@@ -25,7 +25,7 @@ Conventions Prisma :
 ## Tests
 
 - `pnpm --filter @cocooning/couple-e2e-shared test:integration` : demande Docker. Le package n'a pas de tests unitaires, `pnpm test` a la racine ne le lance pas.
-- Les specs `*.integration-spec.ts` creent puis suppriment leurs propres tables tant qu'aucun modele n'existe.
+- Les specs `*.integration-spec.ts` du harnais creent puis suppriment leur propre table sonde (`fixture_probe`) : elles ne dependent d'aucun modele de contexte.
 
 ## Pieges
 

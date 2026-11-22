@@ -8,4 +8,4 @@ Le lot 1 couvre cinq contextes : `authentication` (les deux comptes), `pairing` 
 - [Règles métier](business-rules/index.md)
 - [Architecture](architecture/index.md)
 
-À venir avec la persistance de chaque contexte (phase 2) : `architecture/<contexte>/tables.md`, `infrastructure/database/`, `gaps/`.
+Les tables de chaque contexte sont décrites dans `architecture/<contexte>/tables.md`, à commencer par [celles de la mise en couple](architecture/pairing/tables.md). À venir (phase 2) : `infrastructure/database/`, `gaps/`.

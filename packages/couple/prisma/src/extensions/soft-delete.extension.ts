@@ -34,11 +34,7 @@ export const softDeleteExtension = Prisma.defineExtension({
     name: 'soft-delete',
     query: {
         $allModels: {
-            // One handler serves every model and operation: Prisma cannot type its result, which is the forwarded query's.
-            $allOperations: (params) =>
-                scopeOperationToNotDeleted(
-                    params as ModelOperation,
-                ) as Promise<never>,
+            $allOperations: (params) => scopeOperationToNotDeleted(params),
         },
     },
 });
