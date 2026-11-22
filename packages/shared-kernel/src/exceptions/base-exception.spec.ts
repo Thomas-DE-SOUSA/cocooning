@@ -1,4 +1,4 @@
-import { BaseException } from './base-exception';
+import { BaseException, isBaseException } from './base-exception';
 
 const SampleExceptionCodeEnum = {
     SAMPLE_TITLE_TOO_LONG: 'SAMPLE_TITLE_TOO_LONG',
@@ -33,6 +33,18 @@ describe('Feature: typed exceptions', () => {
                 context: { max: 120 },
             });
             expect(exception.context).toEqual({ max: 120 });
+        });
+    });
+
+    describe('Scenario: narrowing an unknown error', () => {
+        it('recognizes a typed exception and nothing else', () => {
+            const exception = new SampleException({
+                code: SampleExceptionCodeEnum.SAMPLE_TITLE_TOO_LONG,
+                message: 'x',
+            });
+            expect(isBaseException(exception)).toBe(true);
+            expect(isBaseException(new Error('x'))).toBe(false);
+            expect(isBaseException(null)).toBe(false);
         });
     });
 });

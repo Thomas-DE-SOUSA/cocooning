@@ -6,6 +6,10 @@ export type ExceptionParams<TCode extends string> = {
     readonly context?: ExceptionContext;
 };
 
+export function isBaseException(error: unknown): error is BaseException {
+    return error instanceof BaseException;
+}
+
 export class BaseException<TCode extends string = string> extends Error {
     readonly code: TCode;
     readonly context: ExceptionContext;
