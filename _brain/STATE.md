@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-22 (23:50). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-22 (23:25). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
