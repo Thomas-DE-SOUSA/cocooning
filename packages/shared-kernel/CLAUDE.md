@@ -1,6 +1,6 @@
 # @cocooning/shared-kernel
 
-Primitives DDD sans domaine (`AggregateRoot`, `Entity`, `ValueObject`, `DomainEventBase`, `Uuid`, `EventId`, `EntityMetadata`), types transverses (`ExecutionContext`, pagination), ports d'infrastructure (`DateTimeProvider`, `UuidGenerator`, `SecureRandomGenerator`, `Logger`, `EventPublisher`, `UnitOfWork`, `FileStorage`), `EventPublishingService`, `BaseException` et `parseEnum`. Le sous-chemin `testing` porte les fakes partages, hors build.
+Primitives DDD sans domaine (`AggregateRoot`, `Entity`, `ValueObject`, `DomainEventBase`, `Uuid`, `EventId`, `EntityMetadata`), types transverses (`ExecutionContext`, `PartnerContext` reserve a `pairing` par la decision 0029, pagination), ports d'infrastructure (`DateTimeProvider`, `UuidGenerator`, `SecureRandomGenerator`, `Logger`, `EventPublisher`, `UnitOfWork`, `FileStorage`), `EventPublishingService`, `BaseException` et `parseEnum`. Le sous-chemin `testing` porte les fakes partages, hors build.
 
 ## A lire avant de commencer
 

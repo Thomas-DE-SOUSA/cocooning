@@ -18,6 +18,7 @@ No root export: import from a subpath. `@cocooning/shared-kernel/<domain|ports|e
 | `DomainEventBase<TData>` | Base of every domain event: `eventId`, `eventName` (literal on the class, decision 0004), `aggregateId`, `context`, `data`, `occurredAt`. `occurredAt` is a constructor parameter, never `new Date()` (decision 0024) |
 | `EntityMetadata` | Used by aggregates and child entities alike: `createdAt`, `updatedAt`, `deletedAt`; `recordUpdate(now)`, `recordDeletion(now)` return a new instance, the aggregate replaces its metadata (soft delete, `core-backend.md` rule 13) |
 | `ExecutionContext` | `{ coupleId, userId }`, the first argument of every `execute()` (decision 0023) |
+| `PartnerContext` | `{ userId }`, the first argument of the `pairing` use cases only, which run before a couple exists (decision 0029). Their events still carry a full `ExecutionContext` |
 | `OffsetPaginationParams`, `CursorPaginationParams` | Offset page (`page` from `DEFAULT_PAGE` = 1, `pageSize` `DEFAULT_PAGE_SIZE` = 25, at most `MAX_PAGE_SIZE` = 100) and cursor (`cursor` or `null`, `limit`) (decision 0025) |
 | `OffsetPage<T>`, `CursorPage<T>` | A page of results: `items` and `total`, or `items` and `nextCursor` |
 
