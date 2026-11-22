@@ -1,6 +1,6 @@
 # Backend Core Rules (all backend agents)
 
-Loaded alongside core.md for any backend work. The detailed canons (`_knowledge/backend/*.md`) are written at the start of the phase that produces the matching code (phase 1 for the shared kernel and infrastructure, phase 2 for the first bounded context): until a canon exists, this file and core.md are the law. Written so far: `backend/shared-kernel.md`, `backend/prisma.md`, `backend/concurrency.md`, `backend/adapters.md`.
+Loaded alongside core.md for any backend work. The detailed canons (`_knowledge/backend/*.md`) are written at the start of the phase that produces the matching code (phase 1 for the shared kernel and infrastructure, phase 2 for the first bounded context): until a canon exists, this file and core.md are the law. Written so far: `backend/shared-kernel.md`, `backend/prisma.md`, `backend/concurrency.md`, `backend/adapters.md`, `backend/contracts.md`, `backend/domain.md`, `backend/application.md`, `backend/use-case-tests.md`.
 
 ---
 
@@ -62,7 +62,7 @@ Loaded alongside core.md for any backend work. The detailed canons (`_knowledge/
 
 ## Testing
 
-19. **Every use case must be tested exhaustively.** 100% branch coverage: every `if`, every `throw`, every edge case, every invariant. Mutation testing mindset: if one line changes, at least one test breaks. No automatic mocks: hand-written fakes that extend the port (decision 0001). Details in `_knowledge/backend/use-case-tests.md` (phase 2).
+19. **Every use case must be tested exhaustively.** 100% branch coverage: every `if`, every `throw`, every edge case, every invariant. Mutation testing mindset: if one line changes, at least one test breaks. No automatic mocks: hand-written fakes that extend the port (decision 0001). Details in `_knowledge/backend/use-case-tests.md`.
 
 20. **Every API endpoint must have E2E tests.** Happy paths + critical edge cases, including the couple isolation of rule 12. Not exhaustive: business logic is covered by use case tests. Focus on integration, isolation, and resilience.
 

@@ -8,28 +8,28 @@ Ce que l'app impose quand deux comptes deviennent un couple. À lire avant de to
 
 Je ne peux ni créer un deuxième couple ni en rejoindre un autre tant que je suis dans un couple.
 
-- Dans le code : `CreateCoupleUseCase` et `JoinCoupleUseCase` refusent un partenaire déjà présent (`CoupleRepository.findByPartner`) ; index unique sur `couple_partner.user_id`.
+- Dans le code : `CreateCoupleUseCase` et `JoinCoupleUseCase` refusent un partenaire déjà présent par `PairingPreconditionService.ensurePartnerHasNoCouple` (`CoupleRepository.findByPartner`) ; `Couple.join` refuse aussi un membre du couple.
 - Source : [décision 0022](../../decisions/0022-mise-en-couple-par-code-d-invitation.md) (« un couple compte exactement deux membres ») et [décision 0028](../../decisions/pairing/0028-regles-du-code-d-invitation.md), proposée. Validée par : à compléter.
 
 ### R2. Celui qui crée le couple reçoit un code d'invitation
 
 Je crée notre couple, j'en suis le premier membre et l'app me donne un code à transmettre à l'autre. Tant qu'il n'est pas entré, le couple est en attente.
 
-- Dans le code : `Couple.create`, statut `PENDING`.
+- Dans le code : `CreateCoupleUseCase`, `Couple.create`, statut `PENDING`.
 - Source : décision 0022, décision 0028 (proposée). Validée par : à compléter.
 
 ### R3. Le code fait 8 signes faciles à dicter
 
 Le code n'a ni `I`, ni `O`, ni `0`, ni `1` ; je peux le taper en minuscules ou avec des espaces.
 
-- Dans le code : `InvitationCode` (génération par `SecureRandomGenerator`, normalisation de la saisie).
+- Dans le code : `InvitationCode.generate` (tirage par `SecureRandomGenerator.generateHex`), `InvitationCode.normalize` (saisie).
 - Source : décision 0028 (proposée). Validée par : à compléter.
 
 ### R4. Le code est valable 48 heures
 
 Passé ce délai, le code ne marche plus et il faut en demander un nouveau.
 
-- Dans le code : `InvitationCode.isValidAt`, durée lue dans `PAIRING_INVITATION_CODE_TTL_HOURS`.
+- Dans le code : `InvitationCode.isValidAt` ; la durée arrive par `invitationCodeLifetimeInHours` dans `CreateCoupleUseCase` et `RenewInvitationCodeUseCase`, lue par l'API dans `PAIRING_INVITATION_CODE_TTL_HOURS`.
 - Source : décision 0028 (proposée). Validée par : à compléter.
 
 ## Quand l'autre rejoint le couple
@@ -38,14 +38,14 @@ Passé ce délai, le code ne marche plus et il faut en demander un nouveau.
 
 Mon âme sœur saisit le code : elle devient le second membre, le couple est formé et le code disparaît.
 
-- Dans le code : `Couple.join`, statut `PAIRED`, code retiré.
+- Dans le code : `JoinCoupleUseCase`, `Couple.join`, statut `PAIRED`, code retiré.
 - Source : décision 0022, décision 0028 (proposée). Validée par : à compléter.
 
 ### R6. Un code faux ne dit pas pourquoi il est faux
 
 Un code inconnu, expiré ou déjà utilisé reçoit la même réponse.
 
-- Dans le code : `PAIRING_INVITATION_CODE_INVALID`.
+- Dans le code : `PAIRING_INVITATION_CODE_INVALID`, levé par `InvitationCode.normalize`, `PairingPreconditionService.loadCoupleByInvitationCode` et `CouplePairingValidator.ensureJoinableWith`.
 - Source : décision 0028 (proposée). Validée par : à compléter.
 
 ## Tant que le couple est en attente
@@ -54,7 +54,7 @@ Un code inconnu, expiré ou déjà utilisé reçoit la même réponse.
 
 Je demande un nouveau code : l'ancien ne vaut plus rien et le délai repart de zéro. Un couple formé n'a plus de code.
 
-- Dans le code : `Couple.renewInvitationCode`.
+- Dans le code : `RenewInvitationCodeUseCase`, `Couple.renewInvitationCode`.
 - Source : décision 0028 (proposée). Validée par : à compléter.
 
 ## Cas et exceptions
