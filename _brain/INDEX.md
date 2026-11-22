@@ -13,6 +13,18 @@
 | Qu'a-t-on fait tel jour ? | [journal/](journal/), `rg -n "<mot>" _brain/journal` |
 | Comment fonctionne cette mémoire ? | [README.md](README.md) |
 
+## Loi et documentation de Cocooning
+
+| Question | Où |
+|---|---|
+| Règles de code (39 règles cœur, backend, frontend, review) | [_knowledge/core.md](../_knowledge/core.md), `core-backend.md`, `core-frontend.md`, `core-review.md` |
+| Charte de `docs/`, modèle de `CLAUDE.md` par niveau | [docs/CLAUDE.md](../docs/CLAUDE.md) |
+| Modèles (ADR, runbook, règle métier…) | [docs/templates/](../docs/templates/) |
+| Pourquoi cette architecture, carte des contextes, glossaire, conventions | [docs/architecture/](../docs/architecture/index.md) |
+| Installation locale, contribution | [docs/guides/](../docs/guides/index.md) |
+| Registres des ADR | [plateforme](../docs/platform/decisions/index.md), [couple](../docs/couple/decisions/index.md) |
+| Où ranger chaque savoir | [README.md](README.md), « Où va chaque savoir » |
+
 ## Référence Malta : plan et cadrage
 
 | Question | Où |
