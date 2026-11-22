@@ -1,35 +1,42 @@
 # État du projet
 
-> Mis à jour : 2026-11-22 (22:30). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-22 (23:20). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
 
-- **Phase** : phase 0 terminée et mergée dans `dev` (PR #1, 2026-11-22). Branche locale supprimée. Les dernières mises à jour de `_brain/` sont dans l'arbre de travail de `dev`, non commitées : les commiter sur la prochaine branche.
-- **Fait** : analyse complète de Malta (48 rapports, 8 synthèses, blueprint maître, contrôle de 52 affirmations), dans `_malta-blueprint/`.
-- **Fait** : la mémoire du projet est en place et testée : `CLAUDE.md`, `_brain/`, les hooks SessionStart, SessionEnd et Stop, les skills `brain-save` et `brain-consolidate`. Les workflows `malta-*` sont enregistrés dans `.claude/workflows/`.
+- **Phase** : phase 1 en cours sur la branche `chore/phase-1-shared-kernels` (depuis `dev`, 5 commits, **non poussée**, pas de PR).
+- **Fait (phase 1)** : ADR couple 0023 à 0027 (D12, D13, D14, S1, S2) ; canons `_knowledge/backend/{shared-kernel,prisma,concurrency,adapters}.md` ; `packages/shared-kernel` complet et vert (29 tests). Détail : `journal/2026-11-22.md`, « Phase 1 lancée ».
+- **Fait (avant)** : phase 0 mergée dans `dev` (PR #1) ; analyse de Malta dans `_malta-blueprint/` ; mémoire du projet en place.
 
 ## Le produit (vision du propriétaire, 2026-11-22)
 
 - App pour un couple, iPhone et Samsung, en PWA servie via Tailscale comme `/perso/cadence`.
-- Modules évoqués : courses (chez chacun + commune), activités, wishlist, agenda partagé coloré par personne, questions posées par une IA, photo instantanée et mots flash en notification, liste de visionnage enrichie par IA, fiches lieux (prix, genre) filtrables, notes perso ou partagées. Détail : `journal/2026-11-22.md`, « Vision produit ».
+- Premier lot : notes riches (courses = note titrée « Courses »), agenda partagé, messages (photo + mots flash) avec Web Push. Détail : `journal/2026-11-22.md`, « Vision produit ».
 
 ## Prochaine étape
 
-1. Toutes les décisions de la phase 1 sont prises (D12, D13, D14, S1, S2 le 2026-11-22). Quand le propriétaire dit « lance la phase 1 » : branche `chore/phase-1-shared-kernels` depuis `dev`, y commiter d'abord les mises à jour de `_brain/` en attente, écrire les ADR de D12, D13, D14, S1, S2, puis `_knowledge/backend/{shared-kernel,prisma,concurrency,adapters}.md` avant le code (00 §6, « Phase 1 », critères de done).
-2. Faire valider les 12 ADR fondatrices (`proposée`). P6 (mise en couple par code) et P7 décidées ; confirmer le nom du contexte `pairing`.
-3. Phase 1 : noyaux partagés et packages d'infrastructure (`00-BLUEPRINT.md` §6, « Phase 1 »). Décisions à trancher avant : D12, D13, D14 (et D5, D6, D7, D8 déjà décidées).
+1. Suite de la phase 1 (`00-BLUEPRINT.md` §6, « Phase 1 », sans ce que 0021 et 0026 écartent : ni SQS, ni `MessagingModule`, ni `RolesGuard`, ni `ActiveTenantGuard`, ni table `tenant`, ni permissions), dans l'ordre :
+   - `packages/server-infrastructure` : `nest/` (filtre avec table code → statut, pipe Zod, `@Public`, `@PaginationOffset`), `logging/`, `date-time/`, `identifier/` (`UuidV7GeneratorProvider`, dépend de `uuid` 11), `storage/` (disque local), `crypto/`, `health/`, `tracing/`.
+   - `packages/couple/prisma` (Prisma 7, `PrismaService` réentrant, soft delete opt-in, outbox, migration `init` sur Postgres 17), puis `couple/shared-kernel`, `couple/contract`, `couple/e2e-shared`.
+   - `client-infrastructure` et `design-system` (peuvent attendre la phase 3).
+2. Faire valider les 12 ADR fondatrices (`proposée`) ; confirmer le nom du contexte `pairing` (P6).
+3. Pousser la branche et ouvrir la PR vers `dev` quand le propriétaire le demande.
+
+## Décisions qui bloquent
+
+- Aucune pour la suite de la phase 1. Version de Zod (D8) à confirmer à l'installation de `contract`.
 
 ## Fichiers chauds
 
-- `CLAUDE.md`, `_knowledge/core.md`, `docs/CLAUDE.md`, `config/eslint-config/boundaries.js`
-- `_malta-blueprint/00-BLUEPRINT.md` §6 (phase 1)
+- `_knowledge/backend/*.md`, `packages/shared-kernel/`, `config/eslint-config/boundaries.js`
+- `_malta-blueprint/00-BLUEPRINT.md` §6 (phase 1), `11-backend-infrastructure-apps.md` §10 à §12
 
 ## Dépôt
 
-- Dépôt privé `Thomas-DE-SOUSA/cocooning`. `main` est stable, `dev` est l'intégration et la branche par défaut, chaque feature a sa branche depuis `dev` (D23).
+- Dépôt privé `Thomas-DE-SOUSA/cocooning`. `main` stable, `dev` intégration et branche par défaut, une branche par changement depuis `dev` (D23).
 - `_malta-blueprint/` reste en local, hors git (B1).
-- Plan GitHub gratuit en privé : pas de protection de branche, donc la règle « jamais de commit direct sur `main` ni `dev` » tient par discipline (D29 reste ouverte).
+- Plan GitHub gratuit en privé : pas de protection de branche (D29 ouverte).
 
 ## Points d'attention
 
