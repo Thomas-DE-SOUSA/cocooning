@@ -1,10 +1,10 @@
 ---
 nature: technique
-status: proposée
+status: acceptée
 date: 2026-11-22
-deciders: []
-validated-by: à compléter
-validated-on:
+deciders: [Thomas De Sousa]
+validated-by: Thomas De Sousa, 2026-11-23
+validated-on: 2026-11-23
 supersedes:
 superseded-by:
 premortem:
