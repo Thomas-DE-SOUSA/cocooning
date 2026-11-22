@@ -30,7 +30,7 @@ Mots du propriétaire, le 2026-11-22, sur les recommandations du blueprint : « 
 
 ## Conséquences
 
-- Le shared-kernel expose `PaginationParams` ; le contrat expose `PaginationQuerySchema`, `PaginatedResponseSchema` et leurs pendants par curseur.
+- Le shared-kernel expose `OffsetPaginationParams`, `CursorPaginationParams`, `OffsetPage` et `CursorPage` ; le contrat expose `PaginationQuerySchema`, `PaginatedResponseSchema` et leurs pendants par curseur.
 - Le tri par UUID v7 suit l'ordre de création, sans colonne de plus ([décision 0024](0024-determinisme-horloge-et-identifiants.md)).
 
 ## Risques

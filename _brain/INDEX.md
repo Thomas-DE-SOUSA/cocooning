@@ -18,6 +18,7 @@
 | Question | Où |
 |---|---|
 | Règles de code (39 règles cœur, backend, frontend, review) | [_knowledge/core.md](../_knowledge/core.md), `core-backend.md`, `core-frontend.md`, `core-review.md` |
+| Canons backend (shared-kernel, Prisma, concurrence, adaptateurs) | [_knowledge/backend/](../_knowledge/backend/) |
 | Charte de `docs/`, modèle de `CLAUDE.md` par niveau | [docs/CLAUDE.md](../docs/CLAUDE.md) |
 | Modèles (ADR, runbook, règle métier…) | [docs/templates/](../docs/templates/) |
 | Pourquoi cette architecture, carte des contextes, glossaire, conventions | [docs/architecture/](../docs/architecture/index.md) |

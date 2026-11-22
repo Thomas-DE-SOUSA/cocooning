@@ -69,7 +69,8 @@ cocooning/
 │   │   ├── client-business-logic/  # * Frontend business logic, framework-free
 │   │   ├── client-infrastructure/  # * Frontend adapters (HTTP, Yjs, push)
 │   │   ├── contract/  shared-kernel/  prisma/   # * Zod contracts, enums and routers, Prisma schema
-│   ├── shared-kernel/  server-infrastructure/  client-infrastructure/  design-system/   # * (phase 1-3)
+│   ├── shared-kernel/              # * DDD primitives, ports, exceptions, test fakes
+│   ├── server-infrastructure/  client-infrastructure/  design-system/   # * (phase 1-3)
 ├── config/                         # ts, eslint, prettier, jest configs (@cocooning/*), one CLAUDE.md each
 ├── docs/                           # * Documentation (French): architecture, guides, platform, couple
 ├── _knowledge/                     # Coding rules imported by the CLAUDE.md files

@@ -42,7 +42,7 @@ Loaded alongside core.md for any backend work. The detailed canons (`_knowledge/
 
 12. **Couple isolation in every query (D7).** Every repository method includes `coupleId` in the WHERE clause, and `ownerId` for a record private to one partner. Isolation is never checked in memory after loading. A missing filter is a data leak, and every repository has a test proving the other couple, or the other partner for a private record, gets nothing.
 
-13. **Soft delete by default.** Aggregate tables have `deletedAt`. Exceptions: append-only tables (outbox, audit) and child tables without their own lifecycle, each listed explicitly in the exclusions of the Prisma soft-delete extension.
+13. **Soft delete by default.** Aggregate tables have `deletedAt`. Exceptions: append-only tables (outbox) and child tables without their own lifecycle, which have no `deletedAt`. The soft-delete extension is opt-in: it filters only the models that have a `deletedAt` field, read from the DMMF (`backend/prisma.md` rule 8).
 
 14. **Transactions for multi-aggregate operations.** Multiple sequential `repository.save()` = transaction risk. Use one transaction for atomicity.
 

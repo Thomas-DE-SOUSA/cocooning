@@ -37,7 +37,7 @@ Cette page fixe les conventions d'architecture et de nommage communes à tout le
 | Front | Schéma de formulaire | à trancher (D25) : `.zod.ts` ou `.schema.ts`, un seul pour toute l'app |
 | Tests | Spec unitaire, E2E, intégration | `.spec.ts`, `.e2e-spec.ts`, `.integration-spec.ts` |
 | Tests | Contexte de test, builder | `-test.context.ts`, `-input.builder.ts` |
-| Tests | Fake | `-in-memory.repository.ts`, `fake-*.provider.ts` |
+| Tests | Fake | `-in-memory.repository.ts`, `fake-*.provider.ts` ; fake d'un port transverse : `fake-*.adapter.ts`, `in-memory-*.ts`, `deterministic-*.provider.ts` |
 
 Ne pas introduire de variante : `.types.ts`, `.error.ts` ou `.prisma-adapter.ts` n'existent pas dans ce dépôt.
 
