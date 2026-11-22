@@ -19,7 +19,7 @@ Un test de use case doit être déterministe : mêmes entrées, même sortie, as
 ## Décision
 
 - **Horloge** : l'heure courante vient toujours du port `DateTimeProvider`, injecté dans les use cases et les services qui en ont besoin. Le domaine reçoit l'instant en paramètre (`now`), il ne lit jamais d'horloge. `DomainEventBase` reçoit son `occurredAt` du constructeur de l'événement.
-- **Identifiants** : un identifiant est un UUID v7, tiré par `Uuid.generateValue()` depuis la fabrique `generate()` du value object d'identité. Le générateur est posé une fois par process avec `Uuid.configure()` ; en test, un générateur factice à compteur est posé par le contexte de test, et `Uuid.resetForTests()` le retire entre deux fichiers de spec. C'est le contenu de la [décision 0003](0003-identifiants-uuid-generate-value.md), proposée, qui reste à valider avec les autres décisions fondatrices.
+- **Identifiants** : un identifiant est un UUID v7, tiré par `Uuid.generateValue()` depuis la fabrique `generate()` du value object d'identité. Le générateur est posé une fois par process avec `Uuid.configure()` ; en test, un générateur factice à compteur est posé par le contexte de test, et `Uuid.resetForTests()` le retire entre deux fichiers de spec. C'est le contenu de la [décision 0003](0003-identifiants-uuid-generate-value.md).
 - Toute autre source de hasard (heure aléatoire d'une invitation photo, jeton) passe par un port injecté (`core.md` règle 19).
 
 Mots du propriétaire, le 2026-11-22, sur les recommandations du blueprint : « OK pour tout ».
