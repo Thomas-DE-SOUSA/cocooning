@@ -1,6 +1,6 @@
 # @cocooning/couple-prisma
 
-Persistance du domaine couple : schema Prisma 7 eclate en un fichier par modele (`prisma/models/`), migrations (`prisma/migrations/`), `PrismaService` (client cree a `onModuleInit`, `transaction()` reentrant, `current`, `includingDeleted`), `PrismaModule.forRoot()`, `PrismaUnitOfWork` (port `UnitOfWork`), extension de suppression logique opt-in, helper d'unicite `violatedUniqueConstraint`, verrou consultatif transactionnel, schema Zod d'environnement.
+Persistance du domaine couple : schema Prisma 7 eclate en un fichier par modele (`prisma/models/`), migrations (`prisma/migrations/`), `PrismaService` (client cree a `onModuleInit`, `transaction()` reentrant, `current`, `includingDeleted`), `PrismaModule.forRoot()` et `forRootAsync({ inject, useFactory })`, `PrismaUnitOfWork` (port `UnitOfWork`), extension de suppression logique opt-in, helper d'unicite `violatedUniqueConstraint`, verrou consultatif transactionnel, schema Zod d'environnement.
 
 Modeles : `pairing` (`Couple`, `CouplePartner`, outbox `PairingEvent`), crees par la migration `20261122233413_init`. Tables decrites dans `docs/couple/architecture/pairing/tables.md`.
 
@@ -14,7 +14,7 @@ Transactions, verrou optimiste, verrous consultatifs :
 
 ## Consignes de code
 
-- Aucune configuration lue dans `src/` : l'API passe l'URL et les delais de transaction a `PrismaModule.forRoot()` depuis son `env.ts`, qui compose `couplePrismaEnvSchema` (`src/env.ts`). Seul `prisma.config.ts` lit `DATABASE_POSTGRES_URL`, pour la CLI.
+- Aucune configuration lue dans `src/` : l'API passe l'URL et les delais de transaction a `PrismaModule.forRootAsync()`, lus par `ConfigService.getOrThrow()` dans son `env.ts` valide, qui compose `couplePrismaEnvSchema` (`src/env.ts`). Seul `prisma.config.ts` lit `DATABASE_POSTGRES_URL`, pour la CLI.
 - Un modele avec `deletedAt` entre dans `SOFT_DELETABLE_MODELS` dans le meme changement (la spec `soft-deletable-models.spec.ts` echoue sinon).
 - Aucune ligne SQL n'interpole une valeur : `$queryRaw` et `$executeRaw` tagues uniquement.
 - Modeles a copier : `prisma/models/pairing-couple.prisma` (agregat a suppression logique), `prisma/models/pairing-couple-partner.prisma` (enfant), `prisma/models/pairing-event.prisma` (outbox), `src/locks/acquire-transactional-advisory-lock.ts` (SQL brut tague dans la transaction courante), `src/errors/violated-unique-constraint.ts` (lecture d'une erreur Prisma 7).

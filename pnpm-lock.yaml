@@ -521,6 +521,9 @@ importers:
       '@cocooning/ts-config':
         specifier: workspace:*
         version: link:../../../config/ts-config
+      '@nestjs/testing':
+        specifier: catalog:nest
+        version: 11.2.11(@nestjs/common@11.2.11(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@11.2.11)(@nestjs/platform-express@11.2.11)
       '@types/jest':
         specifier: catalog:test
         version: 30.0.0

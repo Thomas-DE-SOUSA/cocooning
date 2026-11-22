@@ -53,6 +53,7 @@
         "@cocooning/eslint-config": "workspace:*",
         "@cocooning/jest-config": "workspace:*",
         "@cocooning/ts-config": "workspace:*",
+        "@nestjs/testing": "catalog:nest",
         "@types/jest": "catalog:test",
         "@types/node": "catalog:build",
         "dotenv-cli": "catalog:tooling",

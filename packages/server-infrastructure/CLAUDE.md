@@ -3,7 +3,7 @@
 Plomberie NestJS et adaptateurs des ports du shared-kernel, sans aucun domaine. Sous-chemins :
 
 - `nest` : `HttpExceptionFilter` (table code -> statut, decision 0020), `ZodValidationPipe`, `ZodException` (422), `ZodResponse(schema)` / `ZodResponseInterceptor`, `RequestIdMiddleware` et `getRequestId()`, `@Public()` / `IS_PUBLIC_KEY`.
-- `logging` : `LoggerModule.forRoot({ level, pretty })`, `PinoLoggerAdapter` (port `Logger`, `requestId` ajoute a chaque ligne).
+- `logging` : `LoggerModule.forRoot({ level, pretty })` ou `forRootAsync({ inject, useFactory })` (l'API lit les options par `ConfigService`), `PinoLoggerAdapter` (port `Logger`, `requestId` ajoute a chaque ligne).
 - `date-time` : `ClockModule` (port `DateTimeProvider`). `identifier` : `IdentifierModule`, `UuidV7GeneratorProvider` (port `UuidGenerator`). `crypto` : `CryptoModule`, `NodeSecureRandomGenerator` (port `SecureRandomGenerator`).
 - `storage` : `LocalDiskFileStorage` (port `FileStorage`, decision 0027), `FileStorageException`.
 
