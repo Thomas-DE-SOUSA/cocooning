@@ -1,6 +1,6 @@
 # Prisma Rules (`@cocooning/couple-prisma`)
 
-Prisma 7, `prisma-client` generator, driver adapter `@prisma/adapter-pg`, PostgreSQL 17. The schema is split into one file per model under `packages/couple/prisma/prisma/models/`; `schema.prisma` holds only the generator and the datasource.
+Prisma 7, `prisma-client` generator (`moduleFormat = "cjs"`, `engineType = "client"`), driver adapter `@prisma/adapter-pg`, PostgreSQL 17. The schema is split into one file per model under `packages/couple/prisma/prisma/models/`; `schema.prisma` holds only the generator and the datasource.
 
 ## Rules
 
@@ -11,7 +11,7 @@ Prisma 7, `prisma-client` generator, driver adapter `@prisma/adapter-pg`, Postgr
 5. **Every string: `@db.VarChar(N)`**, explicit length. `@db.Text` only for free text without a bound (a note body), stated in a `///` comment.
 6. **No Prisma `enum`.** An enumerated column is `String @db.VarChar(N)`, read back through `parseEnum()` (decision 0002).
 7. **`coupleId` on every couple table**, `@db.Uuid`, leading column of every index and unique constraint (core.md rule 27, decision 0018). A table private to a partner has `ownerId`.
-8. **Soft delete is opt-in.** An aggregate table has `deletedAt DateTime?`. The soft-delete extension derives the list of soft-deletable models from the DMMF (models with a `deletedAt` field); a unit spec compares it with the schema. Append-only tables (outbox) have no `deletedAt`.
+8. **Soft delete is opt-in.** An aggregate table has `deletedAt DateTime?`. Adding `deletedAt` to a model adds the model to `SOFT_DELETABLE_MODELS` (`src/extensions/soft-deletable-models.ts`) in the same change; `soft-deletable-models.spec.ts` fails when the list and the `.prisma` files disagree (Prisma 7 exposes no DMMF at runtime). The filter skips `create`, `createMany`, `createManyAndReturn`, `aggregate` and `upsert`, which therefore see deleted rows; `prismaService.includingDeleted` is for reads that must see them, never for writes. Append-only tables (outbox) have no `deletedAt`.
 9. **A uniqueness that tolerates deletion is a partial unique index** (`WHERE "deleted_at" IS NULL`), written in the migration SQL.
 10. **Index every foreign key.** `onDelete: Cascade` from child to parent, `Restrict` towards the couple.
 11. **Outbox table** (decision 0021): `id` = `eventId`, `coupleId`, `aggregateId`, `eventName @db.VarChar(120)`, `eventData Json @db.JsonB`, `userId`, `occurredAt`, `version`, `published Boolean @default(false)`, `publishedAt DateTime?`; `@@unique([aggregateId, version])`, `@@index([published, occurredAt])`, no foreign key to the aggregate (the event outlives it).
@@ -41,4 +41,7 @@ One file per entity under `prisma/seed/`, exporting `run(tx, { debug })` and ins
 | Migrations | `packages/couple/prisma/prisma/migrations/` |
 | `PrismaService`, transaction scope, unit of work | `packages/couple/prisma/src/` |
 | Soft-delete extension and its spec | `packages/couple/prisma/src/extensions/` |
-| Unique-constraint helper | `packages/couple/prisma/src/errors/` |
+| Unique-constraint helper (`violatedUniqueConstraint`) | `packages/couple/prisma/src/errors/` |
+| Transactional advisory lock | `packages/couple/prisma/src/locks/` |
+
+Import paths: `@cocooning/couple-prisma/client` (generated client, `Prisma` namespace), `/nest` (`PrismaModule`, `PrismaService`, `PrismaUnitOfWork`), `/errors`, `/locks`, `/env` (`couplePrismaEnvSchema`, composed by the API's `env.ts`).

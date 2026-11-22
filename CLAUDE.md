@@ -68,7 +68,8 @@ cocooning/
 │   │   ├── server-business-logic/  # * Domain + Application layers (DDD)
 │   │   ├── client-business-logic/  # * Frontend business logic, framework-free
 │   │   ├── client-infrastructure/  # * Frontend adapters (HTTP, Yjs, push)
-│   │   ├── contract/  shared-kernel/  prisma/   # * Zod contracts, enums and routers, Prisma schema
+│   │   ├── prisma/                 # * Prisma 7 schema, PrismaService, unit of work, soft delete, locks
+│   │   ├── contract/  shared-kernel/   # * Zod contracts, enums and routers (phase 1)
 │   ├── shared-kernel/              # * DDD primitives, ports, exceptions, test fakes
 │   ├── server-infrastructure/      # * NestJS plumbing (filter, Zod pipes), pino, clock, ids, disk storage
 │   ├── client-infrastructure/  design-system/   # * (phase 3)

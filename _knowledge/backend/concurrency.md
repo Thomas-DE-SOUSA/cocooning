@@ -14,12 +14,12 @@ How the API protects an aggregate against concurrent writes: one unit of work pe
 5. **Create or update is decided inside the transaction**: `findFirst` on `coupleId` + id, then `create` or `updateMany`.
 6. **Update filters on the version read by the client**: `updateMany({ where: { coupleId, id, version: snapshot.version }, ... })`. `count === 0` throws the context's `<AGGREGATE>_VERSION_CONFLICT` exception, mapped to 409 by the filter table (decision 0020).
 7. **The event version is read inside the same transaction** as the state write.
-8. **The catch rethrows the domain exception first**, then maps a unique violation (`P2002`) by constraint name through the single helper of `@cocooning/couple-prisma`, then logs and rethrows anything else.
+8. **The catch rethrows the domain exception first**, then maps a unique violation (`P2002`) by constraint name through `violatedUniqueConstraint` (`@cocooning/couple-prisma/errors`, `P2002` and `P2010` alike), then logs and rethrows anything else.
 
 ## Advisory locks
 
-9. **Only transactional locks**: `pg_try_advisory_xact_lock(hashtextextended(key, 0))`, run on `prismaService.current`, so lock, state and events share one transaction. Never session locks (`pg_advisory_lock`, `pg_advisory_unlock`): with a connection pool, lock and unlock can land on two connections and the lock stays held.
-10. **Key: `<scope>:<coupleId>:<aggregateId>`.** Acquisition retries until a timeout from configuration; a timeout throws the context's `<AGGREGATE>_LOCK_TIMEOUT` exception (409).
+9. **Only transactional locks**: `pg_advisory_xact_lock(hashtextextended(key, 0))` under a `lock_timeout`, run on `prismaService.current`, so lock, state and events share one transaction. Never session locks (`pg_advisory_lock`, `pg_advisory_unlock`): with a connection pool, lock and unlock can land on two connections and the lock stays held.
+10. **Key: `<scope>:<coupleId>:<aggregateId>`.** `acquireTransactionalAdvisoryLock(prismaService, key, acquireTimeoutMs)` (`@cocooning/couple-prisma/locks`) waits through Postgres `lock_timeout`, not a retry loop, then restores the previous timeout. Outside a transaction it throws `PERSISTENCE_LOCK_OUTSIDE_TRANSACTION`; a busy lock throws `PERSISTENCE_LOCK_BUSY`, which the adapter rethrows as the context's `<AGGREGATE>_LOCK_TIMEOUT` exception (409). A busy lock aborts the transaction: never catch it to continue.
 11. **The domain sees a port** (`DistributedLockProvider` in the context's `domain/ports/`), implemented by an adapter over the shared lock.
 12. **Read-only preconditions outside the lock, writes inside.**
 
