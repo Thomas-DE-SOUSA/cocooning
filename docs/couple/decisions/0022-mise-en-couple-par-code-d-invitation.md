@@ -22,7 +22,7 @@ Chaque personne a son propre compte. Un partenaire crée le couple et obtient un
 
 Mots du propriétaire, le 2026-11-22 : « un compte par personne qui auront un lien pour s'inviter par un code […] un système pour pouvoir faire en sorte qu'un compte user puisse se mettre avec un autre compte ».
 
-Le lien est porté par un contexte dédié, `pairing` (agrégat `Couple`), distinct d'`authentication`, qui ne gère que les comptes et les sessions. Ce découpage et ce nom sont proposés par Claude et restent à confirmer avant la phase 2.
+Le lien est porté par un contexte dédié, `pairing` (agrégat `Couple`), distinct d'`authentication`, qui ne gère que les comptes et les sessions. Ce découpage et ce nom sont confirmés par le propriétaire le 2026-11-23 (« garde pairing »).
 
 ## Alternatives écartées
 
