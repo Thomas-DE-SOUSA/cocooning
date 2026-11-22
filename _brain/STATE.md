@@ -5,7 +5,7 @@
 
 ## Où on en est
 
-- **Phase** : phase 2 en cours, en autonomie de nuit (`/loop`, 2026-11-23). PR #3 et #4 mergées dans `dev`. Plan en 4 étapes : `journal/2026-11-23.md`, « Phase 2 lancée en autonomie ». Étape en cours : 1 (`feat/pairing-domain`).
+- **Phase** : phase 2 en cours, en autonomie de nuit (`/loop`, 2026-11-23). PR #3 et #4 mergées dans `dev`. Plan en 4 étapes : `journal/2026-11-23.md`, « Phase 2 lancée en autonomie ». Étape 1 mergée (PR #6). Étape en cours : 2 (`feat/pairing-persistence`).
 - **Fait (phase 1)** : ADR couple 0023 à 0027 (D12, D13, D14, S1, S2) ; canons `_knowledge/backend/{shared-kernel,prisma,concurrency,adapters}.md` ; `packages/shared-kernel` (30 tests) `packages/server-infrastructure` (36 tests) `packages/couple/prisma` (26 tests + 6 d'intégration Postgres) `packages/couple/shared-kernel` (7 tests) et `packages/couple/contract` (17 tests, canon `_knowledge/backend/contracts.md`) et `packages/couple/e2e-shared` (3 specs d'intégration, Docker), verts. La pagination offset se valide au contrat, plus dans server-infrastructure. D31 : backend CommonJS sur NestJS 11 (ADR plateforme 0011). Détail : `journal/2026-11-22.md`, sections « Phase 1 ».
 - **Fait (avant)** : phase 0 mergée dans `dev` (PR #1) ; analyse de Malta dans `_malta-blueprint/` ; mémoire du projet en place.
 
