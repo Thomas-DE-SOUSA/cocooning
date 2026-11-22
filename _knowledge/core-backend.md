@@ -1,6 +1,6 @@
 # Backend Core Rules (all backend agents)
 
-Loaded alongside core.md for any backend work. The detailed canons (`_knowledge/backend/*.md`) are written at the start of the phase that produces the matching code (phase 1 for the shared kernel and infrastructure, phase 2 for the first bounded context): until a canon exists, this file and core.md are the law. Written so far: `backend/shared-kernel.md`, `backend/prisma.md`, `backend/concurrency.md`, `backend/adapters.md`, `backend/contracts.md`, `backend/domain.md`, `backend/application.md`, `backend/use-case-tests.md`.
+Loaded alongside core.md for any backend work. The detailed canons (`_knowledge/backend/*.md`) are written at the start of the phase that produces the matching code (phase 1 for the shared kernel and infrastructure, phase 2 for the first bounded context): until a canon exists, this file and core.md are the law. Written so far: `backend/shared-kernel.md`, `backend/prisma.md`, `backend/concurrency.md`, `backend/adapters.md`, `backend/contracts.md`, `backend/domain.md`, `backend/application.md`, `backend/use-case-tests.md`, `backend/controllers.md`, `backend/wiring.md`, `backend/e2e.md` (the last three as far as phase 2 has built the API).
 
 ---
 
