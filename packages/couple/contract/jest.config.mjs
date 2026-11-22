@@ -10,5 +10,7 @@ export default {
     moduleNameMapper: {
         '^@cocooning/shared-kernel/(.*)$':
             '<rootDir>/../../shared-kernel/src/$1',
+        '^@cocooning/couple-shared-kernel/(.*)$':
+            '<rootDir>/../shared-kernel/src/$1',
     },
 };

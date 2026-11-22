@@ -6,7 +6,7 @@ Cette page décrit comment le contexte `pairing` est construit : ses couches, se
 
 `pairing` relie deux comptes en un couple : il crée le couple, délivre et renouvelle le code d'invitation, fait entrer le second partenaire et dit à un partenaire où en est son couple. Il ne connaît ni les mots de passe ni les sessions (`authentication`), et ne lit aucune donnée des notes, de l'agenda ou des messages. Quitter un couple n'existe pas encore.
 
-Seules les couches domaine et application existent. La persistance Prisma, le contrat HTTP et les contrôleurs de l'API arrivent dans les étapes suivantes de la phase 2.
+Les couches domaine et application existent, ainsi que les tables PostgreSQL (voir [les tables](tables.md)) et les schémas du contrat HTTP. L'adaptateur Prisma de `CoupleRepository` et les contrôleurs de l'API arrivent dans les étapes suivantes de la phase 2.
 
 ## Comment c'est construit
 
@@ -21,6 +21,8 @@ Seules les couches domaine et application existent. La persistance Prisma, le co
 | `PairingPreconditionService` | Domain service : un partenaire sans couple (R1), le couple d'un partenaire, le couple d'un code | `domain/services/pairing-precondition.service.ts` |
 | `CouplePairingValidator` | Contrôles statiques appelés par l'agrégat | `domain/services/couple-pairing.validator.ts` |
 | `CreateCoupleUseCase`, `JoinCoupleUseCase`, `RenewInvitationCodeUseCase`, `GetMyCoupleUseCase` | Use cases, `execute(context)` ou `execute(context, command)` | `application/use-cases/` |
+| Tables `couple`, `couple_partner`, `pairing_event` | Persistance de l'agrégat et outbox (voir [les tables](tables.md)) | `packages/couple/prisma/prisma/models/pairing-*.prisma` |
+| `JoinCoupleRequestSchema`, `CoupleResponseSchema` | Contrat HTTP partagé par l'API et la PWA : le code saisi, et le corps commun aux quatre actions, miroir de `CoupleView` | `packages/couple/contract/src/pairing/schemas/` |
 | `toCoupleView` | Vue rendue par les quatre use cases : identifiant, statut, partenaires, code ou `null` | `application/mappers/couple-view.mapper.ts` |
 
 Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/pairing/`.
