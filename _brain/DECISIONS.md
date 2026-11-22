@@ -24,6 +24,8 @@ Statuts possibles : `ouverte`, `décidée`, `appliquée`, `remplacée`.
 | P5 | Éditeur de notes | décidée | édition à deux en temps réel (« P5 temps réel ») : éditeur riche type Tiptap + synchronisation CRDT type Yjs ; fonctions calquées sur Apple Notes / Google Keep → [ADR](../docs/couple/decisions/0016-edition-des-notes-en-temps-reel.md) | 2026-11-22 | — |
 | P6 | Mise en couple | décidée | un compte par personne, mise en couple par code d'invitation (« un compte par personne qui auront un lien pour s'inviter par un code ») ; contexte dédié `pairing` proposé par Claude, à confirmer avant la phase 2 → [ADR](../docs/couple/decisions/0022-mise-en-couple-par-code-d-invitation.md) | 2026-11-22 | — |
 | P7 | Numérotation des ADR | décidée | une séquence par registre, comme Malta (« P7 j'aime bien ») → [ADR](../docs/platform/decisions/0010-numerotation-adr-fondatrices.md) | 2026-11-22 | — |
+| S1 | Permissions | décidée | pas de modèle rôles / `ressource:action` de Malta : portée par `coupleId` (guard) et propriété/visibilité par `ownerId` (domaine) ; pas d'`ActiveTenantGuard` ni de `MessagingModule` SQS (« OK pour tout », 2026-11-22) ; ADR à écrire au début de la phase 1 | 2026-11-22 | — |
+| S2 | Stockage des photos | décidée | port `FileStorage`, adaptateur disque local (volume Docker de la VM) au départ, compatible S3 plus tard (« OK pour tout », 2026-11-22) ; ADR à écrire au début de la phase 1 | 2026-11-22 | — |
 
 ## Blueprint (D1 à D30)
 
@@ -40,9 +42,9 @@ Statuts possibles : `ouverte`, `décidée`, `appliquée`, `remplacée`.
 | D9 | Versions majeures (TS, Next, Jest, ESLint) | décidée | dernières versions stables (Next 16, Jest 30, TS le plus récent supporté par typescript-eslint), confirmées en phase 0 (« OK pour tout ») → [ADR](../docs/platform/decisions/0005-versions-des-dependances.md) | 2026-11-22 | — |
 | D10 | Cible de déploiement | décidée | VM + `docker compose` (API, web, Postgres, Caddy), accès Tailscale, HTTPS `*.ts.net`, comme `cadence` (« OK pour tout ») → [ADR](../docs/platform/decisions/0006-deploiement-vm-docker-compose-tailscale.md) | 2026-11-22 | — |
 | D11 | App mobile | décidée | pas d'app native ; PWA Next (Serwist, Web Push VAPID) ; `client-business-logic` sans framework (« OK pour tout ») → [ADR](../docs/platform/decisions/0007-pwa-sans-application-native.md) | 2026-11-22 | — |
-| D12 | Forme des réactions aux événements et des use cases | ouverte | — | — | phase 2 |
-| D13 | Déterminisme (horloge, générateur d'ids) | ouverte | — | — | phase 1 |
-| D14 | Pagination | ouverte | — | — | phase 2 |
+| D12 | Forme des réactions aux événements et des use cases | décidée | signature unique `execute(context, command)`, `context = { coupleId, userId }` ; réaction à un événement = use case de réaction appelé par un handler d'infrastructure (« OK pour tout », 2026-11-22) ; ADR à écrire au début de la phase 1 | 2026-11-22 | — |
+| D13 | Déterminisme (horloge, générateur d'ids) | décidée | horloge injectée (port `DateTimeProvider`, jamais `new Date()` dans le domaine) ; générateur UUID v7 statique `Uuid.configure()` + `Uuid.resetForTests()` (« OK pour tout », 2026-11-22) ; ADR à écrire au début de la phase 1 | 2026-11-22 | — |
+| D14 | Pagination | décidée | offset par défaut (page 1, 25 éléments) ; curseur pour le défilement infini (photos, messages) (« OK pour tout », 2026-11-22) ; ADR à écrire au début de la phase 1 | 2026-11-22 | — |
 | D15 | Langues (CLAUDE.md, docs, commits) | décidée | code, `CLAUDE.md` racine, `_knowledge/`, commits en anglais ; `docs/` en français (« OK pour tout ») → [ADR](../docs/platform/decisions/0008-langues.md) | 2026-11-22 | — |
 | D16 | Versionnement des espaces de travail des agents | ouverte | — | — | phase 5 |
 | D17 | BMAD | ouverte | — | — | phase 5 |

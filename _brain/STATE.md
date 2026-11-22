@@ -5,7 +5,7 @@
 
 ## Où on en est
 
-- **Phase** : phase 0 terminée et vérifiée sur la branche `chore/phase-0-monorepo` (depuis `dev`), **pas encore commitée** : 125 fichiers dans l'arbre de travail.
+- **Phase** : phase 0 terminée et mergée dans `dev` (PR #1, 2026-11-22). Branche locale supprimée. Les dernières mises à jour de `_brain/` sont dans l'arbre de travail de `dev`, non commitées : les commiter sur la prochaine branche.
 - **Fait** : analyse complète de Malta (48 rapports, 8 synthèses, blueprint maître, contrôle de 52 affirmations), dans `_malta-blueprint/`.
 - **Fait** : la mémoire du projet est en place et testée : `CLAUDE.md`, `_brain/`, les hooks SessionStart, SessionEnd et Stop, les skills `brain-save` et `brain-consolidate`. Les workflows `malta-*` sont enregistrés dans `.claude/workflows/`.
 
@@ -16,7 +16,7 @@
 
 ## Prochaine étape
 
-1. Obtenir l'accord du propriétaire pour commiter la phase 0 (commits atomiques proposés : outillage `config`, loi `knowledge`, docs, ADR, mémoire `brain`), pousser, PR vers `dev`.
+1. Toutes les décisions de la phase 1 sont prises (D12, D13, D14, S1, S2 le 2026-11-22). Quand le propriétaire dit « lance la phase 1 » : branche `chore/phase-1-shared-kernels` depuis `dev`, y commiter d'abord les mises à jour de `_brain/` en attente, écrire les ADR de D12, D13, D14, S1, S2, puis `_knowledge/backend/{shared-kernel,prisma,concurrency,adapters}.md` avant le code (00 §6, « Phase 1 », critères de done).
 2. Faire valider les 12 ADR fondatrices (`proposée`). P6 (mise en couple par code) et P7 décidées ; confirmer le nom du contexte `pairing`.
 3. Phase 1 : noyaux partagés et packages d'infrastructure (`00-BLUEPRINT.md` §6, « Phase 1 »). Décisions à trancher avant : D12, D13, D14 (et D5, D6, D7, D8 déjà décidées).
 
