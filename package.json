@@ -22,7 +22,7 @@
         "lint": "turbo run lint --",
         "format": "prettier \"**/*.{js,mjs,cjs,ts,tsx,json}\"",
         "check-types": "turbo run check-types",
-        "dev:couple": "turbo dev --filter=couple-api... --filter=couple-web... --concurrency=20",
+        "dev:couple": "turbo dev --filter='./apps/couple/*...' --concurrency=20",
         "build:couple": "turbo build --filter='./apps/couple/*...'",
         "test:couple": "turbo test --filter='./apps/couple/*...' --filter='./packages/couple/*'"
     },
