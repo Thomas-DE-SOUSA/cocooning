@@ -10,6 +10,9 @@ Le couple parle français, le code est en anglais. Aucune réglementation ne fix
 |---|---|---|
 | **Couple** | `Couple`, `coupleId` | Les deux partenaires qui partagent l'application. Toute donnée lui appartient |
 | **Partenaire** | `Partner`, `userId` | L'une des deux personnes du couple, titulaire d'un compte |
+| **Mise en couple** | contexte `pairing` | Le lien entre deux comptes : l'un crée le couple, l'autre le rejoint par un code |
+| **Code d'invitation** | `InvitationCode` | Le code à 8 signes qu'un partenaire donne à l'autre pour qu'il rejoigne le couple |
+| **Couple en attente / formé** | `CouplePairingStatus` `PENDING` / `PAIRED` | En attente : un seul membre, un code valable. Formé : les deux partenaires |
 | **Propriétaire** | `ownerId` | Le partenaire qui a créé une donnée |
 | **Note** | `Note` | Texte riche, perso ou partagé, éditable à deux en temps réel |
 | **Note perso / partagée** | `NoteVisibility` `PRIVATE` / `SHARED` | Une note perso n'est visible que de son propriétaire ; une note partagée est visible et modifiable par les deux |
