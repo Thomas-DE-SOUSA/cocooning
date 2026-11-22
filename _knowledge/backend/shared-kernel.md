@@ -70,8 +70,8 @@ Excluded from the build. Each one `extends` its port (decision 0001): `Determini
 | Subpath | Contains |
 |---|---|
 | `enums` | Business enums shared by server and PWA, one file per enum, `as const` (decision 0002). Empty until a context needs one |
-| `routers` | `ApiRouterEnum` and `WebRouterEnum`, one route file per context spread into the enum; a spec fails on a duplicated route. Never hardcode a route string |
-| `exceptions` | `MissingExecutionContextException` |
+| `routers` | `ApiRouterEnum` and `WebRouterEnum`, one route file per context spread into the enum and listed in `API_ROUTE_GROUPS` / `WEB_ROUTE_GROUPS`; a spec fails on a key declared by two groups or a group missing from the list. Never hardcode a route string |
+| `exceptions` | `MissingExecutionContextException(missing)`, code `EXECUTION_CONTEXT_MISSING`: thrown by a guard service's `ensureRequiredContextPresent` when a field of `ExecutionContext` is missing |
 
 ---
 
