@@ -17,7 +17,8 @@
 
 - **pnpm** : le pnpm global est en 10.5.2, le dépôt exige 12.21.0 (`packageManager`). Lancer `corepack pnpm@12.21.0 <cmd>` ; dans zsh, pas de variable `P="corepack pnpm@…"` puis `$P` (pas de découpage des mots), utiliser `eval` ou écrire la commande en entier.
 - **Hooks git actifs** : `pnpm install` lance `husky` et règle `core.hooksPath=.husky/_`. Tout commit exige une branche valide, un message conventionnel et un scope de `commitlint.config.ts`.
-- **ESM pur (2026-11-22)** : `uuid` 12 et plus est en ESM pur ; Jest et NestJS tournent en CommonJS. Vérifier `npm view <pkg> type` avant d'ajouter une dépendance runtime.
+- **ESM pur (2026-11-22)** : NestJS 12 et `uuid` 12 et plus sont en ESM pur (D31) ; Jest et NestJS tournent en CommonJS. Vérifier `npm view <pkg> type exports` avant d'ajouter une dépendance runtime.
+- **Realm Jest (2026-11-22)** : une erreur `fs` levée sous Jest n'est pas `instanceof Error` ; tester la propriété `code`.
 - **Scopes de commit** : `shared-kernel` ou `decisions` ne sont pas des scopes ; un commit d'un package transverse se fait sans scope (`feat: …`).
 - **Versions (2026-11-22)** : typescript-eslint 8.73 n'accepte pas TS 7 (`<6.1.0`), d'où TS 6.0. `minimumReleaseAge: 1440` refuse une version publiée il y a moins de 24 h (ex. lint-staged 17.6.2) : prendre la précédente. `eslint-plugin-react` 7.37 ne déclare pas encore ESLint 10 en peer : à régler en phase 3.
 
