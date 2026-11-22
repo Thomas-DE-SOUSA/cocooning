@@ -39,6 +39,8 @@ One abstract class per folder under `src/ports/` (core.md rule 18).
 | `UnitOfWork` | `unit-of-work` | `run(work)`: one transaction around several writes |
 | `FileStorage` | `storage` | Store, read, delete a file by key; keys start with the `coupleId` (decision 0027) |
 
+Adapters live in `@cocooning/server-infrastructure`: `SystemDateTimeProvider` (`ClockModule`), `UuidV7GeneratorProvider` (`IdentifierModule`), `NodeSecureRandomGenerator` (`CryptoModule`), `PinoLoggerAdapter` (`LoggerModule`), `LocalDiskFileStorage`. `EventPublisher` and `UnitOfWork` adapters come with the first event and with `@cocooning/couple-prisma`.
+
 **If a port exists here, use it.** Never recreate `DateTimeProvider` or `Logger` in a bounded context.
 
 Not here, decided against (decisions 0021, 0026): `MessageQueue`, `AuditDispatcher`, an `IdGenerator` port, a permission model, `ActiveTenantGuard`.
@@ -53,7 +55,7 @@ Not here, decided against (decisions 0021, 0026): `MessageQueue`, `AuditDispatch
 
 ## Exceptions (`@cocooning/shared-kernel/exceptions`)
 
-`BaseException<TCode>` carries `code`, `message` and an optional `context` (bounds such as `min`, `max`), the same shape as the contract's error response. It carries **no HTTP status**: the status comes from the code → status table of the HTTP exception filter (decision 0020). Each bounded context extends it with its own exception and its own code enum (core.md rule 24). The kernel's own errors are `SharedKernelException` with `SharedKernelExceptionCodeEnum`.
+`BaseException<TCode>` carries `code`, `message` and an optional `context` (bounds such as `min`, `max`), the same shape as the contract's error response. It carries **no HTTP status**: the status comes from the code → status table of the HTTP exception filter (decision 0020). Each bounded context extends it with its own exception and its own code enum (core.md rule 24). `isBaseException(error)` narrows an unknown error (prefer it to `instanceof`, which types the code as `any`). The kernel's own errors are `SharedKernelException` with `SharedKernelExceptionCodeEnum`.
 
 ---
 
