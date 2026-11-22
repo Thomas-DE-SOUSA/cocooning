@@ -27,7 +27,7 @@ Statuts possibles : `ouverte`, `décidée`, `appliquée`, `remplacée`.
 | S1 | Permissions | décidée | pas de modèle rôles / `ressource:action` de Malta : portée par `coupleId` (guard) et propriété/visibilité par `ownerId` (domaine) ; pas d'`ActiveTenantGuard` ni de `MessagingModule` SQS (« OK pour tout », 2026-11-22) → [ADR](../docs/couple/decisions/0026-permissions-par-portee-sans-roles.md) | 2026-11-22 | — |
 | S2 | Stockage des photos | décidée | port `FileStorage`, adaptateur disque local (volume Docker de la VM) au départ, compatible S3 plus tard (« OK pour tout », 2026-11-22) → [ADR](../docs/couple/decisions/0027-stockage-des-photos.md) | 2026-11-22 | — |
 
-## Blueprint (D1 à D30)
+## Blueprint (D1 à D31)
 
 | ID | Sujet | Statut | Choix | Date | Bloque |
 |---|---|---|---|---|---|
@@ -38,7 +38,7 @@ Statuts possibles : `ouverte`, `décidée`, `appliquée`, `remplacée`.
 | D5 | Statut HTTP des exceptions | décidée | table code → statut dans le filtre HTTP, 422 pour une saisie invalide (« OK pour tout ») → [ADR](../docs/couple/decisions/0020-statut-http-des-exceptions.md) | 2026-11-22 | — |
 | D6 | Sémantique de publication des événements | décidée | outbox PostgreSQL, relais dans le processus de l'API (pas de SQS ni de worker séparé au départ), sert au Web Push (« OK pour tout ») → [ADR](../docs/couple/decisions/0021-outbox-postgresql-relais-dans-l-api.md) | 2026-11-22 | — |
 | D7 | Multi-tenant | décidée | pas de multi-tenant ; `coupleId` dans les ports et les index, `ownerId` sur chaque donnée, 404 pour la donnée perso de l'autre (« OK pour tout ») → [ADR](../docs/couple/decisions/0018-portee-par-couple-et-proprietaire.md) | 2026-11-22 | — |
-| D8 | Zod 3 ou 4 | décidée | Zod 4 si `@t3-oss/env-nextjs` et `@hookform/resolvers` suivent, sinon 3.25 (« OK pour tout ») → [ADR](../docs/platform/decisions/0005-versions-des-dependances.md) | 2026-11-22 | — |
+| D8 | Zod 3 ou 4 | décidée | appliquée en phase 1 : Zod 4, les deux libs l'acceptent ; Zod 4 si `@t3-oss/env-nextjs` et `@hookform/resolvers` suivent, sinon 3.25 (« OK pour tout ») → [ADR](../docs/platform/decisions/0005-versions-des-dependances.md) | 2026-11-22 | — |
 | D9 | Versions majeures (TS, Next, Jest, ESLint) | décidée | dernières versions stables (Next 16, Jest 30, TS le plus récent supporté par typescript-eslint), confirmées en phase 0 (« OK pour tout ») → [ADR](../docs/platform/decisions/0005-versions-des-dependances.md) | 2026-11-22 | — |
 | D10 | Cible de déploiement | décidée | VM + `docker compose` (API, web, Postgres, Caddy), accès Tailscale, HTTPS `*.ts.net`, comme `cadence` (« OK pour tout ») → [ADR](../docs/platform/decisions/0006-deploiement-vm-docker-compose-tailscale.md) | 2026-11-22 | — |
 | D11 | App mobile | décidée | pas d'app native ; PWA Next (Serwist, Web Push VAPID) ; `client-business-logic` sans framework (« OK pour tout ») → [ADR](../docs/platform/decisions/0007-pwa-sans-application-native.md) | 2026-11-22 | — |
@@ -61,3 +61,4 @@ Statuts possibles : `ouverte`, `décidée`, `appliquée`, `remplacée`.
 | D28 | Review agentique au démarrage | ouverte | — | — | phase 5 |
 | D29 | Dépôt et plan GitHub | ouverte | — | — | phase 6 |
 | D30 | Source réglementaire du langage ubiquitaire | ouverte | — | — | phase 2 |
+| D31 | Module system du backend (NestJS 12 ESM pur) | décidée | Nest 11 en CommonJS, `uuid` 11, Jest/ts-jest inchangés ; migration ESM plus tard en une décision (« Nest 11 en CommonJS (Recommandé) ») → [ADR](../docs/platform/decisions/0011-backend-commonjs-nest-11.md) | 2026-11-22 | — |
