@@ -30,10 +30,6 @@ export const nestConfig = [
         },
     },
     {
-        files: ['**/*.{js,mjs,cjs}'],
-        ...tseslint.configs.disableTypeChecked,
-    },
-    {
         rules: {
             'no-await-in-loop': 'error',
             'no-constructor-return': 'error',
@@ -49,5 +45,18 @@ export const nestConfig = [
             '@typescript-eslint/no-floating-promises': 'error',
             '@typescript-eslint/no-unsafe-argument': 'error',
         },
+    },
+    {
+        // Jest asymmetric matchers (expect.any, expect.objectContaining) are typed `any`.
+        files: ['**/*.spec.ts', '**/*.e2e-spec.ts', '**/*.integration-spec.ts'],
+        rules: {
+            '@typescript-eslint/no-unsafe-assignment': 'off',
+            '@typescript-eslint/unbound-method': 'off',
+        },
+    },
+    {
+        // Last, so no typed rule enabled above reaches a plain JavaScript file.
+        files: ['**/*.{js,mjs,cjs}'],
+        ...tseslint.configs.disableTypeChecked,
     },
 ];
