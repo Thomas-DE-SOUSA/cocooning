@@ -37,6 +37,11 @@ Transactions et verrous : `../../../_knowledge/backend/concurrency.md`.
 ## Tests
 
 - Specs unitaires `src/**/*.spec.ts` : `pnpm --filter couple-api test`. Jest lit tous les packages `@cocooning/*` dans leurs `src` (`moduleNameMapper` de `jest.config.mjs`).
+- E2E `test/<contexte>/*.e2e-spec.ts` : `pnpm --filter couple-api test:e2e` (Docker requis). `test/e2e/jest-e2e.config.mjs` branche le setup global de `@cocooning/couple-e2e-shared` (Postgres 17 migre, `DATABASE_POSTGRES_URL`) et le seul module d'environnement de test, `test/shared/env/test-environment.ts` (variables et `Uuid.configure`).
+- `createTestApp({ controllers, overrides })` (`test/shared/app/create-test-app.ts`) monte le vrai `AppModule` et `listen(0)` ; `closeTestApp` ferme l'app, qui deconnecte Prisma. `TestClient.for(app)` envoie les requetes par `fetch` ; `asPartner(userId, now)` signe un cookie de session HS256 avec le secret de test.
+- Un controleur de test declare dans la spec est une fixture (exemple : `test/authentication/session-guard.e2e-spec.ts`). Pas de `jest.fn` ni `jest.spyOn` (decision 0001) : une horloge se remplace par `overrides` avec `DeterministicDateTimeProvider`.
+- Une spec qui ecrit en base vide les tables par `truncateAllTables` (`@cocooning/couple-e2e-shared/fixtures`) en `beforeEach`.
+- Modele a copier : `test/health/health.e2e-spec.ts`.
 
 ## Pieges
 
@@ -51,6 +56,7 @@ Transactions et verrous : `../../../_knowledge/backend/concurrency.md`.
 
 - `pnpm --filter couple-api dev` (reconstruit et relance a chaque changement, lit `.env`)
 - `pnpm --filter couple-api test`
+- `pnpm --filter couple-api test:e2e`
 - `pnpm --filter couple-api check-types`
 - `pnpm --filter couple-api lint`
 - `pnpm --filter couple-api build`
@@ -60,5 +66,6 @@ Transactions et verrous : `../../../_knowledge/backend/concurrency.md`.
 - Tout changement : relire chaque page qui cite le fichier ou la classe modifies, trouvee avec `rg -l '<NomDeClasse>|<chemin/du/fichier>' docs/ _knowledge/`.
 - Demarrage local, variables d'environnement : `docs/guides/local-setup.md`.
 - Garde de session, cookie, algorithme : `docs/couple/decisions/0030-verification-du-jwt-en-phase-2.md` (decision proposee) et `_knowledge/backend/controllers.md`.
+- Harnais E2E : `_knowledge/backend/e2e.md`. Bootstrap, env, modules : `_knowledge/backend/wiring.md`.
 - Table code -> statut : `docs/couple/decisions/0020-statut-http-des-exceptions.md` et le tableau des refus de `docs/couple/business-rules/<contexte>/rules.md`.
 - Module de contexte ajoute (`src/modules/<contexte>/`, avec son stub `CLAUDE.md`) : `_knowledge/backend/adapters.md` (structure) et la carte de l'arborescence du `CLAUDE.md` racine.
