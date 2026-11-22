@@ -2,7 +2,7 @@
 
 Plomberie NestJS et adaptateurs des ports du shared-kernel, sans aucun domaine. Sous-chemins :
 
-- `nest` : `HttpExceptionFilter` (table code -> statut, decision 0020), `ZodValidationPipe`, `ZodException` (422), `ZodResponse(schema)` / `ZodResponseInterceptor`, `RequestIdMiddleware` et `getRequestId()`, `@Public()` / `IS_PUBLIC_KEY`, `@PaginationOffset()`.
+- `nest` : `HttpExceptionFilter` (table code -> statut, decision 0020), `ZodValidationPipe`, `ZodException` (422), `ZodResponse(schema)` / `ZodResponseInterceptor`, `RequestIdMiddleware` et `getRequestId()`, `@Public()` / `IS_PUBLIC_KEY`.
 - `logging` : `LoggerModule.forRoot({ level, pretty })`, `PinoLoggerAdapter` (port `Logger`, `requestId` ajoute a chaque ligne).
 - `date-time` : `ClockModule` (port `DateTimeProvider`). `identifier` : `IdentifierModule`, `UuidV7GeneratorProvider` (port `UuidGenerator`). `crypto` : `CryptoModule`, `NodeSecureRandomGenerator` (port `SecureRandomGenerator`).
 - `storage` : `LocalDiskFileStorage` (port `FileStorage`, decision 0027), `FileStorageException`.
@@ -21,6 +21,7 @@ Ports et primitives implementes ici :
 - Un adaptateur `extends` son port ; un module global (`@Global()`) fournit le port, jamais l'adaptateur (`provide: Port`).
 - Le filtre ne connait aucun code : l'API lui passe sa table (`ExceptionStatusTable`) par `useFactory`. Un code absent de la table repond 500 et se logge en erreur avec son code.
 - La reponse d'un controleur passe par `@UseInterceptors(ZodResponse(Schema))` : la valeur renvoyee est celle parsee par Zod, les champs non declares sont retires. Pas de `class-transformer` ni de `MapperHttpInterceptor` comme chez Malta : le schema Zod du contrat est la seule liste blanche.
+- Pas de decorateur de pagination : un controleur valide sa query avec `@Query(new ZodValidationPipe(OffsetPaginationQuerySchema))`, le schema venant de `@cocooning/couple-contract/shared` (decision 0025).
 - Aucune configuration lue ici : l'API passe les valeurs (niveau de log, dossier de stockage) depuis son `env.ts`.
 - Modeles a copier : `src/storage/local-disk-file-storage.ts` (adaptateur), `src/date-time/clock.module.ts` (module global).
 
