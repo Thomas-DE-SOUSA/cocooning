@@ -50,6 +50,7 @@ export const nestConfig = [
         // Jest asymmetric matchers (expect.any, expect.objectContaining) are typed `any`.
         files: ['**/*.spec.ts', '**/*.e2e-spec.ts', '**/*.integration-spec.ts'],
         rules: {
+            '@typescript-eslint/no-unsafe-argument': 'off',
             '@typescript-eslint/no-unsafe-assignment': 'off',
             '@typescript-eslint/unbound-method': 'off',
         },
