@@ -1,0 +1,44 @@
+{
+    "name": "couple-api",
+    "description": "NestJS API of the couple domain: composition root of the bounded contexts",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "build": "tsc -p tsconfig.build.json",
+        "dev": "tsc-watch -p tsconfig.build.json --onSuccess \"node dist/main.js\"",
+        "start": "node dist/main.js",
+        "lint": "eslint . --max-warnings=0",
+        "check-types": "tsc --noEmit -p tsconfig.json",
+        "test": "jest",
+        "test:e2e": "jest -c test/e2e/jest-e2e.config.mjs --runInBand"
+    },
+    "dependencies": {
+        "@cocooning/couple-contract": "workspace:*",
+        "@cocooning/couple-prisma": "workspace:*",
+        "@cocooning/couple-shared-kernel": "workspace:*",
+        "@cocooning/server-infrastructure": "workspace:*",
+        "@cocooning/shared-kernel": "workspace:*",
+        "@nestjs/common": "catalog:nest",
+        "@nestjs/config": "catalog:nest",
+        "@nestjs/core": "catalog:nest",
+        "@nestjs/platform-express": "catalog:nest",
+        "reflect-metadata": "catalog:nest",
+        "rxjs": "catalog:nest",
+        "zod": "catalog:validation"
+    },
+    "devDependencies": {
+        "@cocooning/couple-e2e-shared": "workspace:*",
+        "@cocooning/eslint-config": "workspace:*",
+        "@cocooning/jest-config": "workspace:*",
+        "@cocooning/ts-config": "workspace:*",
+        "@nestjs/testing": "catalog:nest",
+        "@types/express": "catalog:nest",
+        "@types/jest": "catalog:test",
+        "@types/node": "catalog:build",
+        "eslint": "catalog:lint",
+        "jest": "catalog:test",
+        "ts-jest": "catalog:test",
+        "tsc-watch": "catalog:tooling",
+        "typescript": "catalog:build"
+    }
+}

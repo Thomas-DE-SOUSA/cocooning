@@ -36,7 +36,7 @@ Ports et primitives implementes ici :
 - Sous Jest, une erreur systeme Node (`ENOENT`) vient d'un autre realm : `instanceof Error` est faux, tester `code` sur l'objet.
 - `instanceof BaseException` donne un `BaseException<any>` refuse par le lint type : utiliser `isBaseException()`.
 - `Logger` est fourni en `Scope.TRANSIENT` : chaque classe a son adaptateur et son `setContext`. Ne pas le passer en singleton.
-- Reportes : `tracing/` et `telemetry/` (D21, phase 6), adaptateur `EventPublisher` (premier evenement, phase 2), `health/` (avec l'app API).
+- Reportes : `tracing/` et `telemetry/` (D21, phase 6), adaptateur `EventPublisher` (premier evenement, phase 2). La sante vit dans l'API (`apps/couple/api/src/health/`) : elle interroge Prisma, interdit ici.
 
 ## Commandes
 
