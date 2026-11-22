@@ -30,4 +30,5 @@ How the API protects an aggregate against concurrent writes: one unit of work pe
 ## Tests
 
 - E2E: two requests sent with `Promise.all` on the same versioned aggregate; exactly one succeeds, the other gets 409. One `<context>-concurrency.e2e-spec.ts` per versioned aggregate.
+- Lock: `whileAdvisoryLockHeld(databaseUrl, key, work)` (`@cocooning/couple-e2e-shared/fixtures`) holds the lock from another connection while `work` sends the request; the request gets 409.
 - Unit: the reentrant `transaction()` joins an open transaction and opens one otherwise.

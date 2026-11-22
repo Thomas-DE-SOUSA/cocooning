@@ -23,9 +23,12 @@ allowBuilds:
   "@swc/core": false
   "@tailwindcss/oxide": false
   argon2: false
+  cpu-features: false
   esbuild: false
   prisma: false
+  protobufjs: false
   sharp: false
+  ssh2: false
   unrs-resolver: false
 
 # Named catalogs only: there is no default catalog, `catalog:` alone is not
@@ -81,6 +84,9 @@ catalogs:
   # Pinned to major 11: uuid 12 and later ship ESM only (platform decision 0011).
   identifier:
     uuid: ^11.1.1
+
+  integration:
+    "@testcontainers/postgresql": ^11.14.0
 
   test:
     "@types/jest": ^30.0.0

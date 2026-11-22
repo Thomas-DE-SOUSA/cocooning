@@ -39,7 +39,8 @@
         "./env": {
             "types": "./src/env.ts",
             "default": "./dist/env.js"
-        }
+        },
+        "./package.json": "./package.json"
     },
     "dependencies": {
         "@cocooning/shared-kernel": "workspace:*",

@@ -71,6 +71,7 @@ cocooning/
 │   │   ├── prisma/                 # * Prisma 7 schema, PrismaService, unit of work, soft delete, locks
 │   │   ├── shared-kernel/          # * Business enums, api and web routers, MissingExecutionContextException
 │   │   ├── contract/               # * Zod contracts: error response, pagination, one subpath per context
+│   │   ├── e2e-shared/             # * Test harness: Postgres 17 container, Jest global setup, fixtures
 │   ├── shared-kernel/              # * DDD primitives, ports, exceptions, test fakes
 │   ├── server-infrastructure/      # * NestJS plumbing (filter, Zod pipes), pino, clock, ids, disk storage
 │   ├── client-infrastructure/  design-system/   # * (phase 3)

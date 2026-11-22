@@ -31,6 +31,7 @@ Transactions, verrou optimiste, verrous consultatifs :
 - `$queryRaw` ne sait pas deserialiser une colonne `void` (`SELECT pg_advisory_xact_lock(...)`) : utiliser `$executeRaw`.
 - Un verrou occupe (`55P03`) annule la transaction : la laisser echouer.
 - Sans aucun modele, les types de `$allOperations` valent `never` : d'ou le cast unique commente dans `soft-delete.extension.ts`.
+- Le scope de transaction (`AsyncLocalStorage`) est global au module, pas propre a une instance : deux `PrismaService` d'un meme process (tests seulement) se rejoignent. Du code lance dans la transaction d'une instance voit `isInTransaction` vrai sur l'autre et ecrit dans cette transaction.
 - Le tag `latest` de `prisma` pointe vers une RC de la v8 : rester sur `^7.10.1`.
 
 ## Commandes

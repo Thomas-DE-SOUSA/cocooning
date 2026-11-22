@@ -1,0 +1,44 @@
+{
+    "name": "@cocooning/couple-e2e-shared",
+    "description": "Shared integration and E2E test harness of the couple domain: Postgres container, Jest global setup, fixtures",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "lint": "eslint . --max-warnings=0",
+        "check-types": "tsc --noEmit -p tsconfig.json",
+        "test:integration": "jest -c jest.integration.config.mjs --runInBand"
+    },
+    "exports": {
+        "./containers": {
+            "types": "./src/containers/index.ts",
+            "default": "./src/containers/index.ts"
+        },
+        "./setup/global-setup": {
+            "types": "./src/setup/global-setup.ts",
+            "default": "./src/setup/global-setup.ts"
+        },
+        "./setup/global-teardown": {
+            "types": "./src/setup/global-teardown.ts",
+            "default": "./src/setup/global-teardown.ts"
+        },
+        "./fixtures": {
+            "types": "./src/fixtures/index.ts",
+            "default": "./src/fixtures/index.ts"
+        }
+    },
+    "dependencies": {
+        "@cocooning/couple-prisma": "workspace:*",
+        "@testcontainers/postgresql": "catalog:integration"
+    },
+    "devDependencies": {
+        "@cocooning/eslint-config": "workspace:*",
+        "@cocooning/jest-config": "workspace:*",
+        "@cocooning/ts-config": "workspace:*",
+        "@types/jest": "catalog:test",
+        "@types/node": "catalog:build",
+        "eslint": "catalog:lint",
+        "jest": "catalog:test",
+        "ts-jest": "catalog:test",
+        "typescript": "catalog:build"
+    }
+}
