@@ -14,7 +14,7 @@ premortem:
 
 ## Contexte
 
-Un agrégat crée son identifiant. Deux façons s'opposent : un générateur statique configurable une fois par process, ou un port `IdGenerator` injecté partout où un identifiant naît. Malta a laissé les deux coexister, puis a tranché pour le générateur statique, déjà majoritaire et déterministe en test. La question du déterminisme (horloge et identifiants) reste ouverte pour Cocooning sous le numéro D13 du registre du propriétaire, à trancher avant la phase 1.
+Un agrégat crée son identifiant. Deux façons s'opposent : un générateur statique configurable une fois par process, ou un port `IdGenerator` injecté partout où un identifiant naît. Malta a laissé les deux coexister, puis a tranché pour le générateur statique, déjà majoritaire et déterministe en test. Pour Cocooning, le propriétaire a tranché la question du déterminisme (D13) en faveur du générateur statique : [décision 0024](0024-determinisme-horloge-et-identifiants.md).
 
 ## Décision
 
@@ -35,4 +35,3 @@ C'est une exception limitée aux identifiants : la date, l'heure et toute autre 
 ## Risques
 
 - `Uuid.configure` est un état global : un fichier de spec n'instancie qu'un seul contexte de test.
-- Si D13 est tranchée pour un port injecté, cette proposition est rejetée et remplacée.

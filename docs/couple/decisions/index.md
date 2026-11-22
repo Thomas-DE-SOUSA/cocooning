@@ -32,3 +32,8 @@ Le registre unique des décisions du domaine `couple`, dans l'ordre chronologiqu
 | 0020 | transverse | [Statut HTTP des exceptions par une table dans le filtre](0020-statut-http-des-exceptions.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
 | 0021 | transverse | [Outbox PostgreSQL relayée dans le processus de l'API](0021-outbox-postgresql-relais-dans-l-api.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
 | 0022 | transverse | [Un compte par personne, mise en couple par code d'invitation](0022-mise-en-couple-par-code-d-invitation.md) | produit | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0023 | transverse | [Une seule signature de use case, des réactions aux événements en use cases](0023-forme-des-use-cases-et-des-reactions.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0024 | transverse | [Horloge injectée, identifiants UUID v7 par un générateur configurable](0024-determinisme-horloge-et-identifiants.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0025 | transverse | [Pagination par offset, curseur pour le défilement infini](0025-pagination.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0026 | transverse | [Pas de rôles ni de permissions, une portée par couple et par propriétaire](0026-permissions-par-portee-sans-roles.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0027 | transverse | [Photos stockées sur disque derrière un port `FileStorage`](0027-stockage-des-photos.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |

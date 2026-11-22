@@ -1,0 +1,65 @@
+{
+    "name": "@cocooning/couple-prisma",
+    "description": "Prisma schema, migrations and persistence plumbing of the couple domain",
+    "version": "1.0.0",
+    "private": true,
+    "config": {
+        "env_file": ".env"
+    },
+    "scripts": {
+        "build": "pnpm run db:generate && tsc -p tsconfig.build.json",
+        "dev": "tsc -p tsconfig.build.json --watch",
+        "lint": "eslint . --max-warnings=0",
+        "check-types": "tsc --noEmit -p tsconfig.json",
+        "test": "jest",
+        "test:integration": "dotenv -e $npm_package_config_env_file -- jest -c jest.integration.config.mjs --runInBand",
+        "db:format": "prisma format",
+        "db:generate": "prisma generate",
+        "db:migrate": "dotenv -e $npm_package_config_env_file -- prisma migrate dev",
+        "db:deploy": "dotenv -e $npm_package_config_env_file -- prisma migrate deploy",
+        "db:reset": "dotenv -e $npm_package_config_env_file -- prisma migrate reset --force"
+    },
+    "exports": {
+        "./client": {
+            "types": "./src/client.ts",
+            "default": "./dist/client.js"
+        },
+        "./nest": {
+            "types": "./src/nest/index.ts",
+            "default": "./dist/nest/index.js"
+        },
+        "./errors": {
+            "types": "./src/errors/index.ts",
+            "default": "./dist/errors/index.js"
+        },
+        "./locks": {
+            "types": "./src/locks/index.ts",
+            "default": "./dist/locks/index.js"
+        },
+        "./env": {
+            "types": "./src/env.ts",
+            "default": "./dist/env.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "dependencies": {
+        "@cocooning/shared-kernel": "workspace:*",
+        "@nestjs/common": "catalog:nest",
+        "@prisma/adapter-pg": "catalog:prisma",
+        "@prisma/client": "catalog:prisma",
+        "zod": "catalog:validation"
+    },
+    "devDependencies": {
+        "@cocooning/eslint-config": "workspace:*",
+        "@cocooning/jest-config": "workspace:*",
+        "@cocooning/ts-config": "workspace:*",
+        "@types/jest": "catalog:test",
+        "@types/node": "catalog:build",
+        "dotenv-cli": "catalog:tooling",
+        "eslint": "catalog:lint",
+        "jest": "catalog:test",
+        "prisma": "catalog:prisma",
+        "ts-jest": "catalog:test",
+        "typescript": "catalog:build"
+    }
+}

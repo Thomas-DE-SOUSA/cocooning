@@ -40,6 +40,11 @@
             "dependsOn": ["^build"],
             "cache": false
         },
+        "test:integration": {
+            "dependsOn": ["^build", "db:generate"],
+            "env": ["DATABASE_POSTGRES_URL"],
+            "cache": false
+        },
         "db:format": {
             "cache": false
         },
@@ -54,16 +59,20 @@
         },
         "db:migrate": {
             "cache": false,
-            "persistent": true
+            "persistent": true,
+            "env": ["DATABASE_POSTGRES_URL"]
         },
         "db:deploy": {
-            "cache": false
+            "cache": false,
+            "env": ["DATABASE_POSTGRES_URL"]
         },
         "db:seed": {
-            "cache": false
+            "cache": false,
+            "env": ["DATABASE_POSTGRES_URL"]
         },
         "db:reset": {
-            "cache": false
+            "cache": false,
+            "env": ["DATABASE_POSTGRES_URL"]
         }
     }
 }

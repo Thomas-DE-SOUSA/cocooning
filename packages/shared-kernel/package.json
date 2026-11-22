@@ -1,0 +1,50 @@
+{
+    "name": "@cocooning/shared-kernel",
+    "description": "Domain-agnostic DDD primitives, ports, exceptions and test fakes",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "build": "tsc -p tsconfig.build.json",
+        "dev": "tsc -p tsconfig.build.json --watch",
+        "lint": "eslint . --max-warnings=0",
+        "check-types": "tsc --noEmit -p tsconfig.json",
+        "test": "jest"
+    },
+    "exports": {
+        "./domain": {
+            "types": "./src/domain/index.ts",
+            "default": "./dist/domain/index.js"
+        },
+        "./ports": {
+            "types": "./src/ports/index.ts",
+            "default": "./dist/ports/index.js"
+        },
+        "./exceptions": {
+            "types": "./src/exceptions/index.ts",
+            "default": "./dist/exceptions/index.js"
+        },
+        "./application": {
+            "types": "./src/application/index.ts",
+            "default": "./dist/application/index.js"
+        },
+        "./utils": {
+            "types": "./src/utils/index.ts",
+            "default": "./dist/utils/index.js"
+        },
+        "./testing": {
+            "types": "./src/testing/index.ts",
+            "default": "./src/testing/index.ts"
+        }
+    },
+    "devDependencies": {
+        "@cocooning/eslint-config": "workspace:*",
+        "@cocooning/jest-config": "workspace:*",
+        "@cocooning/ts-config": "workspace:*",
+        "@types/jest": "catalog:test",
+        "@types/node": "catalog:build",
+        "eslint": "catalog:lint",
+        "jest": "catalog:test",
+        "ts-jest": "catalog:test",
+        "typescript": "catalog:build"
+    }
+}

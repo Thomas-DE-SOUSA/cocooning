@@ -83,7 +83,7 @@ Rule numbers are an API: findings, `CLAUDE.md` files and decisions cite `core.md
 18. **Ports = abstract classes, not interfaces.** TypeScript interfaces are erased at runtime: they can't serve as injection tokens. Abstract classes persist at runtime and work as DI tokens.
 
 19. **Dependency injection over static calls.** Never call `Date.now()`, `Math.random()`, `crypto.randomBytes()`, `new Date()` directly in business code. Everything goes through an injectable port: testable, deterministic, swappable. This includes the random time of a photo prompt.
-    Identifiers are the only candidate exception: decision 0003 proposes that an identity VO's `generate()` calls `Uuid.generateValue()`, made deterministic in tests by `Uuid.configure(...)`. While decision 0003 and owner decision D13 are not accepted, ask before generating an identifier any other way.
+    Identifiers are the only exception (decision 0024, owner decision D13): an identity VO's `generate()` calls `Uuid.generateValue()`, made deterministic in tests by `Uuid.configure(...)` and `Uuid.resetForTests()`. Never generate an identifier any other way.
     ```ts
     // WRONG: untestable, non-deterministic
     const now = new Date();

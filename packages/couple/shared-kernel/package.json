@@ -1,0 +1,41 @@
+{
+    "name": "@cocooning/couple-shared-kernel",
+    "description": "Business enums, routes and exceptions shared by the couple server and PWA",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "build": "tsc -p tsconfig.build.json",
+        "dev": "tsc -p tsconfig.build.json --watch",
+        "lint": "eslint . --max-warnings=0",
+        "check-types": "tsc --noEmit -p tsconfig.json",
+        "test": "jest"
+    },
+    "exports": {
+        "./enums": {
+            "types": "./src/enums/index.ts",
+            "default": "./dist/enums/index.js"
+        },
+        "./routers": {
+            "types": "./src/routers/index.ts",
+            "default": "./dist/routers/index.js"
+        },
+        "./exceptions": {
+            "types": "./src/exceptions/index.ts",
+            "default": "./dist/exceptions/index.js"
+        }
+    },
+    "dependencies": {
+        "@cocooning/shared-kernel": "workspace:*"
+    },
+    "devDependencies": {
+        "@cocooning/eslint-config": "workspace:*",
+        "@cocooning/jest-config": "workspace:*",
+        "@cocooning/ts-config": "workspace:*",
+        "@types/jest": "catalog:test",
+        "@types/node": "catalog:build",
+        "eslint": "catalog:lint",
+        "jest": "catalog:test",
+        "ts-jest": "catalog:test",
+        "typescript": "catalog:build"
+    }
+}

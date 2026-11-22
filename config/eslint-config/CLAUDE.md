@@ -4,7 +4,7 @@ Configurations ESLint 10 (flat config) partagees et frontieres entre domaines.
 
 - `base.js` (`.`) : `@eslint/js`, `typescript-eslint` recommended, `eslint-config-prettier`, turbo, `no-restricted-syntax` sur `TSEnumDeclaration`. **Sans `only-warn`.**
 - `boundaries.js` (`./boundaries`) : `eslint-plugin-boundaries` v7. Exporte `boundariesConfig` (le depot reel) et `createBoundaries({ rootPath, domains })`.
-- `nest.js` (`./nest`) : base + `recommendedTypeChecked`, `projectService: true`.
+- `nest.js` (`./nest`) : base + `recommendedTypeChecked`, `projectService: true`. Dans les specs, `no-unsafe-argument`, `no-unsafe-assignment` et `unbound-method` sont coupees (matchers Jest types `any`). Le bloc `disableTypeChecked` des fichiers JS reste le dernier : place avant, une regle typee activee ensuite casse le lint de `eslint.config.mjs`.
 - `react.js` (`./react`), `next.js` (`./next`) : base + React / Next.js.
 
 ## Consignes de code
