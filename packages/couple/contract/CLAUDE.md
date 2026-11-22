@@ -4,7 +4,7 @@ Contrats HTTP du couple : schemas Zod 4 des requetes et des reponses et codes d'
 
 - `http-error` : `HttpErrorResponseSchema` (corps de toute erreur, `errors[]` en 422) et `ValidationIssueSchema`.
 - `shared` : `OffsetPaginationQuerySchema`, `CursorPaginationQuerySchema`, `createOffsetPageResponseSchema(item)`, `createCursorPageResponseSchema(item)` (decision 0025).
-- `<contexte>` : un sous-chemin par bounded context. `pairing` : `PairingExceptionCodeEnum`, `JoinCoupleRequestSchema` (code saisi, borne brute seulement : le domaine normalise et decide) et `CoupleResponseSchema` (`couple.zod.ts`, corps commun aux quatre actions, miroir de `CoupleView`).
+- `<contexte>` : un sous-chemin par bounded context. `pairing` : `PairingExceptionCodeEnum`, `JoinCoupleRequestSchema` (code saisi, borne brute seulement : le domaine normalise et decide) et `CoupleResponseSchema` (`couple.zod.ts`, corps commun aux quatre actions, miroir de `CoupleView`). `authentication` : `AuthenticationExceptionCodeEnum` seulement (`AUTHENTICATION_SESSION_MISSING`, `AUTHENTICATION_SESSION_INVALID`, 401), leves par le garde de session de l'API (decision 0030) ; les schemas arrivent avec la connexion.
 
 ## A lire avant de commencer
 
