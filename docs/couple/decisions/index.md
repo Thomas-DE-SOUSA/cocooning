@@ -1,0 +1,34 @@
+# Décisions Couple
+
+Le registre unique des décisions du domaine `couple`, dans l'ordre chronologique. Les fichiers sont rangés par module, avec les mêmes noms que le code.
+
+- Un fichier par décision, nommé `NNNN-slug.md`, créé depuis `docs/templates/decision.md`. Nature (métier, technique, produit) et statut (proposée, acceptée, remplacée, rejetée) : `docs/CLAUDE.md`, section « Décisions ».
+- Le numéro est unique pour tout le domaine : on prend le suivant de ce registre, quel que soit le module.
+- Rangement : `<contexte>/<sous-module>/` pour un sous-module, `<contexte>/` pour une décision qui en touche plusieurs, la racine pour une décision qui touche plusieurs contextes.
+- Une décision acceptée ne se modifie plus : une remise en cause donne une nouvelle décision qui remplace l'ancienne.
+- Les décisions 0001 à 0012 sont les décisions fondatrices reprises de Malta ([plateforme 0010](../../platform/decisions/0010-numerotation-adr-fondatrices.md)) : elles restent proposées jusqu'à leur validation par le propriétaire.
+
+| N° | Module | Décision | Nature | Statut | Date | Validé par |
+|---|---|---|---|---|---|---|
+| 0001 | transverse | [Mocks automatiques interdits](0001-mocks-automatiques-interdits.md) | technique | proposée | 2026-11-22 | à compléter |
+| 0002 | transverse | [Enums en objets `as const`](0002-enums-as-const.md) | technique | proposée | 2026-11-22 | à compléter |
+| 0003 | transverse | [Identifiants tirés par `Uuid.generateValue()`](0003-identifiants-uuid-generate-value.md) | technique | proposée | 2026-11-22 | à compléter |
+| 0004 | transverse | [Nom d'un événement en littéral sur sa classe](0004-noms-evenements-litteral.md) | technique | proposée | 2026-11-22 | à compléter |
+| 0005 | transverse | [Les domain services ne sont pas des providers](0005-domain-services-hors-providers.md) | technique | proposée | 2026-11-22 | à compléter |
+| 0006 | transverse | [Les guard services sont des providers injectables](0006-guard-services-providers.md) | technique | proposée | 2026-11-22 | à compléter |
+| 0007 | transverse | [Une échelle de gravité à trois niveaux pour les reviews](0007-echelle-gravite-review.md) | technique | proposée | 2026-11-22 | à compléter |
+| 0008 | frontend | [Taille d'un composant React jusqu'à 125 lignes](frontend/0008-taille-composant-react.md) | technique | proposée | 2026-11-22 | à compléter |
+| 0009 | frontend | [Traduction autorisée dans les vues](frontend/0009-use-translation-dans-les-vues.md) | technique | proposée | 2026-11-22 | à compléter |
+| 0010 | frontend | [Une seule façon d'afficher une erreur serveur](frontend/0010-affichage-erreur-serveur.md) | technique | proposée | 2026-11-22 | à compléter |
+| 0011 | frontend | [La PWA est rangée par fonctionnalité](frontend/0011-pwa-rangee-par-fonctionnalite.md) | technique | proposée | 2026-11-22 | à compléter |
+| 0012 | frontend | [Principes de l'observabilité frontend](frontend/0012-observabilite-frontend-principes.md) | technique | proposée | 2026-11-22 | à compléter |
+| 0013 | transverse | [Le premier lot : notes, agenda partagé et messages](0013-premier-lot.md) | produit | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0014 | transverse | [La photo instantanée, dans la PWA](0014-photo-instantanee.md) | produit | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0015 | transverse | [Nos envies d'abord, enrichies ensuite](0015-enrichissement-des-envies.md) | produit | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0016 | transverse | [Édition des notes à deux en temps réel](0016-edition-des-notes-en-temps-reel.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0017 | transverse | [Le couple est l'objet pivot, sans contexte composite](0017-couple-objet-pivot.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0018 | transverse | [Portée des données par `coupleId` et `ownerId`, sans multi-tenant](0018-portee-par-couple-et-proprietaire.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0019 | transverse | [Authentification locale, deux comptes](0019-authentification-locale.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0020 | transverse | [Statut HTTP des exceptions par une table dans le filtre](0020-statut-http-des-exceptions.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0021 | transverse | [Outbox PostgreSQL relayée dans le processus de l'API](0021-outbox-postgresql-relais-dans-l-api.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0022 | transverse | [Un compte par personne, mise en couple par code d'invitation](0022-mise-en-couple-par-code-d-invitation.md) | produit | acceptée | 2026-11-22 | Thomas De Sousa |
