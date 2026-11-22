@@ -21,7 +21,9 @@
         "@nestjs/common": "catalog:nest",
         "@nestjs/config": "catalog:nest",
         "@nestjs/core": "catalog:nest",
+        "@nestjs/jwt": "catalog:nest",
         "@nestjs/platform-express": "catalog:nest",
+        "cookie-parser": "catalog:nest",
         "reflect-metadata": "catalog:nest",
         "rxjs": "catalog:nest",
         "zod": "catalog:validation"
@@ -32,6 +34,7 @@
         "@cocooning/jest-config": "workspace:*",
         "@cocooning/ts-config": "workspace:*",
         "@nestjs/testing": "catalog:nest",
+        "@types/cookie-parser": "catalog:nest",
         "@types/express": "catalog:nest",
         "@types/jest": "catalog:test",
         "@types/node": "catalog:build",

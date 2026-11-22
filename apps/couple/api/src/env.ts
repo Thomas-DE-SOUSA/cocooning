@@ -1,5 +1,6 @@
 import { couplePrismaEnvSchema } from '@cocooning/couple-prisma/env';
 import { z } from 'zod';
+import { authenticationEnvSchema } from './modules/authentication/env';
 
 const MAX_PORT = 65_535;
 
@@ -21,9 +22,9 @@ const apiEnvSchema = z.object({
     DB_TX_MAX_WAIT_MS: z.coerce.number().int().positive(),
 });
 
-export const environmentSchema = apiEnvSchema.extend(
-    couplePrismaEnvSchema.shape,
-);
+export const environmentSchema = apiEnvSchema
+    .extend(couplePrismaEnvSchema.shape)
+    .extend(authenticationEnvSchema.shape);
 
 export type Environment = z.infer<typeof environmentSchema>;
 

@@ -4,7 +4,7 @@ import {
     type NestModule,
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { PrismaModule } from '@cocooning/couple-prisma/nest';
 import { CryptoModule } from '@cocooning/server-infrastructure/crypto';
 import { ClockModule } from '@cocooning/server-infrastructure/date-time';
@@ -17,11 +17,13 @@ import {
     RequestIdMiddleware,
 } from '@cocooning/server-infrastructure/nest';
 import { Logger } from '@cocooning/shared-kernel/ports';
+import cookieParser from 'cookie-parser';
 import { loggerOptionsFactory } from './config/logger-options.factory';
 import { prismaOptionsFactory } from './config/prisma-options.factory';
 import { validateEnvironment } from './env';
 import { EXCEPTION_STATUSES } from './exception-statuses';
 import { HealthModule } from './health/health.module';
+import { AuthenticationModule, SessionGuard } from './modules/authentication';
 
 const EVERY_ROUTE = '{*path}';
 
@@ -34,9 +36,11 @@ const EVERY_ROUTE = '{*path}';
         ClockModule,
         IdentifierModule,
         CryptoModule,
+        AuthenticationModule,
         HealthModule,
     ],
     providers: [
+        { provide: APP_GUARD, useClass: SessionGuard },
         { provide: EXCEPTION_STATUS_TABLE, useValue: EXCEPTION_STATUSES },
         {
             provide: APP_FILTER,
@@ -48,6 +52,8 @@ const EVERY_ROUTE = '{*path}';
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer): void {
-        consumer.apply(RequestIdMiddleware).forRoutes(EVERY_ROUTE);
+        consumer
+            .apply(cookieParser(), RequestIdMiddleware)
+            .forRoutes(EVERY_ROUTE);
     }
 }
