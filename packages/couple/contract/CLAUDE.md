@@ -4,7 +4,7 @@ Contrats HTTP du couple : schemas Zod 4 des requetes et des reponses et codes d'
 
 - `http-error` : `HttpErrorResponseSchema` (corps de toute erreur, `errors[]` en 422) et `ValidationIssueSchema`.
 - `shared` : `OffsetPaginationQuerySchema`, `CursorPaginationQuerySchema`, `createOffsetPageResponseSchema(item)`, `createCursorPageResponseSchema(item)` (decision 0025).
-- `<contexte>` : un sous-chemin par bounded context, a partir de la phase 2.
+- `<contexte>` : un sous-chemin par bounded context. `pairing` : `PairingExceptionCodeEnum` seulement, les schemas viennent avec l'API du contexte.
 
 ## A lire avant de commencer
 
