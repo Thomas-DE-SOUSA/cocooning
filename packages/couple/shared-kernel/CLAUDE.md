@@ -3,7 +3,7 @@
 Ce que le serveur et la PWA du couple partagent sans passer par HTTP. Sous-chemins :
 
 - `enums` : enums metier `as const`, un fichier par enum (decision 0002) : `CouplePairingStatusEnum` (`PENDING`, `PAIRED`), lu par `pairing` et par la reponse HTTP de la PWA.
-- `routers` : `ApiRouterEnum` et `WebRouterEnum`, avec `API_ROUTE_GROUPS` et `WEB_ROUTE_GROUPS` (la liste des fichiers de routes, lue par la spec anti-collision) et le type `RouteGroup`. Vides tant qu'aucun contexte n'expose de route.
+- `routers` : `ApiRouterEnum` et `WebRouterEnum`, avec `API_ROUTE_GROUPS` et `WEB_ROUTE_GROUPS` (la liste des fichiers de routes, lue par la spec anti-collision) et le type `RouteGroup`. API : `HealthRouteEnum` (`HEALTH_CHECK`, route publique de sante de l'API).
 - `exceptions` : `MissingExecutionContextException` (code `EXECUTION_CONTEXT_MISSING`), levee par le `ensureRequiredContextPresent` des guard services.
 
 ## A lire avant de commencer
