@@ -419,6 +419,9 @@ importers:
 
   packages/couple/contract:
     dependencies:
+      '@cocooning/couple-shared-kernel':
+        specifier: workspace:*
+        version: link:../shared-kernel
       '@cocooning/shared-kernel':
         specifier: workspace:*
         version: link:../../shared-kernel

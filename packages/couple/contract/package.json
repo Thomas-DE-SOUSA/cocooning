@@ -25,6 +25,7 @@
         }
     },
     "dependencies": {
+        "@cocooning/couple-shared-kernel": "workspace:*",
         "@cocooning/shared-kernel": "workspace:*",
         "zod": "catalog:validation"
     },
