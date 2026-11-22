@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "extends": "./base.json",
+    "compilerOptions": {
+        "types": ["node", "next"],
+        "plugins": [{ "name": "next" }],
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "module": "ESNext",
+        "isolatedModules": true,
+        "moduleResolution": "Bundler",
+        "useDefineForClassFields": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "noEmit": true,
+        "jsx": "react-jsx"
+    }
+}

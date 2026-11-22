@@ -26,6 +26,22 @@ La mémoire grandit, mais le contexte chargé à chaque session reste petit. Plu
 | `journal/AAAA-MM-JJ.md` | récit de chaque session | **ajout seulement**, jamais chargé automatiquement |
 | `journal/sessions.log` | une ligne par session terminée (date, raison, transcript) | écrit par le hook de fin de session |
 
+## Où va chaque savoir
+
+Chaque type de savoir a une seule place. Le `CLAUDE.md` racine renvoie ici avant toute écriture.
+
+| Ce que tu as appris | Où ça va |
+|---|---|
+| L'état courant, la prochaine étape, les blocages | `_brain/STATE.md` (réécrit) |
+| Une décision du propriétaire | `_brain/DECISIONS.md`, puis une décision dans `docs/<domaine>/decisions/` ou `docs/platform/decisions/` (modèle `docs/templates/decision.md`) |
+| Une idée ou une option soulevée mais non tranchée | `_brain/DECISIONS.md`, statut `ouverte`, avec qui l'a soulevée et quand |
+| Une leçon non évidente, un incident, un piège | `_brain/LESSONS.md` |
+| Ce qui s'est passé dans une session | `_brain/journal/AAAA-MM-JJ.md` (ajout seulement) |
+| Une règle de code | `_knowledge/` (règle ajoutée en fin de liste, jamais renumérotée) |
+| Un savoir sur un dossier ou un module | le `CLAUDE.md` de ce dossier |
+| Une procédure faite deux fois | un skill dans `.claude/skills/<nom>/SKILL.md` |
+| Une préférence personnelle du propriétaire | la mémoire automatique de Claude, pas le dépôt |
+
 ## Ce qui est automatique
 
 Trois hooks sont déclarés dans `.claude/settings.json`, avec leurs scripts dans `.claude/hooks/` :
@@ -56,7 +72,7 @@ Le niveau 0 a un budget fixe, contrôlé par `scripts/check-brain.sh`. Tout le r
 
 ## Avant et après le portage de Malta
 
-Pour l'instant, la loi du code est le blueprint (`_malta-blueprint/00-BLUEPRINT.md` §9). Une fois la phase 0 et le système agentique portés, on retrouve le modèle de Malta : `_knowledge/` porte les règles, les `CLAUDE.md` de dossier les importent, `docs/` garde les décisions et l'architecture. `_brain/` reste la couche de continuité entre sessions : état, journal, leçons, index. C'est le seul ajout volontaire par rapport à la structure de Malta.
+Depuis la phase 0 (2026-11-22), on suit le modèle de Malta : `_knowledge/` porte les règles, les `CLAUDE.md` de dossier les importent, `docs/` garde les décisions et l'architecture. Le blueprint reste la référence pour ce qui n'est pas encore porté (fiches `_knowledge/backend` et `frontend`, orchestrateur en phase 5). `_brain/` reste la couche de continuité entre sessions : état, journal, leçons, index. C'est le seul ajout volontaire par rapport à la structure de Malta.
 
 ## Limites à connaître
 

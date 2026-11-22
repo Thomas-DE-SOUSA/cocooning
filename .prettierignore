@@ -1,0 +1,18 @@
+node_modules
+dist
+build
+coverage
+pnpm-lock.yaml
+package-lock.json
+.turbo
+*.yaml
+*.yml
+**/generated/**
+
+# Project memory, Malta analysis and agent tooling: formatted by hand, never rewritten
+_brain/
+_malta-blueprint/
+.claude/
+scripts/brain-*.sh
+scripts/check-brain.sh
+_cocooning-output/
