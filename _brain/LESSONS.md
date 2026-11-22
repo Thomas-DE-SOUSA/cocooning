@@ -1,0 +1,28 @@
+# Leçons et pièges
+
+> Une entrée = un symptôme, la règle qu'on en tire, la date. On ajoute une leçon quand quelque chose de non évident a coûté du temps.
+> Une leçon qui revient deux fois devient une règle : dans `_knowledge/` une fois porté, dans le `CLAUDE.md` du dossier concerné, ou dans un skill.
+
+## Orchestration multi-agents
+
+- **2026-11-22 : la limite d'usage bloque un workflow sans le signaler.** Symptôme : un workflow « en cours » qui ne bouge plus depuis des heures. Les agents ont reçu une erreur 429 (`usage_limit_reached`, « monthly spend limit ») et le workflow ne reprend pas seul, même après le reset. Règle : avant d'annoncer « ça tourne », vérifier l'activité réelle (date de modification des `agent-*.jsonl` et de `journal.jsonl` dans le dossier de transcripts du workflow). Si c'est bloqué : `TaskStop`, puis un **nouveau** script qui ne lance que la suite et réutilise les fichiers déjà écrits. Pas de reprise à l'aveugle.
+- **2026-11-22 : ordre de grandeur des coûts.** L'analyse de Malta a mobilisé 48 analystes, puis 10 agents de synthèse, blueprint et contrôle. La phase de synthèse seule a consommé environ 2,7 M tokens en environ 38 min. Règle : annoncer le coût estimé avant toute orchestration de plus de 10 agents.
+- **2026-11-22 : les sous-agents ne voient pas les CLAUDE.md de Malta.** Leur cwd est Cocooning, donc les `CLAUDE.md` de Malta ne leur sont pas injectés. Chaque prompt doit être autonome, selon la règle « Sub-agent prompting » de `CLAUDE.md`.
+
+## Environnement
+
+- **Casse du chemin.** Lancer Claude Code depuis `<repo-root>` (avec un D majuscule). Le dossier de mémoire automatique de Claude dépend de l'écriture exacte du chemin, alors que la mémoire du dépôt (`_brain/`) n'en dépend pas.
+- **Les transcripts expirent.** Claude Code supprime les transcripts après 30 jours par défaut (`cleanupPeriodDays`). La mémoire ne doit jamais dépendre d'un transcript : `scripts/brain-last-session.sh` n'est qu'un filet de sécurité.
+- **Les hooks se chargent au démarrage.** Un hook ajouté pendant la session ne s'active qu'après `/hooks` ou un redémarrage.
+
+## Malta
+
+- **Le blueprint est un instantané.** Il décrit Malta au commit `ef877b4bf` (2026-11-20). Si Malta évolue, relancer `.claude/workflows/malta-deep-analysis.js` (complet et coûteux) ou `malta-blueprint-synthesis.js` (synthèse seule, à partir de `raw/`).
+- **L'IAM est hors scope dans Malta.** Le `CLAUDE.md` de Malta l'exclut. Le propriétaire a levé cette exclusion pour l'analyse du 2026-11-22. Pour toute autre lecture de Malta, ne toucher à l'IAM que sur demande explicite.
+- **Code propriétaire.** `_malta-blueprint/` contient des extraits de code propriétaire « All Rights Reserved ». Il est dans `.gitignore` et ne part jamais sur GitHub (décision B1). Sur un clone neuf, il est absent : les liens de `INDEX.md` vers lui sont alors morts. Pour le recréer, lancer le workflow `malta-deep-analysis` (coûteux) depuis une machine qui a Malta.
+
+## Règles provisoires
+
+En attendant le portage de `_knowledge/`, la loi est `_malta-blueprint/00-BLUEPRINT.md` §9 (règles d'or). Les règles propres à Cocooning qui émergent avant ce portage s'écrivent ici, puis sont déplacées dans `_knowledge/` au moment du portage.
+
+- (aucune pour l'instant)

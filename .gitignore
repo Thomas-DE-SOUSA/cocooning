@@ -1,0 +1,13 @@
+# Analyse de Malta : extraits de code propriétaire, gardés en local seulement (décision B1)
+_malta-blueprint/
+
+# Mémoire : propre à cette machine
+_brain/journal/sessions.log
+
+# Claude Code
+.claude/settings.local.json
+.claude/worktrees/
+
+# Système et dépendances
+.DS_Store
+node_modules/
