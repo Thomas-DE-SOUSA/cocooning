@@ -31,7 +31,7 @@ La [décision 0023](../0023-forme-des-use-cases-et-des-reactions.md) donne à ch
 
 ## Conséquences
 
-- `core.md` règle 27 et `_knowledge/backend/prisma.md` règle 7 gardent leur force partout ailleurs ; les deux recherches de `pairing` sont citées comme seules exceptions dans l'architecture de `pairing`, écrite avec son code.
+- `core.md` règle 27 et `_knowledge/backend/prisma.md` règle 7 gardent leur force partout ailleurs ; les deux recherches de `pairing` sont citées comme seules exceptions dans [l'architecture de `pairing`](../../architecture/pairing/index.md).
 - Une requête par appel sert à résoudre le couple du partenaire ; pour deux utilisateurs, c'est négligeable.
 
 ## Risques

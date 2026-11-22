@@ -6,5 +6,6 @@ Le lot 1 couvre cinq contextes : `authentication` (les deux comptes), `pairing` 
 
 - [Registre des décisions](decisions/index.md)
 - [Règles métier](business-rules/index.md)
+- [Architecture](architecture/index.md)
 
-À venir avec le code de chaque contexte (phase 2) : `architecture/<contexte>/` (agrégat, tables), `infrastructure/database/`, `gaps/`.
+À venir avec la persistance de chaque contexte (phase 2) : `architecture/<contexte>/tables.md`, `infrastructure/database/`, `gaps/`.

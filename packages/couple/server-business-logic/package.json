@@ -1,0 +1,35 @@
+{
+    "name": "@cocooning/couple-server-business-logic",
+    "description": "Domain and application layers of the couple bounded contexts",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "build": "tsc -p tsconfig.build.json",
+        "dev": "tsc -p tsconfig.build.json --watch",
+        "lint": "eslint . --max-warnings=0",
+        "check-types": "tsc --noEmit -p tsconfig.json",
+        "test": "jest"
+    },
+    "exports": {
+        "./pairing": {
+            "types": "./src/pairing/index.ts",
+            "default": "./dist/pairing/index.js"
+        }
+    },
+    "dependencies": {
+        "@cocooning/couple-contract": "workspace:*",
+        "@cocooning/couple-shared-kernel": "workspace:*",
+        "@cocooning/shared-kernel": "workspace:*"
+    },
+    "devDependencies": {
+        "@cocooning/eslint-config": "workspace:*",
+        "@cocooning/jest-config": "workspace:*",
+        "@cocooning/ts-config": "workspace:*",
+        "@types/jest": "catalog:test",
+        "@types/node": "catalog:build",
+        "eslint": "catalog:lint",
+        "jest": "catalog:test",
+        "ts-jest": "catalog:test",
+        "typescript": "catalog:build"
+    }
+}
