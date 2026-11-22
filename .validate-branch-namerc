@@ -1,0 +1,4 @@
+{
+  "pattern": "^(main|dev)$|^(feat|fix|chore|docs|refactor|test)/[a-z0-9._-]+$",
+  "errorMsg": "Invalid branch name! Must be one of: (main, dev) OR (feat|fix|chore|docs|refactor|test)/<name> in lowercase kebab-case, from dev."
+}

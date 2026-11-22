@@ -1,0 +1,31 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "module": "Node16",
+        "moduleResolution": "node16",
+        "target": "ESNext",
+        "declaration": true,
+        "esModuleInterop": true,
+        "lib": ["es2022", "ESNext"],
+        "skipLibCheck": true,
+        "strict": true,
+
+        "allowUnreachableCode": false,
+        "alwaysStrict": true,
+        "exactOptionalPropertyTypes": false,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "strictBindCallApply": true,
+        "strictNullChecks": true,
+        "noUncheckedIndexedAccess": true,
+        "removeComments": true,
+        "noImplicitAny": true,
+        "noFallthroughCasesInSwitch": true,
+        "forceConsistentCasingInFileNames": true,
+        "allowSyntheticDefaultImports": true
+    }
+}

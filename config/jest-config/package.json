@@ -1,0 +1,14 @@
+{
+    "name": "@cocooning/jest-config",
+    "description": "Shared Jest preset (ts-jest, node environment)",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "exports": {
+        ".": "./jest.config.mjs"
+    },
+    "peerDependencies": {
+        "jest": "catalog:test",
+        "ts-jest": "catalog:test"
+    }
+}
