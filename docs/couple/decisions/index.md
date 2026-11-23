@@ -39,5 +39,8 @@ Le registre unique des décisions du domaine `couple`, dans l'ordre chronologiqu
 | 0027 | transverse | [Photos stockées sur disque derrière un port `FileStorage`](0027-stockage-des-photos.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
 | 0028 | pairing | [Règles du code d'invitation et de la mise en couple](pairing/0028-regles-du-code-d-invitation.md) | produit | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0029 | pairing | [Le contexte `pairing` travaille avant qu'un couple existe](pairing/0029-pairing-avant-le-couple.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
-| 0030 | transverse | [Vérification du JWT de session en phase 2](0030-verification-du-jwt-en-phase-2.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0030 | transverse | [Vérification du JWT de session en phase 2](0030-verification-du-jwt-en-phase-2.md) | technique | remplacée par [0034](0034-session-revocable.md) | 2026-11-23 | Thomas De Sousa |
 | 0031 | frontend | [Schémas de formulaire construits avec la traduction](frontend/0031-messages-zod-traduits.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0032 | authentication | [Règles du compte et de la session](authentication/0032-regles-du-compte-et-de-la-session.md) | produit | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0033 | authentication | [Le contexte `authentication` travaille hors du couple](authentication/0033-authentication-hors-du-couple.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0034 | transverse | [Session révocable, cookie posé par la PWA](0034-session-revocable.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |

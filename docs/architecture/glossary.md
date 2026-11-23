@@ -10,6 +10,10 @@ Le couple parle français, le code est en anglais. Aucune réglementation ne fix
 |---|---|---|
 | **Couple** | `Couple`, `coupleId` | Les deux partenaires qui partagent l'application. Toute donnée lui appartient |
 | **Partenaire** | `Partner`, `userId` | L'une des deux personnes du couple, titulaire d'un compte |
+| **Compte** | `Account`, `AccountId` | Les identifiants de connexion d'un partenaire : adresse e-mail, mot de passe haché, version de session. Son identifiant est le `userId` du partenaire |
+| **Adresse e-mail** | `EmailAddress` | L'identifiant de connexion d'un compte. Aucun e-mail n'est envoyé |
+| **Connexion / déconnexion** | `SignIn` / `SignOut` | Ouvrir une session avec son adresse et son mot de passe ; fermer toutes ses sessions |
+| **Session** | `sessionToken`, `sessionVersion` | Le jeton signé posé en cookie après la connexion, valable 90 jours. La version de session du compte change à chaque déconnexion |
 | **Mise en couple** | contexte `pairing` | Le lien entre deux comptes : l'un crée le couple, l'autre le rejoint par un code |
 | **Code d'invitation** | `InvitationCode` | Le code à 8 signes qu'un partenaire donne à l'autre pour qu'il rejoigne le couple |
 | **Couple en attente / formé** | `CouplePairingStatus` `PENDING` / `PAIRED` | En attente : un seul membre, un code valable. Formé : les deux partenaires |

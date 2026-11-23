@@ -1,12 +1,12 @@
 ---
 nature: technique
-status: acceptée
+status: remplacée
 date: 2026-11-23
 deciders: [Thomas De Sousa]
 validated-by: Thomas De Sousa, 2026-11-23
 validated-on: 2026-11-23
 supersedes:
-superseded-by:
+superseded-by: 0034
 premortem:
 ---
 

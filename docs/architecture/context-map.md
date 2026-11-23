@@ -12,7 +12,7 @@ Il n'y a pas de contexte composite (D3) : chaque contexte est un module autonome
 
 | Contexte | Ce qu'il possède | Ce qu'il fournit aux autres |
 |---|---|---|
-| `authentication` | Les deux comptes, les mots de passe (Argon2id), la session longue en cookie JWT (D4) | L'identité du partenaire connecté (`userId`) |
+| `authentication` | Les deux comptes (`Account`), hors du couple ([décision 0033](../couple/decisions/authentication/0033-authentication-hors-du-couple.md)), les mots de passe (Argon2id), la session révocable en cookie JWT ([décision 0034](../couple/decisions/0034-session-revocable.md)) | L'identité du partenaire connecté (`userId`) |
 | `pairing` | Le couple (`Couple`), ses deux partenaires et le code d'invitation ([décision 0022](../couple/decisions/0022-mise-en-couple-par-code-d-invitation.md)) | Le `coupleId` du partenaire connecté, lu par la couche API ([décision 0029](../couple/decisions/pairing/0029-pairing-avant-le-couple.md)) |
 | `notes` | Les notes riches, perso ou partagées, éditées à deux en temps réel (Tiptap et Yjs, P5) ; une liste de courses est une note titrée « Courses » | Rien : aucun autre contexte ne lit les notes |
 | `agenda` | Les événements du calendrier partagé, leurs catégories, l'auteur visible, une couleur par partenaire | Rien au lot 1 |
