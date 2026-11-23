@@ -19,3 +19,12 @@
 - Constat : la décision 0010 annonce un test qui vérifie que chaque code d'exception du contrat `@cocooning/couple-contract` a sa clé `apiErrors.<code>` « dans chaque fichier de langue ». Le seul test existant vérifie les codes que la connexion peut recevoir, dans le namespace de son écran. Exiger tous les codes du contrat dans chaque namespace d'écran ferait traduire des refus qu'un écran ne reçoit jamais ; la portée reste à fixer avant le deuxième écran.
 - Règle concernée : [décision 0010](../decisions/frontend/0010-affichage-erreur-serveur.md)
 - Statut : clos, tranché par la [décision 0037](../decisions/frontend/0037-traductions-des-erreurs-par-ecran.md)
+
+### 003. Les routes, les containers et le hook de composition de l'écran ne sont rendus par aucun test
+
+- Type : test manquant
+- Constaté le : 2026-11-23, revue des étapes 2 et 3
+- Où : `apps/couple/web/src/app/page.tsx`, `apps/couple/web/src/app/pairing/page.tsx`, `apps/couple/web/src/modules/*/ui/containers/`, `apps/couple/web/src/modules/pairing/hooks/use-pairing-screen.ts`
+- Constat : une route qui monte un container importe la server action et `serverEnv`, que t3-env refuse sous jsdom ; `use-pairing-screen` appelle `useRouter` de `next/navigation`, sans routeur dans un test. Les décisions qu'ils portent sont sorties dans des fonctions testées (`presentPairingPage`, `resolveHomeDestination`, `resolveCommandFailureFollowUp`, `closeSignOutSession`, `isSecureCookie`), mais le câblage lui-même (choix de la vue, clés des toasts, redirection) n'est vérifié qu'à la main.
+- Règle concernée : `core-backend.md` règle 20 pour l'esprit (E2E des points d'entrée) ; aucune règle front écrite
+- Statut : ouvert

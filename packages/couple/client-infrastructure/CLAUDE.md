@@ -19,7 +19,7 @@ Regles front communes :
 
 ## Tests
 
-- Une spec a cote du fichier, style BDD, sans `should`. `fetch` se remplace par `FakeFetch` de `@cocooning/client-infrastructure/testing` (decision 0001), une instance neuve par test : son journal `calls` ne se vide pas. Les reponses de couple viennent de `A_PENDING_COUPLE` et `A_PAIRED_COUPLE` (`@cocooning/couple-client-business-logic/testing`).
+- Une spec a cote du fichier, style BDD, sans `should`. `fetch` se remplace par `FakeFetch` de `@cocooning/client-infrastructure/testing` (decision 0001), une instance neuve par test : son journal `calls` se lit, ne se vide pas. `givenNoAnswer()` simule une API qui ne repond pas : la requete rejette quand son signal s'interrompt (timeout). Les reponses de couple viennent de `A_PENDING_COUPLE` et `A_PAIRED_COUPLE` (`@cocooning/couple-client-business-logic/testing`).
 
 ## Pieges
 

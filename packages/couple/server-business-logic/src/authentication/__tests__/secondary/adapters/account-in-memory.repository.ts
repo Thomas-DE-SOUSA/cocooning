@@ -10,7 +10,7 @@ const fail = (code: keyof typeof AuthenticationExceptionCodeEnum): never => {
     throw new AuthenticationException({ code, message: `In-memory ${code}` });
 };
 
-// Mimics the adapter: optimistic version, unique address among active accounts.
+// Mimics the adapter: optimistic version, unique address among active accounts, a deleted account found by neither lookup.
 export class AccountInMemoryRepository extends AccountRepository {
     private snapshots: ReadonlyMap<string, AccountSnapshot> = new Map();
     private concurrentSave: Account | null = null;
@@ -32,7 +32,10 @@ export class AccountInMemoryRepository extends AccountRepository {
     }
 
     override findById(accountId: string): Promise<Account | null> {
-        return this.findWhere(({ id }) => id === accountId);
+        return this.findWhere(
+            ({ id, metadata }) =>
+                id === accountId && metadata.deletedAt === null,
+        );
     }
 
     override findByEmailAddress(emailAddress: string): Promise<Account | null> {
