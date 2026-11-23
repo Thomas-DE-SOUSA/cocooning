@@ -9,20 +9,35 @@ import { describeApiResultError } from '@/shared/application/api-result/describe
 import { useRefreshOnReturn } from '@/shared/application/refresh/use-refresh-on-return';
 import { NOTE_NAMESPACE } from '../data/note-page-i18n-namespaces';
 import type { NoteCommandGateway } from '../gateways/ports/note-command.gateway';
+import type { NoteDocumentGateway } from '../gateways/ports/note-document.gateway';
 import { resolveNoteCommandFailureFollowUp } from '../presenters/note-command-failure.presenter';
 import { NoteCommandFailureFollowUpEnum } from '../view-models/note-command.view-model';
+import { useNoteDocument } from './use-note-document';
+import { useNoteEditor } from './use-note-editor';
 import { useNoteTitleForm } from './use-note-title-form';
 import { useRenameNote } from './use-rename-note';
 
 type Note = { readonly noteId: string; readonly title: string };
 
-// Composition hook of the page of a note: router, toasts and form reset live here, not in the container.
-export function useNotePageScreen(gateway: NoteCommandGateway, note: Note) {
+type Gateways = {
+    readonly commands: NoteCommandGateway;
+    readonly document: NoteDocumentGateway;
+};
+
+// Composition hook of the page of a note: router, toasts, form reset and editor live here, not in the container.
+export function useNotePageScreen(gateways: Gateways, note: Note) {
     const { t } = useTranslation(NOTE_NAMESPACE);
     const router = useRouter();
     const titleForm = useNoteTitleForm(NOTE_NAMESPACE, note.title);
     const refresh = useCallback(() => router.refresh(), [router]);
     useRefreshOnReturn(refresh);
+    // R5, R7: a note withdrawn from this partner is read again, and the page then goes back to the list.
+    const document = useNoteDocument({
+        gateway: gateways.document,
+        noteId: note.noteId,
+        onLost: refresh,
+    });
+    const editor = useNoteEditor(document, t('editor.label'));
     const onDone = useCallback(
         (form: NoteTitleForm) => {
             titleForm.reset(form);
@@ -30,7 +45,7 @@ export function useNotePageScreen(gateway: NoteCommandGateway, note: Note) {
         },
         [titleForm, refresh],
     );
-    // A note made private or deleted by the other is read again: the page then goes back to the list.
+    // A note made private or deleted meanwhile is read again: the page then goes back to the list.
     const onFailed = useCallback(
         (error: ApiError) => {
             toast.error(t('toast.renameFailed'), {
@@ -45,13 +60,14 @@ export function useNotePageScreen(gateway: NoteCommandGateway, note: Note) {
         [t, router, refresh],
     );
     const rename = useRenameNote({
-        gateway,
+        gateway: gateways.commands,
         noteId: note.noteId,
         onDone,
         onFailed,
     });
     return {
         ...rename,
+        editor,
         titleForm,
         refresh,
         describeError: (error: ApiError) => describeApiResultError(error, t),

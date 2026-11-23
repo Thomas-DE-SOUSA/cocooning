@@ -46,3 +46,12 @@
 - Constat : l'accueil lit la première page de `GET /notes` avec `pageSize` à `MAX_PAGE_SIZE` (100) et n'offre aucune page suivante. Au-delà de 100 notes visibles, les plus anciennes n'apparaissent plus dans la PWA ; elles restent dans la base et dans l'API.
 - Règle concernée : [décision 0025](../decisions/0025-pagination.md)
 - Statut : ouvert
+
+### 006. L'adaptateur Hocuspocus de la PWA vit dans le module web `notes`
+
+- Type : écart avec une règle validée
+- Constaté le : 2026-11-23, éditeur des notes (branche `feat/notes-editor`)
+- Où : `apps/couple/web/src/modules/notes/gateways/hocuspocus/hocuspocus-note-document.gateway.ts`, `apps/couple/web/src/modules/notes/gateways/ports/note-document.gateway.ts`
+- Constat : la décision 0040 et la règle 12 de `core-frontend.md` placent le fournisseur Hocuspocus dans `couple-client-infrastructure`. Ce package compile en CommonJS, et Hocuspocus comme Yjs n'y publient que des types ESM (TS1479, D31). L'adaptateur et son port sont donc dans le module web, compilé en ESNext par Next. Il reste un adaptateur derrière un port : aucun composant n'ouvre de socket, et le hook se teste par `FakeNoteDocumentGateway`.
+- Règle concernée : [décision 0040](../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md), `core-frontend.md` règle 12
+- Statut : ouvert, une décision qui place l'adaptateur temps réel dans le module web est à proposer au propriétaire

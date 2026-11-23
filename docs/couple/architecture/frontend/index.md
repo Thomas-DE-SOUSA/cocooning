@@ -51,7 +51,7 @@ Exemple réel : la mise en couple, dans `apps/couple/web/src/modules/pairing/` (
 
 L'accueil suit le même chemin pour les notes (`apps/couple/web/src/modules/notes/`) : `src/app/(home)/page.tsx` vérifie d'abord le couple (`resolveHomeDestination`), puis `loadNotes()` lit la première page, de `MAX_PAGE_SIZE` notes, par `notesModule()`. `presentNotesPage` renvoie vers la connexion sur `UNAUTHORIZED`, vers `/pairing` sur `NOTE_COUPLE_NOT_PAIRED`, et met la date de modification à l'heure de Paris. Les actions réservées à la propriétaire ne s'affichent que si l'API a répondu `isOwner`. Un refus `NOT_FOUND`, `FORBIDDEN` ou `CONFLICT` relit la liste : l'autre partenaire a pu rendre la note privée ou la supprimer entre-temps.
 
-Le titre d'une note mène à sa page, `src/app/notes/[noteId]/page.tsx` (`WebRouterEnum.NOTE_EDITOR`) : `loadNote(noteId)` lit `GET /notes/:noteId`, `presentNotePage` renvoie vers la liste une note disparue ou privée de l'autre, et le titre s'y renomme. Le lien vient de `resolveRoute` de `@cocooning/client-infrastructure`, avec une origine vide.
+Le titre d'une note mène à sa page, `src/app/notes/[noteId]/page.tsx` (`WebRouterEnum.NOTE_EDITOR`) : `loadNote(noteId)` lit `GET /notes/:noteId`, `presentNotePage` renvoie vers la liste une note disparue ou privée de l'autre, et le titre s'y renomme. Le contenu s'y écrit à deux dans Tiptap (voir [l'édition à deux](../notes/collaboration.md#dans-la-pwa)). Le lien vient de `resolveRoute` de `@cocooning/client-infrastructure`, avec une origine vide.
 
 ## La session dans la PWA
 
@@ -59,7 +59,7 @@ Le titre d'une note mène à sa page, `src/app/notes/[noteId]/page.tsx` (`WebRou
 |---|---|
 | Cookie `SESSION_COOKIE_NAME` | Posé par la server action après la connexion : `HttpOnly`, `Secure` en production, `SameSite=Lax`, `path=/`, expiré à `sessionExpiresAt` ([décision 0034](../../decisions/0034-session-revocable.md)). Le jeton n'apparaît ni dans la réponse de l'action ni dans le code client |
 | `src/proxy.ts` | Renvoie vers `WebRouterEnum.ACCOUNT_SIGN_IN` toute page demandée sans cookie, sauf l'écran de connexion et `WebRouterEnum.OFFLINE`. Le `matcher` exclut les fichiers de la PWA, demandés sans cookie (manifeste, icônes, service worker). Il ne vérifie que la présence du cookie : le garde de session de l'API vérifie le jeton à chaque appel |
-| `src/env/server.ts` | `API_URL` et `API_TIMEOUT_MS`, validés au démarrage du serveur par `src/instrumentation.ts`, jamais exposés au navigateur (`server-only`) |
+| `src/env/server.ts` | `API_URL`, `API_TIMEOUT_MS` et `NOTES_COLLABORATION_URL` (adresse du canal temps réel, passée par la page au navigateur), validés au démarrage du serveur par `src/instrumentation.ts`, jamais exposés au navigateur (`server-only`) |
 
 Une page qui reçoit `UNAUTHORIZED` renvoie vers la connexion. « Se déconnecter » (`SignOutContainer`, sur l'accueil et `/pairing`) appelle `DELETE /authentication/session` avec la session : l'API ferme les sessions de tous les appareils, puis l'action retire le cookie de ce navigateur. La fabrique `createAuthenticationModule` reçoit donc elle aussi `getSessionToken`, que seule la déconnexion lit ; la connexion part sans cookie ([décision 0042](../../decisions/frontend/0042-fournisseur-de-session-des-fabriques.md)).
 
