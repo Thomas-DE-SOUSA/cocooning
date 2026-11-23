@@ -19,6 +19,7 @@
 - **Hooks git actifs** : `pnpm install` lance `husky` et règle `core.hooksPath=.husky/_`. Tout commit exige une branche valide, un message conventionnel et un scope de `commitlint.config.ts`.
 - **ESM pur (2026-11-22)** : NestJS 12 et `uuid` 12 et plus sont en ESM pur (D31) ; Jest et NestJS tournent en CommonJS. Vérifier `npm view <pkg> type exports` avant d'ajouter une dépendance runtime.
 - **Realm Jest (2026-11-22)** : une erreur `fs` levée sous Jest n'est pas `instanceof Error` ; tester la propriété `code`.
+- **`.gitignore` ancré (2026-11-23)** : dans le `.gitignore` racine, un motif qui contient un `/` (`public/sw.js`) ne vise que la racine ; écrire `**/public/sw.js*`. Vérifier avec `git status --short -uall`.
 - **Scopes de commit** : `shared-kernel` ou `decisions` ne sont pas des scopes ; un commit d'un package transverse se fait sans scope (`feat: …`).
 - **Versions (2026-11-22)** : typescript-eslint 8.73 n'accepte pas TS 7 (`<6.1.0`), d'où TS 6.0. `minimumReleaseAge: 1440` refuse une version publiée il y a moins de 24 h (ex. lint-staged 17.6.2) : prendre la précédente. `eslint-plugin-react` 7.37 ne déclare pas encore ESLint 10 en peer : à régler en phase 3.
 

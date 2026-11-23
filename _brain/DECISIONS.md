@@ -62,3 +62,4 @@ Statuts possibles : `ouverte`, `décidée`, `appliquée`, `remplacée`.
 | D29 | Dépôt et plan GitHub | ouverte | — | — | phase 6 |
 | D30 | Source réglementaire du langage ubiquitaire | ouverte | — | — | phase 2 |
 | D31 | Module system du backend (NestJS 12 ESM pur) | décidée | Nest 11 en CommonJS, `uuid` 11, Jest/ts-jest inchangés ; migration ESM plus tard en une décision (« Nest 11 en CommonJS (Recommandé) ») → [ADR](../docs/platform/decisions/0011-backend-commonjs-nest-11.md) | 2026-11-22 | — |
+| D32 | Socle technique de la PWA (CJS front, design system en source, `@eslint-react`, `@serwist/next` en build webpack) | ouverte | proposée en [décision plateforme 0014](../docs/platform/decisions/0014-socle-technique-de-la-pwa.md), à valider avec la PR 4 | — | phase 3, étape 1 |
