@@ -61,7 +61,7 @@ Cocooning is a pnpm + Turborepo monorepo for a couple's shared life (notes edite
 ```
 cocooning/
 ├── apps/couple/
-│   ├── api/                        # * NestJS API, composition root (env, health, session guard, E2E harness), context modules (pairing)
+│   ├── api/                        # * NestJS API, composition root (env, health, session guard, E2E harness), context modules (authentication, pairing)
 │   └── web/                        # * Next.js 16 PWA on port 3200: root layout, French i18n (Serwist, Web Push to come)
 ├── packages/
 │   ├── couple/                     # contexts: pairing, then authentication, notes, agenda, messaging

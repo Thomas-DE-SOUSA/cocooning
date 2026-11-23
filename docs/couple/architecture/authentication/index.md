@@ -6,7 +6,7 @@ Cette page décrit comment le contexte `authentication` est construit : ses couc
 
 `authentication` garde les deux comptes du couple : adresse e-mail, mot de passe haché, version de session. Il crée un compte, ouvre une session, retrouve le partenaire d'un jeton et ferme les sessions d'un partenaire. Il ne connaît pas le couple : un compte existe avant lui ([décision 0033](../../decisions/authentication/0033-authentication-hors-du-couple.md)), et les autres contextes ne reçoivent que le `userId`.
 
-Le domaine, l'application et la table `account` existent pour l'instant. Le garde de session de l'API vérifie encore le jeton seul ([décision 0030](../../decisions/0030-verification-du-jwt-en-phase-2.md)) ; il passera par `ResolveSessionUseCase` avec le module API du contexte ([décision 0034](../../decisions/0034-session-revocable.md)).
+L'API expose la connexion et la déconnexion, et son garde de session passe par `ResolveSessionUseCase` à chaque requête ([décision 0034](../../decisions/0034-session-revocable.md)). `CreateAccountUseCase` n'a pas encore d'adaptateur primaire : aucun endpoint ne crée de compte (R6).
 
 ## Comment c'est construit
 
@@ -27,7 +27,12 @@ Le domaine, l'application et la table `account` existent pour l'instant. Le gard
 | Table `account` | Persistance de l'agrégat, sans `couple_id` ni outbox (voir [les tables](tables.md)) | `packages/couple/prisma/prisma/models/authentication-account.prisma` |
 | `toAccountView`, `toSessionView` | Vues rendues : compte créé (`userId`, adresse) ; session ouverte (`userId`, jeton, échéance) | `application/mappers/` |
 
-Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/authentication/`.
+| `SignInController`, `SignOutController` | `POST ApiRouterEnum.ACCOUNT_SESSION_OPEN` (public, `200`, `SignInResponseSchema`) et `DELETE ApiRouterEnum.ACCOUNT_SESSION_CLOSE` (`204`) | `apps/couple/api/src/modules/authentication/primary/controllers/` |
+| `SessionGuard` | Garde global de l'API : lit le cookie `cocooning_session`, appelle `ResolveSessionUseCase`, attache le `PartnerContext` | `apps/couple/api/src/modules/authentication/session.guard.ts` |
+| `AccountPrismaRepository` | Adaptateur de `AccountRepository` : verrou optimiste sur `version`, index `account_email_address_key` traduit en `AUTHENTICATION_ACCOUNT_ALREADY_EXISTS` | `apps/couple/api/src/modules/authentication/secondary/repositories/` |
+| `Argon2PasswordHasher`, `JwtSessionTokenSigner` | Adaptateurs : Argon2id (faux hachage au même coût pour une adresse inconnue) ; JWT HS256 aux claims `sub`, `ver`, `exp`, vérifié à l'heure de `DateTimeProvider` | `apps/couple/api/src/modules/authentication/secondary/providers/` |
+
+Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/authentication/`. La durée d'une session vient de `AUTH_SESSION_TTL_DAYS` (`90`), lue au démarrage par la fabrique des use cases.
 
 ## Flux principal
 

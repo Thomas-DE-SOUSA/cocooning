@@ -3,6 +3,7 @@ import { SESSION_COOKIE_NAME } from '@cocooning/couple-contract/authentication';
 import { signSessionToken } from './session-token';
 
 const SECONDS_PER_HOUR = 3_600;
+const FIRST_SESSION_VERSION = 1;
 const MILLISECONDS_PER_SECOND = 1_000;
 const JSON_CONTENT_TYPE = 'application/json';
 
@@ -34,12 +35,13 @@ export class TestClient {
         return new TestClient(this.baseUrl, token);
     }
 
-    // A session valid for an hour from the given instant, the clock the API reads.
+    // A session valid for an hour from the given instant, the clock the API reads, at the first session version of the account.
     asPartner(userId: string, now: Date): TestClient {
         const nowSeconds = Math.floor(now.getTime() / MILLISECONDS_PER_SECOND);
         return this.withSessionToken(
             signSessionToken({
                 sub: userId,
+                ver: FIRST_SESSION_VERSION,
                 exp: nowSeconds + SECONDS_PER_HOUR,
             }),
         );
@@ -57,6 +59,14 @@ export class TestClient {
             method: 'POST',
             headers: { ...this.headers(), 'Content-Type': JSON_CONTENT_TYPE },
             body: body === null ? null : JSON.stringify(body),
+        });
+        return { status: response.status, body: await readBody(response) };
+    }
+
+    async delete(path: string): Promise<TestResponse> {
+        const response = await fetch(`${this.baseUrl}${path}`, {
+            method: 'DELETE',
+            headers: this.headers(),
         });
         return { status: response.status, body: await readBody(response) };
     }

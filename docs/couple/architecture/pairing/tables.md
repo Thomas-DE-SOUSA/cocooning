@@ -30,7 +30,7 @@ L'entité enfant `CouplePartner` (modèle `CouplePartner`, fichier `pairing-coup
 | Colonne | Type | Rôle |
 |---|---|---|
 | `couple_id` | `UUID` | Couple du partenaire, clé étrangère vers `couple.id`, `ON DELETE CASCADE` |
-| `user_id` | `UUID` | Identifiant du partenaire, le `sub` du JWT (décision 0030). Aucune clé étrangère vers `account.id` : chaque contexte garde ses tables ([décision 0033](../../decisions/authentication/0033-authentication-hors-du-couple.md)) |
+| `user_id` | `UUID` | Identifiant du partenaire, le `sub` du JWT et l'`id` de son compte (décision 0034). Aucune clé étrangère vers `account.id` : chaque contexte garde ses tables ([décision 0033](../../decisions/authentication/0033-authentication-hors-du-couple.md)) |
 | `joined_at` | `TIMESTAMP(3)` | Arrivée du partenaire dans le couple |
 
 | Index ou contrainte | Colonnes | Pourquoi |
