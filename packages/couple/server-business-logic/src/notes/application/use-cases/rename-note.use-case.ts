@@ -31,6 +31,6 @@ export class RenameNoteUseCase {
         note.rename(context.userId, title, this.dateTimeProvider.now());
         await this.noteRepository.save(note);
         await this.eventPublishingService.publishAndClear([note]);
-        return toNoteView(note);
+        return toNoteView(note, context.userId);
     }
 }

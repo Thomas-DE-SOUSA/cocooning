@@ -28,6 +28,7 @@ describe('Feature: create a note', () => {
             await expect(create(' Courses ')).resolves.toEqual({
                 noteId: NOTE_ID,
                 ownerId: PARTNER_A,
+                isOwner: true,
                 title: 'Courses',
                 visibility: NoteVisibilityEnum.SHARED,
                 updatedAt: NOW,

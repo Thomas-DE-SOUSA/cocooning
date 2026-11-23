@@ -26,6 +26,7 @@ export type NotesGatewayCall =
 export const A_SHARED_NOTE: NoteResponse = {
     noteId: '01936b2e-7c4a-7000-8000-0000000000d1',
     ownerId: '01936b2e-7c4a-7000-8000-0000000000a1',
+    isOwner: true,
     title: 'Courses',
     visibility: NoteVisibilityEnum.SHARED,
     updatedAt: '2026-11-23T08:00:00.000Z',

@@ -32,6 +32,7 @@ describe('Feature: a partner renames a note (R6)', () => {
             body: {
                 noteId,
                 ownerId: PARTNER_A,
+                isOwner: false,
                 title: 'Courses du samedi',
                 visibility: 'SHARED',
                 updatedAt: new Date(NOW.getTime() + 60_000).toISOString(),
