@@ -12,7 +12,7 @@ Comment la PWA `apps/couple/web` parle à l'API, et ce que porte chaque package 
 | `@cocooning/design-system` | Composants d'interface sans domaine et couleurs du thème (clair et sombre selon le téléphone). Aujourd'hui : `Button`, `Field` et `FieldError`, `Input`, `Label`, `Skeleton`, `Spinner`, `Toaster` | React, Tailwind |
 | `apps/couple/web` | Pages, server actions, containers et vues. Aujourd'hui : layout racine, accueil provisoire, pages d'erreur, traduction en français (`src/i18n/`), manifeste, service worker et page hors ligne, `proxy.ts`, écran de connexion (module `authentication`), descripteur des erreurs serveur (`src/shared/application/api-result/`) | tout ce qui précède |
 
-ESLint (`config/eslint-config/boundaries.js`) refuse les imports qui sortent de cette table : `client-business-logic` n'importe ni React, ni Next, ni un adaptateur.
+ESLint (`config/eslint-config/boundaries.js`) refuse les imports qui sortent de cette table : `client-business-logic` n'importe ni React, ni Next, ni un adaptateur. Dans `apps/couple/web`, `config/eslint-config/feature-modules.js` tient les règles des modules : vues pures ([décision 0009](../../decisions/frontend/0009-use-translation-dans-les-vues.md)), erreurs serveur par le descripteur unique ([décision 0010](../../decisions/frontend/0010-affichage-erreur-serveur.md)), un module n'importe d'un autre que son point d'entrée ([décision 0011](../../decisions/frontend/0011-pwa-rangee-par-fonctionnalite.md)).
 
 ## L'installation sur le téléphone
 

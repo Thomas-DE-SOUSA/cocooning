@@ -23,7 +23,7 @@
 
 ## Prochaine étape
 
-**Étape 2 terminée** : deux comptes en production (`thomas.de.sousa@outlook.fr`, `pauline@exemple.fr`), connexion vérifiée (`journal/2026-11-23.md`, « Comptes du couple créés sur la VM »). Prochaine : PR `chore/` des garde-fous ESLint (écart frontend 001), puis étape 3 (module `pairing` web), sur accord.
+**Étape 2 terminée** : deux comptes en production (`journal/2026-11-23.md`, « Comptes du couple créés sur la VM »). **PR des garde-fous ESLint ouverte** (`chore/frontend-lint-guardrails`, écart frontend 001 corrigé, 002 ouvert : portée du test des clés `apiErrors`), en attente du « go ». Puis étape 3 (module `pairing` web), sur accord.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 

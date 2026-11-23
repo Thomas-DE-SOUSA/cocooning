@@ -3,7 +3,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import turboPlugin from 'eslint-plugin-turbo';
 import tseslint from 'typescript-eslint';
 
-const ENUM_DECLARATION = {
+export const ENUM_DECLARATION = {
     selector: 'TSEnumDeclaration',
     message:
         'TypeScript enums are forbidden. Use an `as const` object and a union type instead.',
@@ -17,7 +17,7 @@ const AUTOMATIC_MOCK = {
 };
 
 /** Unit and integration specs; `*.e2e-spec.ts` keeps its exception (decision 0001). */
-const UNIT_SPECS = [
+export const UNIT_SPECS = [
     '**/*.spec.ts',
     '**/*.spec.tsx',
     '**/*.integration-spec.ts',
