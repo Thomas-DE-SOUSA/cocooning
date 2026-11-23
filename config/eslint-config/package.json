@@ -18,9 +18,11 @@
         "test": "jest"
     },
     "dependencies": {
+        "@eslint-react/eslint-plugin": "catalog:lint",
         "@eslint/js": "catalog:lint",
         "eslint-config-prettier": "catalog:lint",
         "eslint-plugin-boundaries": "catalog:lint",
+        "eslint-plugin-react-hooks": "catalog:lint",
         "eslint-plugin-turbo": "catalog:lint",
         "globals": "catalog:lint",
         "typescript-eslint": "catalog:lint"

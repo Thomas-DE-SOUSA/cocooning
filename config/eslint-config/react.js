@@ -1,23 +1,31 @@
-import pluginReact from 'eslint-plugin-react';
+import pluginReact from '@eslint-react/eslint-plugin';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import { config as baseConfig } from './base.js';
 
+/** Hard ceiling of a React file (decision 0008); the ~125-line target is a review finding. */
+const MAX_REACT_FILE_LINES = 200;
+
 /**
  * The ESLint configuration of libraries that use React.
  *
- * Its plugins (`eslint-plugin-react`, `eslint-plugin-react-hooks`) are
- * declared in this package's dependencies by the phase that brings the first
- * React package, not before.
+ * `@eslint-react/eslint-plugin` replaces `eslint-plugin-react`, whose 7.x
+ * line crashes under ESLint 10 (it calls `context.getFilename`).
  *
  * @type {import("eslint").Linter.Config[]}
  * */
 export const reactConfig = [
     ...baseConfig,
-    pluginReact.configs.flat.recommended,
+    {
+        files: ['**/*.{ts,tsx}'],
+        ...pluginReact.configs['recommended-typescript'],
+        rules: {
+            ...pluginReact.configs['recommended-typescript'].rules,
+            '@eslint-react/no-array-index-key': 'error',
+        },
+    },
     {
         languageOptions: {
-            ...pluginReact.configs.flat.recommended.languageOptions,
             globals: {
                 ...globals.serviceworker,
                 ...globals.browser,
@@ -28,18 +36,22 @@ export const reactConfig = [
         plugins: {
             'react-hooks': pluginReactHooks,
         },
-        settings: { react: { version: 'detect' } },
         rules: {
-            ...pluginReactHooks.configs.recommended.rules,
-            // React scope no longer necessary with new JSX transform.
-            'react/react-in-jsx-scope': 'off',
-            'react/self-closing-comp': 'error',
-            'react/destructuring-assignment': 'error',
+            ...pluginReactHooks.configs.flat.recommended.rules,
             'react-hooks/exhaustive-deps': 'error',
-            'react/no-unused-class-component-methods': 'error',
-            'react/no-array-index-key': 'error',
-            'react/jsx-key': 'error',
-            'react/jsx-no-constructed-context-values': 'error',
+        },
+    },
+    {
+        files: ['**/*.tsx'],
+        rules: {
+            'max-lines': [
+                'error',
+                {
+                    max: MAX_REACT_FILE_LINES,
+                    skipBlankLines: true,
+                    skipComments: true,
+                },
+            ],
         },
     },
 ];
