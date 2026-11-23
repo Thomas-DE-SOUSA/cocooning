@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (étape 3 de la phase 3 en production, release #50). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (revue des étapes 2 et 3 rendue, corrections à choisir). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -20,7 +20,7 @@
 
 ## Prochaine étape
 
-**Étape 3 terminée et en production** (release #50, `journal/2026-11-23.md`, « Mise en production de l'étape 3 ») : mise en couple par code et déconnexion. Le couple reste à former par le propriétaire et Pauline. Prochaine étape de la phase 3 : à choisir avec le propriétaire (premier lot : notes, agenda, messages).
+**Revue des étapes 2 et 3 rendue** (`journal/2026-11-23.md`, « Revue des étapes 2 et 3 ») : aucun CRITICAL, 4 IMPORTANT (cache du service worker, impasse de la mise en couple si les deux créent, trous du lint, server actions non testées). Choix du propriétaire (D38) : PR 1 `fix/pairing-pending-deadlock` d'abord (règle R8 : le seul membre d'un couple en attente peut l'annuler, décision proposée puis use case et bouton), puis PR 2 (cache du service worker), puis 3 à 7 ; adresses e-mail retirées du journal dans la PR 7, sans réécriture d'historique. Aucune PR commencée. Ensuite, prochaine étape de la phase 3 à choisir (notes, agenda, messages).
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
@@ -43,6 +43,8 @@ Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire
 - `_malta-blueprint/` reste en local, hors git (B1).
 
 ## Points d'attention
+
+- Mise en couple en prod : une seule personne appuie sur « Créer notre couple », l'autre saisit le code ; sinon blocage sans issue dans l'app (correctness-1).
 
 - Malta est en lecture seule. Le blueprint contient du code propriétaire « All Rights Reserved » : ne jamais le publier.
 - Les `.env` sont protégés en lecture par une règle de permission : on peut y ajouter une ligne, pas les relire.
