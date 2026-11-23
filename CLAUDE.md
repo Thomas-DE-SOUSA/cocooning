@@ -50,7 +50,7 @@ Cocooning is a pnpm + Turborepo monorepo for a couple's shared life (notes edite
 
 | Command | Description |
 |---------|-------------|
-| `pnpm build`, `pnpm dev`, `pnpm test`, `pnpm lint`, `pnpm check-types` | Build, start, test, lint, type-check every app and package |
+| `pnpm build`, `pnpm dev`, `pnpm test`, `pnpm lint`, `pnpm check-types` | Build, start, test, lint, type-check every app and package; `lint` first runs `scripts/check-event-names.mjs` (decision 0004), `test` first runs its `node --test` self-test |
 | `pnpm format` | Prettier over the repository |
 | `pnpm dev:couple`, `build:couple`, `test:couple` | Same, limited to the couple apps and packages |
 
