@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (PR de mise en production ouverte). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (Cocooning en production). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -22,7 +22,9 @@ D19 et D25 tranchées le 2026-11-23 : pas de Storybook (plateforme 0012), schém
 
 D18 tranchée : 100 % de couverture imposée sur le code métier, sans Stryker (plateforme 0013).
 
-**Prochaine étape** : phase 3, une PR à la fois, accord du propriétaire entre deux PR. Étape 1 (socle) terminée : PR #17 à #19 et #21 (PWA installable) mergées. **PR de mise en production (branche `feat/production-deployment`) ouverte, en attente de l'accord du propriétaire** : images Docker, compose de prod sur la VM Oracle de Cadence avec nom Tailscale dédié (décision plateforme 0015, D33). Au propriétaire : suivre `docs/platform/runbooks/deployment/production.md` sur la VM (clé de déploiement, clé Tailscale, `.env`), puis installer la PWA sur les deux téléphones. La prod suit `main` : merger `dev` dans `main` avant le premier déploiement. Détail : `journal/2026-11-23.md`, « mise en production ». Ensuite, seulement sur accord : étape 2, `authentication` + écran de connexion (décision 0019 ; première variable web `API_URL` dans `src/env/server.ts`, `@t3-oss/env-nextjs`, à ajouter aussi au service `web` du compose), puis étape 3 : module `pairing`.
+**En production depuis le 2026-11-23** : https://cocooning.<tailnet>.ts.net, sur la VM Oracle `cadence` (accès `ssh cadence` depuis le Mac), clone de `main` dans `~/cocooning`, secrets dans `~/cocooning/infrastructure/compose/.env`, clé de déploiement GitHub `oracle-vm` (lecture seule), `pg_dump` nocturne dans `~/backups` (crontab de `ubuntu`). Mise à jour : `docs/platform/runbooks/deployment/production.md`. Reste au propriétaire : installer la PWA sur les deux téléphones.
+
+**Prochaine étape** : phase 3, une PR à la fois, accord du propriétaire entre deux PR. Étape 1 terminée (PR #17 à #19, #21), mise en production (#22, #23 `dev` → `main`). Seulement sur accord : étape 2, `authentication` + écran de connexion (décision 0019 ; première variable web `API_URL` dans `src/env/server.ts`, `@t3-oss/env-nextjs`, à ajouter aussi au service `web` du compose), puis étape 3 : module `pairing`.
 
 **Recette d'un nouveau package** (éprouvée six fois ; un package de test comme `e2e-shared` est lu depuis `src`, sans build) : copier la forme de `packages/server-infrastructure/` (`package.json` à exports par sous-chemin `types → src`, `default → dist` ; `tsconfig.json` + `tsconfig.build.json` + `tsconfig.spec.json` en CommonJS pour Jest ; `jest.config.mjs` avec `moduleNameMapper` vers les `src` voisins ; `eslint.config.mjs` = `nestConfig` + `boundariesConfig`, ou `config` de base pour un package isomorphe comme le shared-kernel). Écrire son `CLAUDE.md` (français sans accents, sections figées) dans le même commit. Vérifier l'entrée CommonJS de toute dépendance (D31). Ajouter les versions aux catalogues de `pnpm-workspace.yaml`. Commit sans scope (`feat: …`). Vérifier `pnpm check-types && pnpm lint && pnpm test && pnpm build` à la racine avant de commiter.
 

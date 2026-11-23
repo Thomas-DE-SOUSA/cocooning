@@ -6,7 +6,7 @@ last-verified: 2026-11-23
 
 Ce runbook installe Cocooning sur la VM Oracle de Cadence, puis le met à jour à chaque merge dans `main`.
 
-Niveau de preuve : les images et la pile `postgres`, `migrate`, `api` ont tourné sur un poste ARM le 2026-11-23 ; le conteneur `tailscale` et l'installation sur la VM n'ont pas encore été exécutés.
+Niveau de preuve : exécuté en conditions réelles sur la VM le 2026-11-23 (préparation, démarrage, sauvegarde) ; la mise à jour et la restauration n'ont pas encore servi.
 
 ## Quand l'utiliser
 
@@ -42,7 +42,7 @@ La VM a déjà Docker et Tailscale pour Cadence ([guide de Cadence](https://gith
 ### Démarrer ou mettre à jour
 
 1. `cd ~/cocooning && git pull`
-2. `docker compose -f infrastructure/compose/docker-compose.prod.yml up -d --build`. Le premier build dure plusieurs minutes. Les migrations s'appliquent avant le démarrage de l'API.
+2. `docker compose -f infrastructure/compose/docker-compose.prod.yml up -d --build`. Le premier build dure une dizaine de minutes sur la VM ; le certificat HTTPS de Tailscale arrive une minute après le démarrage. Les migrations s'appliquent avant le démarrage de l'API.
 3. `docker image prune -f` pour libérer la place des anciennes images.
 
 ### Sauvegarder la base
