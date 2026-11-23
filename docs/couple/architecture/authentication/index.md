@@ -26,7 +26,6 @@ L'API expose la connexion et la déconnexion, et son garde de session passe par 
 | `SignInRequestSchema`, `SignInResponseSchema`, `SESSION_COOKIE_NAME` | Contrat HTTP de la connexion, partagé par l'API et la PWA : identifiants aux bornes brutes, jeton et échéance rendus au serveur Next, nom du cookie | `packages/couple/contract/src/authentication/` |
 | Table `account` | Persistance de l'agrégat, sans `couple_id` ni outbox (voir [les tables](tables.md)) | `packages/couple/prisma/prisma/models/authentication-account.prisma` |
 | `toAccountView`, `toSessionView` | Vues rendues : compte créé (`userId`, adresse) ; session ouverte (`userId`, jeton, échéance) | `application/mappers/` |
-
 | `SignInController`, `SignOutController` | `POST ApiRouterEnum.ACCOUNT_SESSION_OPEN` (public, `200`, `SignInResponseSchema`) et `DELETE ApiRouterEnum.ACCOUNT_SESSION_CLOSE` (`204`) | `apps/couple/api/src/modules/authentication/primary/controllers/` |
 | Écrans de connexion et de déconnexion | Formulaire, server action qui pose le cookie de session, bouton « Se déconnecter » qui ferme les sessions puis retire le cookie, `proxy.ts` (voir [le front de la PWA](../frontend/index.md)) | `apps/couple/web/src/modules/authentication/`, `apps/couple/web/src/proxy.ts` |
 | `SessionGuard` | Garde global de l'API : lit le cookie `cocooning_session`, appelle `ResolveSessionUseCase`, attache le `PartnerContext` | `apps/couple/api/src/modules/authentication/session.guard.ts` |
