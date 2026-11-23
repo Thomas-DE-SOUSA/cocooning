@@ -7,6 +7,7 @@ describe('Feature: error of an API call seen by the frontend', () => {
                 NETWORK_ERROR: 'NETWORK_ERROR',
                 INVALID_RESPONSE: 'INVALID_RESPONSE',
                 UNAUTHORIZED: 'UNAUTHORIZED',
+                FORBIDDEN: 'FORBIDDEN',
                 NOT_FOUND: 'NOT_FOUND',
                 CONFLICT: 'CONFLICT',
                 VALIDATION_ERROR: 'VALIDATION_ERROR',
