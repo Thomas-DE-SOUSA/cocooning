@@ -5,5 +5,12 @@ import { nextConfig } from '@cocooning/eslint-config/next';
 export default [
     ...nextConfig,
     ...boundariesConfig,
-    { ignores: ['.next/**', 'next-env.d.ts'] },
+    {
+        ignores: [
+            '.next/**',
+            'next-env.d.ts',
+            'public/sw.js*',
+            'public/swe-worker-*',
+        ],
+    },
 ];
