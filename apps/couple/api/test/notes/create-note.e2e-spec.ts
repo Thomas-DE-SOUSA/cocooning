@@ -28,6 +28,7 @@ describe('Feature: a partner creates a note (R1, R2)', () => {
                 body: {
                     noteId: noteOf(response).noteId,
                     ownerId: PARTNER_A,
+                    isOwner: true,
                     title: 'Courses',
                     visibility: 'SHARED',
                     updatedAt: NOW.toISOString(),

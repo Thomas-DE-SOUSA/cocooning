@@ -42,6 +42,7 @@ describe('Feature: rename a note', () => {
             ).resolves.toEqual({
                 noteId: note.id.getValue(),
                 ownerId: PARTNER_A,
+                isOwner: false,
                 title: 'Courses du samedi',
                 visibility: NoteVisibilityEnum.SHARED,
                 updatedAt: RENAMED_AT,

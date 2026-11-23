@@ -6,6 +6,7 @@ import { createOffsetPageResponseSchema } from '../../shared/offset-page.zod';
 export const NoteResponseSchema = z.object({
     noteId: z.string(),
     ownerId: z.string(),
+    isOwner: z.boolean(),
     title: z.string(),
     visibility: z.enum(Object.values(NoteVisibilityEnum)),
     updatedAt: z.string(),

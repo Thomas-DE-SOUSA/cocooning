@@ -21,6 +21,6 @@ export class ListNotesUseCase {
             context.userId,
             command,
         );
-        return toNoteViewPage(page);
+        return toNoteViewPage(page, context.userId);
     }
 }

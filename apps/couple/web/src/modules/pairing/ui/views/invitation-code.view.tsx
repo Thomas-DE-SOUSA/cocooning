@@ -3,7 +3,7 @@
 import { Button } from '@cocooning/design-system';
 import { useTranslation } from 'react-i18next';
 import { PAIRING_NAMESPACE } from '../../data/pairing-i18n-namespaces';
-import { CommandButton } from '../components/command-button';
+import { CommandButton } from '@/shared/ui/command-button';
 
 type Props = {
     readonly invitationCode: string;

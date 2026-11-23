@@ -58,6 +58,7 @@ describe('Feature: list the notes of the couple', () => {
                 {
                     noteId: note.id.getValue(),
                     ownerId: AS_A.userId,
+                    isOwner: false,
                     title: 'Courses',
                     visibility: NoteVisibilityEnum.SHARED,
                     updatedAt: ctx.dateTimeProvider.now(),
@@ -67,6 +68,12 @@ describe('Feature: list the notes of the couple', () => {
             page: 1,
             pageSize: 25,
         });
+    });
+
+    it('tells the owner which notes are hers (R5, R7)', async () => {
+        ctx.givenNoteOf(AS_A);
+        const page = await ctx.listNotesUseCase().execute(AS_A, FIRST_PAGE);
+        expect(page.items.map((item) => item.isOwner)).toEqual([true]);
     });
 
     it('gives one page and the total of visible notes (decision 0025)', async () => {

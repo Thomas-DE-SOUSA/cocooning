@@ -9,6 +9,7 @@ import type { OffsetPage } from '@cocooning/shared-kernel/domain';
 export const toNoteResponse = (view: NoteView): NoteResponse => ({
     noteId: view.noteId,
     ownerId: view.ownerId,
+    isOwner: view.isOwner,
     title: view.title,
     visibility: view.visibility,
     updatedAt: view.updatedAt.toISOString(),

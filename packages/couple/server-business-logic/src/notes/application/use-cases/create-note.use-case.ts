@@ -28,6 +28,6 @@ export class CreateNoteUseCase {
         );
         await this.noteRepository.save(note);
         await this.eventPublishingService.publishAndClear([note]);
-        return toNoteView(note);
+        return toNoteView(note, context.userId);
     }
 }

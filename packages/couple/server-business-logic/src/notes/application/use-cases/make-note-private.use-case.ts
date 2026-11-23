@@ -34,6 +34,6 @@ export class MakeNotePrivateUseCase {
             command.noteId,
             note.ownerId,
         );
-        return toNoteView(note);
+        return toNoteView(note, context.userId);
     }
 }

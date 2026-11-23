@@ -45,6 +45,15 @@ describe('Feature: a partner lists the notes of the couple (R4)', () => {
         ]);
     });
 
+    it('tells each partner which notes are theirs (R5, R7)', async () => {
+        const response = await notes.list(PARTNER_B);
+        expect(
+            (response.body as { items: { isOwner: boolean }[] }).items.map(
+                ({ isOwner }) => isOwner,
+            ),
+        ).toEqual([true, false]);
+    });
+
     it('shows nothing of the couple to another couple (core.md rule 27)', async () => {
         expect(titlesOf(await notes.list(STRANGER))).toEqual([]);
     });

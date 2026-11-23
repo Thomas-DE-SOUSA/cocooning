@@ -9,7 +9,7 @@ function setVisibility(state: DocumentVisibilityState): void {
     document.dispatchEvent(new Event('visibilitychange'));
 }
 
-describe('Feature: decision 0036, the screen reads the couple again on return', () => {
+describe('Feature: decision 0036, a screen reads its data again on return', () => {
     it('refreshes when the PWA comes back to the foreground, not when it leaves', () => {
         const refreshes: string[] = [];
         const { unmount } = renderHook(() =>
