@@ -41,6 +41,7 @@ describe('Feature: the notes page (decision 0036)', () => {
                     notes: [
                         {
                             noteId: A_PRIVATE_NOTE_OF_THE_PARTNER.noteId,
+                            href: `/notes/${A_PRIVATE_NOTE_OF_THE_PARTNER.noteId}`,
                             title: 'Idées cadeaux',
                             isShared: false,
                             isOwner: false,

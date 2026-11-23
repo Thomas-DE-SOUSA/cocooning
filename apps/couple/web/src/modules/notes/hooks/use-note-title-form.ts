@@ -6,16 +6,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
 import { type UseFormReturn, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { NOTES_NAMESPACE } from '../data/notes-i18n-namespaces';
+import type { Namespace } from '@/i18n/resources';
 
-const EMPTY_FORM: NoteTitleForm = { title: '' };
-
-export function useNoteTitleForm(): UseFormReturn<NoteTitleForm> {
-    const { t } = useTranslation(NOTES_NAMESPACE);
+// The messages come from the namespace of the screen that shows the form (decision 0031).
+export function useNoteTitleForm(
+    namespace: Namespace,
+    title: string,
+): UseFormReturn<NoteTitleForm> {
+    const { t } = useTranslation(namespace);
     const schema = useMemo(() => createNoteTitleFormSchema(t), [t]);
     return useForm<NoteTitleForm>({
         resolver: zodResolver(schema),
-        defaultValues: EMPTY_FORM,
+        defaultValues: { title },
         mode: 'onSubmit',
         reValidateMode: 'onChange',
     });

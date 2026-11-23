@@ -578,6 +578,9 @@ importers:
 
   apps/couple/web:
     dependencies:
+      '@cocooning/client-infrastructure':
+        specifier: workspace:*
+        version: link:../../../packages/client-infrastructure
       '@cocooning/couple-client-business-logic':
         specifier: workspace:*
         version: link:../../../packages/couple/client-business-logic

@@ -5,23 +5,12 @@ import {
 import {
     NoteExceptionCodeEnum,
     type NotePageResponse,
-    type NoteResponse,
 } from '@cocooning/couple-contract/notes';
-import { NoteVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
 import { WebRouterEnum } from '@cocooning/couple-shared-kernel/routers';
 import type { Result } from '@cocooning/shared-kernel/utils';
-import { I18N_CONFIG } from '@/i18n/config';
-import type {
-    NoteListItem,
-    NotesPage,
-} from '../view-models/notes-screen.view-model';
+import type { NotesPage } from '../view-models/notes-screen.view-model';
 import { NotesStepEnum } from '../view-models/notes-screen.view-model';
-
-const UPDATED_AT_FORMAT = new Intl.DateTimeFormat(I18N_CONFIG.defaultLocale, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-    timeZone: I18N_CONFIG.timeZone,
-});
+import { toNoteListItem } from './note-list-item.presenter';
 
 const redirectTo = (route: string): NotesPage => ({
     redirectTo: route,
@@ -54,11 +43,3 @@ function presentRefusal(error: ApiError): NotesPage {
         viewModel: { step: NotesStepEnum.UNAVAILABLE, error },
     };
 }
-
-const toNoteListItem = (note: NoteResponse): NoteListItem => ({
-    noteId: note.noteId,
-    title: note.title,
-    isShared: note.visibility === NoteVisibilityEnum.SHARED,
-    isOwner: note.isOwner,
-    updatedAt: UPDATED_AT_FORMAT.format(new Date(note.updatedAt)),
-});

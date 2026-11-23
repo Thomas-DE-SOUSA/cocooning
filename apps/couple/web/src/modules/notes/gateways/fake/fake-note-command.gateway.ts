@@ -30,6 +30,13 @@ export class FakeNoteCommandGateway extends NoteCommandGateway {
         return this.answer({ operation: 'createNote', form });
     }
 
+    override renameNote(
+        noteId: string,
+        form: NoteTitleForm,
+    ): Promise<Result<null, ApiError>> {
+        return this.answer({ operation: 'renameNote', noteId, form });
+    }
+
     override shareNote(noteId: string): Promise<Result<null, ApiError>> {
         return this.answer({ operation: 'shareNote', noteId });
     }

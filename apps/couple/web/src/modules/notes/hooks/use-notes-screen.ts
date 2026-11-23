@@ -28,7 +28,7 @@ const FAILURE_TITLE_KEYS: Readonly<Record<NoteCommand, string>> = {
 export function useNotesScreen(gateway: NoteCommandGateway) {
     const { t } = useTranslation(NOTES_NAMESPACE);
     const router = useRouter();
-    const titleForm = useNoteTitleForm();
+    const titleForm = useNoteTitleForm(NOTES_NAMESPACE, '');
     const [deletionAsked, setDeletionAsked] = useState<string | null>(null);
     const refresh = useCallback(() => router.refresh(), [router]);
     useRefreshOnReturn(refresh);

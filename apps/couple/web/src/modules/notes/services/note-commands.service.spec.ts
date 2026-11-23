@@ -2,13 +2,16 @@ import {
     A_SHARED_NOTE,
     FakeNotesGateway,
 } from '@cocooning/couple-client-business-logic/testing';
-import { CreateNoteUseCase } from '@cocooning/couple-client-business-logic/notes';
+import {
+    CreateNoteUseCase,
+    RenameNoteUseCase,
+} from '@cocooning/couple-client-business-logic/notes';
 import {
     type ApiError,
     ApiErrorCodeEnum,
 } from '@cocooning/couple-client-business-logic/shared';
 import { fail, ok } from '@cocooning/shared-kernel/utils';
-import { actOnNote, createNote } from './note-commands.service';
+import { actOnNote, createNote, renameNote } from './note-commands.service';
 
 const REFUSAL: ApiError = {
     code: ApiErrorCodeEnum.FORBIDDEN,
@@ -75,5 +78,42 @@ describe('Feature: note commands sent by the server actions', () => {
             );
             expect(sent).toEqual([]);
         });
+    });
+
+    describe('Scenario: R6, R8, a partner renames a note', () => {
+        const rename = (noteId: unknown, input: unknown) =>
+            renameNote(noteId, input, {
+                t: (key) => key,
+                renameNote: new RenameNoteUseCase(gateway),
+            });
+
+        it('sends the note id and the trimmed title once', async () => {
+            expect(
+                await rename(A_SHARED_NOTE.noteId, {
+                    title: ' Courses du samedi ',
+                }),
+            ).toEqual(ok(null));
+            expect(gateway.calls).toEqual([
+                {
+                    operation: 'renameNote',
+                    noteId: A_SHARED_NOTE.noteId,
+                    request: { title: 'Courses du samedi' },
+                },
+            ]);
+        });
+
+        it.each([
+            ['an empty title', A_SHARED_NOTE.noteId, { title: '' }],
+            ['an id that is not a note id', '../couple', { title: 'Courses' }],
+        ])(
+            'refuses %s without calling the API',
+            async (_label, noteId, input) => {
+                const result = await rename(noteId, input);
+                expect(result.success === false && result.error.code).toBe(
+                    ApiErrorCodeEnum.VALIDATION_ERROR,
+                );
+                expect(gateway.calls).toEqual([]);
+            },
+        );
     });
 });

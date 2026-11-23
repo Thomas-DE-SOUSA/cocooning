@@ -2,6 +2,7 @@ import 'server-only';
 import {
     createNoteTitleFormSchema,
     type CreateNoteUseCase,
+    type RenameNoteUseCase,
 } from '@cocooning/couple-client-business-logic/notes';
 import {
     type ApiError,
@@ -14,6 +15,11 @@ import { fail, ok, type Result } from '@cocooning/shared-kernel/utils';
 export type CreateNoteContext = {
     readonly t: Translator;
     readonly createNote: CreateNoteUseCase;
+};
+
+export type RenameNoteContext = {
+    readonly t: Translator;
+    readonly renameNote: RenameNoteUseCase;
 };
 
 export type NoteUseCaseCall = (
@@ -45,4 +51,17 @@ export async function actOnNote(
     if (!params.success) return fail(invalid('Invalid note id'));
     const result = await call(params.data.noteId);
     return result.success ? ok(null) : result;
+}
+
+// R6: anyone who sees the note renames it; the title is validated again here, like the note id.
+export async function renameNote(
+    noteIdInput: unknown,
+    input: unknown,
+    context: RenameNoteContext,
+): Promise<Result<null, ApiError>> {
+    const form = createNoteTitleFormSchema(context.t).safeParse(input);
+    if (!form.success) return fail(invalid('Invalid note title form'));
+    return actOnNote(noteIdInput, (noteId) =>
+        context.renameNote.execute(noteId, form.data),
+    );
 }
