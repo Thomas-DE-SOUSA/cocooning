@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (PR 7 liste des notes en attente du « go »). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (#74 mergée ; prochaine : éditeur Tiptap). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -20,7 +20,7 @@
 
 ## Prochaine étape
 
-**Étape « notes » de la phase 3** (D40, `journal/2026-11-23.md`, « Étape notes : plan »). Plan : 1 décisions et règles (#66) ; 2 domaine (#67) ; 3 tables et adaptateurs (#68) ; 4 contrat et routes (#69) ; 5 temps réel dans l'API (#70) ; 6 client (#71) ; 7 liste dans la PWA (branche `feat/notes-list`, en attente du « go ») ; 8 éditeur Tiptap (adaptateur Hocuspocus dans le module web, `NOTES_COLLABORATION_URL`) ; 9 route `/collab` en production et release. Écarts (D41) : #72 (décision 0042) et #73 (décision 0043) mergées. Reste ouvert : écart frontend 003, D26.
+**Étape « notes » de la phase 3** (D40, `journal/2026-11-23.md`, « Étape notes : plan »). Plan : 1 décisions et règles (#66) ; 2 domaine (#67) ; 3 tables et adaptateurs (#68) ; 4 contrat et routes (#69) ; 5 temps réel dans l'API (#70) ; 6 client (#71) ; 7 liste dans la PWA (#74) ; 8 éditeur Tiptap, prochaine (adaptateur Hocuspocus dans le module web, `NOTES_COLLABORATION_URL`) ; 9 route `/collab` en production et release. Écarts (D41) : #72 (décision 0042) et #73 (décision 0043) mergées. Reste ouvert : écarts frontend 003 et 005 (100 notes, laissé ouvert par le propriétaire), D26.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
