@@ -10,9 +10,24 @@ Comment la PWA `apps/couple/web` parle à l'API, et ce que porte chaque package 
 | `@cocooning/client-infrastructure` | Le seul `fetch` des gateways (`httpRequest`), la vérification d'une réponse par son contrat (`parseResponse`), `resolveRoute` | `shared-kernel`, zod |
 | `@cocooning/couple-client-infrastructure` | Les gateways du couple et leur configuration HTTP commune (`createCoupleHttpConfig`) | les trois précédents, `couple-contract` |
 | `@cocooning/design-system` | Composants d'interface sans domaine et couleurs du thème (clair et sombre selon le téléphone). Aujourd'hui : `Button`, `Skeleton`, `Toaster` | React, Tailwind |
-| `apps/couple/web` | Pages, server actions, containers et vues. Aujourd'hui : layout racine, accueil provisoire, pages d'erreur, traduction en français (`src/i18n/`) | tout ce qui précède |
+| `apps/couple/web` | Pages, server actions, containers et vues. Aujourd'hui : layout racine, accueil provisoire, pages d'erreur, traduction en français (`src/i18n/`), manifeste, service worker et page hors ligne | tout ce qui précède |
 
 ESLint (`config/eslint-config/boundaries.js`) refuse les imports qui sortent de cette table : `client-business-logic` n'importe ni React, ni Next, ni un adaptateur.
+
+## L'installation sur le téléphone
+
+La PWA s'installe sur l'écran d'accueil ([décision plateforme 0007](../../../platform/decisions/0007-pwa-sans-application-native.md)) :
+
+| Fichier de `apps/couple/web` | Rôle |
+|---|---|
+| `src/app/manifest.ts` | Manifeste servi sur `/manifest.webmanifest` : nom, ouverture en `standalone` sur `WebRouterEnum.HOME`, couleurs, icônes de `public/icons/` (dont une `maskable` pour Android) |
+| `src/app/apple-icon.png` | Icône de l'écran d'accueil de l'iPhone (180 px) |
+| `src/app/layout.tsx` | `appleWebApp` (mode plein écran sur iPhone) et `viewport.themeColor`, clair et sombre |
+| `src/app/pwa-theme.ts` | Les couleurs du thème en hexadécimal, copiées des tokens du design system |
+| `src/app/sw.ts` | Service worker Serwist, compilé en `public/sw.js` : précache du build, cache des requêtes par `defaultCache`, repli vers `WebRouterEnum.OFFLINE` quand une page ne charge pas, nouvelle version active sans attendre (`skipWaiting`, `clientsClaim`) |
+| `src/app/~offline/page.tsx` | Page « Hors ligne », précachée au build |
+
+Le service worker n'existe qu'après `next build --webpack` ([décision plateforme 0014](../../../platform/decisions/0014-socle-technique-de-la-pwa.md)). Les icônes sont provisoires : un « C » blanc sur la couleur principale.
 
 ## Le chemin d'un appel (à partir du premier écran)
 
@@ -42,3 +57,4 @@ ESLint (`config/eslint-config/boundaries.js`) refuse les imports qui sortent de 
 
 - [Statut HTTP des exceptions](../../decisions/0020-statut-http-des-exceptions.md), côté serveur
 - [Schémas de formulaire construits avec la traduction](../../decisions/frontend/0031-messages-zod-traduits.md)
+- [Essayer la PWA sur le téléphone](../../../guides/local-setup.md)
