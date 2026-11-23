@@ -24,6 +24,8 @@ No root export: import from a subpath. `@cocooning/shared-kernel/<domain|ports|e
 
 `parseEnum(raw, Enum, label)` (`@cocooning/shared-kernel/utils`) turns a raw string read from the database into an `as const` enum value, or throws.
 
+`Result<TValue, TError>` with `ok(value)` and `fail(error)` (`@cocooning/shared-kernel/utils`) carries an outcome without throwing. The frontend packages return it from every gateway and use case; it lives here once so that `client-infrastructure`, which may not import a domain package, shares the same type as `couple/client-business-logic`.
+
 ---
 
 ## Ports (`@cocooning/shared-kernel/ports`)
