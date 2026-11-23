@@ -4,11 +4,13 @@ API NestJS 11 (CommonJS, decision plateforme 0011) du domaine couple : racine de
 
 - `src/main.ts` : `Uuid.configure(new UuidV7GeneratorProvider())` une seule fois (decision 0024), `enableShutdownHooks`, ecoute sur `PORT`. Rien d'autre : pas de `useGlobal*`, pas de prefixe global, pas de Swagger.
 - `src/env.ts` : schema Zod de l'API compose avec `couplePrismaEnvSchema` et `authenticationEnvSchema` (`.extend(fragment.shape)`, Zod 4), valide par `ConfigModule.forRoot({ validate })`. `src/env.spec.ts` parse `.env.example`.
-- `src/app.module.ts` : configuration, `LoggerModule` et `PrismaModule` en `forRootAsync` (fabriques dans `src/config/`), `ClockModule`, `IdentifierModule`, `CryptoModule`, `AuthenticationModule`, `APP_GUARD` (`SessionGuard`), `APP_FILTER` (`HttpExceptionFilter` + `EXCEPTION_STATUSES`), `cookie-parser` puis `RequestIdMiddleware` sur toutes les routes.
+- `src/app.module.ts` : configuration, `LoggerModule` et `PrismaModule` en `forRootAsync` (fabriques dans `src/config/`), `ClockModule`, `IdentifierModule`, `CryptoModule`, `MessagingModule`, `AuthenticationModule`, `PairingModule`, `APP_GUARD` (`SessionGuard`), `APP_FILTER` (`HttpExceptionFilter` + `EXCEPTION_STATUSES`), `cookie-parser` puis `RequestIdMiddleware` sur toutes les routes.
 - `src/exception-statuses.ts` : la table code -> statut (decision 0020). Un code absent repond 500 sans son message.
 - `src/health/` : `GET ApiRouterEnum.HEALTH_CHECK`, public, `SELECT 1` par `PrismaService`.
 - `src/modules/authentication/` : verification de la session (decision 0030), sans pendant metier tant que la connexion n'existe pas (pas de `CLAUDE.md`). `SessionGuard` global, ferme par defaut : lit le cookie `SESSION_COOKIE_NAME`, verifie le JWT HS256 (`AUTH_JWT_SECRET`, `env.ts` du module) a l'heure de `DateTimeProvider`, exige `sub` UUID et `exp`, sinon 401 (`AUTHENTICATION_SESSION_MISSING` ou `_INVALID`). `@CurrentPartner()` donne le `PartnerContext { userId }` au controleur. Aucun endpoint ne signe de jeton en phase 2.
-- Etape suivante : `src/modules/<contexte>/` (d'abord `pairing`), avec son stub `CLAUDE.md` qui importe le `CLAUDE.md` du contexte metier.
+- `src/modules/pairing/` : premier contexte (stub `CLAUDE.md`). Trois modules : `PairingModule` (quatre controleurs), `PairingServiceModule` (use cases par `pairingUseCase()`, `PairingPreconditionService` et `EventPublishingService` crees dans la fabrique), `PairingSecondaryModule` (`provide: CoupleRepository`, `useClass: CouplePrismaRepository`). Routes `ApiRouterEnum.COUPLE_*`. `env.ts` du module : `PAIRING_INVITATION_CODE_TTL_HOURS`.
+- `MessagingModule` (`@cocooning/server-infrastructure/messaging`) fournit `EventPublisher` : publication en processus, qui ne fait que journaliser tant qu'aucun abonne n'existe ; le relais de l'outbox livre (decision 0021).
+- Un nouveau contexte : `src/modules/<contexte>/`, sur le modele de `pairing`, avec son stub `CLAUDE.md` qui importe le `CLAUDE.md` du contexte metier.
 
 ## A lire avant de commencer
 
@@ -50,11 +52,14 @@ Transactions et verrous : `../../../_knowledge/backend/concurrency.md`.
 - `createTestApp({ controllers, overrides })` (`test/shared/app/create-test-app.ts`) monte le vrai `AppModule` et `listen(0)` ; `closeTestApp` ferme l'app, qui deconnecte Prisma. `TestClient.for(app)` envoie les requetes par `fetch` ; `asPartner(userId, now)` signe un cookie de session HS256 avec le secret de test.
 - Un controleur de test declare dans la spec est une fixture (exemple : `test/authentication/session-guard.e2e-spec.ts`). Pas de `jest.fn` ni `jest.spyOn` (decision 0001) : une horloge se remplace par `overrides` avec `DeterministicDateTimeProvider`.
 - Une spec qui ecrit en base vide les tables par `truncateAllTables` (`@cocooning/couple-e2e-shared/fixtures`) en `beforeEach`.
-- Modele a copier : `test/health/health.e2e-spec.ts`.
+- Modele a copier : `test/health/health.e2e-spec.ts` (route simple), `test/pairing/` (contexte : `PairingTestApp` monte l'app sur une horloge deterministe, une spec par endpoint, `pairing-concurrency.e2e-spec.ts`, specs de l'adaptateur par `app.get(CoupleRepository)` sur des lignes posees par `createTestCouple`).
+- `readPairingEvents` et `createTestCouple` viennent de `@cocooning/couple-e2e-shared/fixtures`, jamais d'un helper local.
 
 ## Pieges
 
 - A l'execution, l'API lit le `dist/` des packages : `turbo` les construit avant (`^build`). Lancer `pnpm --filter couple-api... build` apres un changement dans un package hors `turbo dev`.
+- Un `POST` repond 201 par defaut : une action qui ne cree rien (rejoindre, renouveler) pose `@HttpCode(HttpStatus.OK)`.
+- Une `CoupleView` porte des `Date` et `CoupleResponseSchema` des chaines : le controleur renvoie `toCoupleResponse(view)`, sinon `ZodResponse` repond 500.
 - Express 5 : une route joker s'ecrit `{*path}` (path-to-regexp 8).
 - `@nestjs/config` 12 et `@nestjs/jwt` 12 sont en ESM pur : rester en 4 et 11.
 - `jsonwebtoken` accepte un jeton sans `exp` comme eternel : c'est le schema `SessionTokenPayloadSchema` qui l'exige. Il lit `Date.now()` sauf si on lui passe `clockTimestamp` : le garde le passe depuis `DateTimeProvider`.

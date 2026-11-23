@@ -41,6 +41,8 @@ describe('Feature: validate the API environment at startup', () => {
             { LOG_PRETTY: 'maybe' },
             { DB_TX_TIMEOUT_MS: '-1' },
             { AUTH_JWT_SECRET: 'shorter-than-thirty-two-chars' },
+            { PAIRING_INVITATION_CODE_TTL_HOURS: '0' },
+            { PAIRING_INVITATION_CODE_TTL_HOURS: '1.5' },
         ])('refuses %p', (override) => {
             const env = { ...readEnvExample(), ...override };
             expect(environmentSchema.safeParse(env).success).toBe(false);

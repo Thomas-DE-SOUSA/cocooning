@@ -24,12 +24,12 @@ Le dépôt contient l'outillage, les packages backend et l'API NestJS (`apps/cou
 3. Appliquer les migrations : `pnpm --filter @cocooning/couple-prisma db:deploy`.
 4. Lancer l'API : `pnpm --filter couple-api... build`, puis `pnpm --filter couple-api dev`. Le script reconstruit et relance l'API à chaque changement de `apps/couple/api/src`. `pnpm dev:couple`, depuis la racine, construit d'abord les packages puis les recompile en continu ; l'API relit leur `dist/` à son prochain redémarrage.
 
-Les variables de l'API, leur rôle et leur valeur de développement sont commentés dans `apps/couple/api/.env.example`. Au démarrage, l'API valide son environnement (`apps/couple/api/src/env.ts`) et s'arrête si une variable manque ou sort de ses bornes.
+Les variables de l'API, leur rôle et leur valeur de développement sont commentés dans `apps/couple/api/.env.example`. `PAIRING_INVITATION_CODE_TTL_HOURS` fixe la durée de validité d'un code d'invitation, en heures entières (`48` en développement, [décision 0028](../couple/decisions/pairing/0028-regles-du-code-d-invitation.md)) : un `.env` créé avant son arrivée doit la recevoir, sinon l'API refuse de démarrer. Au démarrage, l'API valide son environnement (`apps/couple/api/src/env.ts`) et s'arrête si une variable manque ou sort de ses bornes.
 
 ## Vérifier le résultat
 
 - `git config core.hooksPath` affiche le dossier des hooks Husky, et un commit sur une branche mal nommée est refusé par `validate-branch-name`.
-- `curl -i http://localhost:3100/health` répond `200` et `{"status":"UP"}` (port `PORT` du `.env`). Une route non publique répond `401` sans cookie de session valide ; en phase 2, aucun endpoint ne crée encore de session ([décision 0030](../couple/decisions/0030-verification-du-jwt-en-phase-2.md)).
+- `curl -i http://localhost:3100/health` répond `200` et `{"status":"UP"}` (port `PORT` du `.env`). Une route non publique répond `401` sans cookie de session valide ; en phase 2, aucun endpoint ne crée encore de session ([décision 0030](../couple/decisions/0030-verification-du-jwt-en-phase-2.md)). Pour essayer les routes de `pairing` (`POST /pairing/couple`, `GET /pairing/couple`), signer un jeton HS256 avec `AUTH_JWT_SECRET` (un `sub` UUID et un `exp`) et l'envoyer dans le cookie `cocooning_session`.
 - `pnpm --filter couple-api test:e2e` démarre son propre PostgreSQL dans Docker et passe sans `.env`.
 
 ## En cas de problème
