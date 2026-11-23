@@ -1,6 +1,6 @@
 # @cocooning/couple-client-infrastructure
 
-Adaptateurs front des contextes du couple. Sous-chemin `shared` : `createCoupleHttpConfig(timeoutMs)`, la configuration HTTP commune a toutes les gateways du couple, qui traduit un refus de l'API (corps `HttpErrorResponse` du contrat) en `ApiError`. Les gateways d'un contexte arrivent avec son premier ecran, dans `src/shared/<contexte>/` : `endpoints/` (`resolve<Contexte>Endpoints(apiBaseUrl)`), `gateways/api-<nom>.gateway.ts`, et la fabrique `create<Contexte>Module(apiBaseUrl, timeoutMs[, getSessionToken])` qui rend les use cases et garde la gateway. Aujourd'hui : `authentication/` (`ApiAuthenticationGateway`, `createAuthenticationModule(apiBaseUrl, timeoutMs, getSessionToken)` -> `{ signIn, signOut }`, la connexion sans session, la deconnexion avec), `pairing/` (`ApiPairingGateway`, `createPairingModule(apiBaseUrl, timeoutMs, getSessionToken)` -> `{ getMyCouple, createCouple, joinCouple, renewInvitationCode, cancelCouple }`) et `session/` (`SessionTokenProvider`, `sessionHeaders`, `sessionRequest`).
+Adaptateurs front des contextes du couple. Sous-chemin `shared` : `createCoupleHttpConfig(timeoutMs)`, la configuration HTTP commune a toutes les gateways du couple, qui traduit un refus de l'API (corps `HttpErrorResponse` du contrat) en `ApiError`. Les gateways d'un contexte arrivent avec son premier ecran, dans `src/shared/<contexte>/` : `endpoints/` (`resolve<Contexte>Endpoints(apiBaseUrl)`), `gateways/api-<nom>.gateway.ts`, et la fabrique `create<Contexte>Module(apiBaseUrl, timeoutMs[, getSessionToken])` qui rend les use cases et garde la gateway. Aujourd'hui : `authentication/` (`ApiAuthenticationGateway`, `createAuthenticationModule(apiBaseUrl, timeoutMs, getSessionToken)` -> `{ signIn, signOut }`, la connexion sans session, la deconnexion avec), `pairing/` (`ApiPairingGateway`, `createPairingModule(apiBaseUrl, timeoutMs, getSessionToken)` -> `{ getMyCouple, createCouple, joinCouple, renewInvitationCode, cancelCouple }`) `notes/` (`ApiNotesGateway`, `createNotesModule(apiBaseUrl, timeoutMs, getSessionToken)` -> `{ listNotes, createNote, renameNote, shareNote, makeNotePrivate, deleteNote }`, routes a parametre par `resolveRoute(apiBaseUrl, route, { noteId })`) et `session/` (`SessionTokenProvider`, `sessionHeaders`, `sessionRequest`).
 
 ## A lire avant de commencer
 
@@ -9,7 +9,7 @@ Regles front communes :
 
 ## Consignes de code
 
-- Statut -> code : 400 et 422 `VALIDATION_ERROR`, 401 `UNAUTHORIZED`, 404 `NOT_FOUND`, 409 `CONFLICT`, tout autre `UNKNOWN`. Le `code` du corps devient `backendCode` ; l'ecran choisit son message par ce code (decision 0010).
+- Statut -> code : 400 et 422 `VALIDATION_ERROR`, 401 `UNAUTHORIZED`, 403 `FORBIDDEN`, 404 `NOT_FOUND`, 409 `CONFLICT`, tout autre `UNKNOWN`. Le `code` du corps devient `backendCode` ; l'ecran choisit son message par ce code (decision 0010).
 - Une gateway etend le port de `couple-client-business-logic`, appelle `httpRequest` puis `parseResponse` avec le schema de reponse du contrat, et ne leve jamais.
 - Aucune URL en dur : `resolveRoute(apiBaseUrl, ApiRouterEnum.X)`, `apiBaseUrl` lu dans la configuration de l'app.
 - Une gateway valide sa requete par le schema de requete du contrat avant l'appel : hors contrat, `VALIDATION_ERROR` sans appel.

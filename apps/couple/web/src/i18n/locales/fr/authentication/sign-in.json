@@ -30,6 +30,7 @@
         "INVALID_RESPONSE": "La réponse du serveur est illisible. Réessayez dans un instant.",
         "VALIDATION_ERROR": "Les informations envoyées sont invalides.",
         "UNAUTHORIZED": "Adresse e-mail ou mot de passe incorrect.",
+        "FORBIDDEN": "Cette action ne vous est pas permise.",
         "NOT_FOUND": "Le service de connexion est introuvable.",
         "CONFLICT": "La connexion a été refusée. Réessayez.",
         "UNKNOWN": "Une erreur inattendue est survenue. Réessayez dans un instant."
