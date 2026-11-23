@@ -23,7 +23,7 @@
 
 ## Prochaine étape
 
-**Créer les deux comptes sur la VM** (sur accord, le propriétaire tape les mots de passe) : `docs/couple/infrastructure/runbooks/authentication/accounts.md`. Ensuite PR `chore/` des garde-fous ESLint (écart frontend 001), puis étape 3 (module `pairing` web) sur accord. Mise en production : `journal/2026-11-23.md`, « Mise en production de l'étape 2 ».
+**Étape 2 terminée** : deux comptes en production (`thomas.de.sousa@outlook.fr`, `pauline@exemple.fr`), connexion vérifiée (`journal/2026-11-23.md`, « Comptes du couple créés sur la VM »). Prochaine : PR `chore/` des garde-fous ESLint (écart frontend 001), puis étape 3 (module `pairing` web), sur accord.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
