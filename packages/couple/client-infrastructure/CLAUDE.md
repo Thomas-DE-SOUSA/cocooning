@@ -1,6 +1,6 @@
 # @cocooning/couple-client-infrastructure
 
-Adaptateurs front des contextes du couple. Sous-chemin `shared` : `createCoupleHttpConfig(timeoutMs)`, la configuration HTTP commune a toutes les gateways du couple, qui traduit un refus de l'API (corps `HttpErrorResponse` du contrat) en `ApiError`. Les gateways d'un contexte arrivent avec son premier ecran, dans `src/shared/<contexte>/`.
+Adaptateurs front des contextes du couple. Sous-chemin `shared` : `createCoupleHttpConfig(timeoutMs)`, la configuration HTTP commune a toutes les gateways du couple, qui traduit un refus de l'API (corps `HttpErrorResponse` du contrat) en `ApiError`. Les gateways d'un contexte arrivent avec son premier ecran, dans `src/shared/<contexte>/` : `endpoints/` (`resolve<Contexte>Endpoints(apiBaseUrl)`), `gateways/api-<nom>.gateway.ts`, et la fabrique `create<Contexte>Module(apiBaseUrl, timeoutMs)` qui rend les use cases et garde la gateway. Aujourd'hui : `authentication/` (`ApiAuthenticationGateway`, `createAuthenticationModule` -> `{ signIn }`).
 
 ## A lire avant de commencer
 
@@ -12,10 +12,13 @@ Regles front communes :
 - Statut -> code : 400 et 422 `VALIDATION_ERROR`, 401 `UNAUTHORIZED`, 404 `NOT_FOUND`, 409 `CONFLICT`, tout autre `UNKNOWN`. Le `code` du corps devient `backendCode` ; l'ecran choisit son message par ce code (decision 0010).
 - Une gateway etend le port de `couple-client-business-logic`, appelle `httpRequest` puis `parseResponse` avec le schema de reponse du contrat, et ne leve jamais.
 - Aucune URL en dur : `resolveRoute(apiBaseUrl, ApiRouterEnum.X)`, `apiBaseUrl` lu dans la configuration de l'app.
+- Une gateway valide sa requete par le schema de requete du contrat avant l'appel : hors contrat, `VALIDATION_ERROR` sans appel.
+- Seule la connexion transmet l'adresse IP et le User-Agent du navigateur (`x-forwarded-for`, `user-agent`, `core-frontend.md` regle 13) ; une valeur `null` n'envoie pas l'en-tete.
+- Modele a copier : `src/shared/authentication/`.
 
 ## Tests
 
-- Une spec a cote du fichier, style BDD, sans `should`. `fetch` se remplace par un faux ecrit a la main (decision 0001) : a la premiere gateway, exposer le `FakeFetch` de `client-infrastructure` par un sous-chemin `testing` plutot que de le recopier.
+- Une spec a cote du fichier, style BDD, sans `should`. `fetch` se remplace par `FakeFetch` de `@cocooning/client-infrastructure/testing` (decision 0001), une instance neuve par test : son journal `calls` ne se vide pas.
 
 ## Pieges
 
