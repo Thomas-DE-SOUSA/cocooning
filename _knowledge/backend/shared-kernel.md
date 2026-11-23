@@ -40,7 +40,7 @@ One abstract class per folder under `src/ports/` (core.md rule 18).
 | `UnitOfWork` | `unit-of-work` | `run(work)`: one transaction around several writes |
 | `FileStorage` | `storage` | Store, read, delete a file by key; keys start with the `coupleId` (decision 0027) |
 
-Adapters live in `@cocooning/server-infrastructure`: `SystemDateTimeProvider` (`ClockModule`), `UuidV7GeneratorProvider` (`IdentifierModule`), `NodeSecureRandomGenerator` (`CryptoModule`), `PinoLoggerAdapter` (`LoggerModule`), `LocalDiskFileStorage`. `EventPublisher` and `UnitOfWork` adapters come with the first event and with `@cocooning/couple-prisma`.
+Adapters live in `@cocooning/server-infrastructure`: `SystemDateTimeProvider` (`ClockModule`), `UuidV7GeneratorProvider` (`IdentifierModule`), `NodeSecureRandomGenerator` (`CryptoModule`), `PinoLoggerAdapter` (`LoggerModule`), `LocalDiskFileStorage`, `InProcessEventPublisher` (`MessagingModule`: no in-process subscriber yet, it logs each event by its ids and the outbox relay delivers). The `UnitOfWork` adapter is `PrismaUnitOfWork` (`@cocooning/couple-prisma/nest`).
 
 **If a port exists here, use it.** Never recreate `DateTimeProvider` or `Logger` in a bounded context.
 

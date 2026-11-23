@@ -6,6 +6,7 @@ Plomberie NestJS et adaptateurs des ports du shared-kernel, sans aucun domaine. 
 - `logging` : `LoggerModule.forRoot({ level, pretty })` ou `forRootAsync({ inject, useFactory })` (l'API lit les options par `ConfigService`), `PinoLoggerAdapter` (port `Logger`, `requestId` ajoute a chaque ligne).
 - `date-time` : `ClockModule` (port `DateTimeProvider`). `identifier` : `IdentifierModule`, `UuidV7GeneratorProvider` (port `UuidGenerator`). `crypto` : `CryptoModule`, `NodeSecureRandomGenerator` (port `SecureRandomGenerator`).
 - `storage` : `LocalDiskFileStorage` (port `FileStorage`, decision 0027), `FileStorageException`.
+- `messaging` : `MessagingModule` (global, port `EventPublisher`), `InProcessEventPublisher` : publication apres commit dans le processus. Aucun abonne en phase 2 : il journalise chaque evenement par ses identifiants (jamais ses donnees), le relais de l'outbox livre (decision 0021).
 
 ## A lire avant de commencer
 
@@ -36,7 +37,7 @@ Ports et primitives implementes ici :
 - Sous Jest, une erreur systeme Node (`ENOENT`) vient d'un autre realm : `instanceof Error` est faux, tester `code` sur l'objet.
 - `instanceof BaseException` donne un `BaseException<any>` refuse par le lint type : utiliser `isBaseException()`.
 - `Logger` est fourni en `Scope.TRANSIENT` : chaque classe a son adaptateur et son `setContext`. Ne pas le passer en singleton.
-- Reportes : `tracing/` et `telemetry/` (D21, phase 6), adaptateur `EventPublisher` (premier evenement, phase 2). La sante vit dans l'API (`apps/couple/api/src/health/`) : elle interroge Prisma, interdit ici.
+- Reportes : `tracing/` et `telemetry/` (D21, phase 6), les abonnes en processus de `InProcessEventPublisher` (avec le relais de l'outbox, phase 4). La sante vit dans l'API (`apps/couple/api/src/health/`) : elle interroge Prisma, interdit ici.
 
 ## Commandes
 
