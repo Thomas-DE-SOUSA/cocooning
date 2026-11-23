@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export const dynamic = 'force-dynamic';
 
 export default async function PairingPage() {
-    const page = presentPairingPage(await loadMyCouple());
+    const page = presentPairingPage(await loadMyCouple(), new Date());
     if (page.redirectTo !== null) redirect(page.redirectTo);
     const t = await getServerTranslation(PAIRING_NAMESPACE);
     return (

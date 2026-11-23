@@ -15,6 +15,7 @@ describe('Feature: pairing commands through the server actions', () => {
                 return answers();
             },
             renewInvitationCode: answers,
+            cancelCouple: answers,
         });
 
         await expect(gateway.createCouple()).resolves.toEqual(ok(null));
@@ -23,15 +24,22 @@ describe('Feature: pairing commands through the server actions', () => {
         ).resolves.toEqual(ok(null));
         expect(sent).toEqual(['K7M2Q9XR']);
         await expect(gateway.renewInvitationCode()).resolves.toEqual(ok(null));
+        await expect(gateway.cancelCouple()).resolves.toEqual(ok(null));
     });
 
-    it.each(['createCouple', 'joinCouple', 'renewInvitationCode'] as const)(
+    it.each([
+        'createCouple',
+        'joinCouple',
+        'renewInvitationCode',
+        'cancelCouple',
+    ] as const)(
         'gives a network error instead of rejecting for %s',
         async (command) => {
             const gateway = new ServerActionPairingCommandGateway({
                 createCouple: rejects,
                 joinCouple: rejects,
                 renewInvitationCode: rejects,
+                cancelCouple: rejects,
             });
 
             await expect(

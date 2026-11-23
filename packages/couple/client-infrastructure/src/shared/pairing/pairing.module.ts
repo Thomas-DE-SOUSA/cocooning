@@ -1,4 +1,5 @@
 import {
+    CancelCoupleUseCase,
     CreateCoupleUseCase,
     GetMyCoupleUseCase,
     JoinCoupleUseCase,
@@ -14,6 +15,7 @@ export type PairingModule = {
     readonly createCouple: CreateCoupleUseCase;
     readonly joinCouple: JoinCoupleUseCase;
     readonly renewInvitationCode: RenewInvitationCodeUseCase;
+    readonly cancelCouple: CancelCoupleUseCase;
 };
 
 // The gateway stays inside; getSessionToken is only called when a use case runs (decision 0036).
@@ -32,5 +34,6 @@ export function createPairingModule(
         createCouple: new CreateCoupleUseCase(gateway),
         joinCouple: new JoinCoupleUseCase(gateway),
         renewInvitationCode: new RenewInvitationCodeUseCase(gateway),
+        cancelCouple: new CancelCoupleUseCase(gateway),
     };
 }

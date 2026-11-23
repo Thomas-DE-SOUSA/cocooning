@@ -28,7 +28,7 @@ Le contexte est construit de bout en bout : domaine et application, tables Postg
 | `toCoupleResponse` | `CoupleView` vers `CoupleResponseSchema`, dates en chaînes ISO | `apps/couple/api/src/modules/pairing/primary/mappers/` |
 | `CouplePrismaRepository` | Adaptateur de `CoupleRepository` : couple, partenaires et outbox dans une transaction, verrou optimiste, contraintes uniques traduites par leur nom | `apps/couple/api/src/modules/pairing/secondary/repositories/` |
 | `PairingModule`, `PairingServiceModule`, `PairingSecondaryModule` | Contrôleurs ; use cases construits par `pairingUseCase()` ; `provide: CoupleRepository` | `apps/couple/api/src/modules/pairing/` |
-| Écran de mise en couple | Route `/pairing` : créer le couple, partager et renouveler le code, saisir le code de l'autre ; l'accueil y renvoie tant que le couple n'est pas formé (voir [le front de la PWA](../frontend/index.md)) | `apps/couple/web/src/modules/pairing/` |
+| Écran de mise en couple | Route `/pairing` : créer le couple, partager et renouveler le code, saisir le code de l'autre, annuler le couple en attente ; l'accueil y renvoie tant que le couple n'est pas formé (voir [le front de la PWA](../frontend/index.md)) | `apps/couple/web/src/modules/pairing/` |
 
 Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/pairing/`.
 

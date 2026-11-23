@@ -14,6 +14,7 @@ export type PairingCommandActions = {
         form: JoinCoupleForm,
     ) => Promise<Result<null, ApiError>>;
     readonly renewInvitationCode: PairingCommandAction;
+    readonly cancelCouple: PairingCommandAction;
 };
 
 const UNREACHABLE: ApiError = {
@@ -48,5 +49,9 @@ export class ServerActionPairingCommandGateway extends PairingCommandGateway {
 
     override renewInvitationCode(): Promise<Result<null, ApiError>> {
         return runAction(this.actions.renewInvitationCode);
+    }
+
+    override cancelCouple(): Promise<Result<null, ApiError>> {
+        return runAction(this.actions.cancelCouple);
     }
 }

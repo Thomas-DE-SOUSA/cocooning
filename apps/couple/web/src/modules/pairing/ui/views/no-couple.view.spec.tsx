@@ -11,6 +11,7 @@ describe('Feature: the pairing screens', () => {
                 <WithI18n>
                     <NoCoupleView
                         isPending={false}
+                        isBusy={false}
                         onCreateCouple={() => taps.push('create')}
                     />
                 </WithI18n>,
@@ -28,6 +29,7 @@ describe('Feature: the pairing screens', () => {
                 <WithI18n>
                     <NoCoupleView
                         isPending
+                        isBusy
                         onCreateCouple={() => undefined}
                     />
                 </WithI18n>,

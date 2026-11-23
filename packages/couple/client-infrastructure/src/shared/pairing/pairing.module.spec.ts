@@ -24,13 +24,21 @@ describe('Feature: the web app builds the pairing use cases', () => {
         await pairing.createCouple.execute();
         await pairing.renewInvitationCode.execute();
         await pairing.joinCouple.execute({ invitationCode: 'K7M2Q9XR' });
+        await pairing.cancelCouple.execute();
 
-        expect(reads).toEqual(['session', 'session', 'session', 'session']);
+        expect(reads).toEqual([
+            'session',
+            'session',
+            'session',
+            'session',
+            'session',
+        ]);
         expect(fakeFetch.calls.map((call) => call.url)).toEqual([
             'http://api.test/pairing/couple',
             'http://api.test/pairing/couple',
             'http://api.test/pairing/couple/invitation-code',
             'http://api.test/pairing/couple/join',
+            'http://api.test/pairing/couple',
         ]);
     });
 });

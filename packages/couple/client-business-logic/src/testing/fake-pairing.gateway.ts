@@ -11,7 +11,8 @@ export type PairingGatewayCall =
     | { readonly operation: 'getMyCouple' }
     | { readonly operation: 'createCouple' }
     | { readonly operation: 'joinCouple'; readonly request: JoinCoupleRequest }
-    | { readonly operation: 'renewInvitationCode' };
+    | { readonly operation: 'renewInvitationCode' }
+    | { readonly operation: 'cancelCouple' };
 
 export const A_PENDING_COUPLE: CoupleResponse = {
     coupleId: '01936b2e-7c4a-7000-8000-0000000000c1',
@@ -73,12 +74,23 @@ export class FakePairingGateway extends PairingGateway {
         return this.answer({ operation: 'renewInvitationCode' });
     }
 
+    override cancelCouple(): Promise<Result<null, ApiError>> {
+        return this.respond({ operation: 'cancelCouple' }, null);
+    }
+
     private answer(
         call: PairingGatewayCall,
     ): Promise<Result<CoupleResponse, ApiError>> {
+        return this.respond(call, this.couple);
+    }
+
+    private respond<T>(
+        call: PairingGatewayCall,
+        value: T,
+    ): Promise<Result<T, ApiError>> {
         this.calls.push(call);
         return Promise.resolve(
-            this.refusal === null ? ok(this.couple) : fail(this.refusal),
+            this.refusal === null ? ok(value) : fail(this.refusal),
         );
     }
 }

@@ -1,3 +1,4 @@
+import { pairingCoupleCancelAction } from '../actions/pairing-couple-cancel.action';
 import { pairingCoupleCreateAction } from '../actions/pairing-couple-create.action';
 import { pairingCoupleJoinAction } from '../actions/pairing-couple-join.action';
 import { pairingInvitationCodeRenewAction } from '../actions/pairing-invitation-code-renew.action';
@@ -9,5 +10,6 @@ export const pairingCommandGateway: PairingCommandGateway =
         createCouple: pairingCoupleCreateAction,
         joinCouple: pairingCoupleJoinAction,
         renewInvitationCode: pairingInvitationCodeRenewAction,
+        cancelCouple: pairingCoupleCancelAction,
     });
 export { PairingCommandGateway } from './ports/pairing-command.gateway';

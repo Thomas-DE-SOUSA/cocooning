@@ -11,10 +11,13 @@
     "waiting": {
         "intro": "Donnez ce code à votre partenaire : il lui permet de rejoindre le couple.",
         "expiresAt": "Valable jusqu'au {{expiresAt}}",
+        "expired": "Ce code a expiré le {{expiresAt}}. Demandez un nouveau code.",
         "share": "Partager le code",
         "renew": "Nouveau code",
         "renewing": "Nouveau code en cours",
         "refresh": "Actualiser",
+        "cancel": "Annuler ce couple",
+        "cancelling": "Annulation en cours",
         "shareText": "Rejoins-moi sur Cocooning avec le code {{invitationCode}}."
     },
     "unavailable": {
@@ -34,6 +37,7 @@
         "createFailed": "Création impossible",
         "joinFailed": "Impossible de rejoindre le couple",
         "renewFailed": "Nouveau code impossible",
+        "cancelFailed": "Annulation impossible",
         "copied": "Code copié",
         "shareFailed": "Partage impossible"
     },
