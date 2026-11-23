@@ -23,6 +23,7 @@ Le domaine, l'application et la table `account` existent pour l'instant. Le gard
 | `PasswordPolicyValidator` | Contrôle statique de la longueur du mot de passe (R2) | `domain/services/password-policy.validator.ts` |
 | `CreateAccountUseCase`, `SignInUseCase`, `ResolveSessionUseCase` | Use cases `execute(command)`, sans contexte | `application/use-cases/` |
 | `SignOutUseCase` | Use case `execute(context)`, avec le `PartnerContext` du partenaire connecté | `application/use-cases/sign-out.use-case.ts` |
+| `SignInRequestSchema`, `SignInResponseSchema`, `SESSION_COOKIE_NAME` | Contrat HTTP de la connexion, partagé par l'API et la PWA : identifiants aux bornes brutes, jeton et échéance rendus au serveur Next, nom du cookie | `packages/couple/contract/src/authentication/` |
 | Table `account` | Persistance de l'agrégat, sans `couple_id` ni outbox (voir [les tables](tables.md)) | `packages/couple/prisma/prisma/models/authentication-account.prisma` |
 | `toAccountView`, `toSessionView` | Vues rendues : compte créé (`userId`, adresse) ; session ouverte (`userId`, jeton, échéance) | `application/mappers/` |
 

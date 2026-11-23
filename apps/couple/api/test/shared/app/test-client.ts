@@ -1,5 +1,5 @@
 import type { INestApplication } from '@nestjs/common';
-import { SESSION_COOKIE_NAME } from '../../../src/modules/authentication';
+import { SESSION_COOKIE_NAME } from '@cocooning/couple-contract/authentication';
 import { signSessionToken } from './session-token';
 
 const SECONDS_PER_HOUR = 3_600;
