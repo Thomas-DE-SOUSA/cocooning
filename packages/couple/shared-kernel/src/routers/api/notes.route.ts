@@ -8,4 +8,6 @@ export const NotesRouteEnum = {
     NOTE_DELETE: '/notes/:noteId',
     NOTE_SHARE: '/notes/:noteId/share',
     NOTE_MAKE_PRIVATE: '/notes/:noteId/make-private',
+    // WebSocket of the real-time channel (decision 0040), routed by tailscale serve to the API.
+    NOTE_COLLABORATION: '/collab',
 } as const satisfies RouteGroup;

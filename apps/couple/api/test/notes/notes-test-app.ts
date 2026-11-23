@@ -57,6 +57,11 @@ export class NotesTestApp {
         ]);
     }
 
+    async collaborationUrl(): Promise<string> {
+        const httpUrl = await this.started().app.getUrl();
+        return `${httpUrl.replace('http', 'ws')}${ApiRouterEnum.NOTE_COLLABORATION}`;
+    }
+
     advanceMinutes(minutes: number): void {
         this.clock.advanceBy(minutes * MILLISECONDS_PER_MINUTE);
     }

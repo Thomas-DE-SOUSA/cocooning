@@ -14,3 +14,17 @@ export function signSessionToken(
         { algorithm: SESSION_TOKEN_ALGORITHM },
     );
 }
+
+const SECONDS_PER_HOUR = 3_600;
+const FIRST_SESSION_VERSION = 1;
+const MILLISECONDS_PER_SECOND = 1_000;
+
+// A session valid for an hour from the given instant, the clock the API reads, at the first session version of the account.
+export function partnerSessionToken(userId: string, now: Date): string {
+    const nowSeconds = Math.floor(now.getTime() / MILLISECONDS_PER_SECOND);
+    return signSessionToken({
+        sub: userId,
+        ver: FIRST_SESSION_VERSION,
+        exp: nowSeconds + SECONDS_PER_HOUR,
+    });
+}

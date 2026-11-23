@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
+import { AuthenticationServiceModule } from '../authentication';
 import { NotesServiceModule } from './notes-service.module';
+import { NoteCollaborationServer } from './primary/collaboration';
 import { NoteCoupleGuard } from './primary/couple';
 import {
     CreateNoteController,
@@ -11,7 +13,7 @@ import {
 } from './primary/controllers';
 
 @Module({
-    imports: [NotesServiceModule],
+    imports: [NotesServiceModule, AuthenticationServiceModule],
     controllers: [
         CreateNoteController,
         ListNotesController,
@@ -20,6 +22,6 @@ import {
         MakeNotePrivateController,
         DeleteNoteController,
     ],
-    providers: [NoteCoupleGuard],
+    providers: [NoteCoupleGuard, NoteCollaborationServer],
 })
 export class NotesModule {}

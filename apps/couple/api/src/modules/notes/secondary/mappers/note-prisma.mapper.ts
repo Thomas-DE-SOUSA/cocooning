@@ -1,4 +1,4 @@
-import type { Note as NoteRow } from '@cocooning/couple-prisma/client';
+import type { Note } from '@cocooning/couple-prisma/client';
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
 import {
     NoteException,
@@ -6,6 +6,11 @@ import {
 } from '@cocooning/couple-server-business-logic/notes';
 import { NoteVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
 import { parseEnum } from '@cocooning/shared-kernel/utils';
+
+// The metadata of a note: the Yjs content is read and written apart (NoteContentPrismaRepository).
+export type NoteRow = Omit<Note, 'contentState'>;
+
+export const WITHOUT_CONTENT = { contentState: true } as const;
 
 export type NoteStateColumns = {
     readonly title: string;

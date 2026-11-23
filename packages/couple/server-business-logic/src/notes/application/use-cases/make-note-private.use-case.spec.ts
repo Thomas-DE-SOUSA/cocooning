@@ -65,4 +65,28 @@ describe('Feature: make a note private', () => {
             });
         });
     });
+
+    describe('Scenario: R5, editors of the note are connected', () => {
+        it('disconnects the editors who lose the note', async () => {
+            const note = ctx.givenNoteOf(AS_A);
+            await ctx
+                .makeNotePrivateUseCase()
+                .execute(AS_A, { noteId: note.id.getValue() });
+            expect(ctx.noteCollaborationProvider.disconnections).toEqual([
+                { noteId: note.id.getValue(), keptUserId: AS_A.userId },
+            ]);
+        });
+
+        it('disconnects nobody when the change is refused', async () => {
+            const note = ctx.givenNoteOf(AS_A);
+            await expect(
+                ctx
+                    .makeNotePrivateUseCase()
+                    .execute(AS_B, { noteId: note.id.getValue() }),
+            ).rejects.toMatchObject({
+                code: NoteExceptionCodeEnum.NOTE_RESERVED_TO_OWNER,
+            });
+            expect(ctx.noteCollaborationProvider.disconnections).toEqual([]);
+        });
+    });
 });

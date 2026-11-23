@@ -12,13 +12,12 @@ import type {
     OffsetPaginationParams,
 } from '@cocooning/shared-kernel/domain';
 import { Logger, UnitOfWork } from '@cocooning/shared-kernel/ports';
-import { toNoteSnapshot } from '../mappers';
+import { type NoteRow, toNoteSnapshot, WITHOUT_CONTENT } from '../mappers';
 import { appendNoteEvents } from './note-event-prisma.writer';
 import { writeNote } from './note-prisma.writer';
 import { toNoteVersionConflict } from './note-version-conflict';
 
-const toNote = (row: Parameters<typeof toNoteSnapshot>[0]): Note =>
-    Note.fromSnapshot(toNoteSnapshot(row));
+const toNote = (row: NoteRow): Note => Note.fromSnapshot(toNoteSnapshot(row));
 
 // R4: the shared notes of the couple and the partner's own private notes, in the query (core-backend.md rule 12).
 const visibleTo = (
@@ -70,6 +69,7 @@ export class NotePrismaRepository extends NoteRepository {
         return this.load({ noteId }, async (notes) => {
             const row = await notes.findFirst({
                 where: { ...visibleTo(coupleId, userId), id: noteId },
+                omit: WITHOUT_CONTENT,
             });
             return row === null ? null : toNote(row);
         });
@@ -86,6 +86,7 @@ export class NotePrismaRepository extends NoteRepository {
             const [rows, total] = await Promise.all([
                 notes.findMany({
                     where,
+                    omit: WITHOUT_CONTENT,
                     orderBy: [{ updatedAt: 'desc' }, { id: 'asc' }],
                     skip: (page - 1) * pageSize,
                     take: pageSize,

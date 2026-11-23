@@ -1,5 +1,7 @@
 import type { FactoryProvider, Type } from '@nestjs/common';
 import {
+    NoteCollaborationProvider,
+    NoteContentRepository,
     NotePreconditionService,
     NoteRepository,
 } from '@cocooning/couple-server-business-logic/notes';
@@ -12,16 +14,27 @@ import {
 
 export type NotesDependencies = {
     readonly repository: NoteRepository;
+    readonly contents: NoteContentRepository;
     readonly preconditions: NotePreconditionService;
+    readonly collaboration: NoteCollaborationProvider;
     readonly clock: DateTimeProvider;
     readonly publishing: EventPublishingService;
 };
 
-const DEPENDENCIES = [NoteRepository, DateTimeProvider, EventPublisher, Logger];
+const DEPENDENCIES = [
+    NoteRepository,
+    NoteContentRepository,
+    NoteCollaborationProvider,
+    DateTimeProvider,
+    EventPublisher,
+    Logger,
+];
 
 // The domain service is created inline, never a provider (decision 0005).
 const collect = (
     repository: NoteRepository,
+    contents: NoteContentRepository,
+    collaboration: NoteCollaborationProvider,
     clock: DateTimeProvider,
     publisher: EventPublisher,
     logger: Logger,
@@ -29,7 +42,9 @@ const collect = (
     logger.setContext(EventPublishingService.name);
     return {
         repository,
+        contents,
         preconditions: new NotePreconditionService(repository),
+        collaboration,
         clock,
         publishing: new EventPublishingService(publisher, logger),
     };
