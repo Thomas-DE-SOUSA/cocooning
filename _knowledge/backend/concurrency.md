@@ -29,6 +29,6 @@ How the API protects an aggregate against concurrent writes: one unit of work pe
 
 ## Tests
 
-- E2E: two requests sent with `Promise.all` on the same versioned aggregate; exactly one succeeds, the other gets 409. One `<context>-concurrency.e2e-spec.ts` per versioned aggregate.
+- E2E: two requests sent with `Promise.all` on the same versioned aggregate; exactly one succeeds, the other gets 409. One `<context>-concurrency.e2e-spec.ts` per versioned aggregate. Reference: `apps/couple/api/test/pairing/pairing-concurrency.e2e-spec.ts`: two partners joining one couple, the loser gets `PAIRING_COUPLE_VERSION_CONFLICT` (its `updateMany` waits on the row lock, then finds the version gone), or `PAIRING_INVITATION_CODE_INVALID` if it read only after the commit; the same partner creating two couples at once, the unique partner index answers.
 - Lock: `whileAdvisoryLockHeld(databaseUrl, key, work)` (`@cocooning/couple-e2e-shared/fixtures`) holds the lock from another connection while `work` sends the request; the request gets 409.
 - Unit: the reentrant `transaction()` joins an open transaction and opens one otherwise.

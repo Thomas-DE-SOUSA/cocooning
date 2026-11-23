@@ -1,6 +1,6 @@
 # Controller Rules
 
-How a primary HTTP adapter of `apps/couple/api` receives a request: routing, authentication, validation, response. A controller is a thin routing adapter (`core-backend.md` rules 4 and 5). This canon covers what phase 2 has built so far; the context controllers arrive with `src/modules/pairing/`. Reference: `apps/couple/api/src/health/health.controller.ts`, `apps/couple/api/src/modules/authentication/`.
+How a primary HTTP adapter of `apps/couple/api` receives a request: routing, authentication, validation, response. A controller is a thin routing adapter (`core-backend.md` rules 4 and 5). Reference: `apps/couple/api/src/modules/pairing/primary/controllers/join-couple.controller.ts` (body, 200), `create-couple.controller.ts` (201), `apps/couple/api/src/health/health.controller.ts` (public technical route).
 
 ## Routing
 
@@ -17,6 +17,6 @@ How a primary HTTP adapter of `apps/couple/api` receives a request: routing, aut
 ## Input and output
 
 7. **Validate input with `ZodValidationPipe`** and a request schema of `@cocooning/couple-contract` (`contracts.md`); an invalid input answers 422 (D5).
-8. **Describe output with `@UseInterceptors(ZodResponse(Schema))`**: the returned value is the one Zod parses. Exception: the health route returns a fixed `{ status: 'UP' }`, outside the contract.
+8. **Describe output with `@UseInterceptors(ZodResponse(Schema))`**: the returned value is the one Zod parses. `handle()` returns `toXxxResponse(await this.useCase.execute(context, command))`: the response mapper of `primary/mappers/` turns the view's `Date` into ISO strings (`contracts.md` rule 4). A `POST` that creates nothing (join, renew) sets `@HttpCode(HttpStatus.OK)`. Exception: the health route returns a fixed `{ status: 'UP' }`, outside the contract.
 9. **Errors are typed exceptions**, translated by the global `HttpExceptionFilter` through `EXCEPTION_STATUSES` (decision 0020, `wiring.md` rule 7). A controller never builds an `HttpException`.
 10. **When in doubt, ASK.** Never guess.

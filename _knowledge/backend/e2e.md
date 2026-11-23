@@ -1,6 +1,6 @@
 # E2E Rules
 
-How the API is tested end to end: a real `AppModule` on a free port, a real Postgres 17 with the real migrations, HTTP requests. Business logic is covered by the use case tests; E2E covers integration, isolation and resilience (`core-backend.md` rule 20). Reference: `apps/couple/api/test/`.
+How the API is tested end to end: a real `AppModule` on a free port, a real Postgres 17 with the real migrations, HTTP requests. Business logic is covered by the use case tests; E2E covers integration, isolation and resilience (`core-backend.md` rule 20). Reference: `apps/couple/api/test/`, and `test/pairing/` for a context.
 
 ## Harness
 
@@ -17,5 +17,7 @@ How the API is tested end to end: a real `AppModule` on a free port, a real Post
 8. **Couple isolation on every endpoint**: at least one request from the other couple, or the other partner for a private record, answered 404 (core.md rule 27).
 9. **Fresh data per test**: `truncateAllTables` (`@cocooning/couple-e2e-shared/fixtures`) in `beforeEach` for every spec that writes. Never `DELETE FROM` table by table.
 10. **No `jest.fn`, no `jest.spyOn`** (decision 0001): a provider is replaced through `overrides` by a hand-written fake (`DeterministicDateTimeProvider` for the clock).
-11. **Every mutation checks its outbox row**, and a publication failure still answers the success status with an unpublished event (decision 0021).
+11. **Every mutation checks its outbox row**, and a publication failure still answers the success status with an unpublished event (decision 0021): `readPairingEvents` (`@cocooning/couple-e2e-shared/fixtures`), and `EventPublisher` overridden by `FakeEventPublisherAdapter.failWith()` (`test/pairing/pairing-publication-failure.e2e-spec.ts`).
 12. **When in doubt, ASK.** Never guess.
+13. **A context has its test app**: `PairingTestApp` (`test/pairing/pairing-test-app.ts`) starts the real app with a `DeterministicDateTimeProvider` override, signs each session at that clock and exposes one method per endpoint; its constants and response readers live in `pairing-test-data.ts`. An expired deadline is reached by moving the clock, never by sleeping.
+14. **A repository is tested through the app**: `app.get(CoupleRepository)` on rows seeded by `createTestCouple`, for isolation (the other couple gets nothing), the version conflict, each unique constraint mapped by name, and corrupted rows (`*_DATA_CORRUPTED`).
