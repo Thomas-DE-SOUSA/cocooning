@@ -31,6 +31,7 @@ const redirectTo = (route: string): PairingPage => ({
 // Decision 0036: a refused session goes back to sign-in; a formed couple has nothing left to do here.
 export function presentPairingPage(
     couple: Result<CoupleResponse | null, ApiError>,
+    now: Date,
 ): PairingPage {
     if (!couple.success) {
         if (couple.error.code === ApiErrorCodeEnum.UNAUTHORIZED) {
@@ -46,10 +47,10 @@ export function presentPairingPage(
     if (couple.value.pairingStatus === CouplePairingStatusEnum.PAIRED) {
         return redirectTo(WebRouterEnum.HOME);
     }
-    return presentWaitingCouple(couple.value);
+    return presentWaitingCouple(couple.value, now);
 }
 
-function presentWaitingCouple(couple: CoupleResponse): PairingPage {
+function presentWaitingCouple(couple: CoupleResponse, now: Date): PairingPage {
     if (couple.invitationCode === null) {
         return screen({
             step: PairingStepEnum.UNAVAILABLE,
@@ -60,11 +61,12 @@ function presentWaitingCouple(couple: CoupleResponse): PairingPage {
             },
         });
     }
+    const expiresAt = new Date(couple.invitationCode.expiresAt);
     return screen({
         step: PairingStepEnum.WAITING_FOR_PARTNER,
         invitationCode: couple.invitationCode.value,
-        expiresAt: EXPIRY_FORMAT.format(
-            new Date(couple.invitationCode.expiresAt),
-        ),
+        expiresAt: EXPIRY_FORMAT.format(expiresAt),
+        // R4: valid until its deadline, excluded.
+        isExpired: now.getTime() >= expiresAt.getTime(),
     });
 }

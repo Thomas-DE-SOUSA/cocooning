@@ -1,6 +1,6 @@
 # Module pairing de l'API
 
-Adaptateurs du contexte `pairing` : quatre controleurs (`primary/controllers/`), le mapper `toCoupleResponse` (`primary/mappers/`), `CouplePrismaRepository` (`secondary/repositories/`) et ses mappers Prisma (`secondary/mappers/`), le fragment d'environnement `env.ts` (`PAIRING_INVITATION_CODE_TTL_HOURS`). Les use cases sont construits par `pairingUseCase()` (`pairing-use-case.factory.ts`) dans `pairing-service.module.ts`.
+Adaptateurs du contexte `pairing` : cinq controleurs (`primary/controllers/`), le mapper `toCoupleResponse` (`primary/mappers/`), `CouplePrismaRepository` (`secondary/repositories/`) et ses mappers Prisma (`secondary/mappers/`), le fragment d'environnement `env.ts` (`PAIRING_INVITATION_CODE_TTL_HOURS`). Les use cases sont construits par `pairingUseCase()` (`pairing-use-case.factory.ts`) dans `pairing-service.module.ts`.
 
 Contexte metier :
 @../../../../../../packages/couple/server-business-logic/src/pairing/CLAUDE.md

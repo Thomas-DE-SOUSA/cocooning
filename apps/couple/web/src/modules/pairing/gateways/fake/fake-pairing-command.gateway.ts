@@ -7,6 +7,7 @@ import type { PairingCommandCall } from './pairing-command-call';
 export class FakePairingCommandGateway extends PairingCommandGateway {
     private outcome: Result<null, ApiError> = ok(null);
     private readonly recordedCalls: PairingCommandCall[] = [];
+    private held: Promise<void> | null = null;
 
     get calls(): readonly PairingCommandCall[] {
         return [...this.recordedCalls];
@@ -14,6 +15,15 @@ export class FakePairingCommandGateway extends PairingCommandGateway {
 
     givenOutcome(outcome: Result<null, ApiError>): void {
         this.outcome = outcome;
+    }
+
+    // The next answers wait until the returned release is called: the spec sees the command still running.
+    holdAnswers(): () => void {
+        let release: () => void = () => {};
+        this.held = new Promise((resolve) => {
+            release = resolve;
+        });
+        return release;
     }
 
     override createCouple(): Promise<Result<null, ApiError>> {
@@ -28,8 +38,15 @@ export class FakePairingCommandGateway extends PairingCommandGateway {
         return this.answer({ operation: 'renewInvitationCode' });
     }
 
-    private answer(call: PairingCommandCall): Promise<Result<null, ApiError>> {
+    override cancelCouple(): Promise<Result<null, ApiError>> {
+        return this.answer({ operation: 'cancelCouple' });
+    }
+
+    private async answer(
+        call: PairingCommandCall,
+    ): Promise<Result<null, ApiError>> {
         this.recordedCalls.push(call);
-        return Promise.resolve(this.outcome);
+        await this.held;
+        return this.outcome;
     }
 }

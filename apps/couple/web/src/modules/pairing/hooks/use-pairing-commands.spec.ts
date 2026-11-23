@@ -85,4 +85,35 @@ describe('Feature: pairing commands from the screen', () => {
             expect(events).toEqual(['RENEW_INVITATION_CODE:VALIDATION_ERROR']);
         });
     });
+
+    describe('Scenario: R8, the single partner cancels the pending couple', () => {
+        it('sends the command once and asks for a refresh', async () => {
+            const gateway = new FakePairingCommandGateway();
+            const { result, events } = renderCommands(gateway);
+
+            await act(async () => result.current.cancelCouple());
+
+            expect(gateway.calls).toEqual([{ operation: 'cancelCouple' }]);
+            expect(events).toEqual(['done']);
+        });
+    });
+
+    describe('Scenario: a command is still running', () => {
+        it('keeps every button busy and spins only the running one', async () => {
+            const gateway = new FakePairingCommandGateway();
+            const release = gateway.holdAnswers();
+            const { result, events } = renderCommands(gateway);
+
+            act(() =>
+                result.current.joinCouple({ invitationCode: 'K7M2Q9XR' }),
+            );
+
+            expect(result.current.isBusy).toBe(true);
+            expect(result.current.pendingCommand).toBe('JOIN_COUPLE');
+            await act(async () => release());
+            expect(result.current.isBusy).toBe(false);
+            expect(result.current.pendingCommand).toBeNull();
+            expect(events).toEqual(['done']);
+        });
+    });
 });

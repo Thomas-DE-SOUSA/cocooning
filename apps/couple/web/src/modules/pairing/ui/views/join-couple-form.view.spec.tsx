@@ -17,6 +17,7 @@ function JoinCoupleFormHarness({
         <JoinCoupleFormView
             form={form}
             isPending={isPending}
+            isBusy={isPending}
             onJoin={(values) => joined.push(values)}
         />
     );

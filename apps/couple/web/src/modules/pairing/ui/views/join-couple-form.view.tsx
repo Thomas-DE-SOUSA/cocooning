@@ -16,13 +16,14 @@ import { PAIRING_NAMESPACE } from '../../data/pairing-i18n-namespaces';
 type Props = {
     readonly form: UseFormReturn<JoinCoupleForm>;
     readonly isPending: boolean;
+    readonly isBusy: boolean;
     readonly onJoin: (form: JoinCoupleForm) => void;
 };
 
 const CODE_ERROR_ID = 'join-couple-invitation-code-error';
 
 // R3: upper case offered by the keyboard, no autocorrect; the domain still accepts lower case and spaces.
-export function JoinCoupleFormView({ form, isPending, onJoin }: Props) {
+export function JoinCoupleFormView({ form, isPending, isBusy, onJoin }: Props) {
     const { t } = useTranslation(PAIRING_NAMESPACE);
     const { errors } = form.formState;
     return (
@@ -58,7 +59,7 @@ export function JoinCoupleFormView({ form, isPending, onJoin }: Props) {
             <Button
                 type="submit"
                 variant="secondary"
-                disabled={isPending}
+                disabled={isBusy}
                 aria-busy={isPending}
             >
                 {isPending ? (

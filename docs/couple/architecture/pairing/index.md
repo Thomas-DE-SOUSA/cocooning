@@ -4,9 +4,9 @@ Cette page décrit comment le contexte `pairing` est construit : ses couches, se
 
 ## Rôle et limites
 
-`pairing` relie deux comptes en un couple : il crée le couple, délivre et renouvelle le code d'invitation, fait entrer le second partenaire et dit à un partenaire où en est son couple. Il ne connaît ni les mots de passe ni les sessions (`authentication`), et ne lit aucune donnée des notes, de l'agenda ou des messages. Quitter un couple n'existe pas encore.
+`pairing` relie deux comptes en un couple : il crée le couple, délivre et renouvelle le code d'invitation, fait entrer le second partenaire, annule un couple en attente et dit à un partenaire où en est son couple. Il ne connaît ni les mots de passe ni les sessions (`authentication`), et ne lit aucune donnée des notes, de l'agenda ou des messages. Quitter un couple formé n'existe pas encore.
 
-Le contexte est construit de bout en bout : domaine et application, tables PostgreSQL (voir [les tables](tables.md)), contrat HTTP, adaptateur Prisma de `CoupleRepository` et quatre endpoints de l'API. C'est la référence que les contextes suivants copient.
+Le contexte est construit de bout en bout : domaine et application, tables PostgreSQL (voir [les tables](tables.md)), contrat HTTP, adaptateur Prisma de `CoupleRepository` et cinq endpoints de l'API. C'est la référence que les contextes suivants copient.
 
 ## Comment c'est construit
 
@@ -20,27 +20,28 @@ Le contexte est construit de bout en bout : domaine et application, tables Postg
 | `CoupleRepository` | Port : `save`, `findByPartner`, `findByInvitationCode` | `domain/ports/couple.repository.ts` |
 | `PairingPreconditionService` | Domain service : un partenaire sans couple (R1), le couple d'un partenaire, le couple d'un code | `domain/services/pairing-precondition.service.ts` |
 | `CouplePairingValidator` | Contrôles statiques appelés par l'agrégat | `domain/services/couple-pairing.validator.ts` |
-| `CreateCoupleUseCase`, `JoinCoupleUseCase`, `RenewInvitationCodeUseCase`, `GetMyCoupleUseCase` | Use cases, `execute(context)` ou `execute(context, command)` | `application/use-cases/` |
+| `CreateCoupleUseCase`, `JoinCoupleUseCase`, `RenewInvitationCodeUseCase`, `CancelCoupleUseCase`, `GetMyCoupleUseCase` | Use cases, `execute(context)` ou `execute(context, command)` | `application/use-cases/` |
 | Tables `couple`, `couple_partner`, `pairing_event` | Persistance de l'agrégat et outbox (voir [les tables](tables.md)) | `packages/couple/prisma/prisma/models/pairing-*.prisma` |
-| `JoinCoupleRequestSchema`, `CoupleResponseSchema` | Contrat HTTP partagé par l'API et la PWA : le code saisi, et le corps commun aux quatre actions, miroir de `CoupleView` | `packages/couple/contract/src/pairing/schemas/` |
-| `toCoupleView` | Vue rendue par les quatre use cases : identifiant, statut, partenaires, code ou `null` | `application/mappers/couple-view.mapper.ts` |
+| `JoinCoupleRequestSchema`, `CoupleResponseSchema` | Contrat HTTP partagé par l'API et la PWA : le code saisi, et le corps commun aux quatre actions qui rendent un couple, miroir de `CoupleView` | `packages/couple/contract/src/pairing/schemas/` |
+| `toCoupleView` | Vue rendue par les quatre use cases qui rendent un couple : identifiant, statut, partenaires, code ou `null` | `application/mappers/couple-view.mapper.ts` |
 | Contrôleurs | Un par endpoint, méthode `handle()`, partenaire lu par `@CurrentPartner()` | `apps/couple/api/src/modules/pairing/primary/controllers/` |
 | `toCoupleResponse` | `CoupleView` vers `CoupleResponseSchema`, dates en chaînes ISO | `apps/couple/api/src/modules/pairing/primary/mappers/` |
 | `CouplePrismaRepository` | Adaptateur de `CoupleRepository` : couple, partenaires et outbox dans une transaction, verrou optimiste, contraintes uniques traduites par leur nom | `apps/couple/api/src/modules/pairing/secondary/repositories/` |
 | `PairingModule`, `PairingServiceModule`, `PairingSecondaryModule` | Contrôleurs ; use cases construits par `pairingUseCase()` ; `provide: CoupleRepository` | `apps/couple/api/src/modules/pairing/` |
-| Écran de mise en couple | Route `/pairing` : créer le couple, partager et renouveler le code, saisir le code de l'autre ; l'accueil y renvoie tant que le couple n'est pas formé (voir [le front de la PWA](../frontend/index.md)) | `apps/couple/web/src/modules/pairing/` |
+| Écran de mise en couple | Route `/pairing` : créer le couple, partager et renouveler le code, saisir le code de l'autre, annuler le couple en attente ; l'accueil y renvoie tant que le couple n'est pas formé (voir [le front de la PWA](../frontend/index.md)) | `apps/couple/web/src/modules/pairing/` |
 
 Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/pairing/`.
 
 ## Endpoints
 
-Toutes les routes demandent une session (cookie `cocooning_session`, [décision 0034](../../decisions/0034-session-revocable.md)) ; sans elle, `401`. Le corps de chaque réponse réussie suit `CoupleResponseSchema`.
+Toutes les routes demandent une session (cookie `cocooning_session`, [décision 0034](../../decisions/0034-session-revocable.md)) ; sans elle, `401`. Le corps de chaque réponse réussie suit `CoupleResponseSchema`, sauf l'annulation, qui n'en a pas.
 
 | Route | Clé de `ApiRouterEnum` | Use case | Succès | Refus |
 |---|---|---|---|---|
 | `POST /pairing/couple` | `COUPLE_CREATE` | `CreateCoupleUseCase` | `201`, couple `PENDING` et son code | `409` `PAIRING_PARTNER_ALREADY_IN_COUPLE` |
 | `POST /pairing/couple/join`, corps `JoinCoupleRequestSchema` | `COUPLE_JOIN` | `JoinCoupleUseCase` | `200`, couple `PAIRED`, plus de code | `422` corps invalide ou `PAIRING_INVITATION_CODE_INVALID` ; `409` `PAIRING_PARTNER_ALREADY_IN_COUPLE` ou `PAIRING_COUPLE_VERSION_CONFLICT` |
 | `POST /pairing/couple/invitation-code` | `COUPLE_INVITATION_CODE_RENEW` | `RenewInvitationCodeUseCase` | `200`, nouveau code | `404` `PAIRING_COUPLE_NOT_FOUND` ; `409` `PAIRING_COUPLE_ALREADY_PAIRED` |
+| `DELETE /pairing/couple` | `COUPLE_CANCEL` | `CancelCoupleUseCase` | `204`, sans corps | `404` `PAIRING_COUPLE_NOT_FOUND` ; `409` `PAIRING_COUPLE_ALREADY_PAIRED` |
 | `GET /pairing/couple` | `COUPLE_GET_MINE` | `GetMyCoupleUseCase` | `200` | `404` `PAIRING_COUPLE_NOT_FOUND` |
 
 ## Flux principal
@@ -57,7 +58,7 @@ Rejoindre un couple (`JoinCoupleUseCase`) :
 5. `CoupleRepository.save` écrit l'état et l'événement dans une même transaction (outbox, [décision 0021](../../decisions/0021-outbox-postgresql-relais-dans-l-api.md)) : `CouplePrismaRepository` ouvre l'unité de travail, lit le couple (`findFirst`), le crée en version 1 ou le met à jour par `updateMany` filtré sur la version lue, réécrit ses partenaires (`deleteMany` puis `createMany`), puis ajoute les lignes de `pairing_event` à la suite de la dernière version de l'agrégat, lue dans la même transaction.
 6. `EventPublishingService.publishAndClear` publie l'événement dans le processus ; un échec est journalisé et le relais de l'outbox livre plus tard.
 
-Les trois autres use cases suivent la même recette. La durée de validité du code arrive par le constructeur de `CreateCoupleUseCase` et `RenewInvitationCodeUseCase` (`invitationCodeLifetimeInHours`), lue par l'API dans `PAIRING_INVITATION_CODE_TTL_HOURS`.
+Les autres use cases suivent la même recette. Annuler (`CancelCoupleUseCase`, R8) charge le couple du partenaire, puis `Couple.cancel` vérifie le membre et le statut `PENDING`, pose `deletedAt` et enregistre `CoupleCancelledEvent` ; `CouplePrismaRepository` efface alors les lignes `couple_partner` sans les réécrire, ce qui libère le partenaire de l'index unique. La durée de validité du code arrive par le constructeur de `CreateCoupleUseCase` et `RenewInvitationCodeUseCase` (`invitationCodeLifetimeInHours`), lue par l'API dans `PAIRING_INVITATION_CODE_TTL_HOURS`.
 
 ## Points d'attention
 
@@ -71,4 +72,5 @@ Les trois autres use cases suivent la même recette. La durée de validité du c
 - [Décision 0022](../../decisions/0022-mise-en-couple-par-code-d-invitation.md) : un compte par personne, mise en couple par code
 - [Décision 0028](../../decisions/pairing/0028-regles-du-code-d-invitation.md) : règles du code d'invitation
 - [Décision 0029](../../decisions/pairing/0029-pairing-avant-le-couple.md) : le contexte travaille avant qu'un couple existe
+- [Décision 0038](../../decisions/pairing/0038-annuler-un-couple-en-attente.md) : annuler un couple en attente
 - [Décision 0023](../../decisions/0023-forme-des-use-cases-et-des-reactions.md) : forme des use cases

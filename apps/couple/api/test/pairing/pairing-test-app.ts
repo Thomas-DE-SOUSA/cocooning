@@ -88,6 +88,10 @@ export class PairingTestApp {
         return this.as(userId).post(ApiRouterEnum.COUPLE_INVITATION_CODE_RENEW);
     }
 
+    cancel(userId: string): Promise<TestResponse> {
+        return this.as(userId).delete(ApiRouterEnum.COUPLE_CANCEL);
+    }
+
     getMine(userId: string): Promise<TestResponse> {
         return this.as(userId).get(ApiRouterEnum.COUPLE_GET_MINE);
     }

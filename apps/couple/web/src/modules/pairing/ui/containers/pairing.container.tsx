@@ -3,6 +3,7 @@
 import { pairingCommandGateway } from '../../gateways';
 import { usePairingScreen } from '../../hooks/use-pairing-screen';
 import {
+    type PairingCommand,
     PairingCommandEnum,
     type PairingScreenViewModel,
     PairingStepEnum,
@@ -18,21 +19,20 @@ export function PairingContainer({
     readonly viewModel: PairingScreenViewModel;
 }) {
     const screen = usePairingScreen(pairingCommandGateway);
+    const isRunning = (command: PairingCommand) =>
+        screen.pendingCommand === command;
     if (viewModel.step === PairingStepEnum.NO_COUPLE) {
         return (
             <>
                 <NoCoupleView
-                    isPending={
-                        screen.pendingCommand ===
-                        PairingCommandEnum.CREATE_COUPLE
-                    }
+                    isPending={isRunning(PairingCommandEnum.CREATE_COUPLE)}
+                    isBusy={screen.isBusy}
                     onCreateCouple={screen.createCouple}
                 />
                 <JoinCoupleFormView
                     form={screen.joinForm}
-                    isPending={
-                        screen.pendingCommand === PairingCommandEnum.JOIN_COUPLE
-                    }
+                    isPending={isRunning(PairingCommandEnum.JOIN_COUPLE)}
+                    isBusy={screen.isBusy}
                     onJoin={screen.joinCouple}
                 />
             </>
@@ -50,12 +50,13 @@ export function PairingContainer({
         <InvitationCodeView
             invitationCode={viewModel.invitationCode}
             expiresAt={viewModel.expiresAt}
-            isPending={
-                screen.pendingCommand ===
-                PairingCommandEnum.RENEW_INVITATION_CODE
-            }
+            isExpired={viewModel.isExpired}
+            isRenewing={isRunning(PairingCommandEnum.RENEW_INVITATION_CODE)}
+            isCancelling={isRunning(PairingCommandEnum.CANCEL_COUPLE)}
+            isBusy={screen.isBusy}
             onShare={() => screen.shareInvitationCode(viewModel.invitationCode)}
             onRenew={screen.renewInvitationCode}
+            onCancel={screen.cancelCouple}
             onRefresh={screen.refresh}
         />
     );

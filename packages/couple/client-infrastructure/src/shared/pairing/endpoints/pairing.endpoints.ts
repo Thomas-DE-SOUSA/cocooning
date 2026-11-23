@@ -6,6 +6,7 @@ export type PairingEndpoints = {
     readonly createCouple: string;
     readonly joinCouple: string;
     readonly renewInvitationCode: string;
+    readonly cancelCouple: string;
 };
 
 export function resolvePairingEndpoints(apiBaseUrl: string): PairingEndpoints {
@@ -17,5 +18,6 @@ export function resolvePairingEndpoints(apiBaseUrl: string): PairingEndpoints {
             apiBaseUrl,
             ApiRouterEnum.COUPLE_INVITATION_CODE_RENEW,
         ),
+        cancelCouple: resolveRoute(apiBaseUrl, ApiRouterEnum.COUPLE_CANCEL),
     };
 }

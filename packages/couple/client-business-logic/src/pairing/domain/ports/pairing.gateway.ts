@@ -13,4 +13,5 @@ export abstract class PairingGateway {
         request: JoinCoupleRequest,
     ): Promise<Result<CoupleResponse, ApiError>>;
     abstract renewInvitationCode(): Promise<Result<CoupleResponse, ApiError>>;
+    abstract cancelCouple(): Promise<Result<null, ApiError>>;
 }

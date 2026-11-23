@@ -6,4 +6,5 @@ export abstract class PairingCommandGateway {
     abstract createCouple(): Promise<Result<null, ApiError>>;
     abstract joinCouple(form: JoinCoupleForm): Promise<Result<null, ApiError>>;
     abstract renewInvitationCode(): Promise<Result<null, ApiError>>;
+    abstract cancelCouple(): Promise<Result<null, ApiError>>;
 }

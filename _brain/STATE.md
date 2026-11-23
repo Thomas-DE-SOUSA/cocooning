@@ -1,11 +1,11 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (étape 3 de la phase 3 lancée, D37). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (R8 : #52 mergée, #53 ouverte). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
 
-- **Phase 3, étape 3 en cours** : module `pairing` de la PWA (mise en couple par code), plan D37 en 6 PR (`journal/2026-11-23.md`, « Phase 3, étape 3 : plan `pairing` web »).
+- **Phase 3, étape 3 terminée et en production** (2026-11-23) : module `pairing` de la PWA et déconnexion, plan D37 en 6 PR (#43 à #49), release #50.
 - **Étape 2 terminée et en production** (2026-11-23) : contexte `authentication`, écran de connexion, deux comptes créés sur la VM, garde-fous ESLint du web (#25 à #42). Détail : `journal/2026-11-23.md`, sections « Phase 3, étape 2 » à « Garde-fous ESLint ».
 - **Fait avant** : phase 0 à 2 (PR #1 à #13), phase 3 étape 1 (socle web PWA, #17 à #21), étape 2 (#25 à #42). Détail : `journal/2026-11-22.md`, `journal/2026-11-23.md`.
 
@@ -20,7 +20,7 @@
 
 ## Prochaine étape
 
-**Étape 3 lancée** (module `pairing` web, plan D37 en 6 PR, `journal/2026-11-23.md`, « Phase 3, étape 3 : plan `pairing` web »). PR 1 décisions mergée (#43, ADR 0036 et 0037 acceptées). PR 2 mergée (#45). PR 3 mergée (#46). PR 4 et 5 mergées (#47, #48). PR 6 déconnexion ouverte, en attente du « go » ; puis mise en production de l'étape 3, sur accord. Étape 2 en production avec les deux comptes.
+**Revue des étapes 2 et 3 rendue** (`journal/2026-11-23.md`, « Revue des étapes 2 et 3 ») : aucun CRITICAL, 4 IMPORTANT (cache du service worker, impasse de la mise en couple si les deux créent, trous du lint, server actions non testées). Choix du propriétaire (D38) : PR 1 `fix/pairing-pending-deadlock` d'abord (règle R8 : le seul membre d'un couple en attente peut l'annuler, décision proposée puis use case et bouton), puis PR 2 (cache du service worker), puis 3 à 7 ; adresses e-mail retirées du journal dans la PR 7, sans réécriture d'historique. #52 (R8 serveur) mergée ; PR 1b web #53 ouverte, en attente du « go », puis release `dev` → `main` pour livrer le bouton. Ensuite PR 2 (cache du service worker), puis 3 à 7. Ensuite, prochaine étape de la phase 3 à choisir (notes, agenda, messages).
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
@@ -43,6 +43,8 @@ Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire
 - `_malta-blueprint/` reste en local, hors git (B1).
 
 ## Points d'attention
+
+- Mise en couple en prod : une seule personne appuie sur « Créer notre couple », l'autre saisit le code ; sinon blocage sans issue dans l'app (correctness-1).
 
 - Malta est en lecture seule. Le blueprint contient du code propriétaire « All Rights Reserved » : ne jamais le publier.
 - Les `.env` sont protégés en lecture par une règle de permission : on peut y ajouter une ligne, pas les relire.

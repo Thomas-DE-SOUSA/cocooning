@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import {
+    CancelCoupleUseCase,
     CreateCoupleUseCase,
     GetMyCoupleUseCase,
     JoinCoupleUseCase,
@@ -41,6 +42,16 @@ const useCases = [
                 d.clock,
                 d.publishing,
                 d.invitationCodeLifetimeInHours,
+            ),
+    ),
+    pairingUseCase(
+        CancelCoupleUseCase,
+        (d) =>
+            new CancelCoupleUseCase(
+                d.repository,
+                d.preconditions,
+                d.clock,
+                d.publishing,
             ),
     ),
     pairingUseCase(

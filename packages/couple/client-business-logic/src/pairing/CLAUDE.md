@@ -1,6 +1,6 @@
 # Pairing
 
-La mise en couple depuis la PWA : lire le couple du partenaire connecte, creer le couple, saisir le code d'invitation, renouveler le code.
+La mise en couple depuis la PWA : lire le couple du partenaire connecte, creer le couple, saisir le code d'invitation, renouveler le code, annuler un couple en attente (R8, `cancelCouple` rend `Result<null, ApiError>`).
 
 ## A lire avant de commencer
 

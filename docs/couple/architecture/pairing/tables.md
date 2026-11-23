@@ -25,7 +25,7 @@ L'agrégat `Couple` (modèle `Couple`, fichier `pairing-couple.prisma`). Pour ce
 
 ## `couple_partner`
 
-L'entité enfant `CouplePartner` (modèle `CouplePartner`, fichier `pairing-couple-partner.prisma`). Pas de `deleted_at` : la ligne n'a pas de cycle de vie propre et suit son couple.
+L'entité enfant `CouplePartner` (modèle `CouplePartner`, fichier `pairing-couple-partner.prisma`). Pas de `deleted_at` : la ligne n'a pas de cycle de vie propre et suit son couple. Quand le couple est annulé (`deleted_at` posé, R8), ses lignes sont effacées dans la même transaction, pour que `couple_partner_user_id_key` laisse le partenaire former un autre couple.
 
 | Colonne | Type | Rôle |
 |---|---|---|
