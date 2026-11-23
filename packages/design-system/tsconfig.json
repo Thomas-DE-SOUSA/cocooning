@@ -1,0 +1,10 @@
+{
+    "extends": "@cocooning/ts-config/react-library.json",
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "noEmit": true,
+        "types": ["jest"]
+    },
+    "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

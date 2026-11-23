@@ -1,0 +1,37 @@
+# @cocooning/couple-client-business-logic
+
+Logique metier front des contextes du couple, sans framework : partagee par toutes les vues de la PWA. Sous-chemin `shared` : `ApiError` et `ApiErrorCodeEnum` (l'erreur d'un appel a l'API vue par le front, avec le `backendCode` du contrat ou `null`) et le type `Translator` des fabriques de schemas (decision 0031). Les contextes (`pairing` d'abord) arrivent avec leur premier ecran, un sous-chemin chacun.
+
+## A lire avant de commencer
+
+Regles front communes :
+@../../../_knowledge/core-frontend.md
+
+## Consignes de code
+
+- Aucun framework ni adaptateur : ni Next, ni React, ni Expo, ni `client-infrastructure` (boundaries). Un besoin d'infrastructure devient un port, classe abstraite (`core.md rule 18`), implemente dans `packages/couple/client-infrastructure`.
+- Gateways et use cases renvoient un `Result` de `@cocooning/shared-kernel/utils`, jamais un `throw`.
+- Deterministe : ni `Math.random`, ni `randomUUID`, ni `new Date()` (decision 0024, `business-logic.js`). Le temps arrive en parametre ou par un port.
+- Schema de formulaire : `create<X>Schema(t: Translator)`, fichier `*.zod.ts`, cles `form.<field>.errors.<type>` (decision 0031).
+- Un contexte ajoute : `src/<contexte>/` avec son `CLAUDE.md` au format `docs/templates/claude-server-submodule.md`, et une entree `exports` par contexte.
+
+## Tests
+
+- Une spec a cote du fichier, style BDD (`Feature:`, `Scenario:`), sans `should`. Fakes ecrits a la main (decision 0001).
+- `pnpm test` echoue sous 100 % de couverture (decision plateforme 0013).
+
+## Pieges
+
+- Un fichier qui ne porte que des types n'a rien a couvrir ; un `as const` se couvre par une spec de ses valeurs (modele : `src/shared/api-error.spec.ts`).
+
+## Commandes
+
+- `pnpm --filter @cocooning/couple-client-business-logic test`
+- `pnpm --filter @cocooning/couple-client-business-logic check-types`
+- `pnpm --filter @cocooning/couple-client-business-logic lint`
+
+## Documentation a tenir a jour
+
+- Tout changement : relire chaque page qui cite le fichier ou le type modifies, trouvee avec `rg -l '<NomDeType>|<chemin/du/fichier>' docs/ _knowledge/ CLAUDE.md`.
+- Chaine de donnees front et role des packages : `docs/couple/architecture/frontend/index.md`.
+- Regle metier appliquee aussi cote client : la dire sur la regle backend (`docs/couple/business-rules/<contexte>/rules.md`), jamais dans une page front.

@@ -1,0 +1,13 @@
+{
+    "name": "@cocooning/ts-config",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "check-types": "tsc -p test/base && tsc -p test/node && tsc -p test/nest && tsc -p test/react-library"
+    },
+    "devDependencies": {
+        "@types/jest": "catalog:test",
+        "@types/node": "catalog:build",
+        "typescript": "catalog:build"
+    }
+}

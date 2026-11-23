@@ -1,0 +1,47 @@
+{
+    "name": "@cocooning/couple-contract",
+    "description": "Zod HTTP contracts shared by the couple API and PWA",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "build": "tsc -p tsconfig.build.json",
+        "dev": "tsc -p tsconfig.build.json --watch",
+        "lint": "eslint . --max-warnings=0",
+        "check-types": "tsc --noEmit -p tsconfig.json",
+        "test": "jest"
+    },
+    "exports": {
+        "./http-error": {
+            "types": "./src/http-error/index.ts",
+            "default": "./dist/http-error/index.js"
+        },
+        "./shared": {
+            "types": "./src/shared/index.ts",
+            "default": "./dist/shared/index.js"
+        },
+        "./pairing": {
+            "types": "./src/pairing/index.ts",
+            "default": "./dist/pairing/index.js"
+        },
+        "./authentication": {
+            "types": "./src/authentication/index.ts",
+            "default": "./dist/authentication/index.js"
+        }
+    },
+    "dependencies": {
+        "@cocooning/couple-shared-kernel": "workspace:*",
+        "@cocooning/shared-kernel": "workspace:*",
+        "zod": "catalog:validation"
+    },
+    "devDependencies": {
+        "@cocooning/eslint-config": "workspace:*",
+        "@cocooning/jest-config": "workspace:*",
+        "@cocooning/ts-config": "workspace:*",
+        "@types/jest": "catalog:test",
+        "@types/node": "catalog:build",
+        "eslint": "catalog:lint",
+        "jest": "catalog:test",
+        "ts-jest": "catalog:test",
+        "typescript": "catalog:build"
+    }
+}

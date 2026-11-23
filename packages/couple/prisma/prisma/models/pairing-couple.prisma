@@ -1,0 +1,16 @@
+/// The couple itself: its id is the coupleId every other couple table carries.
+/// The invitation code is unique among live couples through a partial index written in the init migration (decision 0029).
+model Couple {
+  id                      String          @id @db.Uuid
+  pairingStatus           String          @map("pairing_status") @db.VarChar(20)
+  /// Null once the couple is paired (INV-004).
+  invitationCode          String?         @map("invitation_code") @db.VarChar(8)
+  invitationCodeExpiresAt DateTime?       @map("invitation_code_expires_at")
+  version                 Int             @map("version")
+  createdAt               DateTime        @map("created_at")
+  updatedAt               DateTime        @map("updated_at")
+  deletedAt               DateTime?       @map("deleted_at")
+  partners                CouplePartner[]
+
+  @@map("couple")
+}

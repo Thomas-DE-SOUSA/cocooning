@@ -1,0 +1,13 @@
+/// A member of a couple. No deletedAt: the row lives and dies with its couple.
+/// userId is the partner's JWT `sub`; no foreign key until the authentication tables exist.
+model CouplePartner {
+  coupleId String   @map("couple_id") @db.Uuid
+  userId   String   @map("user_id") @db.Uuid
+  joinedAt DateTime @map("joined_at")
+  couple   Couple   @relation(fields: [coupleId], references: [id], onDelete: Cascade)
+
+  @@id([coupleId, userId])
+  // One couple per partner (R1, INV-007): the only unique without coupleId, read by findByPartner (decision 0029).
+  @@unique([userId])
+  @@map("couple_partner")
+}

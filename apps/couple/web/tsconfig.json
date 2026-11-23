@@ -1,0 +1,16 @@
+{
+    "extends": "@cocooning/ts-config/next.json",
+    "compilerOptions": {
+        "lib": ["dom", "dom.iterable", "esnext", "webworker"],
+        "types": ["node", "jest", "@serwist/next/typings"],
+        "paths": { "@/*": ["./src/*"] }
+    },
+    "include": [
+        "next-env.d.ts",
+        "next.config.ts",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        ".next/types/**/*.ts"
+    ],
+    "exclude": ["node_modules", "public/sw.js"]
+}

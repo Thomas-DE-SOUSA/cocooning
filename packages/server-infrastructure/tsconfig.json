@@ -1,0 +1,7 @@
+{
+    "extends": "@cocooning/ts-config/nest.json",
+    "compilerOptions": {
+        "rootDir": "./src"
+    },
+    "include": ["src/**/*.ts"]
+}

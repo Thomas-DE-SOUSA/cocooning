@@ -1,0 +1,47 @@
+{
+    "name": "cocooning",
+    "version": "0.0.0",
+    "description": "Monorepo for the Cocooning couple PWA",
+    "private": true,
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Thomas-DE-SOUSA/cocooning.git"
+    },
+    "packageManager": "pnpm@12.21.0",
+    "engines": {
+        "node": ">=22"
+    },
+    "scripts": {
+        "prepare": "husky",
+        "audit": "pnpm audit --prod --no-optional --audit-level high",
+        "audit:dev": "pnpm audit --dev --no-optional",
+        "lint-staged": "lint-staged --concurrent false --relative",
+        "build": "turbo run build",
+        "dev": "turbo run dev",
+        "test": "node --test scripts/*.test.mjs && turbo run test",
+        "lint": "node scripts/check-event-names.mjs && turbo run lint --",
+        "format": "prettier \"**/*.{js,mjs,cjs,ts,tsx,json}\"",
+        "check-types": "turbo run check-types",
+        "dev:couple": "turbo dev --filter='./apps/couple/*...' --concurrency=20",
+        "build:couple": "turbo build --filter='./apps/couple/*...'",
+        "test:couple": "turbo test --filter='./apps/couple/*...' --filter='./packages/couple/*'"
+    },
+    "devDependencies": {
+        "@cocooning/eslint-config": "workspace:*",
+        "@cocooning/prettier-config": "workspace:*",
+        "@commitlint/cli": "catalog:tooling",
+        "@commitlint/config-conventional": "catalog:tooling",
+        "@types/jest": "catalog:test",
+        "@types/node": "catalog:build",
+        "eslint": "catalog:lint",
+        "globals": "catalog:lint",
+        "husky": "catalog:tooling",
+        "jest": "catalog:test",
+        "lint-staged": "catalog:tooling",
+        "prettier": "catalog:lint",
+        "ts-jest": "catalog:test",
+        "turbo": "catalog:tooling",
+        "typescript": "catalog:build",
+        "validate-branch-name": "catalog:tooling"
+    }
+}

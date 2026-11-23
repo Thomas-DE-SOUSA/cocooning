@@ -1,0 +1,7 @@
+{
+    "extends": "@cocooning/ts-config/nest.json",
+    "compilerOptions": {
+        "types": ["node", "jest"]
+    },
+    "include": ["src/**/*.ts", "test/**/*.ts"]
+}

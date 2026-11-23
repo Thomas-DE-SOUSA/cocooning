@@ -1,0 +1,8 @@
+{
+    "extends": "../../nest.json",
+    "compilerOptions": {
+        "noEmit": true,
+        "incremental": false
+    },
+    "include": ["*.ts", "*.tsx"]
+}

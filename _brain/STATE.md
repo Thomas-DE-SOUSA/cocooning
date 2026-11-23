@@ -1,41 +1,49 @@
 # État du projet
 
-> Mis à jour : 2026-11-22. Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (PR de mise en production ouverte). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
 
-- **Phase** : avant la phase 0. Aucun code Cocooning n'existe encore.
-- **Fait** : analyse complète de Malta (48 rapports, 8 synthèses, blueprint maître, contrôle de 52 affirmations), dans `_malta-blueprint/`.
-- **Fait** : la mémoire du projet est en place et testée : `CLAUDE.md`, `_brain/`, les hooks SessionStart, SessionEnd et Stop, les skills `brain-save` et `brain-consolidate`. Les workflows `malta-*` sont enregistrés dans `.claude/workflows/`.
+- **Phase** : **phase 2 terminée et mergée dans `dev`** (nuit du 2026-11-23, en autonomie, PR #3 à #10). Contexte `pairing` de bout en bout : domaine (`packages/couple/server-business-logic`), tables + migration `init`, contrat, API `apps/couple/api` (garde de session HS256, 4 routes), 50 tests E2E. Garde-fous des décisions 0001, 0004, 0024 dans `pnpm lint` (PR #10). Détail : `journal/2026-11-23.md`, sections « Phase 2 ».
+- **Fait (phase 1)** : shared kernels, `server-infrastructure`, `couple/prisma`, `couple/contract`, `couple/e2e-shared`. Détail : `journal/2026-11-22.md`.
+- **Fait (avant)** : phase 0 (PR #1) ; analyse de Malta dans `_malta-blueprint/` ; mémoire du projet.
+
+## Le produit (vision du propriétaire, 2026-11-22)
+
+- App pour un couple, iPhone et Samsung, en PWA servie via Tailscale comme `/perso/cadence`.
+- Premier lot : notes riches (courses = note titrée « Courses »), agenda partagé, messages (photo + mots flash) avec Web Push. Détail : `journal/2026-11-22.md`, « Vision produit ».
 
 ## Prochaine étape
 
-1. Obtenir du propriétaire les décisions qui bloquent la phase 0 (liste ci-dessous).
-2. Lancer la phase 0 du blueprint : squelette du monorepo et packages de configuration (`00-BLUEPRINT.md` §6, « Phase 0 »).
+**Fait au réveil du propriétaire (2026-11-23)** : décisions 0028, 0029, 0030 acceptées (PR #12) ; écarts des décisions 0001 et 0004 dans `docs/platform/gaps/decision-checks.md` (PR #13 ; 0024 relue : la règle vise bien le code métier, pas d'écart) ; `.env` de l'API et de `couple/prisma` créés en local (secret par `openssl`).
 
-## Décisions qui bloquent la phase 0
+D19 et D25 tranchées le 2026-11-23 : pas de Storybook (plateforme 0012), schémas `create<X>Schema(t)` en `*.zod.ts` (0031).
 
-Détail et statut dans `DECISIONS.md`, options et recommandations dans `00-BLUEPRINT.md` §8.
+D18 tranchée : 100 % de couverture imposée sur le code métier, sans Stryker (plateforme 0013).
 
-- **D1** : nom du segment produit (par défaut `product`).
-- **D2** : nom de l'orchestrateur et préfixe des commandes (recommandé : `_cocooning-orch`, `coco-`).
-- **D7** : multi-tenant ou non (recommandé : `tenantId` dans les ports dès le départ).
-- **D4** : authentification (recommandé : option A, un bounded context local).
-- **D8 / D9** : versions (recommandé : parité Malta, soit TS 5.9, Next 15.5, Zod 3).
+**Prochaine étape** : phase 3, une PR à la fois, accord du propriétaire entre deux PR. Étape 1 (socle) terminée : PR #17 à #19 et #21 (PWA installable) mergées. **PR de mise en production (branche `feat/production-deployment`) ouverte, en attente de l'accord du propriétaire** : images Docker, compose de prod sur la VM Oracle de Cadence avec nom Tailscale dédié (décision plateforme 0015, D33). Au propriétaire : suivre `docs/platform/runbooks/deployment/production.md` sur la VM (clé de déploiement, clé Tailscale, `.env`), puis installer la PWA sur les deux téléphones. La prod suit `main` : merger `dev` dans `main` avant le premier déploiement. Détail : `journal/2026-11-23.md`, « mise en production ». Ensuite, seulement sur accord : étape 2, `authentication` + écran de connexion (décision 0019 ; première variable web `API_URL` dans `src/env/server.ts`, `@t3-oss/env-nextjs`, à ajouter aussi au service `web` du compose), puis étape 3 : module `pairing`.
+
+**Recette d'un nouveau package** (éprouvée six fois ; un package de test comme `e2e-shared` est lu depuis `src`, sans build) : copier la forme de `packages/server-infrastructure/` (`package.json` à exports par sous-chemin `types → src`, `default → dist` ; `tsconfig.json` + `tsconfig.build.json` + `tsconfig.spec.json` en CommonJS pour Jest ; `jest.config.mjs` avec `moduleNameMapper` vers les `src` voisins ; `eslint.config.mjs` = `nestConfig` + `boundariesConfig`, ou `config` de base pour un package isomorphe comme le shared-kernel). Écrire son `CLAUDE.md` (français sans accents, sections figées) dans le même commit. Vérifier l'entrée CommonJS de toute dépendance (D31). Ajouter les versions aux catalogues de `pnpm-workspace.yaml`. Commit sans scope (`feat: …`). Vérifier `pnpm check-types && pnpm lint && pnpm test && pnpm build` à la racine avant de commiter.
+
+
+## Décisions qui bloquent
+
+- D26 (tailles de fichiers) : `couple.aggregate.ts` 142 lignes, trois specs E2E à 115.
+
+## Fichiers chauds
+
+- `apps/couple/api/src/modules/pairing/`, `apps/couple/api/test/pairing/`, `_knowledge/backend/*.md`, `packages/shared-kernel/`, `packages/server-infrastructure/`, `packages/couple/prisma/`, `packages/couple/shared-kernel/`, `packages/couple/contract/`, `packages/couple/e2e-shared/`, `config/eslint-config/{base,business-logic}.js`, `scripts/check-event-names.mjs`
+- `infrastructure/`, `.dockerignore`, `docs/platform/runbooks/deployment/production.md`, `apps/couple/web/` (`next.config.ts`, `src/app/sw.ts`)
+- `_malta-blueprint/00-BLUEPRINT.md` §6 (phase 3), `20-frontend-web-mobile.md` §6 et §7
 
 ## Dépôt
 
-- Dépôt privé `Thomas-DE-SOUSA/cocooning`. `main` est stable, `dev` est l'intégration et la branche par défaut, chaque feature a sa branche depuis `dev` (D23).
+- Dépôt privé `Thomas-DE-SOUSA/cocooning`. `main` stable, `dev` intégration et branche par défaut, une branche par changement depuis `dev` (D23).
 - `_malta-blueprint/` reste en local, hors git (B1).
-- Plan GitHub gratuit en privé : pas de protection de branche, donc la règle « jamais de commit direct sur `main` ni `dev` » tient par discipline (D29 reste ouverte).
+- Plan GitHub gratuit en privé : pas de protection de branche (D29 ouverte).
 
 ## Points d'attention
 
 - Malta est en lecture seule. Le blueprint contient du code propriétaire « All Rights Reserved » : ne jamais le publier.
 - Les nouveaux hooks ne s'activent qu'après `/hooks` ou un redémarrage de Claude Code.
-
-## Fichiers chauds
-
-- `_malta-blueprint/00-BLUEPRINT.md` (plan maître)
-- `_brain/DECISIONS.md`

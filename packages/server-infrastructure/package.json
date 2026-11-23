@@ -1,0 +1,68 @@
+{
+    "name": "@cocooning/server-infrastructure",
+    "description": "Domain-agnostic NestJS plumbing and adapters of the shared-kernel ports",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "build": "tsc -p tsconfig.build.json",
+        "dev": "tsc -p tsconfig.build.json --watch",
+        "lint": "eslint . --max-warnings=0",
+        "check-types": "tsc --noEmit -p tsconfig.json",
+        "test": "jest"
+    },
+    "exports": {
+        "./nest": {
+            "types": "./src/nest/index.ts",
+            "default": "./dist/nest/index.js"
+        },
+        "./logging": {
+            "types": "./src/logging/index.ts",
+            "default": "./dist/logging/index.js"
+        },
+        "./date-time": {
+            "types": "./src/date-time/index.ts",
+            "default": "./dist/date-time/index.js"
+        },
+        "./identifier": {
+            "types": "./src/identifier/index.ts",
+            "default": "./dist/identifier/index.js"
+        },
+        "./crypto": {
+            "types": "./src/crypto/index.ts",
+            "default": "./dist/crypto/index.js"
+        },
+        "./storage": {
+            "types": "./src/storage/index.ts",
+            "default": "./dist/storage/index.js"
+        },
+        "./messaging": {
+            "types": "./src/messaging/index.ts",
+            "default": "./dist/messaging/index.js"
+        }
+    },
+    "dependencies": {
+        "@cocooning/shared-kernel": "workspace:*",
+        "@nestjs/common": "catalog:nest",
+        "@nestjs/core": "catalog:nest",
+        "pino": "catalog:logger",
+        "pino-pretty": "catalog:logger",
+        "reflect-metadata": "catalog:nest",
+        "rxjs": "catalog:nest",
+        "uuid": "catalog:identifier",
+        "zod": "catalog:validation"
+    },
+    "devDependencies": {
+        "@cocooning/eslint-config": "workspace:*",
+        "@cocooning/jest-config": "workspace:*",
+        "@cocooning/ts-config": "workspace:*",
+        "@nestjs/platform-express": "catalog:nest",
+        "@nestjs/testing": "catalog:nest",
+        "@types/express": "catalog:nest",
+        "@types/jest": "catalog:test",
+        "@types/node": "catalog:build",
+        "eslint": "catalog:lint",
+        "jest": "catalog:test",
+        "ts-jest": "catalog:test",
+        "typescript": "catalog:build"
+    }
+}
