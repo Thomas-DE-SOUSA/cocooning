@@ -1,13 +1,13 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (étape 2 de la phase 3, PR 7 ouverte, en attente du « go »). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (étape 2 de la phase 3, PR 7 mergée, #35). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
 
 - **Phase 3, étape 2 en cours** : contexte `authentication` et écran de connexion (décisions 0032, 0033, 0034). Plan en 8 PR validé le 2026-11-23 (« go », D34 ; détail `journal/2026-11-23.md`, « Phase 3, étape 2 : plan `authentication` »).
-- **Mergées dans `dev`** : PR 1 décisions (#25), PR 2 domaine (#26), PR 3 table `account` (#27), PR 4 contrat (#28), PR 5 module API (#30), PR 6 commande `create-account` (#33). Rien de l'étape 2 n'est déployé : une seule mise en production après la PR 8.
-- **PR 7 ouverte** (`feat/authentication-client`) : formulaire `createSignInFormSchema(t)`, port `AuthenticationGateway`, `SignInUseCase`, `ApiAuthenticationGateway` et `createAuthenticationModule`, `Input`/`Label`, `FakeFetch` en sous-chemin `testing`. Détail : `journal/2026-11-23.md`, « PR 7 ».
+- **Mergées dans `dev`** : PR 1 décisions (#25), PR 2 domaine (#26), PR 3 table `account` (#27), PR 4 contrat (#28), PR 5 module API (#30), PR 6 commande `create-account` (#33), PR 7 client (#35). Rien de l'étape 2 n'est déployé : une seule mise en production après la PR 8.
+- **PR 7 en bref** : formulaire `createSignInFormSchema(t)`, port `AuthenticationGateway`, `SignInUseCase`, `ApiAuthenticationGateway` et `createAuthenticationModule`, `Input`/`Label`, `FakeFetch` en sous-chemin `testing`. Détail : `journal/2026-11-23.md`, « PR 7 ».
 - **PR 6 en bref** : commande `create-account` dans l'API (`src/commands/`, D35, décision plateforme 0016) et runbook des comptes. Détail : `journal/2026-11-23.md`, « PR 6 ».
 - **PR 5 en bref** : `POST`/`DELETE /authentication/session` (`ApiRouterEnum.ACCOUNT_SESSION_*`), `AccountPrismaRepository`, `Argon2PasswordHasher`, `JwtSessionTokenSigner` (`sub`, `ver`, `exp`), `SessionGuard` par `ResolveSessionUseCase`, `AUTH_SESSION_TTL_DAYS=90` (aussi dans le `.env` local de l'API), fixture `createTestAccount`. E2E de l'API 71/71. Détail : `journal/2026-11-23.md`, « PR 5 ».
 - **Fait avant** : phase 0 à 2 (PR #1 à #13), phase 3 étape 1 (socle web PWA, #17 à #21). Détail : `journal/2026-11-22.md`, `journal/2026-11-23.md`.
@@ -23,7 +23,7 @@
 
 ## Prochaine étape
 
-**Merger la PR 7 sur « go »**. Puis PR 8 écran web (`API_URL`, `proxy.ts`, module `authentication`, cookie posé par la server action, clés `form.*.errors.*` dans les locales), sur accord. Ensuite une mise en production `dev` → `main`. Étape 3 (module `pairing` web) seulement sur accord.
+**PR 8 `feat/authentication-web`** (à lancer sur accord) : écran web (`API_URL`, `proxy.ts`, module `authentication`, cookie posé par la server action, clés `form.*.errors.*` dans les locales). Ensuite une mise en production `dev` → `main`. Étape 3 (module `pairing` web) seulement sur accord.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
