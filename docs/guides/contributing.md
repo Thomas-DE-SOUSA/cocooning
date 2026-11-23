@@ -15,7 +15,7 @@ Le dépôt est installé ([Installer le dépôt en local](local-setup.md)).
 
 ## Vérifier le résultat
 
-`pnpm lint`, `pnpm check-types` et `pnpm test` passent sur la branche avant la fusion.
+`pnpm lint`, `pnpm check-types` et `pnpm test` passent sur la branche avant la fusion. `pnpm lint` lance d'abord `scripts/check-event-names.mjs` (décision 0004), puis l'ESLint de chaque package : mocks automatiques dans les specs (décision 0001), hasard et `uuid` dans le code métier (décision 0024), enums, frontières.
 
 ## En cas de problème
 

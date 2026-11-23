@@ -30,7 +30,7 @@ Selon la tache : `_knowledge/backend/concurrency.md` (version, contraintes uniqu
 
 ## Tests
 
-- Une spec par use case, a cote de lui, style BDD (`Feature:`, `Scenario:`), sans `should`. Fakes ecrits a la main en `extends` du port (decision 0001), jamais `jest.fn`.
+- Une spec par use case, a cote de lui, style BDD (`Feature:`, `Scenario:`), sans `should`. Fakes ecrits a la main en `extends` du port (decision 0001), jamais `jest.fn` : `pnpm lint` le refuse, comme `Math.random`, `randomUUID` et `uuid` dans tout le package (decision 0024, `@cocooning/eslint-config/business-logic`).
 - Chaque `<Contexte>TestContext` pose `Uuid.configure` dans son constructeur ; chaque spec appelle `<Id>.resetForTests()` dans `afterEach`.
 - `__tests__/` est hors build : rien de `src/` hors specs ne l'importe.
 

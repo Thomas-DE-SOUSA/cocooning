@@ -36,11 +36,11 @@ Every folder has an `index.ts` exporting only its own files (core.md rule 22). I
 8. **A child entity** extends `Entity`, is frozen, and has `fromSnapshot()` / `toSnapshot()` (`pairing/domain/models/couple-partner.entity.ts`).
 9. **An identity VO** extends `Uuid` with `generate()` and `from()`, nothing else (`pairing/domain/value-objects/couple-id.vo.ts`).
 10. **A domain VO** extends `ValueObject`, calls `Object.freeze(this)`, validates external input in its factory and rehydrates with `from()` without validating. Getters return copies of `Date`. Reference: `pairing/domain/value-objects/invitation-code.vo.ts`, whose `normalize()` reads what a partner typed.
-11. **Randomness comes from a port passed as an argument** (`InvitationCode.generate(secureRandomGenerator, issuedAt, lifetimeInHours)`), never `Math.random` (core.md rule 19).
+11. **Randomness comes from a port passed as an argument** (`InvitationCode.generate(secureRandomGenerator, issuedAt, lifetimeInHours)`), never `Math.random`, `randomUUID` or the `uuid` package (core.md rule 19, decision 0024); `pnpm lint` rejects them (`config/eslint-config/business-logic.js`).
 
 ## Events
 
-12. **One class per file, extending `DomainEventBase`**, with `static readonly EVENT_NAME = '<context>.<object>.<fact>' as const` (decision 0004), the fact in the past tense: `pairing.couple.paired`.
+12. **One class per file, extending `DomainEventBase`**, with `static readonly EVENT_NAME = '<context>.<object>.<fact>' as const` (decision 0004), the fact in the past tense: `pairing.couple.paired`. Every other file references `XxxEvent.EVENT_NAME`; `pnpm lint` runs `scripts/check-event-names.mjs` first, which fails on an event class without its literal or on a name retyped as a string.
 13. **Data holds identifiers, statuses and primitives**, never a VO, never a secret or the couple's content (core.md rules 30, 33). `InvitationCodeRenewedEvent` has `null` data: the code stays out of every event.
 14. **The context is the full `ExecutionContext`**, even in a context whose use cases receive `PartnerContext` (decision 0029).
 

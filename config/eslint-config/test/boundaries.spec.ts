@@ -1,52 +1,7 @@
-import { spawnSync } from 'node:child_process';
-import { createRequire } from 'node:module';
-import path from 'node:path';
-
-type LintMessage = { ruleId: string | null; message: string };
-type LintResult = { filePath: string; messages: LintMessage[] };
-
-const packageRoot = path.resolve(__dirname, '..');
-const fixtureRoot = path.join(packageRoot, '__fixtures__', 'forbidden-import');
-const eslintBin = path.join(
-    path.dirname(createRequire(__filename).resolve('eslint/package.json')),
-    'bin',
-    'eslint.js',
-);
-
-const runEslint = (...args: string[]) =>
-    spawnSync(process.execPath, [eslintBin, ...args], {
-        cwd: packageRoot,
-        encoding: 'utf8',
-    });
-
-const lintFixture = () => {
-    const run = runEslint(
-        '--config',
-        path.join(fixtureRoot, 'fixture.eslint.config.mjs'),
-        '--format',
-        'json',
-        fixtureRoot,
-    );
-    const results = JSON.parse(run.stdout) as LintResult[];
-    const byFile = new Map(
-        results.map((result) => [
-            path.relative(fixtureRoot, result.filePath),
-            result.messages,
-        ]),
-    );
-    return { status: run.status, byFile };
-};
+import { lintFixture, runEslint } from './lint-fixture';
 
 describe('domain boundaries (real boundaries.js on a fake repository)', () => {
-    const { status, byFile } = lintFixture();
-
-    const messagesOf = (file: string): LintMessage[] => {
-        const messages = byFile.get(file);
-        if (!messages) {
-            throw new Error(`ESLint did not lint ${file}`);
-        }
-        return messages;
-    };
+    const { status, messagesOf } = lintFixture('forbidden-import');
 
     it('fails the lint when a fixture breaks a boundary', () => {
         expect(status).toBe(1);
