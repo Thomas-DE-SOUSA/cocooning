@@ -3,6 +3,7 @@
     "extends": ["//"],
     "tasks": {
         "build": {
+            "env": ["API_URL", "API_TIMEOUT_MS"],
             "outputs": [
                 ".next/**",
                 "!.next/cache/**",

@@ -44,3 +44,4 @@ Le registre unique des décisions du domaine `couple`, dans l'ordre chronologiqu
 | 0032 | authentication | [Règles du compte et de la session](authentication/0032-regles-du-compte-et-de-la-session.md) | produit | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0033 | authentication | [Le contexte `authentication` travaille hors du couple](authentication/0033-authentication-hors-du-couple.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0034 | transverse | [Session révocable, cookie posé par la PWA](0034-session-revocable.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0035 | frontend | [Formulaires par react-hook-form, server action qui rend un résultat](frontend/0035-formulaires-de-la-pwa.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
