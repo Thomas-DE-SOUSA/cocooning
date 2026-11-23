@@ -1,7 +1,7 @@
 import type { PartnerContext } from '@cocooning/shared-kernel/domain';
 import { AuthenticationExceptionCodeEnum } from '@cocooning/couple-contract/authentication';
 import type { Request } from 'express';
-import { AuthenticationException } from './authentication.exception';
+import { AuthenticationException } from '@cocooning/couple-server-business-logic/authentication';
 
 const PARTNER_CONTEXT = Symbol('PARTNER_CONTEXT');
 

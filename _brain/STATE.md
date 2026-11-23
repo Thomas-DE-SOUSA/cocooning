@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (étape 2 de la phase 3, PR 1). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (étape 2 de la phase 3, PR 2). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -24,7 +24,7 @@ D18 tranchée : 100 % de couverture imposée sur le code métier, sans Stryker (
 
 **En production depuis le 2026-11-23** : https://cocooning.<tailnet>.ts.net, sur la VM Oracle `cadence` (accès `ssh cadence` depuis le Mac), clone de `main` dans `~/cocooning`, secrets dans `~/cocooning/infrastructure/compose/.env`, clé de déploiement GitHub `oracle-vm` (lecture seule), `pg_dump` nocturne dans `~/backups` (crontab de `ubuntu`). Mise à jour : `docs/platform/runbooks/deployment/production.md`. PWA installée et vérifiée sur le téléphone du propriétaire le 2026-11-23 (« Bienvenue sur Cocooning »).
 
-**Prochaine étape** : phase 3, une PR à la fois, accord du propriétaire entre deux PR. Étape 1 terminée (PR #17 à #19, #21), mise en production (#22, #23 `dev` → `main`, #24). **Étape 2 en cours** : plan en 8 PR validé le 2026-11-23 (« go », D34 ; détail `journal/2026-11-23.md`, « Phase 3, étape 2 »). PR 1 `docs/authentication-decisions` (décisions 0032, 0033, 0034 qui remplace 0030) ouverte, en attente d'accord. Ensuite : PR 2 domaine, 3 tables, 4 contrat, 5 API (`AUTH_SESSION_TTL_DAYS`), 6 commande `create-account`, 7 client, 8 écran web (`API_URL`). Une seule mise en production après la PR 8. Étape 3 (module `pairing` web) seulement sur accord.
+**Prochaine étape** : phase 3, une PR à la fois, accord du propriétaire entre deux PR. Étape 1 terminée (PR #17 à #19, #21), mise en production (#22, #23 `dev` → `main`, #24). **Étape 2 en cours** : plan en 8 PR validé le 2026-11-23 (« go », D34 ; détail `journal/2026-11-23.md`, « Phase 3, étape 2 »). PR 1 mergée (#25). PR 2 `feat/authentication-domain` ouverte, en attente d'accord. Ensuite : 3 tables, 4 contrat, 5 API (`AUTH_SESSION_TTL_DAYS`), 6 commande `create-account`, 7 client, 8 écran web (`API_URL`). Une seule mise en production après la PR 8. Étape 3 (module `pairing` web) seulement sur accord.
 
 **Recette d'un nouveau package** (éprouvée six fois ; un package de test comme `e2e-shared` est lu depuis `src`, sans build) : copier la forme de `packages/server-infrastructure/` (`package.json` à exports par sous-chemin `types → src`, `default → dist` ; `tsconfig.json` + `tsconfig.build.json` + `tsconfig.spec.json` en CommonJS pour Jest ; `jest.config.mjs` avec `moduleNameMapper` vers les `src` voisins ; `eslint.config.mjs` = `nestConfig` + `boundariesConfig`, ou `config` de base pour un package isomorphe comme le shared-kernel). Écrire son `CLAUDE.md` (français sans accents, sections figées) dans le même commit. Vérifier l'entrée CommonJS de toute dépendance (D31). Ajouter les versions aux catalogues de `pnpm-workspace.yaml`. Commit sans scope (`feat: …`). Vérifier `pnpm check-types && pnpm lint && pnpm test && pnpm build` à la racine avant de commiter.
 

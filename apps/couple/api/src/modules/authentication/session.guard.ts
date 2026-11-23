@@ -10,7 +10,7 @@ import { IS_PUBLIC_KEY } from '@cocooning/server-infrastructure/nest';
 import type { PartnerContext } from '@cocooning/shared-kernel/domain';
 import { DateTimeProvider } from '@cocooning/shared-kernel/ports';
 import type { Request } from 'express';
-import { AuthenticationException } from './authentication.exception';
+import { AuthenticationException } from '@cocooning/couple-server-business-logic/authentication';
 import { attachPartnerContext } from './partner-context.request';
 import { SESSION_COOKIE_NAME, SESSION_TOKEN_ALGORITHM } from './session-cookie';
 import { SessionTokenPayloadSchema } from './session-token-payload';

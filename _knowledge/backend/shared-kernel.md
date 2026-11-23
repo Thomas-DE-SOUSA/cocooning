@@ -2,7 +2,7 @@
 
 Two shared kernels. `@cocooning/shared-kernel` (`packages/shared-kernel`) holds the domain-agnostic primitives, ports and exceptions, isomorphic (API and PWA). `@cocooning/couple-shared-kernel` (`packages/couple/shared-kernel`) holds what the couple server and PWA share: business enums and routes. Before creating any primitive, port, enum or base class: **check both first** (core.md rule 16).
 
-No root export: import from a subpath. `@cocooning/shared-kernel/<domain|ports|exceptions|application|utils>`, test fakes from `@cocooning/shared-kernel/testing`. `@cocooning/couple-shared-kernel/<enums|routers|exceptions>`.
+No root export: import from a subpath. `@cocooning/shared-kernel/<domain|ports|exceptions|application|utils>`, test fakes from `@cocooning/shared-kernel/testing`. `@cocooning/couple-shared-kernel/<enums|routers|exceptions|limits>`.
 
 ---
 
@@ -73,6 +73,7 @@ Excluded from the build. Each one `extends` its port (decision 0001): `Determini
 | Subpath | Contains |
 |---|---|
 | `enums` | Business enums shared by server and PWA, one file per enum, `as const` (decision 0002): `CouplePairingStatusEnum` (`PENDING`, `PAIRED`) |
+| `limits` | Bounds that are both a domain invariant and a contract or form bound (`contracts.md` rule 11): `EMAIL_ADDRESS_MAX_LENGTH`, `PASSWORD_MIN_LENGTH`, `PASSWORD_MAX_LENGTH` (decision 0032) |
 | `routers` | `ApiRouterEnum` and `WebRouterEnum`, one route file per context (plus `HealthRouteEnum`, the public API health route; `PairingRouteEnum` for `pairing`; web: `HomeRouteEnum`, `OfflineRouteEnum` for the offline fallback page of the service worker) spread into the enum and listed in `API_ROUTE_GROUPS` / `WEB_ROUTE_GROUPS`; a spec fails on a key declared by two groups or a group missing from the list. Never hardcode a route string |
 | `exceptions` | `MissingExecutionContextException(missing)`, code `EXECUTION_CONTEXT_MISSING`: thrown by a guard service's `ensureRequiredContextPresent` when a field of `ExecutionContext` is missing |
 

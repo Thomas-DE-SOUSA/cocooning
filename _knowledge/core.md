@@ -141,7 +141,7 @@ Rule numbers are an API: findings, `CLAUDE.md` files and decisions cite `core.md
 
 ## Security
 
-27. **Couple isolation (D7).** Every record belongs to a couple and has an `ownerId`. Every data query MUST be scoped to a `coupleId`: first parameter of every port method, leading column of every index. A record private to one partner is also filtered by `ownerId`, and the other partner gets a 404, never a 403. A missing filter = data leak. No exceptions.
+27. **Couple isolation (D7).** Every record belongs to a couple and has an `ownerId`. Every data query MUST be scoped to a `coupleId`: first parameter of every port method, leading column of every index. A record private to one partner is also filtered by `ownerId`, and the other partner gets a 404, never a 403. A missing filter = data leak. The only exceptions are the two contexts that precede the couple: `pairing` (decision 0029) and `authentication` (decision 0033).
 
 28. **Never trust client input.** Validate at system boundaries with Zod schemas: API endpoints, server actions, form submissions. Invalid input is answered with 422 (D5). Frontend validation is UX; server validation is security.
 
