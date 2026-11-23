@@ -53,6 +53,36 @@ describe('Next.js rules (next.js on a fake Next.js app)', () => {
                 'entry point',
             ],
             [
+                'src/app/forbidden-relative-module-interior.ts',
+                'no-restricted-imports',
+                'entry point',
+            ],
+            [
+                'src/app/forbidden-toast-message.ts',
+                'no-restricted-syntax',
+                'describeApiResultError',
+            ],
+            [
+                'src/shared/forbidden-module-import.ts',
+                'no-restricted-imports',
+                'depends on none',
+            ],
+            [
+                'src/modules/notes/ui/views/forbidden-service.view.tsx',
+                'no-restricted-imports',
+                'service',
+            ],
+            [
+                'src/modules/notes/ui/views/forbidden-use.view.tsx',
+                'no-restricted-syntax',
+                'decision 0009',
+            ],
+            [
+                'src/modules/notes/hooks/forbidden-action.ts',
+                'no-restricted-imports',
+                'rule 21',
+            ],
+            [
                 'src/modules/notes/data/forbidden-enum.ts',
                 'no-restricted-syntax',
                 'enums are forbidden',
@@ -76,6 +106,7 @@ describe('Next.js rules (next.js on a fake Next.js app)', () => {
             'src/modules/notes/hooks/allowed-toast.ts',
             'src/modules/notes/hooks/allowed-relative-import.ts',
             'src/app/allowed-module-entry.ts',
+            'src/shared/allowed-shared-import.ts',
         ])('accepts %s', (file) => {
             expect(messagesOf(file)).toEqual([]);
         });

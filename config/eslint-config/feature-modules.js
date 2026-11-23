@@ -15,6 +15,10 @@ const VIEW_HOOK_MESSAGE =
     'A view only calls useTranslation and useForm (decision 0009): move the hook to the container or a hook of the module.';
 const VIEW_HOOKS = [
     {
+        selector: "CallExpression[callee.name='use']",
+        message: VIEW_HOOK_MESSAGE,
+    },
+    {
         selector:
             'CallExpression[callee.name=/^use(?!Translation$|Form$)[A-Z]/]',
         message: VIEW_HOOK_MESSAGE,
@@ -32,6 +36,24 @@ const MODULE_INTERIOR = {
         'Import another module through its entry point @/modules/<module> only (decision 0011).',
 };
 
+const RELATIVE_MODULE_INTERIOR = {
+    regex: '^\\.{1,2}/(.+/)?modules/[^/]+/.+',
+    message:
+        'Outside src/modules, reach a module through its entry point @/modules/<module> only (decision 0011).',
+};
+
+const SHARED_TO_MODULE = {
+    regex: '(^@/|/)modules(/|$)',
+    message:
+        'src/shared serves every module and depends on none (decision 0011).',
+};
+
+const HOOK_TO_ACTION = {
+    regex: '(^|/)actions(/|$)',
+    message:
+        'A hook receives the gateway or the action as a parameter, never imports a server action (core-frontend.md rule 21).',
+};
+
 const VIEW_IMPORTS = [
     {
         regex: '^next/navigation$',
@@ -39,9 +61,9 @@ const VIEW_IMPORTS = [
             'A view does not navigate (decision 0009): the container calls useRouter.',
     },
     {
-        regex: '(^|/)(gateways|actions)(/|$)',
+        regex: '(^|/)(gateways|actions|services|hooks)(/|$)',
         message:
-            'A view imports neither a gateway nor a server action (decision 0009): data comes through its props.',
+            'A view imports neither a gateway, a server action, a service nor a hook (decision 0009): data comes through its props.',
     },
 ];
 
@@ -75,7 +97,22 @@ export const featureModulesConfig = [
         rules: { 'no-restricted-imports': restrictImports([MODULE_INTERIOR]) },
     },
     {
-        files: ['**/src/modules/**/*.{ts,tsx}'],
+        files: ['**/src/app/**/*.{ts,tsx}'],
+        rules: {
+            'no-restricted-imports': restrictImports([
+                MODULE_INTERIOR,
+                RELATIVE_MODULE_INTERIOR,
+            ]),
+        },
+    },
+    {
+        files: ['**/src/shared/**/*.{ts,tsx}'],
+        rules: {
+            'no-restricted-imports': restrictImports([SHARED_TO_MODULE]),
+        },
+    },
+    {
+        files: ['**/src/**/*.{ts,tsx}'],
         ignores: UNIT_SPECS,
         rules: {
             'no-restricted-syntax': [
@@ -94,6 +131,16 @@ export const featureModulesConfig = [
             ]),
         },
     })),
+    {
+        files: ['**/src/modules/*/hooks/*.{ts,tsx}'],
+        rules: {
+            'no-restricted-imports': restrictImports([
+                MODULE_INTERIOR,
+                escapingModule(1),
+                HOOK_TO_ACTION,
+            ]),
+        },
+    },
     ...depths
         .filter((depth) => depth >= VIEW_DEPTH)
         .map((depth) => ({
