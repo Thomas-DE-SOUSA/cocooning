@@ -15,7 +15,7 @@ const NOW = new Date('2026-11-23T08:00:00.000Z');
 const NOW_SECONDS = NOW.getTime() / 1_000;
 const PARTNER_ID = '01936b2e-7c4a-7000-8000-000000000001';
 
-// A test-only route behind the global guard: no protected route exists yet in phase 2.
+// A test-only route behind the global guard: it echoes the partner the guard attached to the request.
 @Controller()
 class PartnerProbeController {
     @Get(PROBE_ROUTE)
