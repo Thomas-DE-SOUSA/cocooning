@@ -57,7 +57,7 @@ Exemple réel : la mise en couple, dans `apps/couple/web/src/modules/pairing/` (
 | `src/proxy.ts` | Renvoie vers `WebRouterEnum.ACCOUNT_SIGN_IN` toute page demandée sans cookie, sauf l'écran de connexion et `WebRouterEnum.OFFLINE`. Le `matcher` exclut les fichiers de la PWA, demandés sans cookie (manifeste, icônes, service worker). Il ne vérifie que la présence du cookie : le garde de session de l'API vérifie le jeton à chaque appel |
 | `src/env/server.ts` | `API_URL` et `API_TIMEOUT_MS`, validés au démarrage du serveur par `src/instrumentation.ts`, jamais exposés au navigateur (`server-only`) |
 
-Une page qui reçoit `UNAUTHORIZED` renvoie vers la connexion. « Se déconnecter » (`SignOutContainer`, sur l'accueil et `/pairing`) appelle `DELETE /authentication/session` avec la session : l'API ferme les sessions de tous les appareils, puis l'action retire le cookie de ce navigateur. La fabrique `createAuthenticationModule` reçoit donc elle aussi `getSessionToken`, que seule la déconnexion lit ; la connexion n'en a pas besoin ([écart frontend 004](../../gaps/frontend.md), sur la décision 0036).
+Une page qui reçoit `UNAUTHORIZED` renvoie vers la connexion. « Se déconnecter » (`SignOutContainer`, sur l'accueil et `/pairing`) appelle `DELETE /authentication/session` avec la session : l'API ferme les sessions de tous les appareils, puis l'action retire le cookie de ce navigateur. La fabrique `createAuthenticationModule` reçoit donc elle aussi `getSessionToken`, que seule la déconnexion lit ; la connexion part sans cookie ([décision 0042](../../decisions/frontend/0042-fournisseur-de-session-des-fabriques.md)).
 
 ## Les erreurs
 
