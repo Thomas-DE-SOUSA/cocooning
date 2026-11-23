@@ -14,7 +14,7 @@ import {
 } from '../view-models/pairing-screen.view-model';
 import { useJoinCoupleForm } from './use-join-couple-form';
 import { usePairingCommands } from './use-pairing-commands';
-import { useRefreshOnReturn } from './use-refresh-on-return';
+import { useRefreshOnReturn } from '@/shared/application/refresh/use-refresh-on-return';
 import { useShareInvitationCode } from './use-share-invitation-code';
 
 const FAILURE_TITLE_KEYS: Readonly<Record<PairingCommand, string>> = {

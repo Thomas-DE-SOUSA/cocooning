@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-// Decision 0036: the other partner may have joined while the PWA was in the background.
+// Decision 0036: the other partner may have acted while the PWA was in the background.
 export function useRefreshOnReturn(refresh: () => void): void {
     useEffect(() => {
         const refreshWhenVisible = () => {

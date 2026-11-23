@@ -9,7 +9,7 @@ type Props = {
     readonly onClick: () => void;
 };
 
-// A pairing command: disabled while any command runs, the Spinner only on the running one (core-frontend.md rule 9).
+// A screen command: disabled while any command runs, the Spinner only on the running one (core-frontend.md rule 9).
 export function CommandButton({
     variant,
     label,

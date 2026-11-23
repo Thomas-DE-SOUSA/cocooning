@@ -26,6 +26,7 @@ Construit aujourd'hui : domaine et application, tables `note` et `note_event` (v
 | `CreateNoteUseCase`, `ListNotesUseCase` (page `OffsetPage<NoteView>`), `RenameNoteUseCase`, `ShareNoteUseCase`, `MakeNotePrivateUseCase`, `DeleteNoteUseCase` | Use cases, `execute(context)` ou `execute(context, command)` | `application/use-cases/` |
 | `NotePrismaRepository`, `PairedCouplePrismaProvider` | Adaptateurs : note et outbox dans une transaction, verrou optimiste, visibilité dans le `where` ; lecture seule du couple formé dans les tables de `pairing` (couple supprimé exclu) | `apps/couple/api/src/modules/notes/secondary/` |
 | `toNoteView` | Vue rendue pour le partenaire qui lit : identifiant, propriétaire, `isOwner` (la lectrice est la propriétaire, pour les actions de R5 et R7), titre, visibilité, dernière modification | `application/mappers/note-view.mapper.ts` |
+| Liste des notes | Accueil de la PWA (route `/`) : les notes visibles, la création par le titre, et pour la propriétaire partager, rendre privée, supprimer après une confirmation (voir [le front de la PWA](../frontend/index.md)) | `apps/couple/web/src/modules/notes/` |
 
 Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/notes/`.
 

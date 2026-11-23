@@ -24,7 +24,7 @@
 
 - Type : test manquant
 - Constaté le : 2026-11-23, revue des étapes 2 et 3
-- Où : `apps/couple/web/src/app/page.tsx`, `apps/couple/web/src/app/pairing/page.tsx`, `apps/couple/web/src/modules/*/ui/containers/`, `apps/couple/web/src/modules/pairing/hooks/use-pairing-screen.ts`
+- Où : `apps/couple/web/src/app/(home)/page.tsx`, `apps/couple/web/src/app/pairing/page.tsx`, `apps/couple/web/src/modules/*/ui/containers/`, `apps/couple/web/src/modules/pairing/hooks/use-pairing-screen.ts`, `apps/couple/web/src/modules/notes/hooks/use-notes-screen.ts`
 - Constat : une route qui monte un container importe la server action et `serverEnv`, que t3-env refuse sous jsdom ; `use-pairing-screen` appelle `useRouter` de `next/navigation`, sans routeur dans un test. Les décisions qu'ils portent sont sorties dans des fonctions testées (`presentPairingPage`, `resolveHomeDestination`, `resolveCommandFailureFollowUp`, `closeSignOutSession`, `isSecureCookie`), mais le câblage lui-même (choix de la vue, clés des toasts, redirection) n'est vérifié qu'à la main.
 - Règle concernée : `core-backend.md` règle 20 pour l'esprit (E2E des points d'entrée) ; aucune règle front écrite
 - Statut : ouvert
@@ -37,3 +37,12 @@
 - Constat : la décision 0036 dit que la fabrique `authentication`, dont le premier appel est public, ne prend pas de `getSessionToken`. Depuis la déconnexion (décision 0034), `SignOutUseCase` agit pour le partenaire connecté : la fabrique reçoit donc `getSessionToken`, que seule la déconnexion lit. Une fabrique de contexte reçoit `getSessionToken` dès qu'un de ses use cases agit pour le partenaire connecté. Retirer le fournisseur pour suivre la décision casserait la déconnexion : sans session, l'API répond 401, que `SignOutUseCase` compte comme une session fermée, et seuls les autres appareils resteraient connectés.
 - Règle concernée : [décision 0036](../decisions/frontend/0036-lecture-des-donnees-par-la-page-serveur.md)
 - Statut : clos, tranché par la [décision 0042](../decisions/frontend/0042-fournisseur-de-session-des-fabriques.md)
+
+### 005. La liste des notes ne montre que les 100 plus récentes
+
+- Type : règle validée non construite
+- Constaté le : 2026-11-23, liste des notes (branche `feat/notes-list`)
+- Où : `apps/couple/web/src/modules/notes/services/load-notes.service.ts`
+- Constat : l'accueil lit la première page de `GET /notes` avec `pageSize` à `MAX_PAGE_SIZE` (100) et n'offre aucune page suivante. Au-delà de 100 notes visibles, les plus anciennes n'apparaissent plus dans la PWA ; elles restent dans la base et dans l'API.
+- Règle concernée : [décision 0025](../decisions/0025-pagination.md)
+- Statut : ouvert
