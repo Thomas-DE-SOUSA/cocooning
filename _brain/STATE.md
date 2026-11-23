@@ -1,11 +1,11 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (étape 3 de la phase 3 lancée, D37). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (étape 3 de la phase 3 en production, release #50). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
 
-- **Phase 3, étape 3 en cours** : module `pairing` de la PWA (mise en couple par code), plan D37 en 6 PR (`journal/2026-11-23.md`, « Phase 3, étape 3 : plan `pairing` web »).
+- **Phase 3, étape 3 terminée et en production** (2026-11-23) : module `pairing` de la PWA et déconnexion, plan D37 en 6 PR (#43 à #49), release #50.
 - **Étape 2 terminée et en production** (2026-11-23) : contexte `authentication`, écran de connexion, deux comptes créés sur la VM, garde-fous ESLint du web (#25 à #42). Détail : `journal/2026-11-23.md`, sections « Phase 3, étape 2 » à « Garde-fous ESLint ».
 - **Fait avant** : phase 0 à 2 (PR #1 à #13), phase 3 étape 1 (socle web PWA, #17 à #21), étape 2 (#25 à #42). Détail : `journal/2026-11-22.md`, `journal/2026-11-23.md`.
 
@@ -20,7 +20,7 @@
 
 ## Prochaine étape
 
-**Étape 3 lancée** (module `pairing` web, plan D37 en 6 PR, `journal/2026-11-23.md`, « Phase 3, étape 3 : plan `pairing` web »). PR 1 décisions mergée (#43, ADR 0036 et 0037 acceptées). PR 2 mergée (#45). PR 3 mergée (#46). PR 4 et 5 mergées (#47, #48). PR 6 déconnexion ouverte, en attente du « go » ; puis mise en production de l'étape 3, sur accord. Étape 2 en production avec les deux comptes.
+**Étape 3 terminée et en production** (release #50, `journal/2026-11-23.md`, « Mise en production de l'étape 3 ») : mise en couple par code et déconnexion. Le couple reste à former par le propriétaire et Pauline. Prochaine étape de la phase 3 : à choisir avec le propriétaire (premier lot : notes, agenda, messages).
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
