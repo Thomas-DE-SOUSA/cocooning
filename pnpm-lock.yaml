@@ -364,6 +364,9 @@ importers:
       '@cocooning/couple-prisma':
         specifier: workspace:*
         version: link:../../../packages/couple/prisma
+      '@cocooning/couple-server-business-logic':
+        specifier: workspace:*
+        version: link:../../../packages/couple/server-business-logic
       '@cocooning/couple-shared-kernel':
         specifier: workspace:*
         version: link:../../../packages/couple/shared-kernel

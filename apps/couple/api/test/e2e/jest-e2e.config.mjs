@@ -18,6 +18,7 @@ export default {
         '^@cocooning/server-infrastructure/(.*)$': `${packages}/server-infrastructure/src/$1`,
         '^@cocooning/couple-shared-kernel/(.*)$': `${packages}/couple/shared-kernel/src/$1`,
         '^@cocooning/couple-contract/(.*)$': `${packages}/couple/contract/src/$1`,
+        '^@cocooning/couple-server-business-logic/(.*)$': `${packages}/couple/server-business-logic/src/$1`,
         '^@cocooning/couple-prisma/(.*)$': `${packages}/couple/prisma/src/$1`,
         '^@cocooning/couple-e2e-shared/(.*)$': `${packages}/couple/e2e-shared/src/$1`,
     },
