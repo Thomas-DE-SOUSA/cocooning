@@ -6,7 +6,7 @@ Cette page décrit comment le contexte `authentication` est construit : ses couc
 
 `authentication` garde les deux comptes du couple : adresse e-mail, mot de passe haché, version de session. Il crée un compte, ouvre une session, retrouve le partenaire d'un jeton et ferme les sessions d'un partenaire. Il ne connaît pas le couple : un compte existe avant lui ([décision 0033](../../decisions/authentication/0033-authentication-hors-du-couple.md)), et les autres contextes ne reçoivent que le `userId`.
 
-Seuls le domaine et l'application existent pour l'instant. Le garde de session de l'API vérifie encore le jeton seul ([décision 0030](../../decisions/0030-verification-du-jwt-en-phase-2.md)) ; il passera par `ResolveSessionUseCase` avec le module API du contexte ([décision 0034](../../decisions/0034-session-revocable.md)).
+Le domaine, l'application et la table `account` existent pour l'instant. Le garde de session de l'API vérifie encore le jeton seul ([décision 0030](../../decisions/0030-verification-du-jwt-en-phase-2.md)) ; il passera par `ResolveSessionUseCase` avec le module API du contexte ([décision 0034](../../decisions/0034-session-revocable.md)).
 
 ## Comment c'est construit
 
@@ -23,6 +23,7 @@ Seuls le domaine et l'application existent pour l'instant. Le garde de session d
 | `PasswordPolicyValidator` | Contrôle statique de la longueur du mot de passe (R2) | `domain/services/password-policy.validator.ts` |
 | `CreateAccountUseCase`, `SignInUseCase`, `ResolveSessionUseCase` | Use cases `execute(command)`, sans contexte | `application/use-cases/` |
 | `SignOutUseCase` | Use case `execute(context)`, avec le `PartnerContext` du partenaire connecté | `application/use-cases/sign-out.use-case.ts` |
+| Table `account` | Persistance de l'agrégat, sans `couple_id` ni outbox (voir [les tables](tables.md)) | `packages/couple/prisma/prisma/models/authentication-account.prisma` |
 | `toAccountView`, `toSessionView` | Vues rendues : compte créé (`userId`, adresse) ; session ouverte (`userId`, jeton, échéance) | `application/mappers/` |
 
 Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/authentication/`.
