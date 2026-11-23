@@ -6,7 +6,7 @@ last-verified: 2026-11-23
 
 Ce runbook crée les deux comptes de Cocooning sur la VM, vérifie qu'ils se connectent, et dit quoi faire d'un mot de passe oublié.
 
-Niveau de preuve : exécuté le 2026-11-23 en local, dans l'image `runner` construite par ce Dockerfile, sur un terminal réel et contre un Postgres 17 jetable (création, refus d'une adresse prise, vérification `curl` à `200` et `401`) ; pas encore sur la VM, ni par `docker compose run`.
+Niveau de preuve : exécuté sur la VM le 2026-11-23 par `docker compose run` (création des deux comptes du couple, vérification `curl` à `200`) ; auparavant en local, dans l'image `runner` sur un terminal réel, contre un Postgres 17 jetable (refus d'une adresse prise, `401`).
 
 ## Quand l'utiliser
 
