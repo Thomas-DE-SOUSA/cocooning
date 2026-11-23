@@ -6,6 +6,7 @@ import {
     FakeSecureRandomGenerator,
     FakeUuidV7GeneratorProvider,
 } from '@cocooning/shared-kernel/testing';
+import { CancelCoupleUseCase } from '../../application/use-cases/cancel-couple.use-case';
 import { CreateCoupleUseCase } from '../../application/use-cases/create-couple.use-case';
 import { GetMyCoupleUseCase } from '../../application/use-cases/get-my-couple.use-case';
 import { JoinCoupleUseCase } from '../../application/use-cases/join-couple.use-case';
@@ -70,6 +71,15 @@ export class PairingTestContext {
             this.dateTimeProvider,
             this.eventPublishingService,
             INVITATION_CODE_LIFETIME_IN_HOURS,
+        );
+    }
+
+    cancelCoupleUseCase(): CancelCoupleUseCase {
+        return new CancelCoupleUseCase(
+            this.coupleRepository,
+            this.preconditions,
+            this.dateTimeProvider,
+            this.eventPublishingService,
         );
     }
 

@@ -16,11 +16,14 @@ const sharesTheCode = (left: CoupleSnapshot, right: CoupleSnapshot): boolean =>
     left.invitationCode !== null &&
     left.invitationCode.value === right.invitationCode?.value;
 
+const isLive = (snapshot: CoupleSnapshot): boolean =>
+    snapshot.metadata.deletedAt === null;
+
 const fail = (code: keyof typeof PairingExceptionCodeEnum): never => {
     throw new PairingException({ code, message: `In-memory ${code}` });
 };
 
-// Mimics the adapter: optimistic version, unique partner, unique code, outbox.
+// Mimics the adapter: optimistic version, unique partner, unique code, outbox; a cancelled couple is found by nobody and holds neither its partner nor its code.
 export class CoupleInMemoryRepository extends CoupleRepository {
     private snapshots: ReadonlyMap<string, CoupleSnapshot> = new Map();
     private outbox: ReadonlyArray<DomainEvent> = [];
@@ -69,7 +72,7 @@ export class CoupleInMemoryRepository extends CoupleRepository {
     private findWhere(
         predicate: (snapshot: CoupleSnapshot) => boolean,
     ): Promise<Couple | null> {
-        const found = this.storedSnapshots.find(predicate);
+        const found = this.storedSnapshots.filter(isLive).find(predicate);
         return Promise.resolve(
             found === undefined
                 ? null
@@ -83,7 +86,7 @@ export class CoupleInMemoryRepository extends CoupleRepository {
             fail(PairingExceptionCodeEnum.PAIRING_COUPLE_VERSION_CONFLICT);
         }
         const others = this.storedSnapshots.filter(
-            ({ id }) => id !== snapshot.id,
+            (other) => other.id !== snapshot.id && isLive(other),
         );
         if (others.some((other) => sharesAPartner(other, snapshot))) {
             fail(PairingExceptionCodeEnum.PAIRING_PARTNER_ALREADY_IN_COUPLE);

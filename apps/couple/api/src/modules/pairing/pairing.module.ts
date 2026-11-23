@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PairingServiceModule } from './pairing-service.module';
 import {
+    CancelCoupleController,
     CreateCoupleController,
     GetMyCoupleController,
     JoinCoupleController,
@@ -14,6 +15,7 @@ import {
         JoinCoupleController,
         RenewInvitationCodeController,
         GetMyCoupleController,
+        CancelCoupleController,
     ],
 })
 export class PairingModule {}

@@ -13,6 +13,7 @@ Cette page décrit l'agrégat `Couple` du contexte `pairing` : son état, ses tr
 | `Couple.create(input, now)` | Le créateur devient le premier partenaire, statut `PENDING`, code reçu en entrée ; enregistre `CoupleCreatedEvent` | `domain/models/couple.aggregate.ts` |
 | `Couple.join(partnerUserId, enteredCode, now)` | Ajoute le second partenaire, statut `PAIRED`, code retiré ; enregistre `CouplePairedEvent` | idem |
 | `Couple.renewInvitationCode(partnerUserId, invitationCode, now)` | Remplace le code d'un couple en attente ; enregistre `InvitationCodeRenewedEvent` | idem |
+| `Couple.cancel(partnerUserId, now)` | Supprime en douceur un couple en attente (`deletedAt`) ; enregistre `CoupleCancelledEvent` (R8) | idem |
 | `Couple.fromSnapshot`, `toSnapshot` | Relecture sans validation, sérialisation en primitives et dates ISO | idem |
 | `CouplePairingValidator` | `ensureMember`, `ensureNotMember`, `ensurePending`, `ensureJoinableWith` | `domain/services/couple-pairing.validator.ts` |
 | `InvitationCode` | `generate`, `from`, `normalize`, `isValidAt`, `matches` | `domain/value-objects/invitation-code.vo.ts` |
@@ -28,6 +29,7 @@ Le code est tiré par `SecureRandomGenerator.generateHex(8)` : chaque octet donn
 | `CoupleCreatedEvent` | `pairing.couple.created` | `creatorUserId`, `pairingStatus` |
 | `CouplePairedEvent` | `pairing.couple.paired` | `partnerUserIds`, `pairingStatus` |
 | `InvitationCodeRenewedEvent` | `pairing.invitation-code.renewed` | aucune (`null`) |
+| `CoupleCancelledEvent` | `pairing.couple.cancelled` | aucune (`null`) |
 
 Chaque événement porte l'`ExecutionContext` complet : `coupleId` du couple, `userId` du partenaire qui agit. Aucun ne porte le code.
 
@@ -43,6 +45,7 @@ Chaque événement porte l'`ExecutionContext` complet : `coupleId` du couple, `u
 | INV-006 | L'agrégat ne modifie jamais `version` ; il part de 1 et la base l'incrémente | agrégat, repository |
 | INV-007 | Un partenaire appartient à un seul couple (R1) | `PairingPreconditionService`, contrainte unique de `CoupleRepository.save` |
 | INV-008 | Un code n'existe que dans un couple (`PAIRING_INVITATION_CODE_CONFLICT`) | contrainte unique de `CoupleRepository.save` |
+| INV-009 | Seul un membre d'un couple `PENDING` l'annule ; un couple `PAIRED` refuse (`PAIRING_COUPLE_ALREADY_PAIRED`, R8). Un couple annulé ne retient ni son partenaire ni son code | agrégat (`cancel`, `ensureMember`, `ensurePending`), `CoupleRepository.save` |
 
 ## Points d'attention
 
@@ -52,4 +55,5 @@ Chaque événement porte l'`ExecutionContext` complet : `coupleId` du couple, `u
 ## Décisions liées
 
 - [Décision 0028](../../decisions/pairing/0028-regles-du-code-d-invitation.md) : règles du code d'invitation
+- [Décision 0038](../../decisions/pairing/0038-annuler-un-couple-en-attente.md) : annuler un couple en attente
 - [Décision 0024](../../decisions/0024-determinisme-horloge-et-identifiants.md) : horloge injectée, identifiants UUID v7

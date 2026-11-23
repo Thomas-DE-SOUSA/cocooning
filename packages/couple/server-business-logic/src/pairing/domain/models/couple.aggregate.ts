@@ -3,6 +3,7 @@ import {
     CouplePairingStatusEnum,
 } from '@cocooning/couple-shared-kernel/enums';
 import { AggregateRoot, EntityMetadata } from '@cocooning/shared-kernel/domain';
+import { CoupleCancelledEvent } from '../events/couple-cancelled.event';
 import { CoupleCreatedEvent } from '../events/couple-created.event';
 import { CouplePairedEvent } from '../events/couple-paired.event';
 import { InvitationCodeRenewedEvent } from '../events/invitation-code-renewed.event';
@@ -99,6 +100,21 @@ export class Couple extends AggregateRoot {
         this.props.metadata = this.props.metadata.recordUpdate(now);
         this.addDomainEvent(
             new InvitationCodeRenewedEvent({
+                coupleId: this.id.getValue(),
+                userId: partnerUserId,
+                occurredAt: now,
+                data: null,
+            }),
+        );
+    }
+
+    // R8: only the single partner of a pending couple cancels it; the adapter releases the partner.
+    cancel(partnerUserId: string, now: Date): void {
+        CouplePairingValidator.ensureMember(this.partners, partnerUserId);
+        CouplePairingValidator.ensurePending(this.pairingStatus);
+        this.props.metadata = this.props.metadata.recordDeletion(now);
+        this.addDomainEvent(
+            new CoupleCancelledEvent({
                 coupleId: this.id.getValue(),
                 userId: partnerUserId,
                 occurredAt: now,
