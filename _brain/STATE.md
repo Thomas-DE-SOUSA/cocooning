@@ -20,7 +20,9 @@
 
 D19 et D25 tranchées le 2026-11-23 : pas de Storybook (plateforme 0012), schémas `create<X>Schema(t)` en `*.zod.ts` (0031).
 
-**Prochaine étape** : phase 3 (PWA), étape par étape avec le propriétaire : il a demandé d'arrêter l'autonomie. Restent à revoir avec lui les points « À confirmer » des étapes 1 à 4 du journal (code `PAIRING_INVITATION_CODE_CONFLICT`, schéma de réponse partagé, `InProcessEventPublisher`, port 3100, suffixes). Merger `dev` dans `main` seulement à sa demande.
+D18 tranchée : 100 % de couverture imposée sur le code métier, sans Stryker (plateforme 0013).
+
+**Prochaine étape** : phase 3 (PWA), étape par étape, une PR chacune, accord du propriétaire entre deux étapes (il a arrêté l'autonomie). Ordre choisi le 2026-11-23 : 1. socle `apps/couple/web` (Next 16, i18n, env, Serwist, `client-business-logic`, `client-infrastructure`, design system minimal) ; 2. contexte `authentication` (connexion locale, décision 0019) et écran de connexion ; 3. module de référence `pairing`. Restent à revoir avec lui les points « À confirmer » des étapes 1 à 4 du journal (code `PAIRING_INVITATION_CODE_CONFLICT`, schéma de réponse partagé, `InProcessEventPublisher`, port 3100, suffixes). Merger `dev` dans `main` seulement à sa demande.
 
 **Recette d'un nouveau package** (éprouvée six fois ; un package de test comme `e2e-shared` est lu depuis `src`, sans build) : copier la forme de `packages/server-infrastructure/` (`package.json` à exports par sous-chemin `types → src`, `default → dist` ; `tsconfig.json` + `tsconfig.build.json` + `tsconfig.spec.json` en CommonJS pour Jest ; `jest.config.mjs` avec `moduleNameMapper` vers les `src` voisins ; `eslint.config.mjs` = `nestConfig` + `boundariesConfig`, ou `config` de base pour un package isomorphe comme le shared-kernel). Écrire son `CLAUDE.md` (français sans accents, sections figées) dans le même commit. Vérifier l'entrée CommonJS de toute dépendance (D31). Ajouter les versions aux catalogues de `pnpm-workspace.yaml`. Commit sans scope (`feat: …`). Vérifier `pnpm check-types && pnpm lint && pnpm test && pnpm build` à la racine avant de commiter.
 

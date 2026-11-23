@@ -20,3 +20,4 @@ Le registre des décisions qui touchent tout le monorepo : dépôt, outillage, v
 | 0010 | [Numérotation des décisions fondatrices de 0001 à 0012](0010-numerotation-adr-fondatrices.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
 | 0011 | [Backend en CommonJS sur NestJS 11](0011-backend-commonjs-nest-11.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
 | 0012 | [Pas de Storybook](0012-pas-de-storybook.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0013 | [Couverture de 100 % sur le code métier, sans Stryker](0013-portes-de-qualite.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
