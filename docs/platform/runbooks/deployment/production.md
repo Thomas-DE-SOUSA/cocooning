@@ -37,7 +37,7 @@ La VM a déjà Docker et Tailscale pour Cadence ([guide de Cadence](https://gith
    ```
 3. Cloner `main` : `git clone -b main git@github-cocooning:Thomas-DE-SOUSA/cocooning.git && cd cocooning`.
 4. Dans la console Tailscale : vérifier que MagicDNS et les certificats HTTPS sont activés (Cadence s'en sert déjà), puis Settings, Keys, « Generate auth key » (ni réutilisable, ni éphémère).
-5. `cp infrastructure/compose/.env.example infrastructure/compose/.env`, puis remplir : `POSTGRES_PASSWORD` par `openssl rand -hex 24`, `AUTH_JWT_SECRET` par `openssl rand -base64 48`, `TS_AUTHKEY` par la clé de l'étape 4. Ce fichier ne quitte jamais la VM.
+5. `cp infrastructure/compose/.env.example infrastructure/compose/.env`, puis remplir : `POSTGRES_PASSWORD` par `openssl rand -hex 24`, `AUTH_JWT_SECRET` par `openssl rand -base64 48` (l'API refuse de démarrer sur la valeur d'exemple `change-me…`), `TS_AUTHKEY` par la clé de l'étape 4. Ce fichier ne quitte jamais la VM.
 
 ### Démarrer ou mettre à jour
 
