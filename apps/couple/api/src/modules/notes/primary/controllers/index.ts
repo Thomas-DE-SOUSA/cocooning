@@ -1,4 +1,5 @@
 export * from './create-note.controller';
+export * from './get-note.controller';
 export * from './list-notes.controller';
 export * from './rename-note.controller';
 export * from './share-note.controller';

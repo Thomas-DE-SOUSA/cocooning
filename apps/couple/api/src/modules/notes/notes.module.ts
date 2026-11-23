@@ -6,6 +6,7 @@ import { NoteCoupleGuard } from './primary/couple';
 import {
     CreateNoteController,
     DeleteNoteController,
+    GetNoteController,
     ListNotesController,
     MakeNotePrivateController,
     RenameNoteController,
@@ -17,6 +18,7 @@ import {
     controllers: [
         CreateNoteController,
         ListNotesController,
+        GetNoteController,
         RenameNoteController,
         ShareNoteController,
         MakeNotePrivateController,

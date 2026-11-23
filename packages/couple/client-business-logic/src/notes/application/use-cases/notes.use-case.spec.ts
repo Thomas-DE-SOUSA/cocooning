@@ -8,6 +8,7 @@ import {
 } from '../../../testing/fake-notes.gateway';
 import { CreateNoteUseCase } from './create-note.use-case';
 import { DeleteNoteUseCase } from './delete-note.use-case';
+import { GetNoteUseCase } from './get-note.use-case';
 import { ListNotesUseCase } from './list-notes.use-case';
 import { MakeNotePrivateUseCase } from './make-note-private.use-case';
 import { RenameNoteUseCase } from './rename-note.use-case';
@@ -33,6 +34,15 @@ describe('Feature: the notes of the couple from the PWA', () => {
             new ListNotesUseCase(gateway).execute(query),
         ).resolves.toEqual(ok(A_NOTE_PAGE));
         expect(gateway.calls).toEqual([{ operation: 'listNotes', query }]);
+    });
+
+    it('opens one note (R4)', async () => {
+        await expect(
+            new GetNoteUseCase(gateway).execute(NOTE_ID),
+        ).resolves.toEqual(ok(A_SHARED_NOTE));
+        expect(gateway.calls).toEqual([
+            { operation: 'getNote', noteId: NOTE_ID },
+        ]);
     });
 
     it('creates a note with its title (R1, R2)', async () => {

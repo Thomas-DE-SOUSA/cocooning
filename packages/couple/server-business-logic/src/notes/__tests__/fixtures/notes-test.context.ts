@@ -7,6 +7,7 @@ import {
     FakeUuidV7GeneratorProvider,
 } from '@cocooning/shared-kernel/testing';
 import { AuthorizeNoteDocumentUseCase } from '../../application/use-cases/authorize-note-document.use-case';
+import { GetNoteUseCase } from '../../application/use-cases/get-note.use-case';
 import { LoadNoteDocumentUseCase } from '../../application/use-cases/load-note-document.use-case';
 import { SaveNoteDocumentUseCase } from '../../application/use-cases/save-note-document.use-case';
 import { NoteCoupleGuardService } from '../../application/services/note-couple-guard.service';
@@ -98,6 +99,10 @@ export class NotesTestContext {
 
     deleteNoteUseCase(): DeleteNoteUseCase {
         return new DeleteNoteUseCase(...this.revokingDependencies());
+    }
+
+    getNoteUseCase(): GetNoteUseCase {
+        return new GetNoteUseCase(this.preconditions);
     }
 
     authorizeNoteDocumentUseCase(): AuthorizeNoteDocumentUseCase {

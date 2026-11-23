@@ -70,6 +70,7 @@ describe('Feature: the PWA reaches the notes through the API', () => {
         });
 
         it.each([
+            ['opens', 'getNote', 'GET', `/notes/${NOTE_ID}`],
             ['shares', 'shareNote', 'POST', `/notes/${NOTE_ID}/share`],
             [
                 'makes private',

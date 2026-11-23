@@ -86,6 +86,10 @@ export class NotesTestApp {
         return this.as(userId).get(`${ApiRouterEnum.NOTE_LIST}${query}`);
     }
 
+    get(userId: string, noteId: string): Promise<TestResponse> {
+        return this.as(userId).get(withNote(ApiRouterEnum.NOTE_GET, noteId));
+    }
+
     rename(
         userId: string,
         noteId: string,

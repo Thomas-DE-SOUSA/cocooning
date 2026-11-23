@@ -31,7 +31,7 @@ Tant que nous ne sommes pas en couple dans l'app, je n'ai pas de notes.
 
 Ma note privée n'apparaît pas chez l'autre, et l'app ne lui dit même pas qu'elle existe.
 
-- Dans le code : `NoteRepository.findVisibleById` et `findVisible` filtrent par la requête ; `NotePreconditionService.loadVisibleNote` refuse `NOTE_NOT_FOUND` (`core.md` règle 27).
+- Dans le code : `NoteRepository.findVisibleById` et `findVisible` filtrent par la requête, `GetNoteUseCase` ouvre une note ; `NotePreconditionService.loadVisibleNote` refuse `NOTE_NOT_FOUND` (`core.md` règle 27).
 - Source : décision 0039, décision 0018. Validée par : Thomas De Sousa, 2026-11-23.
 
 ### R5. Seule la propriétaire change la visibilité
