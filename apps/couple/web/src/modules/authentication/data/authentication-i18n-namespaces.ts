@@ -10,5 +10,7 @@ export const SIGN_IN_SCREEN_ERROR_CODES = [
 
 export const SIGN_OUT_NAMESPACE = 'authentication/sign-out' satisfies Namespace;
 
-// The sign-out button only receives the generic codes: a refused session counts as closed (SignOutUseCase).
-export const SIGN_OUT_SCREEN_ERROR_CODES = [] as const;
+// A refused session counts as closed (SignOutUseCase); two sign-outs written at the same instant conflict on the account version.
+export const SIGN_OUT_SCREEN_ERROR_CODES = [
+    AuthenticationExceptionCodeEnum.AUTHENTICATION_ACCOUNT_VERSION_CONFLICT,
+] as const;

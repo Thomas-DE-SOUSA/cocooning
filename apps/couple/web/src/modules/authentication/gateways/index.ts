@@ -8,4 +8,3 @@ export const authenticationCommandGateway: AuthenticationCommandGateway =
         signIn: authenticationSignInAction,
         signOut: authenticationSignOutAction,
     });
-export { AuthenticationCommandGateway } from './ports/authentication-command.gateway';

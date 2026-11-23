@@ -3,7 +3,8 @@ import {
     type ApiError,
     ApiErrorCodeEnum,
 } from '@cocooning/couple-client-business-logic/shared';
-import { fail, type Result } from '@cocooning/shared-kernel/utils';
+import type { Result } from '@cocooning/shared-kernel/utils';
+import { runServerAction } from '@/shared/application/server-action/run-server-action';
 import { AuthenticationCommandGateway } from '../ports/authentication-command.gateway';
 
 export type AuthenticationCommandActions = {
@@ -17,27 +18,16 @@ const UNREACHABLE: ApiError = {
     backendCode: null,
 };
 
-// The call rejects when the phone is offline or the page predates a deployment (unknown action id): the hook gets a Result either way.
-async function runAction(
-    action: () => Promise<Result<null, ApiError>>,
-): Promise<Result<null, ApiError>> {
-    try {
-        return await action();
-    } catch {
-        return fail(UNREACHABLE);
-    }
-}
-
 export class ServerActionAuthenticationCommandGateway extends AuthenticationCommandGateway {
     constructor(private readonly actions: AuthenticationCommandActions) {
         super();
     }
 
     override signIn(form: SignInForm): Promise<Result<null, ApiError>> {
-        return runAction(() => this.actions.signIn(form));
+        return runServerAction(() => this.actions.signIn(form), UNREACHABLE);
     }
 
     override signOut(): Promise<Result<null, ApiError>> {
-        return runAction(this.actions.signOut);
+        return runServerAction(this.actions.signOut, UNREACHABLE);
     }
 }

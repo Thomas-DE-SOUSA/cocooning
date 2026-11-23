@@ -13,13 +13,13 @@ const aRequest = (overrides: Partial<HttpRequest> = {}): HttpRequest => ({
 });
 
 describe('Feature: send one HTTP request to the API', () => {
-    const fakeFetch = new FakeFetch();
+    let fakeFetch: FakeFetch;
 
-    beforeEach(() => fakeFetch.install());
-    afterEach(() => {
-        fakeFetch.restore();
-        fakeFetch.calls.length = 0;
+    beforeEach(() => {
+        fakeFetch = new FakeFetch();
+        fakeFetch.install();
     });
+    afterEach(() => fakeFetch.restore());
 
     describe('Scenario: a request with a body', () => {
         it('sends JSON with the given headers', async () => {
@@ -136,6 +136,22 @@ describe('Feature: send one HTTP request to the API', () => {
             expect(await httpRequest(aRequest(), TEST_HTTP_CONFIG)).toEqual({
                 success: false,
                 error: { kind: 'network', message: 'fetch failed' },
+            });
+        });
+    });
+
+    describe('Scenario: the API does not answer in time', () => {
+        it('gives up after timeoutMs and reports a network error', async () => {
+            fakeFetch.givenNoAnswer();
+
+            const result = await httpRequest(aRequest(), {
+                ...TEST_HTTP_CONFIG,
+                timeoutMs: 10,
+            });
+
+            expect(result).toEqual({
+                success: false,
+                error: { kind: 'network', message: expect.any(String) },
             });
         });
     });

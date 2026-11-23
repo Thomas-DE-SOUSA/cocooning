@@ -14,9 +14,10 @@ Regles front communes :
 - Composant serveur : `const t = await getServerTranslation('<namespace>')` (une instance i18next par appel). Composant client : `useTranslation('<namespace>')` de `react-i18next`, sous le `Provider` de `src/app/provider.tsx`.
 - Aucune URL en dur : `WebRouterEnum` de `@cocooning/couple-shared-kernel/routers` (modele : `src/app/not-found.tsx`).
 - `process.env` est interdit hors de `src/env/` (lint `next.js`). Une variable serveur : son schema dans `src/env/server.ts` (`@t3-oss/env-nextjs`, `server-only`), son `.env.example`, la liste `env` de `turbo.json` et le bloc `environment` de `web` du compose de prod, dans le meme commit. Aujourd'hui : `API_URL`, `API_TIMEOUT_MS`.
-- Une route (`src/app/`) importe seulement le point d'entree d'un module (`@/modules/<module>`) ou `src/shared/` (decision 0011). Le lint (`config/eslint-config/feature-modules.js`) refuse `@/modules/<module>/...`, un chemin relatif vers un autre module, un hook autre que `useTranslation`/`useForm` ou un import de `next/navigation`, `gateways`, `actions` dans une vue, et un `toast.error` qui lit `.message`.
+- Une route (`src/app/`) importe seulement le point d'entree d'un module (`@/modules/<module>`) ou `src/shared/` (decision 0011) ; `src/shared/` n'importe aucun module. Le lint (`config/eslint-config/feature-modules.js`) refuse `@/modules/<module>/...` et un chemin relatif vers l'interieur d'un module, un import de `@/modules` dans `src/shared/`, un hook autre que `useTranslation`/`useForm` (y compris `use(...)`) ou un import de `next/navigation`, `gateways`, `actions`, `services`, `hooks` dans une vue, un import d'une server action dans `hooks/` (`core-frontend.md` regle 21), et un `toast.error` qui lit `.message` dans tout `src/`.
 - Erreur serveur : `toast.error(titre, { description: describeApiResultError(error, t) })`, jamais `error.message` (decision 0010, `src/shared/application/api-result/`).
 - Formulaire : react-hook-form et `zodResolver`, server action qui rend un `Result` (decision 0035, modele `src/modules/authentication/`).
+- Gateway `server-action/` d'un module : chaque appel passe par `runServerAction(action, UNREACHABLE)` (`src/shared/application/server-action/`), qui rend `NETWORK_ERROR` quand l'action rejette et recharge la page quand elle date d'avant un deploiement. Jamais de `try/catch` recopie dans un module.
 - Composants d'interface : `@cocooning/design-system`, jamais une copie locale. Couleurs par les tokens (`bg-primary`, `text-muted-foreground`), jamais en dur.
 - `*.tsx` : 125 lignes visees, 200 au plus (decision 0008).
 - Couleurs du telephone (manifeste, `viewport.themeColor`) : `src/app/pwa-theme.ts`, copie en hexadecimal des tokens oklch du design system. Un token de fond change : le reporter ici.
@@ -26,7 +27,7 @@ Regles front communes :
 
 - Composant client sous traduction : l'envelopper dans `WithI18n` (`src/testing/with-i18n.tsx`), le vrai provider, pas un mock.
 - Specs a cote du fichier, `*.spec.tsx` en jsdom avec Testing Library, style BDD, sans `should`.
-- Composant serveur async : `render(await Page())` (modele : `src/app/page.spec.tsx`).
+- Composant serveur async : `render(await Page())` (modele : `src/app/~offline/page.spec.tsx`). Une page qui lit l'API monte un container : voir le piege t3-env ci-dessous et l'ecart frontend 003.
 - `src/i18n/__tests__/locale-files.spec.ts` refuse un `{placeholder}` a accolade simple et des cles qui different entre langues.
 
 ## Pieges
@@ -37,7 +38,7 @@ Regles front communes :
 - `@t3-oss/env-nextjs` est livre en ESM seul : `jest.config.mjs` le compile en CommonJS (`transform`, `transformIgnorePatterns`). `server-only` est remplace dans Jest par `src/testing/server-only-stub.ts`.
 - Une spec ne charge pas une route qui monte un container : la chaine importe la server action et `serverEnv`, que t3-env refuse sous jsdom. Tester la vue, les hooks et les services.
 - `proxy.ts` : le `matcher` est ecrit en litteraux (Next l'analyse au build et ignore une variable). Les routes publiques passent par `WebRouterEnum` dans le code. Un fichier de la PWA ajoute dans `public/` (demande sans cookie) : l'exclure du `matcher` et de sa spec.
-- Server action et proxy inverse : Next compare `Origin` a `X-Forwarded-Host` (ou `Host`) et refuse sinon ("Invalid Server Actions request"). Derriere `tailscale serve` sur la VM, a verifier au premier deploiement de l'ecran ; sinon `serverActions.allowedOrigins` dans `next.config.ts`.
+- Server action et proxy inverse : Next compare `Origin` a `X-Forwarded-Host` (ou `Host`) et refuse sinon ("Invalid Server Actions request"). Derriere `tailscale serve` sur la VM, verifie le 2026-11-23 (releases #39 et #50) : `X-Forwarded-Host` passe, `serverActions.allowedOrigins` est inutile. Ne l'ajouter que si "Invalid Server Actions request" apparait dans les logs du web.
 - `next-env.d.ts` est regenere par `next build` et n'est pas versionne ; `check-types` passe sans lui.
 - Le design system est lu depuis ses `src` (`transpilePackages` dans `next.config.ts`) ; les autres packages internes depuis leur `dist`, construit avant par turbo (`^build`).
 - Jest ne passe pas par Next : `@/`, les packages internes et les `.css` sont mappes dans `jest.config.mjs`. Un nouveau package interne importe par l'app y recoit sa ligne.

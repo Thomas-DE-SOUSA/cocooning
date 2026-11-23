@@ -9,7 +9,8 @@ import { getServerTranslation } from '@/i18n/server';
 import { SIGN_IN_NAMESPACE } from '../data/authentication-i18n-namespaces';
 import { readSignInClientContext } from '../services/sign-in-client-context.service';
 import { openSignInSession } from '../services/sign-in-session.service';
-import { authenticationModule } from './authentication-module.factory';
+import { authenticationModule } from '../services/authentication-module.factory';
+import { isSecureCookie } from '../services/secure-cookie.service';
 
 // The session token stays on the server: the browser only receives the HttpOnly cookie (decision 0034).
 export async function authenticationSignInAction(
@@ -19,7 +20,7 @@ export async function authenticationSignInAction(
         t: await getServerTranslation(SIGN_IN_NAMESPACE),
         signIn: authenticationModule().signIn,
         client: readSignInClientContext(await headers()),
-        secure: serverEnv.NODE_ENV === 'production',
+        secure: isSecureCookie(serverEnv.NODE_ENV),
     });
     if (!session.success) return session;
     const { name, value, options } = session.value;

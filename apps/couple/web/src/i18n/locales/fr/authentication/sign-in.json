@@ -26,7 +26,7 @@
     },
     "apiErrors": {
         "AUTHENTICATION_CREDENTIALS_INVALID": "Adresse e-mail ou mot de passe incorrect.",
-        "NETWORK_ERROR": "Cocooning ne répond pas. Vérifiez la connexion du téléphone, puis réessayez.",
+        "NETWORK_ERROR": "Cocooning ne répond pas pour le moment. Réessayez dans un instant ; si le problème dure, vérifiez que Tailscale est activé.",
         "INVALID_RESPONSE": "La réponse du serveur est illisible. Réessayez dans un instant.",
         "VALIDATION_ERROR": "Les informations envoyées sont invalides.",
         "UNAUTHORIZED": "Adresse e-mail ou mot de passe incorrect.",

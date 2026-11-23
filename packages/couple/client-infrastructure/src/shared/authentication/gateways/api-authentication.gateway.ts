@@ -29,7 +29,7 @@ const INVALID_REQUEST: ApiError = {
     backendCode: null,
 };
 
-// core-frontend.md rule 13: the API sees the browser, not the Next server. x-forwarded-for keeps its standard name (core-backend.md rule 18).
+// core-frontend.md rule 13: the API sees the browser, not the Next server; it reads neither header yet (gap authentication 005). x-forwarded-for keeps its standard name (core-backend.md rule 18).
 function clientHeaders(client: SignInClientContext): Record<string, string> {
     return {
         ...(client.ipAddress === null
