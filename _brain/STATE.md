@@ -1,12 +1,12 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (étape 2 de la phase 3, PR 8 ouverte, #37). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (étape 2 de la phase 3, PR 8 mergée, #37). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
 
 - **Phase 3, étape 2 en cours** : contexte `authentication` et écran de connexion (décisions 0032, 0033, 0034). Plan en 8 PR validé le 2026-11-23 (« go », D34 ; détail `journal/2026-11-23.md`, « Phase 3, étape 2 : plan `authentication` »).
-- **Mergées dans `dev`** : PR 1 décisions (#25), PR 2 domaine (#26), PR 3 table `account` (#27), PR 4 contrat (#28), PR 5 module API (#30), PR 6 commande `create-account` (#33), PR 7 client (#35). Rien de l'étape 2 n'est déployé : une seule mise en production après la PR 8.
+- **Mergées dans `dev`** : PR 1 décisions (#25), PR 2 domaine (#26), PR 3 table `account` (#27), PR 4 contrat (#28), PR 5 module API (#30), PR 6 commande `create-account` (#33), PR 7 client (#35), PR 8 écran web (#37). Rien de l'étape 2 n'est déployé : une seule mise en production après la PR 8.
 - **PR 7 en bref** : formulaire `createSignInFormSchema(t)`, port `AuthenticationGateway`, `SignInUseCase`, `ApiAuthenticationGateway` et `createAuthenticationModule`, `Input`/`Label`, `FakeFetch` en sous-chemin `testing`. Détail : `journal/2026-11-23.md`, « PR 7 ».
 - **PR 6 en bref** : commande `create-account` dans l'API (`src/commands/`, D35, décision plateforme 0016) et runbook des comptes. Détail : `journal/2026-11-23.md`, « PR 6 ».
 - **PR 5 en bref** : `POST`/`DELETE /authentication/session` (`ApiRouterEnum.ACCOUNT_SESSION_*`), `AccountPrismaRepository`, `Argon2PasswordHasher`, `JwtSessionTokenSigner` (`sub`, `ver`, `exp`), `SessionGuard` par `ResolveSessionUseCase`, `AUTH_SESSION_TTL_DAYS=90` (aussi dans le `.env` local de l'API), fixture `createTestAccount`. E2E de l'API 71/71. Détail : `journal/2026-11-23.md`, « PR 5 ».
@@ -23,7 +23,7 @@
 
 ## Prochaine étape
 
-**PR 8 #37 `feat/authentication-web` ouverte, en attente du « go »** (détail `journal/2026-11-23.md`, « PR 8 : écran de connexion »). Après le merge : mise en production `dev` → `main`, vérifier la connexion derrière `tailscale serve` (`X-Forwarded-Host`), créer les deux comptes sur la VM, sur accord. Puis PR `chore/` des garde-fous ESLint (écart frontend 001).
+**Mise en production `dev` → `main`** (sur accord) : vérifier la connexion derrière `tailscale serve` (`X-Forwarded-Host`, sinon `serverActions.allowedOrigins`), puis créer les deux comptes sur la VM (`docs/couple/infrastructure/runbooks/authentication/accounts.md`). Ensuite PR `chore/` des garde-fous ESLint (écart frontend 001). PR 8 : `journal/2026-11-23.md`, « PR 8 : écran de connexion ».
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
