@@ -66,15 +66,16 @@ cocooning/
 ├── packages/
 │   ├── couple/                     # contexts: pairing, then authentication, notes, agenda, messaging
 │   │   ├── server-business-logic/  # * Domain + Application layers (DDD)
-│   │   ├── client-business-logic/  # * Frontend business logic, framework-free
-│   │   ├── client-infrastructure/  # * Frontend adapters (HTTP, Yjs, push)
+│   │   ├── client-business-logic/  # * Frontend business logic, framework-free (ApiError, Translator)
+│   │   ├── client-infrastructure/  # * Frontend adapters: HTTP config of the couple, then gateways, Yjs, push
 │   │   ├── prisma/                 # * Prisma 7 schema, PrismaService, unit of work, soft delete, locks
 │   │   ├── shared-kernel/          # * Business enums, api and web routers, MissingExecutionContextException
 │   │   ├── contract/               # * Zod contracts: error response, pagination, one subpath per context
 │   │   ├── e2e-shared/             # * Test harness: Postgres 17 container, Jest global setup, fixtures
 │   ├── shared-kernel/              # * DDD primitives, ports, exceptions, test fakes
 │   ├── server-infrastructure/      # * NestJS plumbing (filter, Zod pipes), pino, clock, ids, disk storage, in-process events
-│   ├── client-infrastructure/  design-system/   # * (phase 3)
+│   ├── client-infrastructure/      # * Domain-agnostic frontend adapters: the single HTTP client
+│   ├── design-system/              # * (phase 3)
 ├── config/                         # ts, eslint, prettier, jest configs (@cocooning/*), one CLAUDE.md each
 ├── docs/                           # * Documentation (French): architecture, guides, platform, couple
 ├── _knowledge/                     # Coding rules imported by the CLAUDE.md files
