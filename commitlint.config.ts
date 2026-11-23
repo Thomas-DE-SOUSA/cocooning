@@ -40,6 +40,7 @@ export default {
                 'knowledge',
                 // Bounded contexts of the couple domain
                 'authentication',
+                'pairing',
                 'notes',
                 'agenda',
                 'messaging',
