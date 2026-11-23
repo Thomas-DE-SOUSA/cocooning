@@ -15,6 +15,10 @@
             "types": "./src/authentication/index.ts",
             "default": "./dist/authentication/index.js"
         },
+        "./notes": {
+            "types": "./src/notes/index.ts",
+            "default": "./dist/notes/index.js"
+        },
         "./pairing": {
             "types": "./src/pairing/index.ts",
             "default": "./dist/pairing/index.js"

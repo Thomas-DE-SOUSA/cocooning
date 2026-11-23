@@ -6,9 +6,9 @@ Comment la PWA `apps/couple/web` parle à l'API, et ce que porte chaque package 
 
 | Package | Rôle | Peut importer |
 |---|---|---|
-| `@cocooning/couple-client-business-logic` | Logique métier front sans framework : ports des gateways, use cases, schémas de formulaire, presenters. Aujourd'hui : `ApiError` et `Translator` (`shared`), pour `authentication` le formulaire de connexion (`createSignInFormSchema`), le port `AuthenticationGateway`, `SignInUseCase` et `SignOutUseCase`, et pour `pairing` le port `PairingGateway`, les cinq use cases de la mise en couple (`GetMyCoupleUseCase` rend `null` quand le partenaire n'a pas de couple, `CancelCoupleUseCase` annule un couple en attente) et `createJoinCoupleFormSchema` | `shared-kernel`, `couple-shared-kernel`, `couple-contract`, zod |
+| `@cocooning/couple-client-business-logic` | Logique métier front sans framework : ports des gateways, use cases, schémas de formulaire, presenters. Aujourd'hui : `ApiError` et `Translator` (`shared`), pour `authentication` le formulaire de connexion (`createSignInFormSchema`), le port `AuthenticationGateway`, `SignInUseCase` et `SignOutUseCase`, et pour `pairing` le port `PairingGateway`, les cinq use cases de la mise en couple (`GetMyCoupleUseCase` rend `null` quand le partenaire n'a pas de couple, `CancelCoupleUseCase` annule un couple en attente) et `createJoinCoupleFormSchema`, et pour `notes` le port `NotesGateway`, six use cases et `createNoteTitleFormSchema` | `shared-kernel`, `couple-shared-kernel`, `couple-contract`, zod |
 | `@cocooning/client-infrastructure` | Le seul `fetch` des gateways (`httpRequest`), la vérification d'une réponse par son contrat (`parseResponse`), `resolveRoute`, et le faux `fetch` des specs (`FakeFetch`, sous-chemin `testing`) | `shared-kernel`, zod |
-| `@cocooning/couple-client-infrastructure` | Les gateways du couple, leur configuration HTTP commune (`createCoupleHttpConfig`) et la fabrique de chaque contexte. Aujourd'hui : `ApiAuthenticationGateway` et `createAuthenticationModule` (`authentication`), `ApiPairingGateway` et `createPairingModule` (`pairing`), et `sessionRequest`, qui renvoie la session du partenaire à l'API dans l'en-tête `Cookie` (`sessionHeaders`) ([décision 0036](../../decisions/frontend/0036-lecture-des-donnees-par-la-page-serveur.md)) | les trois précédents, `couple-contract` |
+| `@cocooning/couple-client-infrastructure` | Les gateways du couple, leur configuration HTTP commune (`createCoupleHttpConfig`) et la fabrique de chaque contexte. Aujourd'hui : `ApiAuthenticationGateway` et `createAuthenticationModule` (`authentication`), `ApiPairingGateway` et `createPairingModule` (`pairing`), `ApiNotesGateway` et `createNotesModule` (`notes`), et `sessionRequest`, qui renvoie la session du partenaire à l'API dans l'en-tête `Cookie` (`sessionHeaders`) ([décision 0036](../../decisions/frontend/0036-lecture-des-donnees-par-la-page-serveur.md)) | les trois précédents, `couple-contract` |
 | `@cocooning/design-system` | Composants d'interface sans domaine et couleurs du thème (clair et sombre selon le téléphone). Aujourd'hui : `Button`, `Field` et `FieldError`, `Input`, `Label`, `Skeleton`, `Spinner`, `Toaster` | React, Tailwind |
 | `apps/couple/web` | Pages, server actions, containers et vues. Aujourd'hui : layout racine, accueil provisoire (réservé à un couple formé), pages d'erreur, traduction en français (`src/i18n/`), manifeste, service worker et page hors ligne, `proxy.ts`, écran de connexion (module `authentication`), mise en couple (module `pairing`), descripteur des erreurs serveur (`src/shared/application/api-result/`) | tout ce qui précède |
 
@@ -69,6 +69,7 @@ Une page qui reçoit `UNAUTHORIZED` renvoie vers la connexion. « Se déconnecte
 | Réponse de succès illisible ou hors contrat | `INVALID_RESPONSE` |
 | 400 ou 422 | `VALIDATION_ERROR` |
 | 401 | `UNAUTHORIZED` |
+| 403 | `FORBIDDEN` |
 | 404 | `NOT_FOUND` |
 | 409 | `CONFLICT` |
 | Autre statut | `UNKNOWN` |
