@@ -1,51 +1,49 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (étape 2 de la phase 3, PR 5 mergée, #30). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (étape 2 de la phase 3, PR 5 mergée, #30 et #31). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
 
-- **Phase** : **phase 2 terminée et mergée dans `dev`** (nuit du 2026-11-23, en autonomie, PR #3 à #10). Contexte `pairing` de bout en bout : domaine (`packages/couple/server-business-logic`), tables + migration `init`, contrat, API `apps/couple/api` (garde de session HS256, 4 routes), 50 tests E2E. Garde-fous des décisions 0001, 0004, 0024 dans `pnpm lint` (PR #10). Détail : `journal/2026-11-23.md`, sections « Phase 2 ».
-- **Fait (phase 1)** : shared kernels, `server-infrastructure`, `couple/prisma`, `couple/contract`, `couple/e2e-shared`. Détail : `journal/2026-11-22.md`.
-- **Fait (avant)** : phase 0 (PR #1) ; analyse de Malta dans `_malta-blueprint/` ; mémoire du projet.
+- **Phase 3, étape 2 en cours** : contexte `authentication` et écran de connexion (décisions 0032, 0033, 0034). Plan en 8 PR validé le 2026-11-23 (« go », D34 ; détail `journal/2026-11-23.md`, « Phase 3, étape 2 : plan `authentication` »).
+- **Mergées dans `dev`** : PR 1 décisions (#25), PR 2 domaine (#26), PR 3 table `account` (#27), PR 4 contrat (#28), PR 5 module API (#30). Rien de l'étape 2 n'est déployé : une seule mise en production après la PR 8.
+- **PR 5 en bref** : `POST`/`DELETE /authentication/session` (`ApiRouterEnum.ACCOUNT_SESSION_*`), `AccountPrismaRepository`, `Argon2PasswordHasher`, `JwtSessionTokenSigner` (`sub`, `ver`, `exp`), `SessionGuard` par `ResolveSessionUseCase`, `AUTH_SESSION_TTL_DAYS=90` (aussi dans le `.env` local de l'API), fixture `createTestAccount`. E2E de l'API 71/71. Détail : `journal/2026-11-23.md`, « PR 5 ».
+- **Fait avant** : phase 0 à 2 (PR #1 à #13), phase 3 étape 1 (socle web PWA, #17 à #21). Détail : `journal/2026-11-22.md`, `journal/2026-11-23.md`.
 
 ## Le produit (vision du propriétaire, 2026-11-22)
 
 - App pour un couple, iPhone et Samsung, en PWA servie via Tailscale comme `/perso/cadence`.
 - Premier lot : notes riches (courses = note titrée « Courses »), agenda partagé, messages (photo + mots flash) avec Web Push. Détail : `journal/2026-11-22.md`, « Vision produit ».
 
+## Production
+
+- Depuis le 2026-11-23 : https://cocooning.<tailnet>.ts.net, VM Oracle `cadence` (`ssh cadence`), clone de `main` dans `~/cocooning`, secrets dans `~/cocooning/infrastructure/compose/.env`, `pg_dump` nocturne dans `~/backups`. Procédure : `docs/platform/runbooks/deployment/production.md`. PWA installée sur le téléphone du propriétaire.
+
 ## Prochaine étape
 
-**Fait au réveil du propriétaire (2026-11-23)** : décisions 0028, 0029, 0030 acceptées (PR #12) ; écarts des décisions 0001 et 0004 dans `docs/platform/gaps/decision-checks.md` (PR #13 ; 0024 relue : la règle vise bien le code métier, pas d'écart) ; `.env` de l'API et de `couple/prisma` créés en local (secret par `openssl`).
+**PR 6 `feat/authentication-create-account`** (à lancer sur accord) : la commande `create-account` qui appelle `CreateAccountUseCase` (R6 : comptes créés par le propriétaire sur la VM, jamais par un endpoint) et le runbook des comptes. Puis PR 7 client (gateway, `createSignInFormSchema(t)`, `Input`/`Label`), PR 8 écran web (`API_URL`, `proxy.ts`, module `authentication`, cookie posé par la server action). Ensuite une mise en production `dev` → `main`. Étape 3 (module `pairing` web) seulement sur accord.
 
-D19 et D25 tranchées le 2026-11-23 : pas de Storybook (plateforme 0012), schémas `create<X>Schema(t)` en `*.zod.ts` (0031).
+Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
-D18 tranchée : 100 % de couverture imposée sur le code métier, sans Stryker (plateforme 0013).
-
-**En production depuis le 2026-11-23** : https://cocooning.<tailnet>.ts.net, sur la VM Oracle `cadence` (accès `ssh cadence` depuis le Mac), clone de `main` dans `~/cocooning`, secrets dans `~/cocooning/infrastructure/compose/.env`, clé de déploiement GitHub `oracle-vm` (lecture seule), `pg_dump` nocturne dans `~/backups` (crontab de `ubuntu`). Mise à jour : `docs/platform/runbooks/deployment/production.md`. PWA installée et vérifiée sur le téléphone du propriétaire le 2026-11-23 (« Bienvenue sur Cocooning »).
-
-**Prochaine étape** : phase 3, une PR à la fois, accord du propriétaire entre deux PR. Étape 1 terminée (PR #17 à #19, #21), mise en production (#22, #23 `dev` → `main`, #24). **Étape 2 en cours** : plan en 8 PR validé le 2026-11-23 (« go », D34 ; détail `journal/2026-11-23.md`, « Phase 3, étape 2 »). PR 1 mergée (#25). PR 2 mergée (#26). PR 3 mergée (#27). PR 4 mergée (#28). PR 5 mergée (#30, `AUTH_SESSION_TTL_DAYS=90` ajouté au `.env` local de l'API). **Suite : PR 6** `create-account` et runbook des comptes (à lancer sur accord), puis, 7 client, 8 écran web (`API_URL`). Une seule mise en production après la PR 8. Étape 3 (module `pairing` web) seulement sur accord.
-
-**Recette d'un nouveau package** (éprouvée six fois ; un package de test comme `e2e-shared` est lu depuis `src`, sans build) : copier la forme de `packages/server-infrastructure/` (`package.json` à exports par sous-chemin `types → src`, `default → dist` ; `tsconfig.json` + `tsconfig.build.json` + `tsconfig.spec.json` en CommonJS pour Jest ; `jest.config.mjs` avec `moduleNameMapper` vers les `src` voisins ; `eslint.config.mjs` = `nestConfig` + `boundariesConfig`, ou `config` de base pour un package isomorphe comme le shared-kernel). Écrire son `CLAUDE.md` (français sans accents, sections figées) dans le même commit. Vérifier l'entrée CommonJS de toute dépendance (D31). Ajouter les versions aux catalogues de `pnpm-workspace.yaml`. Commit sans scope (`feat: …`). Vérifier `pnpm check-types && pnpm lint && pnpm test && pnpm build` à la racine avant de commiter.
-
+**Recette d'un nouveau package** (éprouvée six fois) : copier la forme de `packages/server-infrastructure/` (exports par sous-chemin `types → src`, `default → dist` ; `tsconfig.json` + `tsconfig.build.json` + `tsconfig.spec.json` en CommonJS ; `jest.config.mjs` avec `moduleNameMapper` vers les `src` ; `eslint.config.mjs`). `CLAUDE.md` dans le même commit. Vérifier l'entrée CommonJS de toute dépendance (D31). Versions dans les catalogues de `pnpm-workspace.yaml`. Avant chaque commit : `pnpm check-types && pnpm lint && pnpm test && pnpm build` à la racine, puis `pnpm --filter couple-api test:e2e`.
 
 ## Décisions qui bloquent
 
-- D26 (tailles de fichiers) : `couple.aggregate.ts` 142 lignes, trois specs E2E à 115.
+- D26 (tailles de fichiers) : `couple.aggregate.ts` 142 lignes ; specs E2E au-delà de 100 lignes (trois de `pairing` à 115, `test/authentication/` à 107, 117 et 123).
 
 ## Fichiers chauds
 
-- `apps/couple/api/src/modules/pairing/`, `apps/couple/api/test/pairing/`, `_knowledge/backend/*.md`, `packages/shared-kernel/`, `packages/server-infrastructure/`, `packages/couple/prisma/`, `packages/couple/shared-kernel/`, `packages/couple/contract/`, `packages/couple/e2e-shared/`, `config/eslint-config/{base,business-logic}.js`, `scripts/check-event-names.mjs`
-- `infrastructure/`, `.dockerignore`, `docs/platform/runbooks/deployment/production.md`, `apps/couple/web/` (`next.config.ts`, `src/app/sw.ts`)
-- `_malta-blueprint/00-BLUEPRINT.md` §6 (phase 3), `20-frontend-web-mobile.md` §6 et §7
+- `apps/couple/api/src/modules/authentication/` (et son `CLAUDE.md`), `apps/couple/api/test/authentication/`, `packages/couple/server-business-logic/src/authentication/`
+- `packages/couple/e2e-shared/src/fixtures/`, `packages/couple/contract/src/authentication/`, `docs/couple/architecture/authentication/`, `docs/couple/gaps/authentication.md`
+- `apps/couple/web/` (PR 8), `infrastructure/compose/docker-compose.prod.yml`, `docs/platform/runbooks/deployment/production.md`
 
 ## Dépôt
 
-- Dépôt privé `Thomas-DE-SOUSA/cocooning`. `main` stable, `dev` intégration et branche par défaut, une branche par changement depuis `dev` (D23).
+- Dépôt privé `Thomas-DE-SOUSA/cocooning`. `main` stable, `dev` intégration et branche par défaut, une branche par changement depuis `dev` (D23). Pas de protection de branche (D29 ouverte).
 - `_malta-blueprint/` reste en local, hors git (B1).
-- Plan GitHub gratuit en privé : pas de protection de branche (D29 ouverte).
 
 ## Points d'attention
 
 - Malta est en lecture seule. Le blueprint contient du code propriétaire « All Rights Reserved » : ne jamais le publier.
+- Les `.env` sont protégés en lecture par une règle de permission : on peut y ajouter une ligne, pas les relire.
 - Les nouveaux hooks ne s'activent qu'après `/hooks` ou un redémarrage de Claude Code.
