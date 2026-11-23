@@ -2,7 +2,6 @@ import {
     type HttpMethod,
     HttpMethodEnum,
     type HttpRequestConfig,
-    httpRequest,
     parseResponse,
 } from '@cocooning/client-infrastructure/shared/http';
 import { PairingGateway } from '@cocooning/couple-client-business-logic/pairing';
@@ -17,10 +16,8 @@ import {
     JoinCoupleRequestSchema,
 } from '@cocooning/couple-contract/pairing';
 import { fail, type Result } from '@cocooning/shared-kernel/utils';
-import {
-    type SessionTokenProvider,
-    sessionHeaders,
-} from '../../session/session-headers';
+import type { SessionTokenProvider } from '../../session/session-headers';
+import { sessionRequest } from '../../session/session-request';
 import type { PairingEndpoints } from '../endpoints/pairing.endpoints';
 
 const INVALID_REQUEST: ApiError = {
@@ -77,10 +74,9 @@ export class ApiPairingGateway extends PairingGateway {
         url: string,
         body: unknown,
     ): Promise<Result<CoupleResponse, ApiError>> {
-        const headers = await sessionHeaders(this.getSessionToken);
-        if (!headers.success) return headers;
-        const result = await httpRequest(
-            { url, method, headers: headers.value, body },
+        const result = await sessionRequest(
+            this.getSessionToken,
+            { url, method, body },
             this.httpConfig,
         );
         return parseResponse(result, CoupleResponseSchema, this.httpConfig);
