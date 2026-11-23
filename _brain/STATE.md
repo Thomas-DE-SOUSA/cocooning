@@ -20,7 +20,7 @@
 
 ## Prochaine étape
 
-**Revue des étapes 2 et 3 rendue** (`journal/2026-11-23.md`, « Revue des étapes 2 et 3 ») : aucun CRITICAL, 4 IMPORTANT (cache du service worker, impasse de la mise en couple si les deux créent, trous du lint, server actions non testées). Choix du propriétaire (D38) : PR 1 `fix/pairing-pending-deadlock` d'abord (règle R8 : le seul membre d'un couple en attente peut l'annuler, décision proposée puis use case et bouton), puis PR 2 (cache du service worker), puis 3 à 7 ; adresses e-mail retirées du journal dans la PR 7, sans réécriture d'historique. R8 en production (#52, #53, release #54). PR 2 (cache du service worker) en production (#56, release #57). PR 3 `refactor/web-run-server-action` ouverte, en attente du « go ». Ensuite PR 4 à 7. Ensuite, prochaine étape de la phase 3 à choisir (notes, agenda, messages).
+**Revue des étapes 2 et 3 rendue** (`journal/2026-11-23.md`, « Revue des étapes 2 et 3 ») : aucun CRITICAL, 4 IMPORTANT (cache du service worker, impasse de la mise en couple si les deux créent, trous du lint, server actions non testées). Choix du propriétaire (D38) : PR 1 `fix/pairing-pending-deadlock` d'abord (règle R8 : le seul membre d'un couple en attente peut l'annuler, décision proposée puis use case et bouton), puis PR 2 (cache du service worker), puis 3 à 7 ; adresses e-mail retirées du journal dans la PR 7, sans réécriture d'historique. R8 en production (#52, #53, release #54). PR 2 (cache du service worker) en production (#56, release #57). Revue traitée : PR 3 à 7 mergées en autonomie (D39, #59 à #63). Release vers `main` et déploiement : voir le journal. Prochaine étape de la phase 3 à choisir avec le propriétaire (notes, agenda, messages) ; points ouverts : écarts frontend 004, authentication 005 et 002, D26. Ensuite, prochaine étape de la phase 3 à choisir (notes, agenda, messages).
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
@@ -28,7 +28,7 @@ Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire
 
 ## Décisions qui bloquent
 
-- D26 (tailles de fichiers) : `couple.aggregate.ts` 142 lignes ; specs E2E au-delà de 100 lignes (trois de `pairing` à 115, `test/authentication/` à 107, 117 et 123).
+- D26 (tailles de fichiers) : `couple.aggregate.ts` 158 lignes ; specs E2E au-delà de 100 lignes : `join-couple` 115, `renew-invitation-code` 114, `cancel-couple` 110, `session-guard` 117, `account-prisma-repository` 123 ; harnais `authentication-test-app.ts` 107, `pairing-test-app.ts` 105 (mesuré le 2026-11-23).
 
 ## Fichiers chauds
 
