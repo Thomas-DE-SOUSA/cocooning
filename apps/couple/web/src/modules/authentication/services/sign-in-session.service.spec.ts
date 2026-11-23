@@ -14,7 +14,6 @@ const CREDENTIALS = {
     emailAddress: ' thomas@cocooning.test ',
     password: 'correct horse battery',
 };
-const CLIENT = { ipAddress: '100.64.0.7', userAgent: 'Mozilla/5.0 (iPhone)' };
 const REFUSAL = {
     code: ApiErrorCodeEnum.UNAUTHORIZED,
     message: 'Invalid credentials',
@@ -30,13 +29,12 @@ describe('Feature: opening a session from the sign-in form', () => {
         context = {
             t: (key) => key,
             signIn: new SignInUseCase(gateway),
-            client: CLIENT,
             secure: true,
         };
     });
 
     describe('Scenario: the API accepts the credentials', () => {
-        it('sends the trimmed form with the browser context', async () => {
+        it('sends the trimmed form', async () => {
             await openSignInSession(CREDENTIALS, context);
 
             expect(gateway.calls).toEqual([
@@ -46,7 +44,6 @@ describe('Feature: opening a session from the sign-in form', () => {
                         emailAddress: 'thomas@cocooning.test',
                         password: CREDENTIALS.password,
                     },
-                    client: CLIENT,
                 },
             ]);
         });

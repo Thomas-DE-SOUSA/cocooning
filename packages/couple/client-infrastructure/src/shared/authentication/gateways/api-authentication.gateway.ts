@@ -4,10 +4,7 @@ import {
     httpRequest,
     parseResponse,
 } from '@cocooning/client-infrastructure/shared/http';
-import {
-    AuthenticationGateway,
-    type SignInClientContext,
-} from '@cocooning/couple-client-business-logic/authentication';
+import { AuthenticationGateway } from '@cocooning/couple-client-business-logic/authentication';
 import {
     type ApiError,
     ApiErrorCodeEnum,
@@ -29,18 +26,6 @@ const INVALID_REQUEST: ApiError = {
     backendCode: null,
 };
 
-// core-frontend.md rule 13: the API sees the browser, not the Next server; it reads neither header yet (gap authentication 005). x-forwarded-for keeps its standard name (core-backend.md rule 18).
-function clientHeaders(client: SignInClientContext): Record<string, string> {
-    return {
-        ...(client.ipAddress === null
-            ? {}
-            : { 'x-forwarded-for': client.ipAddress }),
-        ...(client.userAgent === null
-            ? {}
-            : { 'user-agent': client.userAgent }),
-    };
-}
-
 export class ApiAuthenticationGateway extends AuthenticationGateway {
     constructor(
         private readonly endpoints: AuthenticationEndpoints,
@@ -52,7 +37,6 @@ export class ApiAuthenticationGateway extends AuthenticationGateway {
 
     override async signIn(
         request: SignInRequest,
-        client: SignInClientContext,
     ): Promise<Result<SignInResponse, ApiError>> {
         const validated = SignInRequestSchema.safeParse(request);
         if (!validated.success) return fail(INVALID_REQUEST);
@@ -60,7 +44,7 @@ export class ApiAuthenticationGateway extends AuthenticationGateway {
             {
                 url: this.endpoints.signIn,
                 method: HttpMethodEnum.POST,
-                headers: clientHeaders(client),
+                headers: {},
                 body: validated.data,
             },
             this.httpConfig,

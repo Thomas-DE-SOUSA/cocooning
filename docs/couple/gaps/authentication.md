@@ -18,7 +18,7 @@
 - Où : `packages/couple/server-business-logic/src/authentication/domain/services/authentication-precondition.service.ts` (`loadAccountByCredentials`)
 - Constat : un appareil du tailnet peut tenter autant de mots de passe qu'il veut. Argon2id ralentit chaque essai et le mot de passe fait au moins 12 caractères ; aucun compte n'est verrouillé. Des essais en rafale occupent aussi les 4 fils du pool libuv qui calculent Argon2 (64 Mio chacun) et ralentissent les autres requêtes de l'API sans la faire tomber. Un refus n'est journalisé qu'avec son code (`HttpExceptionFilter`) : rien ne dit quel appareil essayait (voir 005).
 - Règle concernée : [décision 0032](../decisions/authentication/0032-regles-du-compte-et-de-la-session.md)
-- Statut : ouvert
+- Statut : clos, tranché par la [décision 0043](../decisions/authentication/0043-le-tailnet-borne-les-essais-de-connexion.md) : aucune limite, le tailnet borne les essais
 
 ### 003. Le mot de passe ne se change ni ne se réinitialise
 
@@ -45,4 +45,4 @@
 - Où : `apps/couple/web/src/modules/authentication/services/sign-in-client-context.service.ts`, `packages/couple/client-infrastructure/src/shared/authentication/gateways/api-authentication.gateway.ts` (`clientHeaders`), `apps/couple/api/src/main.ts`
 - Constat : la PWA envoie `x-forwarded-for` (le premier élément de l'en-tête reçu) et `user-agent` à `POST /authentication/session`, comme le demande la règle 13 de `core-frontend.md`. L'API ne pose pas `trust proxy` et aucun code ne lit ces en-têtes, ni un use case, ni un log : la transmission n'a aucun effet. Le jour où l'API s'en servira (limite d'essais, 002), il faudra vérifier sur la VM ce que `tailscale serve` met dans `x-forwarded-for`, le premier élément étant celui qu'un client peut forger.
 - Règle concernée : `core-frontend.md` règle 13
-- Statut : ouvert
+- Statut : corrigé le 2026-11-23 (branche `fix/sign-in-client-context`) : la PWA ne transmet plus ni l'adresse IP ni le User-Agent ([décision 0043](../decisions/authentication/0043-le-tailnet-borne-les-essais-de-connexion.md)), et la règle 13 de `core-frontend.md` le dit
