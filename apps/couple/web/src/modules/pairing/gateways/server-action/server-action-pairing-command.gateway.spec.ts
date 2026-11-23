@@ -1,0 +1,35 @@
+import { ApiErrorCodeEnum } from '@cocooning/couple-client-business-logic/shared';
+import { ok } from '@cocooning/shared-kernel/utils';
+import { ServerActionPairingCommandGateway } from './server-action-pairing-command.gateway';
+
+const answers = () => Promise.resolve(ok(null));
+const rejects = () => Promise.reject(new TypeError('Failed to fetch'));
+
+describe('Feature: pairing commands through the server actions', () => {
+    it('gives the result of each action', async () => {
+        const gateway = new ServerActionPairingCommandGateway({
+            createCouple: answers,
+            renewInvitationCode: answers,
+        });
+
+        await expect(gateway.createCouple()).resolves.toEqual(ok(null));
+        await expect(gateway.renewInvitationCode()).resolves.toEqual(ok(null));
+    });
+
+    it.each(['createCouple', 'renewInvitationCode'] as const)(
+        'gives a network error instead of rejecting for %s',
+        async (command) => {
+            const gateway = new ServerActionPairingCommandGateway({
+                createCouple: rejects,
+                renewInvitationCode: rejects,
+            });
+
+            await expect(gateway[command]()).resolves.toEqual({
+                success: false,
+                error: expect.objectContaining({
+                    code: ApiErrorCodeEnum.NETWORK_ERROR,
+                }),
+            });
+        },
+    );
+});
