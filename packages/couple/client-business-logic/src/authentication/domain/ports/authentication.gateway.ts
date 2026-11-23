@@ -16,4 +16,7 @@ export abstract class AuthenticationGateway {
         request: SignInRequest,
         client: SignInClientContext,
     ): Promise<Result<SignInResponse, ApiError>>;
+
+    // Acts for the signed-in partner: the adapter forwards the session (decision 0036).
+    abstract signOut(): Promise<Result<null, ApiError>>;
 }
