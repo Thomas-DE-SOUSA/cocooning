@@ -18,6 +18,10 @@
         "./shared": {
             "types": "./src/shared/index.ts",
             "default": "./dist/shared/index.js"
+        },
+        "./testing": {
+            "types": "./src/testing/index.ts",
+            "default": "./dist/testing/index.js"
         }
     },
     "dependencies": {

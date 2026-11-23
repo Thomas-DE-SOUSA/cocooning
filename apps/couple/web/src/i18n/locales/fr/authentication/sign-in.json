@@ -1,0 +1,37 @@
+{
+    "title": "Connexion",
+    "subtitle": "Retrouvez votre espace à deux.",
+    "form": {
+        "emailAddress": {
+            "label": "Adresse e-mail",
+            "errors": {
+                "required": "Indiquez votre adresse e-mail.",
+                "tooLong": "Cette adresse e-mail est trop longue."
+            }
+        },
+        "password": {
+            "label": "Mot de passe",
+            "errors": {
+                "required": "Indiquez votre mot de passe.",
+                "tooLong": "Ce mot de passe est trop long."
+            }
+        }
+    },
+    "submit": {
+        "label": "Se connecter",
+        "pending": "Connexion en cours"
+    },
+    "toast": {
+        "signInFailed": "Connexion impossible"
+    },
+    "apiErrors": {
+        "AUTHENTICATION_CREDENTIALS_INVALID": "Adresse e-mail ou mot de passe incorrect.",
+        "NETWORK_ERROR": "Cocooning ne répond pas. Vérifiez la connexion du téléphone, puis réessayez.",
+        "INVALID_RESPONSE": "La réponse du serveur est illisible. Réessayez dans un instant.",
+        "VALIDATION_ERROR": "Les informations envoyées sont invalides.",
+        "UNAUTHORIZED": "Adresse e-mail ou mot de passe incorrect.",
+        "NOT_FOUND": "Le service de connexion est introuvable.",
+        "CONFLICT": "La connexion a été refusée. Réessayez.",
+        "UNKNOWN": "Une erreur inattendue est survenue. Réessayez dans un instant."
+    }
+}

@@ -1,6 +1,6 @@
 # @cocooning/design-system
 
-Composants d'interface sans domaine de la PWA, et les couleurs du theme. Exporte `Button` (variantes `primary`, `secondary`, `ghost`, `destructive`), `Input` (bordure `destructive` sous `aria-invalid`), `Label`, `Skeleton`, `Toaster` et `toast` (sonner), `cn`. `@cocooning/design-system/styles.css` porte Tailwind 4 et les tokens en oklch, clair et sombre selon le systeme du telephone.
+Composants d'interface sans domaine de la PWA, et les couleurs du theme. Exporte `Button` (variantes `primary`, `secondary`, `ghost`, `destructive`), `Field` et `FieldError` (groupe d'un champ, erreur annoncee par `role="alert"`, rien quand le champ est valide), `Input` (bordure `destructive` sous `aria-invalid`), `Label`, `Skeleton`, `Spinner` (icone `lucide-react` qui tourne, `aria-label` recu en prop), `Toaster` et `toast` (sonner), `cn`. `@cocooning/design-system/styles.css` porte Tailwind 4 et les tokens en oklch, clair et sombre selon le systeme du telephone.
 
 ## A lire avant de commencer
 
@@ -17,6 +17,8 @@ Regles front communes :
 - Chaque fichier exporte par `src/index.ts`, exports nommes seulement.
 - `*.tsx` : 125 lignes visees, 200 au plus (decision 0008, `max-lines` du lint).
 - Un champ de saisie garde un texte d'au moins 16 px (`text-base`) : en dessous, Safari sur iPhone zoome dans la page au focus.
+- Un champ de formulaire : `Field` > `Label` + `Input` (`aria-invalid`, `aria-describedby` vers l'`id` de l'erreur) + `FieldError`. Modele : `src/ui/field.spec.tsx`.
+- Icones : `lucide-react` seul (`core-frontend.md` regle 10).
 - Un composant qui utilise un hook ou un evenement du navigateur commence par `'use client'` (modele : `src/ui/toaster.tsx`).
 
 ## Tests

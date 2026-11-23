@@ -4,7 +4,7 @@ import { type ApiError, ApiErrorCodeEnum } from '../../../shared/api-error';
 import {
     A_SESSION,
     FakeAuthenticationGateway,
-} from '../../__tests__/secondary/fake-authentication.gateway';
+} from '../../../testing/fake-authentication.gateway';
 import { SignInUseCase } from './sign-in.use-case';
 
 const FORM = {

@@ -28,3 +28,12 @@
 - Constat : aucun use case ne change le hachage d'un compte. Un mot de passe oublié oblige le propriétaire à recréer le compte, ce qui change son `userId`.
 - Règle concernée : [décision 0019](../decisions/0019-authentification-locale.md) (contexte complet au plus tard en phase 7)
 - Statut : ouvert
+
+### 004. La PWA garde un cookie dont la session n'est plus valable
+
+- Type : règle validée non construite
+- Constaté le : 2026-11-23, écran de connexion (branche `feat/authentication-web`)
+- Où : `apps/couple/web/src/proxy.ts`
+- Constat : le proxy laisse passer toute requête qui porte le cookie `cocooning_session`, sans savoir si l'API l'accepte encore. Une session fermée par `SignOutUseCase` sur un autre appareil, ou un jeton refusé par le garde de l'API, ne renvoie pas vers l'écran de connexion : aucune page ne lit encore l'API, et la PWA n'a ni écran de déconnexion ni retrait du cookie sur un `401`. Les données restent protégées : le garde de session de l'API refuse le jeton à chaque appel.
+- Règle concernée : [décision 0034](../decisions/0034-session-revocable.md)
+- Statut : ouvert

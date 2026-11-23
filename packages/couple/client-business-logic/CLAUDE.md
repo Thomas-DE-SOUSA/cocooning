@@ -18,6 +18,7 @@ Regles front communes :
 ## Tests
 
 - Une spec a cote du fichier, style BDD (`Feature:`, `Scenario:`), sans `should`. Fakes ecrits a la main (decision 0001).
+- Les fakes que la PWA reutilise vivent dans `src/testing/` (sous-chemin `testing`, construit, hors couverture comme `__tests__/`), comme `FakeFetch` de `@cocooning/client-infrastructure/testing`. Jamais importe par du code de production.
 - `pnpm test` echoue sous 100 % de couverture (decision plateforme 0013).
 
 ## Pieges

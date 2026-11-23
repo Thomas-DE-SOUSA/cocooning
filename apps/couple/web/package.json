@@ -12,14 +12,23 @@
         "test": "jest"
     },
     "dependencies": {
+        "@cocooning/couple-client-business-logic": "workspace:*",
+        "@cocooning/couple-client-infrastructure": "workspace:*",
+        "@cocooning/couple-contract": "workspace:*",
         "@cocooning/couple-shared-kernel": "workspace:*",
         "@cocooning/design-system": "workspace:*",
+        "@cocooning/shared-kernel": "workspace:*",
+        "@hookform/resolvers": "catalog:forms",
         "@serwist/next": "catalog:pwa",
+        "@t3-oss/env-nextjs": "catalog:next",
         "i18next": "catalog:i18n",
         "next": "catalog:next",
         "react": "catalog:react",
         "react-dom": "catalog:react",
-        "react-i18next": "catalog:i18n"
+        "react-hook-form": "catalog:forms",
+        "react-i18next": "catalog:i18n",
+        "server-only": "catalog:next",
+        "zod": "catalog:validation"
     },
     "devDependencies": {
         "@cocooning/eslint-config": "workspace:*",
@@ -27,6 +36,7 @@
         "@cocooning/ts-config": "workspace:*",
         "@tailwindcss/postcss": "catalog:styles",
         "@testing-library/react": "catalog:test",
+        "@testing-library/user-event": "catalog:test",
         "@types/jest": "catalog:test",
         "@types/node": "catalog:build",
         "@types/react": "catalog:react",
