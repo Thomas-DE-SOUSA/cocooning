@@ -1,6 +1,6 @@
 # @cocooning/couple-client-business-logic
 
-Logique metier front des contextes du couple, sans framework : partagee par toutes les vues de la PWA. Sous-chemin `shared` : `ApiError` et `ApiErrorCodeEnum` (l'erreur d'un appel a l'API vue par le front, avec le `backendCode` du contrat ou `null`) et le type `Translator` des fabriques de schemas (decision 0031). Un sous-chemin par contexte, arrive avec son premier ecran : `authentication` (formulaire de connexion `createSignInFormSchema(t)`, port `AuthenticationGateway`, `SignInUseCase`, `CLAUDE.md` du contexte).
+Logique metier front des contextes du couple, sans framework : partagee par toutes les vues de la PWA. Sous-chemin `shared` : `ApiError` et `ApiErrorCodeEnum` (l'erreur d'un appel a l'API vue par le front, avec le `backendCode` du contrat ou `null`) et le type `Translator` des fabriques de schemas (decision 0031). Un sous-chemin par contexte, arrive avec son premier ecran : `authentication` (formulaire de connexion `createSignInFormSchema(t)`, port `AuthenticationGateway`, `SignInUseCase`, `SignOutUseCase`), `pairing` (port `PairingGateway`, `GetMyCoupleUseCase`, `CreateCoupleUseCase`, `JoinCoupleUseCase`, `RenewInvitationCodeUseCase`, formulaire `createJoinCoupleFormSchema(t)`), chacun avec son `CLAUDE.md`. Sous-chemin `testing` : `FakeAuthenticationGateway`, `FakePairingGateway`.
 
 ## A lire avant de commencer
 

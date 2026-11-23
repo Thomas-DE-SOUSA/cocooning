@@ -1,16 +1,13 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (étape 2 de la phase 3, PR 8 mergée, #37). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (étape 3 de la phase 3 lancée, D37). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
 
-- **Phase 3, étape 2 en cours** : contexte `authentication` et écran de connexion (décisions 0032, 0033, 0034). Plan en 8 PR validé le 2026-11-23 (« go », D34 ; détail `journal/2026-11-23.md`, « Phase 3, étape 2 : plan `authentication` »).
-- **Mergées dans `dev`** : PR 1 décisions (#25), PR 2 domaine (#26), PR 3 table `account` (#27), PR 4 contrat (#28), PR 5 module API (#30), PR 6 commande `create-account` (#33), PR 7 client (#35), PR 8 écran web (#37). Rien de l'étape 2 n'est déployé : une seule mise en production après la PR 8.
-- **PR 7 en bref** : formulaire `createSignInFormSchema(t)`, port `AuthenticationGateway`, `SignInUseCase`, `ApiAuthenticationGateway` et `createAuthenticationModule`, `Input`/`Label`, `FakeFetch` en sous-chemin `testing`. Détail : `journal/2026-11-23.md`, « PR 7 ».
-- **PR 6 en bref** : commande `create-account` dans l'API (`src/commands/`, D35, décision plateforme 0016) et runbook des comptes. Détail : `journal/2026-11-23.md`, « PR 6 ».
-- **PR 5 en bref** : `POST`/`DELETE /authentication/session` (`ApiRouterEnum.ACCOUNT_SESSION_*`), `AccountPrismaRepository`, `Argon2PasswordHasher`, `JwtSessionTokenSigner` (`sub`, `ver`, `exp`), `SessionGuard` par `ResolveSessionUseCase`, `AUTH_SESSION_TTL_DAYS=90` (aussi dans le `.env` local de l'API), fixture `createTestAccount`. E2E de l'API 71/71. Détail : `journal/2026-11-23.md`, « PR 5 ».
-- **Fait avant** : phase 0 à 2 (PR #1 à #13), phase 3 étape 1 (socle web PWA, #17 à #21). Détail : `journal/2026-11-22.md`, `journal/2026-11-23.md`.
+- **Phase 3, étape 3 en cours** : module `pairing` de la PWA (mise en couple par code), plan D37 en 6 PR (`journal/2026-11-23.md`, « Phase 3, étape 3 : plan `pairing` web »).
+- **Étape 2 terminée et en production** (2026-11-23) : contexte `authentication`, écran de connexion, deux comptes créés sur la VM, garde-fous ESLint du web (#25 à #42). Détail : `journal/2026-11-23.md`, sections « Phase 3, étape 2 » à « Garde-fous ESLint ».
+- **Fait avant** : phase 0 à 2 (PR #1 à #13), phase 3 étape 1 (socle web PWA, #17 à #21), étape 2 (#25 à #42). Détail : `journal/2026-11-22.md`, `journal/2026-11-23.md`.
 
 ## Le produit (vision du propriétaire, 2026-11-22)
 
@@ -23,7 +20,7 @@
 
 ## Prochaine étape
 
-**Mise en production `dev` → `main`** (sur accord) : vérifier la connexion derrière `tailscale serve` (`X-Forwarded-Host`, sinon `serverActions.allowedOrigins`), puis créer les deux comptes sur la VM (`docs/couple/infrastructure/runbooks/authentication/accounts.md`). Ensuite PR `chore/` des garde-fous ESLint (écart frontend 001). PR 8 : `journal/2026-11-23.md`, « PR 8 : écran de connexion ».
+**Étape 3 lancée** (module `pairing` web, plan D37 en 6 PR, `journal/2026-11-23.md`, « Phase 3, étape 3 : plan `pairing` web »). PR 1 décisions mergée (#43, ADR 0036 et 0037 acceptées). PR 2 mergée (#45). PR 3 mergée (#46). PR 4 et 5 mergées (#47, #48). PR 6 déconnexion ouverte, en attente du « go » ; puis mise en production de l'étape 3, sur accord. Étape 2 en production avec les deux comptes.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 

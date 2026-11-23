@@ -17,7 +17,7 @@ export async function authenticationSignInAction(
 ): Promise<Result<null, ApiError>> {
     const session = await openSignInSession(input, {
         t: await getServerTranslation(SIGN_IN_NAMESPACE),
-        signIn: authenticationModule.signIn,
+        signIn: authenticationModule().signIn,
         client: readSignInClientContext(await headers()),
         secure: serverEnv.NODE_ENV === 'production',
     });

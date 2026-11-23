@@ -1,6 +1,6 @@
 # Authentication
 
-Le partenaire se connecte avec son adresse e-mail et son mot de passe ; la PWA garde sa session dans un cookie que le navigateur ne lit pas.
+Le partenaire se connecte avec son adresse e-mail et son mot de passe, et se deconnecte de tous ses appareils ; la PWA garde sa session dans un cookie que le navigateur ne lit pas.
 
 ## A lire avant de commencer
 
@@ -17,6 +17,7 @@ Architecture front (chemin d'un appel, session, erreurs) :
 
 - Module de reference de la PWA pour un formulaire (decision 0035) : `hooks/use-sign-in-form.ts` (react-hook-form, schema memoise sur `t`), `hooks/use-sign-in.ts` (gateway et callbacks injectes), trio `gateways/{ports,server-action,fake}/`, vue pure `ui/views/sign-in-form.view.tsx`.
 - L'action `actions/authentication-sign-in.action.ts` ne fait que lire `headers()`, `cookies()` et la traduction du serveur : la logique va dans `services/sign-in-session.service.ts`, testable sans mock. Jamais de `redirect()` dans l'action (decision 0035).
+- Deconnexion : `SignOutContainer` (exporte par le module, monte par les pages d'un partenaire connecte) ; `actions/authentication-sign-out.action.ts` appelle `SignOutUseCase` puis retire le cookie, seulement si l'API a ferme les sessions. Un echec reseau garde la session et affiche un toast : les autres appareils resteraient connectes.
 - Le jeton de session ne quitte pas le serveur : l'action rend `Result<null, ApiError>`. `server-only` en tete de la fabrique et du service.
 - Champs du formulaire : `autoComplete="username"` et `"current-password"`, `inputMode="email"`, `autoCapitalize="none"`, sinon le trousseau du telephone ne remplit ni n'enregistre le mot de passe. `method="post"` sur le `<form>`.
 - Un code d'erreur que la connexion peut recevoir a sa cle `apiErrors.<code>` dans `src/i18n/locales/fr/authentication/sign-in.json`.

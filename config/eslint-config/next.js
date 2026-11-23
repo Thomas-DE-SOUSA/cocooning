@@ -1,4 +1,5 @@
 import pluginNext from '@next/eslint-plugin-next';
+import { featureModulesConfig } from './feature-modules.js';
 import { reactConfig } from './react.js';
 
 const ENV_ACCESS =
@@ -33,4 +34,5 @@ export const nextConfig = [
             ],
         },
     },
+    ...featureModulesConfig,
 ];

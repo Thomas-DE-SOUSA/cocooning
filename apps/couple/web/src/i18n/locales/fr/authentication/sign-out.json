@@ -1,0 +1,18 @@
+{
+    "signOut": {
+        "label": "Se déconnecter",
+        "pending": "Déconnexion en cours"
+    },
+    "toast": {
+        "signOutFailed": "Déconnexion impossible"
+    },
+    "apiErrors": {
+        "NETWORK_ERROR": "Cocooning ne répond pas. Vérifiez la connexion du téléphone, puis réessayez.",
+        "INVALID_RESPONSE": "La réponse du serveur est illisible. Réessayez dans un instant.",
+        "VALIDATION_ERROR": "La demande envoyée est invalide.",
+        "UNAUTHORIZED": "Votre session a déjà pris fin.",
+        "NOT_FOUND": "Le service de déconnexion est introuvable.",
+        "CONFLICT": "La déconnexion a été refusée. Réessayez.",
+        "UNKNOWN": "Une erreur inattendue est survenue. Réessayez dans un instant."
+    }
+}

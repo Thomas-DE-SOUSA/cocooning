@@ -1,6 +1,6 @@
 # couple-web
 
-PWA Next.js 16 (App Router, Turbopack) du couple, servie en dev sur le port 3200. Aujourd'hui : le socle (`src/app/` : layout racine, `Provider`, accueil provisoire, `not-found`, `global-error`), la traduction en francais (`src/i18n/`) et l'installation sur le telephone (`manifest.ts`, icones provisoires, service worker `sw.ts` de Serwist, page hors ligne `~offline/`). Premier ecran : la connexion (`src/modules/authentication/`, route `src/app/sign-in/`), avec `src/proxy.ts` qui renvoie vers elle sans cookie de session. Les ecrans arrivent par modules dans `src/modules/<module>/` (Feature Module Pattern, decision 0011) ; module de reference : `src/modules/authentication/`.
+PWA Next.js 16 (App Router, Turbopack) du couple, servie en dev sur le port 3200. Aujourd'hui : le socle (`src/app/` : layout racine, `Provider`, accueil provisoire, `not-found`, `global-error`), la traduction en francais (`src/i18n/`) et l'installation sur le telephone (`manifest.ts`, icones provisoires, service worker `sw.ts` de Serwist, page hors ligne `~offline/`). Ecrans : la connexion et la deconnexion (`src/modules/authentication/`, route `src/app/sign-in/`), avec `src/proxy.ts` qui renvoie vers elle sans cookie de session, et la mise en couple (`src/modules/pairing/`, route `src/app/pairing/`), vers laquelle l'accueil renvoie tant que le couple n'est pas forme. Les ecrans arrivent par modules dans `src/modules/<module>/` (Feature Module Pattern, decision 0011) ; module de reference : `src/modules/authentication/`.
 
 ## A lire avant de commencer
 
@@ -14,7 +14,7 @@ Regles front communes :
 - Composant serveur : `const t = await getServerTranslation('<namespace>')` (une instance i18next par appel). Composant client : `useTranslation('<namespace>')` de `react-i18next`, sous le `Provider` de `src/app/provider.tsx`.
 - Aucune URL en dur : `WebRouterEnum` de `@cocooning/couple-shared-kernel/routers` (modele : `src/app/not-found.tsx`).
 - `process.env` est interdit hors de `src/env/` (lint `next.js`). Une variable serveur : son schema dans `src/env/server.ts` (`@t3-oss/env-nextjs`, `server-only`), son `.env.example`, la liste `env` de `turbo.json` et le bloc `environment` de `web` du compose de prod, dans le meme commit. Aujourd'hui : `API_URL`, `API_TIMEOUT_MS`.
-- Une route (`src/app/`) importe seulement le point d'entree d'un module (`@/modules/<module>`) ou `src/shared/` (decision 0011).
+- Une route (`src/app/`) importe seulement le point d'entree d'un module (`@/modules/<module>`) ou `src/shared/` (decision 0011). Le lint (`config/eslint-config/feature-modules.js`) refuse `@/modules/<module>/...`, un chemin relatif vers un autre module, un hook autre que `useTranslation`/`useForm` ou un import de `next/navigation`, `gateways`, `actions` dans une vue, et un `toast.error` qui lit `.message`.
 - Erreur serveur : `toast.error(titre, { description: describeApiResultError(error, t) })`, jamais `error.message` (decision 0010, `src/shared/application/api-result/`).
 - Formulaire : react-hook-form et `zodResolver`, server action qui rend un `Result` (decision 0035, modele `src/modules/authentication/`).
 - Composants d'interface : `@cocooning/design-system`, jamais une copie locale. Couleurs par les tokens (`bg-primary`, `text-muted-foreground`), jamais en dur.
@@ -31,7 +31,9 @@ Regles front communes :
 
 ## Pieges
 
-- `src/env/server.ts` est valide au demarrage (`src/instrumentation.ts`) et `onValidationError` quitte le processus : sans lui, Next journalise l'erreur et continue de repondre 500. `next build` ne la lit pas, l'image Docker se construit sans elle.
+- `src/env/server.ts` est valide au demarrage (`src/instrumentation.ts`) et `onValidationError` quitte le processus : sans lui, Next journalise l'erreur et continue de repondre 500. `next build` charge les pages qui lisent l'API ("Collecting page data") : la validation y est sautee (`NEXT_PHASE`), et les fabriques de modules sont des fonctions appelees a la requete (`pairingModule()`, `authenticationModule()`), jamais des constantes lues a l'import.
+- Une page qui lit les donnees du partenaire porte `export const dynamic = 'force-dynamic'` : sinon Next la prerend au build, sans cookie ni variables.
+- Lire la session cote serveur : `getSessionToken()` (`src/shared/application/session/`), passe non resolu aux fabriques (decision 0036). `next build` ne la lit pas, l'image Docker se construit sans elle.
 - `@t3-oss/env-nextjs` est livre en ESM seul : `jest.config.mjs` le compile en CommonJS (`transform`, `transformIgnorePatterns`). `server-only` est remplace dans Jest par `src/testing/server-only-stub.ts`.
 - Une spec ne charge pas une route qui monte un container : la chaine importe la server action et `serverEnv`, que t3-env refuse sous jsdom. Tester la vue, les hooks et les services.
 - `proxy.ts` : le `matcher` est ecrit en litteraux (Next l'analyse au build et ignore une variable). Les routes publiques passent par `WebRouterEnum` dans le code. Un fichier de la PWA ajoute dans `public/` (demande sans cookie) : l'exclure du `matcher` et de sa spec.

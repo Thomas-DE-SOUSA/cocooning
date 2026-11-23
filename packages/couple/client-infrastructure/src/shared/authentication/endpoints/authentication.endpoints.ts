@@ -3,6 +3,7 @@ import { ApiRouterEnum } from '@cocooning/couple-shared-kernel/routers';
 
 export type AuthenticationEndpoints = {
     readonly signIn: string;
+    readonly signOut: string;
 };
 
 export function resolveAuthenticationEndpoints(
@@ -10,5 +11,6 @@ export function resolveAuthenticationEndpoints(
 ): AuthenticationEndpoints {
     return {
         signIn: resolveRoute(apiBaseUrl, ApiRouterEnum.ACCOUNT_SESSION_OPEN),
+        signOut: resolveRoute(apiBaseUrl, ApiRouterEnum.ACCOUNT_SESSION_CLOSE),
     };
 }

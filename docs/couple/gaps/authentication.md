@@ -36,4 +36,4 @@
 - Où : `apps/couple/web/src/proxy.ts`
 - Constat : le proxy laisse passer toute requête qui porte le cookie `cocooning_session`, sans savoir si l'API l'accepte encore. Une session fermée par `SignOutUseCase` sur un autre appareil, ou un jeton refusé par le garde de l'API, ne renvoie pas vers l'écran de connexion : aucune page ne lit encore l'API, et la PWA n'a ni écran de déconnexion ni retrait du cookie sur un `401`. Les données restent protégées : le garde de session de l'API refuse le jeton à chaque appel.
 - Règle concernée : [décision 0034](../decisions/0034-session-revocable.md)
-- Statut : ouvert
+- Statut : corrigé le 2026-11-23 (branche `feat/sign-out`) : une page qui lit l'API renvoie vers la connexion sur `UNAUTHORIZED` (décision 0036), et « Se déconnecter » ferme les sessions de tous les appareils puis retire le cookie de ce navigateur. Sur un autre appareil, le cookie refusé reste jusqu'à la connexion suivante, sans rien ouvrir.
