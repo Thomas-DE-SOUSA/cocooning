@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (étape 2 de la phase 3, PR 8 en cours, plan validé D36). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (étape 2 de la phase 3, PR 8 ouverte, #37). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -23,7 +23,7 @@
 
 ## Prochaine étape
 
-**PR 8 `feat/authentication-web` en cours** (branche créée depuis `dev` après #36) : plan validé (D36, `journal/2026-11-23.md`, « PR 8 : plan de l'écran web »). Ensuite une mise en production `dev` → `main` et les deux comptes sur la VM, sur accord. Puis PR `chore/` des garde-fous ESLint 0009/0010/0011.
+**PR 8 #37 `feat/authentication-web` ouverte, en attente du « go »** (détail `journal/2026-11-23.md`, « PR 8 : écran de connexion »). Après le merge : mise en production `dev` → `main`, vérifier la connexion derrière `tailscale serve` (`X-Forwarded-Host`), créer les deux comptes sur la VM, sur accord. Puis PR `chore/` des garde-fous ESLint (écart frontend 001).
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
