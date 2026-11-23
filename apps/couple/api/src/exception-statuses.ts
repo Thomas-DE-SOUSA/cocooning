@@ -1,5 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { AuthenticationExceptionCodeEnum } from '@cocooning/couple-contract/authentication';
+import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
 import { PairingExceptionCodeEnum } from '@cocooning/couple-contract/pairing';
 import { PersistenceExceptionCodeEnum } from '@cocooning/couple-prisma/errors';
 import type { ExceptionStatusTable } from '@cocooning/server-infrastructure/nest';
@@ -32,6 +33,11 @@ export const EXCEPTION_STATUSES: ExceptionStatusTable = {
     [PairingExceptionCodeEnum.PAIRING_COUPLE_NOT_FOUND]: HttpStatus.NOT_FOUND,
     [PairingExceptionCodeEnum.PAIRING_COUPLE_VERSION_CONFLICT]:
         HttpStatus.CONFLICT,
+    [NoteExceptionCodeEnum.NOTE_NOT_FOUND]: HttpStatus.NOT_FOUND,
+    [NoteExceptionCodeEnum.NOTE_COUPLE_NOT_PAIRED]: HttpStatus.NOT_FOUND,
+    [NoteExceptionCodeEnum.NOTE_RESERVED_TO_OWNER]: HttpStatus.FORBIDDEN,
+    [NoteExceptionCodeEnum.NOTE_TITLE_INVALID]: HttpStatus.UNPROCESSABLE_ENTITY,
+    [NoteExceptionCodeEnum.NOTE_VERSION_CONFLICT]: HttpStatus.CONFLICT,
     [PersistenceExceptionCodeEnum.PERSISTENCE_LOCK_BUSY]: HttpStatus.CONFLICT,
     [SharedKernelExceptionCodeEnum.UUID_INVALID]:
         HttpStatus.UNPROCESSABLE_ENTITY,

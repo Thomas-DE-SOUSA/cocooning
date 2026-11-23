@@ -18,6 +18,10 @@
         "./pairing": {
             "types": "./src/pairing/index.ts",
             "default": "./dist/pairing/index.js"
+        },
+        "./notes": {
+            "types": "./src/notes/index.ts",
+            "default": "./dist/notes/index.js"
         }
     },
     "dependencies": {
