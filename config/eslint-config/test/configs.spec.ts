@@ -4,7 +4,7 @@ import path from 'node:path';
 const packageRoot = path.resolve(__dirname, '..');
 
 describe('shared configs', () => {
-    it.each(['base.js', 'nest.js', 'boundaries.js'])(
+    it.each(['base.js', 'nest.js', 'boundaries.js', 'business-logic.js'])(
         '%s loads as an ES module',
         (file) => {
             const run = spawnSync(

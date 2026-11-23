@@ -1,6 +1,6 @@
 # Use Case Test Rules
 
-How the use cases of `@cocooning/couple-server-business-logic` are tested: exhaustive, deterministic, with hand-written fakes (`core-backend.md` rule 19, decision 0001). Reference: `packages/couple/server-business-logic/src/pairing/application/use-cases/*.use-case.spec.ts`.
+How the use cases of `@cocooning/couple-server-business-logic` are tested: exhaustive, deterministic, with hand-written fakes (`core-backend.md` rule 19, decision 0001). `pnpm lint` rejects `jest.fn`, `jest.spyOn` and `jest.mock` in every `*.spec.ts(x)` and `*.integration-spec.ts`, and `Math.random`, `randomUUID` and `uuid` in the whole package, specs and `__tests__/` included (`config/eslint-config/CLAUDE.md`). Reference: `packages/couple/server-business-logic/src/pairing/application/use-cases/*.use-case.spec.ts`.
 
 ## Layout
 
