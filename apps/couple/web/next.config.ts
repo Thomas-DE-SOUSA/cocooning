@@ -13,6 +13,8 @@ function withServiceWorker(config: NextConfig): NextConfig {
     const withSerwist = withSerwistInit({
         swSrc: 'src/app/sw.ts',
         swDest: 'public/sw.js',
+        // The screens read again on return to the foreground and on « Actualiser » (decision 0036): no reload that empties a form.
+        reloadOnOnline: false,
         additionalPrecacheEntries: [
             { url: WebRouterEnum.OFFLINE, revision: randomUUID() },
         ],
