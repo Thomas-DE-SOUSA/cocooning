@@ -52,6 +52,19 @@ export function usePairingCommands({ gateway, onDone, onFailed }: Options) {
             ),
         [run, gateway],
     );
+    const cancelCouple = useCallback(
+        () =>
+            run(PairingCommandEnum.CANCEL_COUPLE, () => gateway.cancelCouple()),
+        [run, gateway],
+    );
+    // One command at a time: every button waits while isBusy, only pendingCommand spins.
     const pendingCommand = isPending ? lastCommand : null;
-    return { createCouple, joinCouple, renewInvitationCode, pendingCommand };
+    return {
+        createCouple,
+        joinCouple,
+        renewInvitationCode,
+        cancelCouple,
+        pendingCommand,
+        isBusy: isPending,
+    };
 }

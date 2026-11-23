@@ -1,24 +1,34 @@
 'use client';
 
-import { Button, Spinner } from '@cocooning/design-system';
+import { Button } from '@cocooning/design-system';
 import { useTranslation } from 'react-i18next';
 import { PAIRING_NAMESPACE } from '../../data/pairing-i18n-namespaces';
+import { CommandButton } from '../components/command-button';
 
 type Props = {
     readonly invitationCode: string;
     readonly expiresAt: string;
-    readonly isPending: boolean;
+    readonly isExpired: boolean;
+    readonly isRenewing: boolean;
+    readonly isCancelling: boolean;
+    readonly isBusy: boolean;
     readonly onShare: () => void;
     readonly onRenew: () => void;
+    readonly onCancel: () => void;
     readonly onRefresh: () => void;
 };
 
+// R4: an expired code is no longer offered for sharing, a new one comes first (R7); R8: the couple can be cancelled.
 export function InvitationCodeView({
     invitationCode,
     expiresAt,
-    isPending,
+    isExpired,
+    isRenewing,
+    isCancelling,
+    isBusy,
     onShare,
     onRenew,
+    onCancel,
     onRefresh,
 }: Props) {
     const { t } = useTranslation(PAIRING_NAMESPACE);
@@ -34,27 +44,35 @@ export function InvitationCodeView({
                 {invitationCode}
             </p>
             <p className="text-sm text-muted-foreground">
-                {t('waiting.expiresAt', { expiresAt })}
+                {isExpired
+                    ? t('waiting.expired', { expiresAt })
+                    : t('waiting.expiresAt', { expiresAt })}
             </p>
-            <Button onClick={onShare}>{t('waiting.share')}</Button>
-            <Button
-                variant="secondary"
+            {isExpired ? null : (
+                <Button onClick={onShare}>{t('waiting.share')}</Button>
+            )}
+            <CommandButton
+                variant={isExpired ? 'primary' : 'secondary'}
+                label={t('waiting.renew')}
+                pendingLabel={t('waiting.renewing')}
+                isPending={isRenewing}
+                isBusy={isBusy}
                 onClick={onRenew}
-                disabled={isPending}
-                aria-busy={isPending}
-            >
-                {isPending ? (
-                    <Spinner aria-label={t('waiting.renewing')} />
-                ) : (
-                    t('waiting.renew')
-                )}
-            </Button>
+            />
             <Button
                 variant="ghost"
                 onClick={onRefresh}
             >
                 {t('waiting.refresh')}
             </Button>
+            <CommandButton
+                variant="ghost"
+                label={t('waiting.cancel')}
+                pendingLabel={t('waiting.cancelling')}
+                isPending={isCancelling}
+                isBusy={isBusy}
+                onClick={onCancel}
+            />
         </section>
     );
 }
