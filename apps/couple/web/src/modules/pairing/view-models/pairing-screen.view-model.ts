@@ -21,3 +21,12 @@ export type PairingScreenViewModel =
 export type PairingPage =
     | { readonly redirectTo: string; readonly viewModel: null }
     | { readonly redirectTo: null; readonly viewModel: PairingScreenViewModel };
+
+export const PairingCommandEnum = {
+    CREATE_COUPLE: 'CREATE_COUPLE',
+    JOIN_COUPLE: 'JOIN_COUPLE',
+    RENEW_INVITATION_CODE: 'RENEW_INVITATION_CODE',
+} as const;
+
+export type PairingCommand =
+    (typeof PairingCommandEnum)[keyof typeof PairingCommandEnum];

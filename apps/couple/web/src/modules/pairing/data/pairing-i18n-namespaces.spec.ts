@@ -8,13 +8,16 @@ import {
 } from './pairing-i18n-namespaces';
 
 const REQUIRED_KEYS = [
-    ...PAIRING_SCREEN_ERROR_CODES,
-    ...Object.values(ApiErrorCodeEnum),
-].map((code) => `apiErrors.${code}`);
+    'form.invitationCode.errors.required',
+    'form.invitationCode.errors.tooLong',
+    ...[...PAIRING_SCREEN_ERROR_CODES, ...Object.values(ApiErrorCodeEnum)].map(
+        (code) => `apiErrors.${code}`,
+    ),
+];
 
 describe('Feature: messages of the pairing screen (decision 0037)', () => {
     it.each(I18N_CONFIG.supportedLocales)(
-        'has a message for every server error the screen can receive in %s',
+        'has every key of the join form and of the server errors in %s',
         (locale) => {
             const keys = flattenLocale(
                 RESOURCES[locale][PAIRING_NAMESPACE],

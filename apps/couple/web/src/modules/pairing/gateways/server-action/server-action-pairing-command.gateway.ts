@@ -1,3 +1,4 @@
+import type { JoinCoupleForm } from '@cocooning/couple-client-business-logic/pairing';
 import {
     type ApiError,
     ApiErrorCodeEnum,
@@ -9,6 +10,9 @@ export type PairingCommandAction = () => Promise<Result<null, ApiError>>;
 
 export type PairingCommandActions = {
     readonly createCouple: PairingCommandAction;
+    readonly joinCouple: (
+        form: JoinCoupleForm,
+    ) => Promise<Result<null, ApiError>>;
     readonly renewInvitationCode: PairingCommandAction;
 };
 
@@ -36,6 +40,10 @@ export class ServerActionPairingCommandGateway extends PairingCommandGateway {
 
     override createCouple(): Promise<Result<null, ApiError>> {
         return runAction(this.actions.createCouple);
+    }
+
+    override joinCouple(form: JoinCoupleForm): Promise<Result<null, ApiError>> {
+        return runAction(() => this.actions.joinCouple(form));
     }
 
     override renewInvitationCode(): Promise<Result<null, ApiError>> {
