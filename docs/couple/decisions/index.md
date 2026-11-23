@@ -37,6 +37,6 @@ Le registre unique des décisions du domaine `couple`, dans l'ordre chronologiqu
 | 0025 | transverse | [Pagination par offset, curseur pour le défilement infini](0025-pagination.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
 | 0026 | transverse | [Pas de rôles ni de permissions, une portée par couple et par propriétaire](0026-permissions-par-portee-sans-roles.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
 | 0027 | transverse | [Photos stockées sur disque derrière un port `FileStorage`](0027-stockage-des-photos.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
-| 0028 | pairing | [Règles du code d'invitation et de la mise en couple](pairing/0028-regles-du-code-d-invitation.md) | produit | proposée | 2026-11-23 | à compléter |
-| 0029 | pairing | [Le contexte `pairing` travaille avant qu'un couple existe](pairing/0029-pairing-avant-le-couple.md) | technique | proposée | 2026-11-23 | à compléter |
-| 0030 | transverse | [Vérification du JWT de session en phase 2](0030-verification-du-jwt-en-phase-2.md) | technique | proposée | 2026-11-23 | à compléter |
+| 0028 | pairing | [Règles du code d'invitation et de la mise en couple](pairing/0028-regles-du-code-d-invitation.md) | produit | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0029 | pairing | [Le contexte `pairing` travaille avant qu'un couple existe](pairing/0029-pairing-avant-le-couple.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0030 | transverse | [Vérification du JWT de session en phase 2](0030-verification-du-jwt-en-phase-2.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |

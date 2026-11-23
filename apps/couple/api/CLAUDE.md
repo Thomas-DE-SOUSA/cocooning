@@ -79,7 +79,7 @@ Transactions et verrous : `../../../_knowledge/backend/concurrency.md`.
 
 - Tout changement : relire chaque page qui cite le fichier ou la classe modifies, trouvee avec `rg -l '<NomDeClasse>|<chemin/du/fichier>' docs/ _knowledge/`.
 - Demarrage local, variables d'environnement : `docs/guides/local-setup.md`.
-- Garde de session, cookie, algorithme : `docs/couple/decisions/0030-verification-du-jwt-en-phase-2.md` (decision proposee) et `_knowledge/backend/controllers.md`.
+- Garde de session, cookie, algorithme : `docs/couple/decisions/0030-verification-du-jwt-en-phase-2.md` et `_knowledge/backend/controllers.md`.
 - Bootstrap, env, modules globaux, table des statuts : `_knowledge/backend/wiring.md`. Harnais E2E : `_knowledge/backend/e2e.md`.
 - Table code -> statut : `docs/couple/decisions/0020-statut-http-des-exceptions.md` et le tableau des refus de `docs/couple/business-rules/<contexte>/rules.md`.
 - Module de contexte ajoute (`src/modules/<contexte>/`, avec son stub `CLAUDE.md`) : `_knowledge/backend/adapters.md` (structure) et la carte de l'arborescence du `CLAUDE.md` racine.
