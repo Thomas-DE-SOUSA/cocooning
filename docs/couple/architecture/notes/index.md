@@ -6,7 +6,7 @@ Cette page décrit comment le contexte `notes` est construit : ses couches, ses 
 
 `notes` porte les notes du couple : leur titre, leur propriétaire, leur visibilité et leur cycle de vie. Le contenu riche, document Yjs édité à deux, arrive avec le canal temps réel ([décision 0040](../../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md)). Le contexte ne connaît ni les sessions (`authentication`) ni le code d'invitation (`pairing`) : il reçoit le `coupleId` par un port étroit ([décision 0041](../../decisions/0041-couple-de-la-requete.md)).
 
-Construit aujourd'hui : domaine et application. À venir dans l'étape « notes » : table `note`, contrat HTTP et routes de l'API, canal temps réel, écrans de la PWA.
+Construit aujourd'hui : domaine et application, tables `note` et `note_event` (voir [les tables](tables.md)), adaptateur Prisma de `NoteRepository` et de `PairedCoupleProvider`. À venir dans l'étape « notes » : contrat HTTP et routes de l'API, canal temps réel, écrans de la PWA.
 
 ## Comment c'est construit
 
@@ -22,6 +22,7 @@ Construit aujourd'hui : domaine et application. À venir dans l'étape « notes 
 | `NoteAccessValidator` | Contrôle statique : action réservée à la propriétaire (R5, R7) | `domain/services/note-access.validator.ts` |
 | `NoteCoupleGuardService` | Guard service : construit l'`ExecutionContext` depuis le `PartnerContext`, sinon `NOTE_COUPLE_NOT_PAIRED` (R3, décision 0006) | `application/services/note-couple-guard.service.ts` |
 | `CreateNoteUseCase`, `ListNotesUseCase`, `RenameNoteUseCase`, `ShareNoteUseCase`, `MakeNotePrivateUseCase`, `DeleteNoteUseCase` | Use cases, `execute(context)` ou `execute(context, command)` | `application/use-cases/` |
+| `NotePrismaRepository`, `PairedCouplePrismaProvider` | Adaptateurs : note et outbox dans une transaction, verrou optimiste, visibilité dans le `where` ; lecture seule du couple formé dans les tables de `pairing` (couple supprimé exclu) | `apps/couple/api/src/modules/notes/secondary/` |
 | `toNoteView` | Vue rendue : identifiant, propriétaire, titre, visibilité, dernière modification | `application/mappers/note-view.mapper.ts` |
 
 Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/notes/`.
