@@ -1,4 +1,5 @@
 import { AuthenticationExceptionCodeEnum } from '@cocooning/couple-contract/authentication';
+import { Account } from '../../domain/models/account.aggregate';
 import { AccountId } from '../../domain/value-objects/account-id.vo';
 import {
     AuthenticationTestContext,
@@ -97,6 +98,21 @@ describe('Feature: sign in', () => {
             expect(ctx.passwordHasher.checkedHashes).toEqual([
                 FakePasswordHasher.hashOf(PASSWORD),
             ]);
+        });
+    });
+
+    describe('Scenario: a stored hash that cannot be read', () => {
+        it('lets the error through instead of answering a wrong password', async () => {
+            const account = ctx.givenAccount();
+            ctx.accountRepository.seed(
+                Account.fromSnapshot({
+                    ...account.toSnapshot(),
+                    passwordHash: 'corrupted',
+                }),
+            );
+            await expect(signIn(EMAIL_ADDRESS, PASSWORD)).rejects.toThrow(
+                'Unreadable password hash',
+            );
         });
     });
 });
