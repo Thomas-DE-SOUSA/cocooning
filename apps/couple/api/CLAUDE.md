@@ -8,6 +8,7 @@ API NestJS 11 (CommonJS, decision plateforme 0011) du domaine couple : racine de
 - `src/exception-statuses.ts` : la table code -> statut (decision 0020). Un code absent repond 500 sans son message.
 - `src/health/` : `GET ApiRouterEnum.HEALTH_CHECK`, public, `SELECT 1` par `PrismaService`.
 - `src/modules/authentication/` : connexion, deconnexion et session (decision 0034, stub `CLAUDE.md`). Trois modules comme `pairing` ; `AuthenticationModule` exporte les use cases pour que `AppModule` construise `SessionGuard`. `SessionGuard` global, ferme par defaut : lit le cookie `SESSION_COOKIE_NAME` (`@cocooning/couple-contract/authentication`) et appelle `ResolveSessionUseCase`, sinon 401 (`AUTHENTICATION_SESSION_MISSING` ou `_INVALID`). `@CurrentPartner()` donne le `PartnerContext { userId }` au controleur. `env.ts` du module : `AUTH_JWT_SECRET`, `AUTH_SESSION_TTL_DAYS`.
+- `src/commands/` : commandes d'exploitation lancees sur la VM (decision plateforme 0016, `CLAUDE.md` du dossier). `create-account/` cree un compte (R6) dans un contexte Nest sans HTTP, sur `AuthenticationSecondaryModule`.
 - `src/modules/pairing/` : premier contexte (stub `CLAUDE.md`). Trois modules : `PairingModule` (quatre controleurs), `PairingServiceModule` (use cases par `pairingUseCase()`, `PairingPreconditionService` et `EventPublishingService` crees dans la fabrique), `PairingSecondaryModule` (`provide: CoupleRepository`, `useClass: CouplePrismaRepository`). Routes `ApiRouterEnum.COUPLE_*`. `env.ts` du module : `PAIRING_INVITATION_CODE_TTL_HOURS`.
 - `MessagingModule` (`@cocooning/server-infrastructure/messaging`) fournit `EventPublisher` : publication en processus, qui ne fait que journaliser tant qu'aucun abonne n'existe ; le relais de l'outbox livre (decision 0021).
 - Un nouveau contexte : `src/modules/<contexte>/`, sur le modele de `pairing`, avec son stub `CLAUDE.md` qui importe le `CLAUDE.md` du contexte metier.
@@ -74,6 +75,7 @@ Transactions et verrous : `../../../_knowledge/backend/concurrency.md`.
 - `pnpm --filter couple-api check-types`
 - `pnpm --filter couple-api lint`
 - `pnpm --filter couple-api build`
+- `pnpm --filter couple-api create-account <adresse>` (apres `build`, lit `.env` ; en production : `docs/couple/infrastructure/runbooks/authentication/accounts.md`)
 
 ## Documentation a tenir a jour
 
@@ -82,4 +84,5 @@ Transactions et verrous : `../../../_knowledge/backend/concurrency.md`.
 - Garde de session, cookie, jeton : `docs/couple/architecture/authentication/index.md` et `_knowledge/backend/controllers.md`.
 - Bootstrap, env, modules globaux, table des statuts : `_knowledge/backend/wiring.md`. Harnais E2E : `_knowledge/backend/e2e.md`.
 - Table code -> statut : `docs/couple/decisions/0020-statut-http-des-exceptions.md` et le tableau des refus de `docs/couple/business-rules/<contexte>/rules.md`.
+- Commande ajoutee (`src/commands/<commande>/`) : le `CLAUDE.md` de `src/commands/`, son runbook dans `docs/couple/infrastructure/runbooks/<contexte>/`, la carte du `CLAUDE.md` racine.
 - Module de contexte ajoute (`src/modules/<contexte>/`, avec son stub `CLAUDE.md`) : `_knowledge/backend/adapters.md` (structure) et la carte de l'arborescence du `CLAUDE.md` racine.

@@ -26,3 +26,7 @@ How `apps/couple/api` is assembled: bootstrap, environment, global modules, enha
 
 12. **Three modules per context, imported in one direction**: `<context>.module.ts` (controllers) imports `-service.module.ts` (use cases), which imports `-secondary.module.ts` (`{ provide: Port, useClass: Adapter }`, exports the ports). `AppModule` imports the first only.
 13. **Use cases are plain classes built by `useFactory`**, with `inject` listing the ports, `Logger` and `ConfigService`. Domain services (`new PairingPreconditionService(repository)`) and `EventPublishingService` are created inside the factory (decision 0005); a configuration value is read there with `getOrThrow` and passed to the constructor (`invitationCodeLifetimeInHours`). A typed helper (`pairingUseCase(Token, build)`, `pairing-use-case.factory.ts`) keeps one token paired with its own factory.
+
+## Commands
+
+14. **An operating command is an entry point of the API** (platform decision 0016): `src/commands/<command>/main.ts` calls `Uuid.configure` and a function that takes `args` and a terminal, which boots `NestFactory.createApplicationContext` on its own module. That module imports the configuration, logger, Prisma and the context's secondary module, never `AppModule`, and builds its use case through the context's factory. Reference: `src/commands/create-account/`.

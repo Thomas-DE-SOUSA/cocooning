@@ -12,6 +12,7 @@ import type { Environment } from '../../env';
 export type AuthenticationDependencies = {
     readonly repository: AccountRepository;
     readonly preconditions: AuthenticationPreconditionService;
+    readonly hasher: PasswordHasher;
     readonly signer: SessionTokenSigner;
     readonly clock: DateTimeProvider;
     readonly sessionLifetimeInDays: number;
@@ -39,6 +40,7 @@ const collect = (
         hasher,
         signer,
     ),
+    hasher,
     signer,
     clock,
     sessionLifetimeInDays: config.getOrThrow('AUTH_SESSION_TTL_DAYS', {
