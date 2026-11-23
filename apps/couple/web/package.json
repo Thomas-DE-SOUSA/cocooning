@@ -1,0 +1,40 @@
+{
+    "name": "couple-web",
+    "description": "Next.js PWA of the couple domain",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "build": "next build",
+        "dev": "next dev -p 3200",
+        "start": "next start -p 3200",
+        "lint": "eslint . --max-warnings=0",
+        "check-types": "tsc --noEmit -p tsconfig.json",
+        "test": "jest"
+    },
+    "dependencies": {
+        "@cocooning/couple-shared-kernel": "workspace:*",
+        "@cocooning/design-system": "workspace:*",
+        "i18next": "catalog:i18n",
+        "next": "catalog:next",
+        "react": "catalog:react",
+        "react-dom": "catalog:react",
+        "react-i18next": "catalog:i18n"
+    },
+    "devDependencies": {
+        "@cocooning/eslint-config": "workspace:*",
+        "@cocooning/jest-config": "workspace:*",
+        "@cocooning/ts-config": "workspace:*",
+        "@tailwindcss/postcss": "catalog:styles",
+        "@testing-library/react": "catalog:test",
+        "@types/jest": "catalog:test",
+        "@types/node": "catalog:build",
+        "@types/react": "catalog:react",
+        "@types/react-dom": "catalog:react",
+        "eslint": "catalog:lint",
+        "jest": "catalog:test",
+        "jest-environment-jsdom": "catalog:test",
+        "tailwindcss": "catalog:styles",
+        "ts-jest": "catalog:test",
+        "typescript": "catalog:build"
+    }
+}
