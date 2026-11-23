@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import type { Environment } from '../../env';
-import { SESSION_TOKEN_ALGORITHM } from './session-cookie';
+import { SESSION_TOKEN_ALGORITHM } from './session-token-algorithm';
 
 @Module({
     imports: [

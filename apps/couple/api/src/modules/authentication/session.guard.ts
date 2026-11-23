@@ -5,14 +5,17 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { AuthenticationExceptionCodeEnum } from '@cocooning/couple-contract/authentication';
+import {
+    AuthenticationExceptionCodeEnum,
+    SESSION_COOKIE_NAME,
+} from '@cocooning/couple-contract/authentication';
 import { IS_PUBLIC_KEY } from '@cocooning/server-infrastructure/nest';
 import type { PartnerContext } from '@cocooning/shared-kernel/domain';
 import { DateTimeProvider } from '@cocooning/shared-kernel/ports';
 import type { Request } from 'express';
 import { AuthenticationException } from '@cocooning/couple-server-business-logic/authentication';
 import { attachPartnerContext } from './partner-context.request';
-import { SESSION_COOKIE_NAME, SESSION_TOKEN_ALGORITHM } from './session-cookie';
+import { SESSION_TOKEN_ALGORITHM } from './session-token-algorithm';
 import { SessionTokenPayloadSchema } from './session-token-payload';
 
 const MILLISECONDS_PER_SECOND = 1_000;
