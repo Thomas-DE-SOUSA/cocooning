@@ -11,12 +11,17 @@ type FetchOutcome =
           readonly status: number;
           readonly text: string;
       }
-    | { readonly kind: 'network-failure'; readonly message: string };
+    | { readonly kind: 'network-failure'; readonly message: string }
+    | { readonly kind: 'no-answer' };
 
 export class FakeFetch {
-    readonly calls: RecordedFetchCall[] = [];
+    private readonly recordedCalls: RecordedFetchCall[] = [];
     private outcome: FetchOutcome = { kind: 'response', status: 200, text: '' };
     private readonly originalFetch = globalThis.fetch;
+
+    get calls(): ReadonlyArray<RecordedFetchCall> {
+        return [...this.recordedCalls];
+    }
 
     install(): void {
         globalThis.fetch = (...args) => this.handle(...args);
@@ -34,10 +39,15 @@ export class FakeFetch {
         this.outcome = { kind: 'network-failure', message };
     }
 
+    // An API that never answers: the request rejects only when its signal aborts, as fetch does.
+    givenNoAnswer(): void {
+        this.outcome = { kind: 'no-answer' };
+    }
+
     private async handle(
         ...[input, init]: Parameters<typeof fetch>
     ): Promise<Response> {
-        this.calls.push({
+        this.recordedCalls.push({
             url: String(input),
             method: init?.method ?? 'GET',
             headers: { ...(init?.headers as Record<string, string>) },
@@ -46,8 +56,17 @@ export class FakeFetch {
         if (this.outcome.kind === 'network-failure') {
             throw new TypeError(this.outcome.message);
         }
+        if (this.outcome.kind === 'no-answer') return waitForAbort(init);
         return new Response(this.outcome.text || null, {
             status: this.outcome.status,
         });
     }
+}
+
+function waitForAbort(init: RequestInit | undefined): Promise<Response> {
+    return new Promise((_resolve, reject) => {
+        init?.signal?.addEventListener('abort', () =>
+            reject(init.signal?.reason),
+        );
+    });
 }

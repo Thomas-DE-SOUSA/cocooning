@@ -18,7 +18,7 @@ Regles front communes :
 ## Tests
 
 - Une spec a cote du fichier, style BDD, sans `should`.
-- `fetch` se remplace par `FakeFetch` (`src/testing/fake-fetch.ts` : journal `calls`, `givenResponse`, `givenNetworkFailure`), jamais par `jest.fn` (decision 0001). `install()` dans `beforeEach`, `restore()` dans `afterEach` ; le journal ne se vide jamais, une instance neuve par test quand la spec le lit.
+- `fetch` se remplace par `FakeFetch` (`src/testing/fake-fetch.ts` : journal `calls` en lecture seule, `givenResponse`, `givenNetworkFailure`, `givenNoAnswer` pour un timeout), jamais par `jest.fn` (decision 0001). `install()` dans `beforeEach`, `restore()` dans `afterEach` ; le journal ne se vide jamais, une instance neuve par test quand la spec le lit.
 
 ## Pieges
 
