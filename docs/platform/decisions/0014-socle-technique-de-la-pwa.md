@@ -1,10 +1,10 @@
 ---
 nature: technique
-status: proposée
+status: acceptée
 date: 2026-11-23
 deciders: [Thomas De Sousa]
-validated-by: à compléter
-validated-on:
+validated-by: Thomas De Sousa, 2026-11-23
+validated-on: 2026-11-23
 supersedes:
 superseded-by:
 premortem:
@@ -22,6 +22,8 @@ L'étape 1 de la phase 3 a posé la PWA `apps/couple/web` (Next.js 16, Turbopack
 2. **Design system lu en source.** `@cocooning/design-system` n'a pas de build : ses exports pointent vers `src/`, et Next le compile par `transpilePackages` dans `apps/couple/web/next.config.ts`.
 3. **`@eslint-react/eslint-plugin` à la place d'`eslint-plugin-react`.** `config/eslint-config/react.js` l'utilise, avec `eslint-plugin-react-hooks`.
 4. **Service worker par `@serwist/next`, build en webpack.** `next build --webpack` produit `public/sw.js` depuis `src/app/sw.ts`. Le plugin n'enveloppe la configuration qu'à la phase `PHASE_PRODUCTION_BUILD` : `next dev` reste en Turbopack, sans service worker.
+
+Réponse du propriétaire, le 2026-11-23, à la question « Je merge d'abord la PR #21 (PWA installable) ? » : « Merger #21 (Recommandé) ».
 
 ## Alternatives écartées
 
