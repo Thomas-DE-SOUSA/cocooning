@@ -45,3 +45,5 @@ Le registre unique des décisions du domaine `couple`, dans l'ordre chronologiqu
 | 0033 | authentication | [Le contexte `authentication` travaille hors du couple](authentication/0033-authentication-hors-du-couple.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0034 | transverse | [Session révocable, cookie posé par la PWA](0034-session-revocable.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0035 | frontend | [Formulaires par react-hook-form, server action qui rend un résultat](frontend/0035-formulaires-de-la-pwa.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0036 | frontend | [Les données se lisent dans la page serveur, avec le cookie de session](frontend/0036-lecture-des-donnees-par-la-page-serveur.md) | technique | proposée | 2026-11-23 | à compléter |
+| 0037 | frontend | [Chaque écran traduit les erreurs qu'il peut recevoir](frontend/0037-traductions-des-erreurs-par-ecran.md) | technique | proposée | 2026-11-23 | à compléter |
