@@ -4,7 +4,7 @@ Ce que le serveur et la PWA du couple partagent sans passer par HTTP. Sous-chemi
 
 - `enums` : enums metier `as const`, un fichier par enum (decision 0002) : `CouplePairingStatusEnum` (`PENDING`, `PAIRED`), lu par `pairing` et par la reponse HTTP de la PWA.
 - `routers` : `ApiRouterEnum` et `WebRouterEnum`, avec `API_ROUTE_GROUPS` et `WEB_ROUTE_GROUPS` (la liste des fichiers de routes, lue par la spec anti-collision) et le type `RouteGroup`. API : `HealthRouteEnum` (`HEALTH_CHECK`, route publique de sante de l'API), `AuthenticationRouteEnum` (`ACCOUNT_SESSION_OPEN` et `ACCOUNT_SESSION_CLOSE` sur `/authentication/session`, distingues par le verbe), `PairingRouteEnum` (`COUPLE_CREATE` et `COUPLE_GET_MINE` sur `/pairing/couple`, distingues par le verbe, `COUPLE_JOIN`, `COUPLE_INVITATION_CODE_RENEW`). Web : `AuthenticationRouteEnum` (`ACCOUNT_SIGN_IN`, `/sign-in`, ecran de connexion, route publique du `proxy.ts` de la PWA), `HomeRouteEnum` (`HOME`, `/`), `OfflineRouteEnum` (`OFFLINE`, `/~offline`, page de repli du service worker).
-- `limits` : bornes qui sont a la fois un invariant du domaine et une borne du contrat ou d'un formulaire : `EMAIL_ADDRESS_MAX_LENGTH`, `PASSWORD_MIN_LENGTH`, `PASSWORD_MAX_LENGTH` (decision 0032).
+- `limits` : bornes qui sont a la fois un invariant du domaine et une borne du contrat ou d'un formulaire : `EMAIL_ADDRESS_MAX_LENGTH`, `PASSWORD_MIN_LENGTH`, `PASSWORD_MAX_LENGTH` (decision 0032), `INVITATION_CODE_ENTRY_MAX_LENGTH` (code d'invitation saisi, espaces compris, R3).
 - `exceptions` : `MissingExecutionContextException` (code `EXECUTION_CONTEXT_MISSING`), levee par le `ensureRequiredContextPresent` des guard services.
 
 ## A lire avant de commencer
