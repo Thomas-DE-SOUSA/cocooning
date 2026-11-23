@@ -1,4 +1,4 @@
-import { FakeFetch } from './__tests__/fake-fetch';
+import { FakeFetch } from '../../testing';
 import { TEST_HTTP_CONFIG } from './__tests__/test-http-config';
 import { httpRequest } from './http-request';
 import { HttpMethodEnum } from './http-method.enum';

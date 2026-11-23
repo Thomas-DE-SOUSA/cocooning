@@ -1,6 +1,6 @@
 # @cocooning/client-infrastructure
 
-Adaptateurs front sans domaine. Sous-chemin `shared/http` : le seul `fetch` des gateways (`httpRequest`), la verification d'une reponse par son schema de contrat (`parseResponse`), la construction d'une URL d'API (`resolveRoute`), `HttpMethodEnum` et les types `HttpRequest` et `HttpRequestConfig<TError>`.
+Adaptateurs front sans domaine. Sous-chemin `shared/http` : le seul `fetch` des gateways (`httpRequest`), la verification d'une reponse par son schema de contrat (`parseResponse`), la construction d'une URL d'API (`resolveRoute`), `HttpMethodEnum` et les types `HttpRequest` et `HttpRequestConfig<TError>`. Sous-chemin `testing` : `FakeFetch`, le faux `fetch` des specs de gateways, ici et dans les packages de domaine.
 
 ## A lire avant de commencer
 
@@ -18,7 +18,7 @@ Regles front communes :
 ## Tests
 
 - Une spec a cote du fichier, style BDD, sans `should`.
-- `fetch` se remplace par `src/shared/http/__tests__/fake-fetch.ts` (journal `calls`, `givenResponse`, `givenNetworkFailure`), jamais par `jest.fn` (decision 0001). `install()` dans `beforeEach`, `restore()` dans `afterEach`.
+- `fetch` se remplace par `FakeFetch` (`src/testing/fake-fetch.ts` : journal `calls`, `givenResponse`, `givenNetworkFailure`), jamais par `jest.fn` (decision 0001). `install()` dans `beforeEach`, `restore()` dans `afterEach` ; le journal ne se vide jamais, une instance neuve par test quand la spec le lit.
 
 ## Pieges
 
