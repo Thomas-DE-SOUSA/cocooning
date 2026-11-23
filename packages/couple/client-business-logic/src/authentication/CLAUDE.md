@@ -21,4 +21,4 @@ Architecture front :
 
 ## Tests
 
-- `FakeAuthenticationGateway` (`__tests__/secondary/`) : journal `calls`, `givenRefusal(error)`, session `A_SESSION` par defaut.
+- `FakeAuthenticationGateway` (sous-chemin `@cocooning/couple-client-business-logic/testing`, aussi pour les specs de la PWA) : journal `calls`, `givenRefusal(error)`, `givenSession(session)`, session `A_SESSION` par defaut.

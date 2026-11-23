@@ -3,11 +3,11 @@ import type {
     SignInResponse,
 } from '@cocooning/couple-contract/authentication';
 import { fail, ok, type Result } from '@cocooning/shared-kernel/utils';
-import type { ApiError } from '../../../shared/api-error';
+import type { ApiError } from '../shared/api-error';
 import {
     AuthenticationGateway,
     type SignInClientContext,
-} from '../../domain/ports/authentication.gateway';
+} from '../authentication/domain/ports/authentication.gateway';
 
 export type AuthenticationGatewayCall = {
     readonly operation: 'signIn';
@@ -23,7 +23,12 @@ export const A_SESSION: SignInResponse = {
 
 export class FakeAuthenticationGateway extends AuthenticationGateway {
     readonly calls: AuthenticationGatewayCall[] = [];
+    private session: SignInResponse = A_SESSION;
     private refusal: ApiError | null = null;
+
+    givenSession(session: SignInResponse): void {
+        this.session = session;
+    }
 
     givenRefusal(error: ApiError): void {
         this.refusal = error;
@@ -35,7 +40,7 @@ export class FakeAuthenticationGateway extends AuthenticationGateway {
     ): Promise<Result<SignInResponse, ApiError>> {
         this.calls.push({ operation: 'signIn', request, client });
         return Promise.resolve(
-            this.refusal === null ? ok(A_SESSION) : fail(this.refusal),
+            this.refusal === null ? ok(this.session) : fail(this.refusal),
         );
     }
 }
