@@ -1,0 +1,21 @@
+# Allowlist: only what the image build needs enters the context.
+*
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!turbo.json
+!apps/
+!packages/
+!config/
+
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+**/.env
+**/.env.*
+**/coverage
+**/*.tsbuildinfo
+**/src/generated
+**/public/sw.js*
+**/public/swe-worker-*

@@ -77,6 +77,7 @@ cocooning/
 │   ├── client-infrastructure/      # * Domain-agnostic frontend adapters: the single HTTP client
 │   ├── design-system/              # * Tailwind 4 tokens, Button, Skeleton, Toaster, cn (read from src, no build)
 ├── config/                         # ts, eslint, prettier, jest configs (@cocooning/*), one CLAUDE.md each
+├── infrastructure/                 # * Dockerfiles (nest, next) and the production docker compose (Oracle VM, Tailscale)
 ├── docs/                           # * Documentation (French): architecture, guides, platform, couple
 ├── _knowledge/                     # Coding rules imported by the CLAUDE.md files
 ├── _brain/                         # Project memory (state, decisions, lessons, journal)

@@ -44,4 +44,4 @@ Conventions Prisma :
 
 - Tout changement : relire chaque page qui cite le fichier ou la fonction modifies, trouvee avec `rg -l '<nomDeFonction>|<chemin/du/fichier>' docs/ _knowledge/ CLAUDE.md`.
 - Fixture de verrou : `_knowledge/backend/concurrency.md`.
-- Image Postgres (`postgres:17-alpine`) : la meme version majeure que le `docker compose` de deploiement (decision plateforme 0006, phase 6).
+- Image Postgres (`postgres:17-alpine`) : la meme version majeure que `infrastructure/compose/docker-compose.prod.yml` (decision plateforme 0015).
