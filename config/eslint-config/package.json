@@ -20,6 +20,7 @@
     "dependencies": {
         "@eslint-react/eslint-plugin": "catalog:lint",
         "@eslint/js": "catalog:lint",
+        "@next/eslint-plugin-next": "catalog:next",
         "eslint-config-prettier": "catalog:lint",
         "eslint-plugin-boundaries": "catalog:lint",
         "eslint-plugin-react-hooks": "catalog:lint",

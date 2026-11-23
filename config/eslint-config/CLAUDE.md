@@ -7,7 +7,7 @@ Configurations ESLint 10 (flat config) partagees et frontieres entre domaines.
 - `boundaries.js` (`./boundaries`) : `eslint-plugin-boundaries` v7. Exporte `boundariesConfig` (le depot reel) et `createBoundaries({ rootPath, domains })`.
 - `nest.js` (`./nest`) : base + `recommendedTypeChecked`, `projectService: true`. Dans les specs, `no-unsafe-argument`, `no-unsafe-assignment` et `unbound-method` sont coupees (matchers Jest types `any`). Le bloc `disableTypeChecked` des fichiers JS reste le dernier : place avant, une regle typee activee ensuite casse le lint de `eslint.config.mjs`.
 - `react.js` (`./react`) : base + `@eslint-react/eslint-plugin` (`recommended-typescript`, `no-array-index-key` en erreur) + `eslint-plugin-react-hooks` (`exhaustive-deps` en erreur) + `max-lines` a 200 sur les `*.tsx`, lignes vides et commentaires exclus (decision 0008). Etale par `packages/design-system`.
-- `next.js` (`./next`) : `react.js` + `@next/eslint-plugin-next` (plugin pas encore installe : il arrive avec l'app web).
+- `next.js` (`./next`) : `react.js` + `@next/eslint-plugin-next` (`recommended`, `core-web-vitals`, sans `no-html-link-for-pages` : App Router seul) + `process.env` interdit dans `**/src/**` hors `**/src/env/**`. Etale par `apps/couple/web`.
 
 ## Consignes de code
 
@@ -22,7 +22,7 @@ Configurations ESLint 10 (flat config) partagees et frontieres entre domaines.
 ## Tests
 
 - `test/boundaries.spec.ts` lance le vrai ESLint sur `__fixtures__/forbidden-import/`, un faux depot ou chaque fichier `forbidden-*` viole une regle : le test passe parce que le lint echoue. `__fixtures__/` est exclu du lint normal.
-- `test/restricted-code.spec.ts` fait de meme sur `__fixtures__/restricted-code/` (mocks automatiques, enum dans une spec, determinisme), et `test/react-code.spec.ts` sur `__fixtures__/react-code/` (cle d'index, fichier de plus de 200 lignes) ; chaque `allowed-*` doit passer. Les specs partagent `test/lint-fixture.ts`.
+- `test/restricted-code.spec.ts` fait de meme sur `__fixtures__/restricted-code/` (mocks automatiques, enum dans une spec, determinisme), `test/react-code.spec.ts` sur `__fixtures__/react-code/` (cle d'index, fichier de plus de 200 lignes) et `test/next-code.spec.ts` sur `__fixtures__/next-code/` (`process.env` hors `src/env/`) ; chaque `allowed-*` doit passer. Les specs partagent `test/lint-fixture.ts`.
 - Nouvelle regle : une fixture `forbidden-*` qui la viole, une `allowed-*` qui la respecte, un cas dans la spec.
 
 ## Pieges
@@ -34,7 +34,7 @@ Configurations ESLint 10 (flat config) partagees et frontieres entre domaines.
 ## Commandes
 
 - `pnpm --filter @cocooning/eslint-config test`
-- A la main : `pnpm --filter @cocooning/eslint-config exec eslint -c __fixtures__/forbidden-import/fixture.eslint.config.mjs __fixtures__/forbidden-import` (doit sortir en erreur), idem avec `restricted-code` et `react-code`.
+- A la main : `pnpm --filter @cocooning/eslint-config exec eslint -c __fixtures__/forbidden-import/fixture.eslint.config.mjs __fixtures__/forbidden-import` (doit sortir en erreur), idem avec `restricted-code`, `react-code` et `next-code`.
 
 ## Documentation a tenir a jour
 

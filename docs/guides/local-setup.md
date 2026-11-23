@@ -2,7 +2,7 @@
 
 Ce guide installe le monorepo sur un poste de développement, vérifie que les contrôles passent et démarre l'API du couple. À suivre à la première installation ou après un changement de version de Node ou de pnpm.
 
-Le dépôt contient l'outillage, les packages backend et l'API NestJS (`apps/couple/api`). L'app web arrive en phase 3.
+Le dépôt contient l'outillage, les packages, l'API NestJS (`apps/couple/api`) et le socle de la PWA Next.js (`apps/couple/web`).
 
 ## Avant de commencer
 
@@ -26,10 +26,15 @@ Le dépôt contient l'outillage, les packages backend et l'API NestJS (`apps/cou
 
 Les variables de l'API, leur rôle et leur valeur de développement sont commentés dans `apps/couple/api/.env.example`. `PAIRING_INVITATION_CODE_TTL_HOURS` fixe la durée de validité d'un code d'invitation, en heures entières (`48` en développement, [décision 0028](../couple/decisions/pairing/0028-regles-du-code-d-invitation.md)) : un `.env` créé avant son arrivée doit la recevoir, sinon l'API refuse de démarrer. Au démarrage, l'API valide son environnement (`apps/couple/api/src/env.ts`) et s'arrête si une variable manque ou sort de ses bornes.
 
+## Démarrer la PWA
+
+Lancer `pnpm --filter couple-web... build` une première fois (il construit les packages dont l'app dépend), puis `pnpm --filter couple-web dev`. La PWA répond sur http://localhost:3200 (l'API garde le port 3100). Elle n'a encore besoin d'aucune variable d'environnement.
+
 ## Vérifier le résultat
 
 - `git config core.hooksPath` affiche le dossier des hooks Husky, et un commit sur une branche mal nommée est refusé par `validate-branch-name`.
 - `curl -i http://localhost:3100/health` répond `200` et `{"status":"UP"}` (port `PORT` du `.env`). Une route non publique répond `401` sans cookie de session valide ; en phase 2, aucun endpoint ne crée encore de session ([décision 0030](../couple/decisions/0030-verification-du-jwt-en-phase-2.md)). Pour essayer les routes de `pairing` (`POST /pairing/couple`, `GET /pairing/couple`), signer un jeton HS256 avec `AUTH_JWT_SECRET` (un `sub` UUID et un `exp`) et l'envoyer dans le cookie `cocooning_session`.
+- http://localhost:3200 affiche « Bienvenue sur Cocooning », une adresse inconnue la page « Page introuvable ».
 - `pnpm --filter couple-api test:e2e` démarre son propre PostgreSQL dans Docker et passe sans `.env`.
 
 ## En cas de problème

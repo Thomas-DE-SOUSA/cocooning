@@ -1,0 +1,18 @@
+{
+    "app": {
+        "name": "Cocooning",
+        "description": "Notre petit monde à deux : notes, agenda et messages."
+    },
+    "home": {
+        "title": "Bienvenue sur Cocooning",
+        "subtitle": "Votre espace à deux se prépare."
+    },
+    "notFound": {
+        "title": "Page introuvable",
+        "backHome": "Revenir à l'accueil"
+    },
+    "globalError": {
+        "title": "Quelque chose s'est mal passé",
+        "retry": "Réessayer"
+    }
+}

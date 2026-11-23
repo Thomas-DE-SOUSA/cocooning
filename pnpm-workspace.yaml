@@ -109,6 +109,14 @@ catalogs:
     react: ^19.3.1
     react-dom: ^19.3.1
 
+  next:
+    "@next/eslint-plugin-next": ^16.4.6
+    next: ^16.4.6
+
+  i18n:
+    i18next: ^27.2.0
+    react-i18next: ^18.0.3
+
   styles:
     "@tailwindcss/postcss": ^4.3.5
     class-variance-authority: ^0.7.1
