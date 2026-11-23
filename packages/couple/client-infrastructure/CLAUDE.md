@@ -15,7 +15,7 @@ Regles front communes :
 - Une gateway valide sa requete par le schema de requete du contrat avant l'appel : hors contrat, `VALIDATION_ERROR` sans appel.
 - Seule la connexion transmet l'adresse IP et le User-Agent du navigateur (`x-forwarded-for`, `user-agent`, `core-frontend.md` regle 13) ; une valeur `null` n'envoie pas l'en-tete.
 - Contexte qui agit pour le partenaire connecte : la fabrique recoit `getSessionToken` sans l'appeler, la gateway passe par `sessionRequest(getSessionToken, requete, config)`, qui appelle `sessionHeaders` a chaque requete et envoie `Cookie: <SESSION_COOKIE_NAME>=<jeton>`, lu par le garde de session de l'API (decision 0036). Sans jeton, `UNAUTHORIZED` (`AUTHENTICATION_SESSION_MISSING`) sans appel.
-- Modeles a copier : `src/shared/authentication/` (appel public), `src/shared/pairing/` (appel au nom du partenaire).
+- Modeles a copier : `src/shared/authentication/` (connexion publique, deconnexion avec la session), `src/shared/pairing/` (tous les appels au nom du partenaire).
 
 ## Tests
 

@@ -47,7 +47,7 @@ Un service worker ne s'enregistre qu'en HTTPS, sauf sur `localhost`. Pour instal
 
 - `git config core.hooksPath` affiche le dossier des hooks Husky, et un commit sur une branche mal nommée est refusé par `validate-branch-name`.
 - `curl -i http://localhost:3100/health` répond `200` et `{"status":"UP"}` (port `PORT` du `.env`). Une route non publique répond `401` sans cookie de session valide ([décision 0034](../couple/decisions/0034-session-revocable.md)). `POST /authentication/session` avec `{"emailAddress": "...", "password": "..."}` répond le jeton (`sessionToken`) d'un compte existant ; l'envoyer dans le cookie `cocooning_session` ouvre les routes de `pairing` (`POST /pairing/couple`, `GET /pairing/couple`), et `DELETE /authentication/session` ferme toutes les sessions du partenaire.
-- http://localhost:3200 affiche « Bienvenue sur Cocooning », une adresse inconnue la page « Page introuvable ».
+- http://localhost:3200 renvoie vers l'écran « Connexion » (`/sign-in`) sans cookie de session ; après la connexion, « Notre couple » tant que le couple n'est pas formé, puis « Bienvenue sur Cocooning ». Une adresse inconnue affiche la page « Page introuvable ».
 - Après `build` et `start` de la PWA, `curl -I http://localhost:3200/manifest.webmanifest` et `curl -I http://localhost:3200/sw.js` répondent `200`, et http://localhost:3200/~offline affiche « Hors ligne ». Dans les outils du navigateur, onglet « Application », le service worker est actif ; en coupant le réseau, une page non visitée affiche « Hors ligne ».
 - `pnpm --filter couple-api test:e2e` démarre son propre PostgreSQL dans Docker et passe sans `.env`.
 

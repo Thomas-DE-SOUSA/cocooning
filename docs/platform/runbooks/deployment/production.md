@@ -6,7 +6,7 @@ last-verified: 2026-11-23
 
 Ce runbook installe Cocooning sur la VM Oracle de Cadence, puis le met à jour à chaque merge dans `main`.
 
-Niveau de preuve : exécuté en conditions réelles sur la VM le 2026-11-23 (préparation, démarrage, sauvegarde, installation de la PWA sur un téléphone) ; la mise à jour et la restauration n'ont pas encore servi.
+Niveau de preuve : exécuté en conditions réelles sur la VM le 2026-11-23 (préparation, démarrage, sauvegarde, installation de la PWA sur un téléphone) ; mise à jour exécutée le 2026-11-23 (releases #39, #50, #54, #57) ; la restauration n'a pas encore servi.
 
 ## Quand l'utiliser
 
@@ -57,7 +57,7 @@ Créer le dossier avant : `mkdir -p ~/backups`. Copier ces fichiers hors de la V
 
 ## Vérification
 
-- Depuis un appareil du tailnet, https://cocooning.<tailnet>.ts.net renvoie vers l'écran « Connexion » (`/sign-in`) ; après la connexion d'un compte créé par le [runbook des comptes](../../../couple/infrastructure/runbooks/authentication/accounts.md), il affiche « Bienvenue sur Cocooning ». Un toast « Connexion impossible » sur un bon mot de passe : lire `docker compose ... logs web --tail 50`. « Invalid Server Actions request » signifie que `tailscale serve` n'a pas transmis le nom public (`X-Forwarded-Host`) : ajouter ce nom à `serverActions.allowedOrigins` de `apps/couple/web/next.config.ts`.
+- Depuis un appareil du tailnet, https://cocooning.<tailnet>.ts.net renvoie vers l'écran « Connexion » (`/sign-in`) ; après la connexion d'un compte créé par le [runbook des comptes](../../../couple/infrastructure/runbooks/authentication/accounts.md), il affiche « Notre couple » (`/pairing`) tant que le couple n'est pas formé, puis « Bienvenue sur Cocooning ». Un toast « Connexion impossible » sur un bon mot de passe : lire `docker compose ... logs web --tail 50`. « Invalid Server Actions request » signifierait que `tailscale serve` n'a pas transmis le nom public (`X-Forwarded-Host`) : vérifié absent le 2026-11-23 ; s'il apparaît, ajouter ce nom à `serverActions.allowedOrigins` de `apps/couple/web/next.config.ts`.
 - https://cocooning.<tailnet>.ts.net/manifest.webmanifest et `/sw.js` répondent.
 - Sur l'iPhone (Safari, « Partager », « Sur l'écran d'accueil ») et sur l'Android (Chrome, « Installer l'application »), la PWA s'installe et s'ouvre en plein écran.
 - `docker compose -f infrastructure/compose/docker-compose.prod.yml exec api node -e "fetch('http://127.0.0.1:3100/health').then((r) => r.text()).then(console.log)"` affiche `{"status":"UP"}`.

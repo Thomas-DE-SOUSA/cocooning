@@ -28,3 +28,12 @@
 - Constat : une route qui monte un container importe la server action et `serverEnv`, que t3-env refuse sous jsdom ; `use-pairing-screen` appelle `useRouter` de `next/navigation`, sans routeur dans un test. Les décisions qu'ils portent sont sorties dans des fonctions testées (`presentPairingPage`, `resolveHomeDestination`, `resolveCommandFailureFollowUp`, `closeSignOutSession`, `isSecureCookie`), mais le câblage lui-même (choix de la vue, clés des toasts, redirection) n'est vérifié qu'à la main.
 - Règle concernée : `core-backend.md` règle 20 pour l'esprit (E2E des points d'entrée) ; aucune règle front écrite
 - Statut : ouvert
+
+### 004. La fabrique `authentication` reçoit un fournisseur de session, contrairement à ce que dit la décision 0036
+
+- Type : écart avec une règle validée
+- Constaté le : 2026-11-23, revue des étapes 2 et 3
+- Où : `apps/couple/web/src/modules/authentication/services/authentication-module.factory.ts`, `docs/couple/decisions/frontend/0036-lecture-des-donnees-par-la-page-serveur.md` (Conséquences)
+- Constat : la décision 0036 dit que la fabrique `authentication`, dont le premier appel est public, ne prend pas de `getSessionToken`. Depuis la déconnexion (décision 0034), `SignOutUseCase` agit pour le partenaire connecté : la fabrique reçoit donc `getSessionToken`, que seule la déconnexion lit. Une fabrique de contexte reçoit `getSessionToken` dès qu'un de ses use cases agit pour le partenaire connecté. Retirer le fournisseur pour suivre la décision casserait la déconnexion : sans session, l'API répond 401, que `SignOutUseCase` compte comme une session fermée, et seuls les autres appareils resteraient connectés.
+- Règle concernée : [décision 0036](../decisions/frontend/0036-lecture-des-donnees-par-la-page-serveur.md)
+- Statut : ouvert, une décision qui remplace ce point de 0036 est à proposer au propriétaire
