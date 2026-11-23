@@ -75,7 +75,7 @@ cocooning/
 │   ├── shared-kernel/              # * DDD primitives, ports, exceptions, test fakes
 │   ├── server-infrastructure/      # * NestJS plumbing (filter, Zod pipes), pino, clock, ids, disk storage, in-process events
 │   ├── client-infrastructure/      # * Domain-agnostic frontend adapters: the single HTTP client, FakeFetch (testing)
-│   ├── design-system/              # * Tailwind 4 tokens, Button, Input, Label, Skeleton, Toaster, cn (read from src, no build)
+│   ├── design-system/              # * Tailwind 4 tokens, Button, Field, Input, Label, Skeleton, Spinner, Toaster, cn (read from src, no build)
 ├── config/                         # ts, eslint, prettier, jest configs (@cocooning/*), one CLAUDE.md each
 ├── infrastructure/                 # * Dockerfiles (nest, next) and the production docker compose (Oracle VM, Tailscale)
 ├── docs/                           # * Documentation (French): architecture, guides, platform, couple
