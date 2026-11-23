@@ -10,6 +10,7 @@ import { CryptoModule } from '@cocooning/server-infrastructure/crypto';
 import { ClockModule } from '@cocooning/server-infrastructure/date-time';
 import { IdentifierModule } from '@cocooning/server-infrastructure/identifier';
 import { LoggerModule } from '@cocooning/server-infrastructure/logging';
+import { MessagingModule } from '@cocooning/server-infrastructure/messaging';
 import {
     EXCEPTION_STATUS_TABLE,
     type ExceptionStatusTable,
@@ -24,6 +25,7 @@ import { validateEnvironment } from './env';
 import { EXCEPTION_STATUSES } from './exception-statuses';
 import { HealthModule } from './health/health.module';
 import { AuthenticationModule, SessionGuard } from './modules/authentication';
+import { PairingModule } from './modules/pairing';
 
 const EVERY_ROUTE = '{*path}';
 
@@ -36,8 +38,10 @@ const EVERY_ROUTE = '{*path}';
         ClockModule,
         IdentifierModule,
         CryptoModule,
+        MessagingModule,
         AuthenticationModule,
         HealthModule,
+        PairingModule,
     ],
     providers: [
         { provide: APP_GUARD, useClass: SessionGuard },

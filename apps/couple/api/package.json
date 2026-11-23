@@ -15,6 +15,7 @@
     "dependencies": {
         "@cocooning/couple-contract": "workspace:*",
         "@cocooning/couple-prisma": "workspace:*",
+        "@cocooning/couple-server-business-logic": "workspace:*",
         "@cocooning/couple-shared-kernel": "workspace:*",
         "@cocooning/server-infrastructure": "workspace:*",
         "@cocooning/shared-kernel": "workspace:*",

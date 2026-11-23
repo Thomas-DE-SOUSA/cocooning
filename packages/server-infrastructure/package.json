@@ -34,6 +34,10 @@
         "./storage": {
             "types": "./src/storage/index.ts",
             "default": "./dist/storage/index.js"
+        },
+        "./messaging": {
+            "types": "./src/messaging/index.ts",
+            "default": "./dist/messaging/index.js"
         }
     },
     "dependencies": {

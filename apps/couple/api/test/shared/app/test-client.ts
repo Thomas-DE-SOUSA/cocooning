@@ -4,6 +4,7 @@ import { signSessionToken } from './session-token';
 
 const SECONDS_PER_HOUR = 3_600;
 const MILLISECONDS_PER_SECOND = 1_000;
+const JSON_CONTENT_TYPE = 'application/json';
 
 export type TestResponse = {
     readonly status: number;
@@ -47,6 +48,15 @@ export class TestClient {
     async get(path: string): Promise<TestResponse> {
         const response = await fetch(`${this.baseUrl}${path}`, {
             headers: this.headers(),
+        });
+        return { status: response.status, body: await readBody(response) };
+    }
+
+    async post(path: string, body: unknown = null): Promise<TestResponse> {
+        const response = await fetch(`${this.baseUrl}${path}`, {
+            method: 'POST',
+            headers: { ...this.headers(), 'Content-Type': JSON_CONTENT_TYPE },
+            body: body === null ? null : JSON.stringify(body),
         });
         return { status: response.status, body: await readBody(response) };
     }

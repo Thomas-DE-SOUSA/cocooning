@@ -61,10 +61,10 @@ Cocooning is a pnpm + Turborepo monorepo for a couple's shared life (notes edite
 ```
 cocooning/
 ├── apps/couple/
-│   ├── api/                        # * NestJS API, composition root (env, health, session guard, E2E harness); context modules from phase 2
+│   ├── api/                        # * NestJS API, composition root (env, health, session guard, E2E harness), context modules (pairing)
 │   └── web/                        # * Next.js PWA (Serwist, Web Push) (phase 3)
 ├── packages/
-│   ├── couple/                     # contexts: authentication, notes, agenda, messaging (phase 1-2)
+│   ├── couple/                     # contexts: pairing, then authentication, notes, agenda, messaging
 │   │   ├── server-business-logic/  # * Domain + Application layers (DDD)
 │   │   ├── client-business-logic/  # * Frontend business logic, framework-free
 │   │   ├── client-infrastructure/  # * Frontend adapters (HTTP, Yjs, push)
@@ -73,7 +73,7 @@ cocooning/
 │   │   ├── contract/               # * Zod contracts: error response, pagination, one subpath per context
 │   │   ├── e2e-shared/             # * Test harness: Postgres 17 container, Jest global setup, fixtures
 │   ├── shared-kernel/              # * DDD primitives, ports, exceptions, test fakes
-│   ├── server-infrastructure/      # * NestJS plumbing (filter, Zod pipes), pino, clock, ids, disk storage
+│   ├── server-infrastructure/      # * NestJS plumbing (filter, Zod pipes), pino, clock, ids, disk storage, in-process events
 │   ├── client-infrastructure/  design-system/   # * (phase 3)
 ├── config/                         # ts, eslint, prettier, jest configs (@cocooning/*), one CLAUDE.md each
 ├── docs/                           # * Documentation (French): architecture, guides, platform, couple

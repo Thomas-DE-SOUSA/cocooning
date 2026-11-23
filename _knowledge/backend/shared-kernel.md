@@ -40,7 +40,7 @@ One abstract class per folder under `src/ports/` (core.md rule 18).
 | `UnitOfWork` | `unit-of-work` | `run(work)`: one transaction around several writes |
 | `FileStorage` | `storage` | Store, read, delete a file by key; keys start with the `coupleId` (decision 0027) |
 
-Adapters live in `@cocooning/server-infrastructure`: `SystemDateTimeProvider` (`ClockModule`), `UuidV7GeneratorProvider` (`IdentifierModule`), `NodeSecureRandomGenerator` (`CryptoModule`), `PinoLoggerAdapter` (`LoggerModule`), `LocalDiskFileStorage`. `EventPublisher` and `UnitOfWork` adapters come with the first event and with `@cocooning/couple-prisma`.
+Adapters live in `@cocooning/server-infrastructure`: `SystemDateTimeProvider` (`ClockModule`), `UuidV7GeneratorProvider` (`IdentifierModule`), `NodeSecureRandomGenerator` (`CryptoModule`), `PinoLoggerAdapter` (`LoggerModule`), `LocalDiskFileStorage`, `InProcessEventPublisher` (`MessagingModule`: no in-process subscriber yet, it logs each event by its ids and the outbox relay delivers). The `UnitOfWork` adapter is `PrismaUnitOfWork` (`@cocooning/couple-prisma/nest`).
 
 **If a port exists here, use it.** Never recreate `DateTimeProvider` or `Logger` in a bounded context.
 
@@ -71,7 +71,7 @@ Excluded from the build. Each one `extends` its port (decision 0001): `Determini
 | Subpath | Contains |
 |---|---|
 | `enums` | Business enums shared by server and PWA, one file per enum, `as const` (decision 0002): `CouplePairingStatusEnum` (`PENDING`, `PAIRED`) |
-| `routers` | `ApiRouterEnum` and `WebRouterEnum`, one route file per context (plus `HealthRouteEnum`, the public API health route) spread into the enum and listed in `API_ROUTE_GROUPS` / `WEB_ROUTE_GROUPS`; a spec fails on a key declared by two groups or a group missing from the list. Never hardcode a route string |
+| `routers` | `ApiRouterEnum` and `WebRouterEnum`, one route file per context (plus `HealthRouteEnum`, the public API health route; `PairingRouteEnum` for `pairing`) spread into the enum and listed in `API_ROUTE_GROUPS` / `WEB_ROUTE_GROUPS`; a spec fails on a key declared by two groups or a group missing from the list. Never hardcode a route string |
 | `exceptions` | `MissingExecutionContextException(missing)`, code `EXECUTION_CONTEXT_MISSING`: thrown by a guard service's `ensureRequiredContextPresent` when a field of `ExecutionContext` is missing |
 
 ---

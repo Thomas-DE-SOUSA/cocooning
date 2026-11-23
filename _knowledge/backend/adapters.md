@@ -25,16 +25,20 @@ Secondary adapters (repositories, providers, storage) implement domain ports; pr
 
 ```
 apps/couple/api/src/modules/<context>/
+├── CLAUDE.md  index.ts  env.ts       # stub importing the context CLAUDE.md; env fragment if configured
 ├── <context>.module.ts  <context>-service.module.ts  <context>-secondary.module.ts
+├── <context>-use-case.factory.ts       # typed useFactory helper, when the service module outgrows its file
 ├── primary/
 │   ├── controllers/<action>-<entity>.controller.ts
-│   ├── dto/responses/
-│   ├── mappers/
+│   ├── mappers/to-<view>-response.mapper.ts
 │   └── handlers/on-<event-name>.handler.ts
 └── secondary/
+    ├── mappers/<aggregate>-prisma.mapper.ts  <aggregate>-prisma.payload.ts  <context>-event-prisma.mapper.ts
     ├── repositories/<aggregate>-prisma.repository.ts
-    ├── repositories/<context>-event-prisma.repository.ts
+    ├── repositories/<aggregate>-prisma.writer.ts  <context>-event-prisma.writer.ts  <aggregate>-unique-constraints.ts
     └── providers/<concept>-prisma.provider.ts
 ```
+
+Reference: `apps/couple/api/src/modules/pairing/`. No `dto/responses/`: the contract's response schema is the DTO, and `ZodResponse` its whitelist; a response mapper turns the use case view into it (dates to ISO strings). The `<context>-event-prisma.repository.ts` of the outbox relay (claim, mark published) arrives with the relay; until then the outbox rows are written by the aggregate repository's `save()`, through its event writer. A repository that would pass ~100 lines moves its writes into `*.writer.ts` functions that take `prismaService.current`.
 
 A handler reacting to one event is `on-<event-name>.handler.ts`; a handler fed by several events is named by its effect (`<effect>.handler.ts`). Each folder has an `index.ts` barrel exporting only its own files (core.md rule 22).

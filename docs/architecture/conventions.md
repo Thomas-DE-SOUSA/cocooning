@@ -29,6 +29,9 @@ Cette page fixe les conventions d'architecture et de nommage communes à tout le
 | API | Contrôleur | `.controller.ts` |
 | API | Modules NestJS d'un contexte | `.module.ts`, `-service.module.ts`, `-secondary.module.ts` |
 | API | Repository et provider Prisma | `-prisma.repository.ts`, `-prisma.provider.ts` |
+| API | Mapper Prisma, type de lecture, écriture d'un repository | `-prisma.mapper.ts`, `-prisma.payload.ts`, `-prisma.writer.ts` |
+| API | Mapper de réponse, fabrique typée des use cases | `to-*-response.mapper.ts`, `-use-case.factory.ts` |
+| API | Traduction des contraintes uniques d'un agrégat | `-unique-constraints.ts` |
 | Contrat | Schéma de requête et de réponse | `.request.ts`, `.response.ts` |
 | Front | Server action, gateway | `.action.ts`, `.gateway.ts` |
 | Front | Presenter, view model | `.presenter.ts`, `.view-model.ts` |
@@ -37,6 +40,7 @@ Cette page fixe les conventions d'architecture et de nommage communes à tout le
 | Front | Schéma de formulaire | à trancher (D25) : `.zod.ts` ou `.schema.ts`, un seul pour toute l'app |
 | Tests | Spec unitaire, E2E, intégration | `.spec.ts`, `.e2e-spec.ts`, `.integration-spec.ts` |
 | Tests | Contexte de test, builder | `-test.context.ts`, `-input.builder.ts` |
+| Tests | App E2E d'un contexte, données de test | `-test-app.ts`, `-test-data.ts` |
 | Tests | Fake | `-in-memory.repository.ts`, `fake-*.provider.ts` ; fake d'un port transverse : `fake-*.adapter.ts`, `in-memory-*.ts`, `deterministic-*.provider.ts` |
 
 Ne pas introduire de variante : `.types.ts`, `.error.ts` ou `.prisma-adapter.ts` n'existent pas dans ce dépôt.
