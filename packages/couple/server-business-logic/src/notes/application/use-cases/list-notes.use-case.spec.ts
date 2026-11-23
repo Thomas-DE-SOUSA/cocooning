@@ -15,8 +15,10 @@ describe('Feature: list the notes of the couple', () => {
     });
     afterEach(() => NoteId.resetForTests());
 
+    const FIRST_PAGE = { page: 1, pageSize: 25 };
+
     const titlesSeenBy = async (context: typeof AS_A) =>
-        (await ctx.listNotesUseCase().execute(context)).map(
+        (await ctx.listNotesUseCase().execute(context, FIRST_PAGE)).items.map(
             ({ title }) => title,
         );
 
@@ -49,13 +51,34 @@ describe('Feature: list the notes of the couple', () => {
 
     it('gives each note its owner and visibility', async () => {
         const note = ctx.givenNoteOf(AS_A);
-        const [view] = await ctx.listNotesUseCase().execute(AS_B);
-        expect(view).toEqual({
-            noteId: note.id.getValue(),
-            ownerId: AS_A.userId,
-            title: 'Courses',
-            visibility: NoteVisibilityEnum.SHARED,
-            updatedAt: ctx.dateTimeProvider.now(),
+        await expect(
+            ctx.listNotesUseCase().execute(AS_B, FIRST_PAGE),
+        ).resolves.toEqual({
+            items: [
+                {
+                    noteId: note.id.getValue(),
+                    ownerId: AS_A.userId,
+                    title: 'Courses',
+                    visibility: NoteVisibilityEnum.SHARED,
+                    updatedAt: ctx.dateTimeProvider.now(),
+                },
+            ],
+            total: 1,
+            page: 1,
+            pageSize: 25,
         });
+    });
+
+    it('gives one page and the total of visible notes (decision 0025)', async () => {
+        ctx.givenNoteOf(AS_A, 'Un');
+        ctx.advanceHours(1);
+        ctx.givenNoteOf(AS_A, 'Deux');
+        ctx.advanceHours(1);
+        ctx.givenNoteOf(AS_A, 'Trois');
+        const page = await ctx
+            .listNotesUseCase()
+            .execute(AS_A, { page: 2, pageSize: 2 });
+        expect(page).toMatchObject({ total: 3, page: 2, pageSize: 2 });
+        expect(page.items.map(({ title }) => title)).toEqual(['Un']);
     });
 });

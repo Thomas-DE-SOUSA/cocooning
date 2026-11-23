@@ -1,3 +1,7 @@
+import type {
+    OffsetPage,
+    OffsetPaginationParams,
+} from '@cocooning/shared-kernel/domain';
 import type { Note } from '../models/note.aggregate';
 
 // Visibility is filtered by the query, never in memory (core-backend.md rule 12): another partner's private note is not found (R4).
@@ -8,6 +12,10 @@ export abstract class NoteRepository {
         userId: string,
         noteId: string,
     ): Promise<Note | null>;
-    // Most recently changed first.
-    abstract findVisible(coupleId: string, userId: string): Promise<Note[]>;
+    // Most recently changed first, one offset page (decision 0025).
+    abstract findVisible(
+        coupleId: string,
+        userId: string,
+        pagination: OffsetPaginationParams,
+    ): Promise<OffsetPage<Note>>;
 }

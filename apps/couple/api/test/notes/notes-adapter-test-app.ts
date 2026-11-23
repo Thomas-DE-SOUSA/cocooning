@@ -37,8 +37,11 @@ export class NotesAdapterTestApp {
     }
 
     async titlesSeenBy(coupleId: string, userId: string): Promise<string[]> {
-        const notes = await this.repository.findVisible(coupleId, userId);
-        return notes.map((note) => note.title.value);
+        const notes = await this.repository.findVisible(coupleId, userId, {
+            page: 1,
+            pageSize: 25,
+        });
+        return notes.items.map((note) => note.title.value);
     }
 
     // A note the spec knows is visible: its absence fails the spec instead of a cast.

@@ -1,6 +1,25 @@
 import { Module } from '@nestjs/common';
 import { NotesServiceModule } from './notes-service.module';
+import { NoteCoupleGuard } from './primary/couple';
+import {
+    CreateNoteController,
+    DeleteNoteController,
+    ListNotesController,
+    MakeNotePrivateController,
+    RenameNoteController,
+    ShareNoteController,
+} from './primary/controllers';
 
-// Controllers arrive with the HTTP contract of notes.
-@Module({ imports: [NotesServiceModule] })
+@Module({
+    imports: [NotesServiceModule],
+    controllers: [
+        CreateNoteController,
+        ListNotesController,
+        RenameNoteController,
+        ShareNoteController,
+        MakeNotePrivateController,
+        DeleteNoteController,
+    ],
+    providers: [NoteCoupleGuard],
+})
 export class NotesModule {}

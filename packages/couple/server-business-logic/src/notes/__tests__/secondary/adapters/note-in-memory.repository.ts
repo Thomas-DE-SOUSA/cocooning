@@ -1,6 +1,10 @@
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
 import { NoteVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
-import type { DomainEvent } from '@cocooning/shared-kernel/domain';
+import type {
+    DomainEvent,
+    OffsetPage,
+    OffsetPaginationParams,
+} from '@cocooning/shared-kernel/domain';
 import { NoteException } from '../../../domain/exceptions/note.exception';
 import { Note } from '../../../domain/models/note.aggregate';
 import type { NoteSnapshot } from '../../../domain/models/note.aggregate.type';
@@ -58,13 +62,23 @@ export class NoteInMemoryRepository extends NoteRepository {
         );
     }
 
-    override findVisible(coupleId: string, userId: string): Promise<Note[]> {
-        return Promise.resolve(
-            this.storedSnapshots
-                .filter(isVisibleTo(coupleId, userId))
-                .sort(byMostRecentChange)
+    override findVisible(
+        coupleId: string,
+        userId: string,
+        { page, pageSize }: OffsetPaginationParams,
+    ): Promise<OffsetPage<Note>> {
+        const visible = this.storedSnapshots
+            .filter(isVisibleTo(coupleId, userId))
+            .sort(byMostRecentChange);
+        const start = (page - 1) * pageSize;
+        return Promise.resolve({
+            items: visible
+                .slice(start, start + pageSize)
                 .map((snapshot) => this.rebuild(snapshot)),
-        );
+            total: visible.length,
+            page,
+            pageSize,
+        });
     }
 
     private write(note: Note): void {
