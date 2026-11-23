@@ -36,7 +36,7 @@ apps/couple/api/src/modules/<context>/
     ├── mappers/<aggregate>-prisma.mapper.ts  <aggregate>-prisma.payload.ts  <context>-event-prisma.mapper.ts
     ├── repositories/<aggregate>-prisma.repository.ts
     ├── repositories/<aggregate>-prisma.writer.ts  <context>-event-prisma.writer.ts  <aggregate>-unique-constraints.ts
-    └── providers/<concept>-prisma.provider.ts
+    └── providers/<concept>-prisma.provider.ts  <technology>-<port>.ts   # technical port: argon2-password-hasher.ts
 ```
 
 Reference: `apps/couple/api/src/modules/pairing/`. No `dto/responses/`: the contract's response schema is the DTO, and `ZodResponse` its whitelist; a response mapper turns the use case view into it (dates to ISO strings). The `<context>-event-prisma.repository.ts` of the outbox relay (claim, mark published) arrives with the relay; until then the outbox rows are written by the aggregate repository's `save()`, through its event writer. A repository that would pass ~100 lines moves its writes into `*.writer.ts` functions that take `prismaService.current`.

@@ -33,7 +33,7 @@ Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/
 
 ## Endpoints
 
-Toutes les routes demandent une session (cookie `cocooning_session`, [décision 0030](../../decisions/0030-verification-du-jwt-en-phase-2.md)) ; sans elle, `401`. Le corps de chaque réponse réussie suit `CoupleResponseSchema`.
+Toutes les routes demandent une session (cookie `cocooning_session`, [décision 0034](../../decisions/0034-session-revocable.md)) ; sans elle, `401`. Le corps de chaque réponse réussie suit `CoupleResponseSchema`.
 
 | Route | Clé de `ApiRouterEnum` | Use case | Succès | Refus |
 |---|---|---|---|---|

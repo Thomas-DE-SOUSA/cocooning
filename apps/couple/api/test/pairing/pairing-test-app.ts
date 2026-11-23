@@ -1,5 +1,8 @@
 import type { INestApplication } from '@nestjs/common';
-import { truncateAllTables } from '@cocooning/couple-e2e-shared/fixtures';
+import {
+    createTestAccount,
+    truncateAllTables,
+} from '@cocooning/couple-e2e-shared/fixtures';
 import { PrismaService } from '@cocooning/couple-prisma/nest';
 import { ApiRouterEnum } from '@cocooning/couple-shared-kernel/routers';
 import { DateTimeProvider } from '@cocooning/shared-kernel/ports';
@@ -10,9 +13,14 @@ import {
     type ProviderOverride,
 } from '../shared/app/create-test-app';
 import { TestClient, type TestResponse } from '../shared/app/test-client';
-import { MILLISECONDS_PER_HOUR, NOW } from './pairing-test-data';
+import {
+    MILLISECONDS_PER_HOUR,
+    NOW,
+    PARTNERS,
+    partnerAccount,
+} from './pairing-test-data';
 
-// The real AppModule on a clock the spec moves; sessions are signed at that clock.
+// The real AppModule on a clock the spec moves; sessions are signed at that clock, for partners whose accounts reset() seeds.
 export class PairingTestApp {
     readonly clock = new DeterministicDateTimeProvider(NOW);
     private app: INestApplication | null = null;
@@ -47,6 +55,11 @@ export class PairingTestApp {
     async reset(): Promise<void> {
         this.clock.setNow(NOW);
         await truncateAllTables(this.prisma);
+        await Promise.all(
+            PARTNERS.map((userId) =>
+                createTestAccount(this.prisma, partnerAccount(userId)),
+            ),
+        );
     }
 
     advanceHours(hours: number): void {

@@ -24,6 +24,7 @@
         "@nestjs/core": "catalog:nest",
         "@nestjs/jwt": "catalog:nest",
         "@nestjs/platform-express": "catalog:nest",
+        "argon2": "catalog:security",
         "cookie-parser": "catalog:nest",
         "reflect-metadata": "catalog:nest",
         "rxjs": "catalog:nest",
