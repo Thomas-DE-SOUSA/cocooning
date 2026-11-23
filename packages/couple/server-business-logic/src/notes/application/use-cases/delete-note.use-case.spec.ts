@@ -96,4 +96,28 @@ describe('Feature: delete a note', () => {
             });
         });
     });
+
+    describe('Scenario: R7, editors of the note are connected', () => {
+        it('disconnects every editor of the note', async () => {
+            const note = ctx.givenNoteOf(AS_A);
+            await ctx
+                .deleteNoteUseCase()
+                .execute(AS_A, { noteId: note.id.getValue() });
+            expect(ctx.noteCollaborationProvider.disconnections).toEqual([
+                { noteId: note.id.getValue(), keptUserId: null },
+            ]);
+        });
+
+        it('disconnects nobody when the change is refused', async () => {
+            const note = ctx.givenNoteOf(AS_A);
+            await expect(
+                ctx
+                    .deleteNoteUseCase()
+                    .execute(AS_B, { noteId: note.id.getValue() }),
+            ).rejects.toMatchObject({
+                code: NoteExceptionCodeEnum.NOTE_RESERVED_TO_OWNER,
+            });
+            expect(ctx.noteCollaborationProvider.disconnections).toEqual([]);
+        });
+    });
 });
