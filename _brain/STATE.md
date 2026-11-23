@@ -20,7 +20,7 @@
 
 ## Prochaine étape
 
-**Étape « notes » de la phase 3** (D40, `journal/2026-11-23.md`, « Étape notes : plan »). Plan en 10 PR : 1 décisions et règles (branche `docs/notes-decisions`) ; 2 couple de la requête (0041) ; 3 domaine `notes` ; 4 table `note` et document Yjs ; 5 contrat et API ; 6 Hocuspocus dans l'API (0040) ; 7 client ; 8 liste ; 9 éditeur Tiptap ; 10 route `/collab` et release. Corrections de la revue : en production (#64). Points ouverts : écarts frontend 004, authentication 005 et 002, D26.
+**Étape « notes » de la phase 3** (D40, `journal/2026-11-23.md`, « Étape notes : plan »). Plan en 10 PR : 1 décisions et règles (#66, mergée) ; 2 domaine `notes` avec le port du couple (branche `feat/notes-domain`) ; 3 table `note`, document Yjs et adaptateur du port ; 4 contrat, API et décorateur du couple ; 5 (fusionnée dans 2 et 4) ; 6 Hocuspocus dans l'API (0040) ; 7 client ; 8 liste ; 9 éditeur Tiptap ; 10 route `/collab` et release. Corrections de la revue : en production (#64). Points ouverts : écarts frontend 004, authentication 005 et 002, D26.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
