@@ -75,7 +75,7 @@ cocooning/
 │   ├── shared-kernel/              # * DDD primitives, ports, exceptions, test fakes
 │   ├── server-infrastructure/      # * NestJS plumbing (filter, Zod pipes), pino, clock, ids, disk storage, in-process events
 │   ├── client-infrastructure/      # * Domain-agnostic frontend adapters: the single HTTP client
-│   ├── design-system/              # * (phase 3)
+│   ├── design-system/              # * Tailwind 4 tokens, Button, Skeleton, Toaster, cn (read from src, no build)
 ├── config/                         # ts, eslint, prettier, jest configs (@cocooning/*), one CLAUDE.md each
 ├── docs/                           # * Documentation (French): architecture, guides, platform, couple
 ├── _knowledge/                     # Coding rules imported by the CLAUDE.md files
