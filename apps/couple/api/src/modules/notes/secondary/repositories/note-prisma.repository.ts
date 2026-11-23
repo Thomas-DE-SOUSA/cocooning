@@ -7,11 +7,18 @@ import {
     NoteRepository,
 } from '@cocooning/couple-server-business-logic/notes';
 import { NoteVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
+import type {
+    OffsetPage,
+    OffsetPaginationParams,
+} from '@cocooning/shared-kernel/domain';
 import { Logger, UnitOfWork } from '@cocooning/shared-kernel/ports';
 import { toNoteSnapshot } from '../mappers';
 import { appendNoteEvents } from './note-event-prisma.writer';
 import { writeNote } from './note-prisma.writer';
 import { toNoteVersionConflict } from './note-version-conflict';
+
+const toNote = (row: Parameters<typeof toNoteSnapshot>[0]): Note =>
+    Note.fromSnapshot(toNoteSnapshot(row));
 
 // R4: the shared notes of the couple and the partner's own private notes, in the query (core-backend.md rule 12).
 const visibleTo = (
@@ -60,28 +67,42 @@ export class NotePrismaRepository extends NoteRepository {
         userId: string,
         noteId: string,
     ): Promise<Note | null> {
-        const [note] = await this.findMany(
-            { ...visibleTo(coupleId, userId), id: noteId },
-            { noteId },
-        );
-        return note ?? null;
+        return this.load({ noteId }, async (notes) => {
+            const row = await notes.findFirst({
+                where: { ...visibleTo(coupleId, userId), id: noteId },
+            });
+            return row === null ? null : toNote(row);
+        });
     }
 
-    override findVisible(coupleId: string, userId: string): Promise<Note[]> {
-        return this.findMany(visibleTo(coupleId, userId), { coupleId });
+    // One page and its total, read with the same filter (decision 0025).
+    override findVisible(
+        coupleId: string,
+        userId: string,
+        { page, pageSize }: OffsetPaginationParams,
+    ): Promise<OffsetPage<Note>> {
+        const where = visibleTo(coupleId, userId);
+        return this.load({ coupleId }, async (notes) => {
+            const [rows, total] = await Promise.all([
+                notes.findMany({
+                    where,
+                    orderBy: [{ updatedAt: 'desc' }, { id: 'asc' }],
+                    skip: (page - 1) * pageSize,
+                    take: pageSize,
+                }),
+                notes.count({ where }),
+            ]);
+            return { items: rows.map(toNote), total, page, pageSize };
+        });
     }
 
     // Logged by identifiers only: titles belong to the couple (core.md rule 33).
-    private async findMany(
-        where: Prisma.NoteWhereInput,
+    private async load<T>(
         logContext: Record<string, string>,
-    ): Promise<Note[]> {
+        read: (notes: PrismaService['current']['note']) => Promise<T>,
+    ): Promise<T> {
         try {
-            const rows = await this.prismaService.current.note.findMany({
-                where,
-                orderBy: [{ updatedAt: 'desc' }, { id: 'asc' }],
-            });
-            return rows.map((row) => Note.fromSnapshot(toNoteSnapshot(row)));
+            return await read(this.prismaService.current.note);
         } catch (error) {
             if (error instanceof NoteException) throw error;
             this.logger.error('Failed to load notes', { ...logContext, error });

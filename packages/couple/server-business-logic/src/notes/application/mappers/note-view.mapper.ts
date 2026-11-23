@@ -1,4 +1,5 @@
 import type { NoteVisibility } from '@cocooning/couple-shared-kernel/enums';
+import type { OffsetPage } from '@cocooning/shared-kernel/domain';
 import type { Note } from '../../domain/models/note.aggregate';
 
 export type NoteView = {
@@ -15,4 +16,11 @@ export const toNoteView = (note: Note): NoteView => ({
     title: note.title.value,
     visibility: note.visibility,
     updatedAt: note.updatedAt,
+});
+
+export const toNoteViewPage = (
+    page: OffsetPage<Note>,
+): OffsetPage<NoteView> => ({
+    ...page,
+    items: page.items.map(toNoteView),
 });

@@ -16,12 +16,12 @@ Construit aujourd'hui : domaine et application, tables `note` et `note_event` (v
 | `NoteId`, `NoteTitle` | Value objects : identité UUID v7, titre de 1 à `NOTE_TITLE_MAX_LENGTH` signes (R8) | `domain/value-objects/` |
 | `NoteVisibilityEnum` | `PRIVATE`, `SHARED`, partagé avec la PWA | `packages/couple/shared-kernel/src/enums/note-visibility.enum.ts` |
 | `NoteException` | Exception du contexte, codes de `NoteExceptionCodeEnum` | `domain/exceptions/`, `packages/couple/contract/src/notes/exceptions/exception-codes.ts` |
-| `NoteRepository` | Port : `save`, `findVisibleById`, `findVisible` ; la visibilité est filtrée par la requête (R4) | `domain/ports/note.repository.ts` |
+| `NoteRepository` | Port : `save`, `findVisibleById`, `findVisible` (une page par offset et le total, [décision 0025](../../decisions/0025-pagination.md)) ; la visibilité est filtrée par la requête (R4) | `domain/ports/note.repository.ts` |
 | `PairedCoupleProvider` | Port : le couple formé d'un partenaire, seule recherche sans `coupleId` du contexte (décision 0041) | `domain/ports/paired-couple.provider.ts` |
 | `NotePreconditionService` | Domain service : la note visible pour le partenaire, sinon `NOTE_NOT_FOUND` | `domain/services/note-precondition.service.ts` |
 | `NoteAccessValidator` | Contrôle statique : action réservée à la propriétaire (R5, R7) | `domain/services/note-access.validator.ts` |
 | `NoteCoupleGuardService` | Guard service : construit l'`ExecutionContext` depuis le `PartnerContext`, sinon `NOTE_COUPLE_NOT_PAIRED` (R3, décision 0006) | `application/services/note-couple-guard.service.ts` |
-| `CreateNoteUseCase`, `ListNotesUseCase`, `RenameNoteUseCase`, `ShareNoteUseCase`, `MakeNotePrivateUseCase`, `DeleteNoteUseCase` | Use cases, `execute(context)` ou `execute(context, command)` | `application/use-cases/` |
+| `CreateNoteUseCase`, `ListNotesUseCase` (page `OffsetPage<NoteView>`), `RenameNoteUseCase`, `ShareNoteUseCase`, `MakeNotePrivateUseCase`, `DeleteNoteUseCase` | Use cases, `execute(context)` ou `execute(context, command)` | `application/use-cases/` |
 | `NotePrismaRepository`, `PairedCouplePrismaProvider` | Adaptateurs : note et outbox dans une transaction, verrou optimiste, visibilité dans le `where` ; lecture seule du couple formé dans les tables de `pairing` (couple supprimé exclu) | `apps/couple/api/src/modules/notes/secondary/` |
 | `toNoteView` | Vue rendue : identifiant, propriétaire, titre, visibilité, dernière modification | `application/mappers/note-view.mapper.ts` |
 

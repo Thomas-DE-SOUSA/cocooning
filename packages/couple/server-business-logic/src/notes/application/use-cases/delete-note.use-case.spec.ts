@@ -35,7 +35,13 @@ describe('Feature: delete a note', () => {
                     deletedAt: DELETED_AT.toISOString(),
                 },
             });
-            expect(await ctx.listNotesUseCase().execute(AS_B)).toEqual([]);
+            expect(
+                (
+                    await ctx
+                        .listNotesUseCase()
+                        .execute(AS_B, { page: 1, pageSize: 25 })
+                ).items,
+            ).toEqual([]);
         });
 
         it('persists then publishes one deleted event', async () => {

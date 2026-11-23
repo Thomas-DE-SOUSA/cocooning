@@ -68,10 +68,30 @@ describe('Feature: the Prisma adapter of NoteRepository, reads', () => {
                 data: { visibility: 'PUBLIC' },
             });
             await expect(
-                notes.repository.findVisible(COUPLE_ID, PARTNER_B),
+                notes.repository.findVisible(COUPLE_ID, PARTNER_B, {
+                    page: 1,
+                    pageSize: 25,
+                }),
             ).rejects.toMatchObject({
                 code: NoteExceptionCodeEnum.NOTE_DATA_CORRUPTED,
             });
+        });
+    });
+
+    describe('Scenario: decision 0025, one page of the list', () => {
+        it('gives the page asked for and the total of visible notes', async () => {
+            const page = await notes.repository.findVisible(
+                COUPLE_ID,
+                PARTNER_A,
+                {
+                    page: 2,
+                    pageSize: 2,
+                },
+            );
+            expect(page).toMatchObject({ total: 3, page: 2, pageSize: 2 });
+            expect(page.items.map((note) => note.title.value)).toEqual([
+                'Courses',
+            ]);
         });
     });
 });
