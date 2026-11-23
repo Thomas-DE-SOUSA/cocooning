@@ -2,7 +2,7 @@
 
 Persistance du domaine couple : schema Prisma 7 eclate en un fichier par modele (`prisma/models/`), migrations (`prisma/migrations/`), `PrismaService` (client cree a `onModuleInit`, `transaction()` reentrant, `current`, `includingDeleted`), `PrismaModule.forRoot()` et `forRootAsync({ inject, useFactory })`, `PrismaUnitOfWork` (port `UnitOfWork`), extension de suppression logique opt-in, helper d'unicite `violatedUniqueConstraint`, verrou consultatif transactionnel, schema Zod d'environnement.
 
-Modeles : `pairing` (`Couple`, `CouplePartner`, outbox `PairingEvent`), crees par la migration `20261122233413_init`, tables decrites dans `docs/couple/architecture/pairing/tables.md` ; `authentication` (`Account`, sans `coupleId` ni outbox), cree par `20261123131843_authentication_account`, table decrite dans `docs/couple/architecture/authentication/tables.md`.
+Modeles : `pairing` (`Couple`, `CouplePartner`, outbox `PairingEvent`), crees par la migration `20261122233413_init`, tables decrites dans `docs/couple/architecture/pairing/tables.md` ; `authentication` (`Account`, sans `coupleId` ni outbox), cree par `20261123131843_authentication_account`, table decrite dans `docs/couple/architecture/authentication/tables.md` ; `notes` (`Note`, outbox `NoteEvent`), cree par `20261123194115_notes_note`, tables decrites dans `docs/couple/architecture/notes/tables.md`.
 
 ## A lire avant de commencer
 
