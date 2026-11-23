@@ -4,17 +4,10 @@ import type {
 } from '@cocooning/couple-contract/authentication';
 import { fail, ok, type Result } from '@cocooning/shared-kernel/utils';
 import type { ApiError } from '../shared/api-error';
-import {
-    AuthenticationGateway,
-    type SignInClientContext,
-} from '../authentication/domain/ports/authentication.gateway';
+import { AuthenticationGateway } from '../authentication/domain/ports/authentication.gateway';
 
 export type AuthenticationGatewayCall =
-    | {
-          readonly operation: 'signIn';
-          readonly request: SignInRequest;
-          readonly client: SignInClientContext;
-      }
+    | { readonly operation: 'signIn'; readonly request: SignInRequest }
     | { readonly operation: 'signOut' };
 
 export const A_SESSION: SignInResponse = {
@@ -43,9 +36,8 @@ export class FakeAuthenticationGateway extends AuthenticationGateway {
 
     override signIn(
         request: SignInRequest,
-        client: SignInClientContext,
     ): Promise<Result<SignInResponse, ApiError>> {
-        this.calls.push({ operation: 'signIn', request, client });
+        this.calls.push({ operation: 'signIn', request });
         return Promise.resolve(
             this.refusal === null ? ok(this.session) : fail(this.refusal),
         );

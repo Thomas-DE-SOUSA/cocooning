@@ -1,7 +1,6 @@
 import 'server-only';
 import {
     createSignInFormSchema,
-    type SignInClientContext,
     type SignInUseCase,
 } from '@cocooning/couple-client-business-logic/authentication';
 import {
@@ -30,7 +29,6 @@ export type SessionCookie = {
 export type SignInSessionContext = {
     readonly t: Translator;
     readonly signIn: SignInUseCase;
-    readonly client: SignInClientContext;
     readonly secure: boolean;
 };
 
@@ -53,7 +51,7 @@ export async function openSignInSession(
             anError(ApiErrorCodeEnum.VALIDATION_ERROR, 'Invalid sign-in form'),
         );
     }
-    const session = await context.signIn.execute(form.data, context.client);
+    const session = await context.signIn.execute(form.data);
     if (!session.success) return session;
     return toSessionCookie(session.value, context.secure);
 }

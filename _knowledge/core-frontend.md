@@ -42,7 +42,7 @@ Loaded alongside core.md for any frontend work. The web app is a Next.js PWA (D1
 
 12. **Data mutations and queries go through Server Actions.** Never call APIs directly from client components. Route handlers (`app/api/**`) cover what an action cannot return: event streams, file downloads, proxies. Real-time note collaboration (Yjs, P5) and the Web Push subscription go through their adapters in `client-infrastructure`, never through a socket or a browser API opened in a component.
 
-13. **Client context forwarding (authentication only).** Requests that authenticate a partner forward the browser's IP and User-Agent, otherwise the backend sees the Next.js server. Business server actions do not forward them.
+13. **No client context forwarding (decision 0043).** No server action forwards the browser's IP address or User-Agent to the API, sign-in included: the tailnet bounds who reaches the app, and nothing in the API reads them. A future need (an attempt limit per device) starts with a new decision.
 
 14. **Server-side validation (MANDATORY).** Server Actions are public HTTP endpoints: an attacker can call them directly. Inputs MUST be validated with Zod server-side, even if the frontend already validates.
 

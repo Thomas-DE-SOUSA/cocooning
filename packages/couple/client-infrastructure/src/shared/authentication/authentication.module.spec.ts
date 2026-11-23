@@ -20,10 +20,10 @@ describe('Feature: the web app builds the authentication use cases', () => {
             5000,
             () => Promise.resolve(null),
         );
-        await signIn.execute(
-            { emailAddress: 'thomas@cocooning.test', password: 'secret' },
-            { ipAddress: null, userAgent: null },
-        );
+        await signIn.execute({
+            emailAddress: 'thomas@cocooning.test',
+            password: 'secret',
+        });
         expect(signIn).toBeInstanceOf(SignInUseCase);
         expect(fakeFetch.calls.map((call) => call.url)).toEqual([
             'http://api.test/authentication/session',
