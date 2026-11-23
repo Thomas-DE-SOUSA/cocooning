@@ -11,6 +11,16 @@
         "submit": "Renommer",
         "renaming": "Renommage en cours"
     },
+    "editor": {
+        "label": "Contenu de la note",
+        "toolbar": "Mise en forme",
+        "heading": "Titre",
+        "bold": "Gras",
+        "italic": "Italique",
+        "bulletList": "Liste à puces",
+        "orderedList": "Liste numérotée",
+        "taskList": "Cases à cocher"
+    },
     "unavailable": {
         "title": "Impossible d'afficher cette note",
         "refresh": "Réessayer"

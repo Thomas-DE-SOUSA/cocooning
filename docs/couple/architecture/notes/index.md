@@ -6,7 +6,7 @@ Cette page décrit comment le contexte `notes` est construit : ses couches, ses 
 
 `notes` porte les notes du couple : leur titre, leur propriétaire, leur visibilité et leur cycle de vie. Le contenu riche, document Yjs édité à deux, arrive avec le canal temps réel ([décision 0040](../../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md)). Le contexte ne connaît ni les sessions (`authentication`) ni le code d'invitation (`pairing`) : il reçoit le `coupleId` par un port étroit ([décision 0041](../../decisions/0041-couple-de-la-requete.md)).
 
-Construit aujourd'hui : domaine et application, tables `note` et `note_event` (voir [les tables](tables.md)), adaptateur Prisma de `NoteRepository` et de `PairedCoupleProvider`. Contrat HTTP et sept routes de l'API, canal temps réel (voir [l'édition à deux](collaboration.md)), liste et page d'une note dans la PWA. À venir dans l'étape « notes » : l'éditeur du contenu.
+Construit aujourd'hui : domaine et application, tables `note` et `note_event` (voir [les tables](tables.md)), adaptateur Prisma de `NoteRepository` et de `PairedCoupleProvider`. Contrat HTTP et sept routes de l'API, canal temps réel (voir [l'édition à deux](collaboration.md)), liste, page et éditeur d'une note dans la PWA. À venir dans l'étape « notes » : la route `/collab` en production.
 
 ## Comment c'est construit
 
@@ -26,7 +26,7 @@ Construit aujourd'hui : domaine et application, tables `note` et `note_event` (v
 | `CreateNoteUseCase`, `ListNotesUseCase` (page `OffsetPage<NoteView>`), `GetNoteUseCase`, `RenameNoteUseCase`, `ShareNoteUseCase`, `MakeNotePrivateUseCase`, `DeleteNoteUseCase` | Use cases, `execute(context)` ou `execute(context, command)` | `application/use-cases/` |
 | `NotePrismaRepository`, `PairedCouplePrismaProvider` | Adaptateurs : note et outbox dans une transaction, verrou optimiste, visibilité dans le `where` ; lecture seule du couple formé dans les tables de `pairing` (couple supprimé exclu) | `apps/couple/api/src/modules/notes/secondary/` |
 | `toNoteView` | Vue rendue pour le partenaire qui lit : identifiant, propriétaire, `isOwner` (la lectrice est la propriétaire, pour les actions de R5 et R7), titre, visibilité, dernière modification | `application/mappers/note-view.mapper.ts` |
-| Liste et page d'une note | Accueil de la PWA (route `/`) : les notes visibles, la création par le titre, et pour la propriétaire partager, rendre privée, supprimer après une confirmation ; page `/notes/:noteId` pour renommer (voir [le front de la PWA](../frontend/index.md)) | `apps/couple/web/src/modules/notes/` |
+| Liste et page d'une note | Accueil de la PWA (route `/`) : les notes visibles, la création par le titre, et pour la propriétaire partager, rendre privée, supprimer après une confirmation ; page `/notes/:noteId` pour renommer et écrire à deux (voir [le front de la PWA](../frontend/index.md)) | `apps/couple/web/src/modules/notes/` |
 
 Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/notes/`.
 

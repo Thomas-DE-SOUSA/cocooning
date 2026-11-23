@@ -5,6 +5,7 @@ import {
     loadNote,
     NOTE_NAMESPACE,
     NotePageContainer,
+    noteCollaborationUrl,
     presentNotePage,
 } from '@/modules/notes';
 
@@ -27,6 +28,7 @@ export default async function NotePage({ params }: Props) {
             <NotePageContainer
                 key={noteId}
                 viewModel={page.viewModel}
+                collaborationUrl={noteCollaborationUrl()}
             />
         </main>
     );

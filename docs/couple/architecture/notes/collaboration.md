@@ -27,6 +27,20 @@ Le contenu d'une note est un document Yjs ([décision 0040](../../decisions/note
 4. Après un court délai sans frappe, et à la fermeture du dernier éditeur, `onStoreDocument` enregistre l'état complet (`SaveNoteDocumentUseCase`) dans `content_state`, avec `updated_at` : la liste remonte la note modifiée.
 5. Quand la propriétaire rend la note privée, `MakeNotePrivateUseCase` appelle `disconnectAllBut(noteId, ownerId)` : l'autre partenaire perd le document, la propriétaire continue d'écrire (R5). Une suppression appelle `disconnectEveryone(noteId)` (R7).
 
+## Dans la PWA
+
+La page d'une note (`apps/couple/web/src/app/notes/[noteId]/page.tsx`) passe au navigateur `NOTES_COLLABORATION_URL`, lue par `noteCollaborationUrl()` du module web `notes`.
+
+| Élément | Rôle | Chemin (depuis `apps/couple/web/src/modules/notes/`) |
+|---|---|---|
+| `NoteDocumentGateway` | Port : relie un document Yjs à sa note jusqu'à la fermeture ; signale un refus (R4) et un document fermé par le serveur | `gateways/ports/note-document.gateway.ts` |
+| `HocuspocusNoteDocumentGateway` | Adaptateur : `HocuspocusProvider` sur l'adresse du canal, le nom du document est le `noteId`. Un jeton fixe déclenche `onAuthenticate`, qui lit le cookie. Un message `CLOSE` du serveur (code 1000) devient `onClosedByServer` ; une coupure réseau se reconnecte seule | `gateways/hocuspocus/hocuspocus-note-document.gateway.ts` |
+| `useNoteDocument` | Un seul `Y.Doc` pour la page ; rouvre le même document après une fermeture par le serveur, pour fusionner ce qui a été tapé entre-temps, et relit la page (`router.refresh()`), qui renvoie vers la liste une note perdue | `hooks/use-note-document.ts` |
+| `useNoteEditor` | Tiptap 3 : `StarterKit` sans annuler et refaire (l'historique est celui de Yjs), titres de niveau 2 et 3, `TaskList` et `TaskItem`, `Collaboration` sur le document | `hooks/use-note-editor.ts` |
+| `NoteEditorToolbar`, `NoteEditorView` | Barre de mise en forme (titre, gras, italique, listes, cases à cocher) et contenu éditable | `ui/components/`, `ui/views/` |
+
+L'adaptateur vit dans le module web et non dans `couple-client-infrastructure`, contrairement à la décision 0040 ([écart frontend 006](../../gaps/frontend.md)).
+
 ## Points d'attention
 
 - **Fermeture d'un document.** Le serveur ferme la connexion au document, pas le WebSocket ; le provider ne la rouvre pas seul. La PWA rouvre la note, et le nouveau contrôle d'accès refuse celui qui l'a perdue.

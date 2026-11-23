@@ -37,11 +37,11 @@ La VM a déjà Docker et Tailscale pour Cadence ([guide de Cadence](https://gith
    ```
 3. Cloner `main` : `git clone -b main git@github-cocooning:Thomas-DE-SOUSA/cocooning.git && cd cocooning`.
 4. Dans la console Tailscale : vérifier que MagicDNS et les certificats HTTPS sont activés (Cadence s'en sert déjà), puis Settings, Keys, « Generate auth key » (ni réutilisable, ni éphémère).
-5. `cp infrastructure/compose/.env.example infrastructure/compose/.env`, puis remplir : `POSTGRES_PASSWORD` par `openssl rand -hex 24`, `AUTH_JWT_SECRET` par `openssl rand -base64 48` (l'API refuse de démarrer sur la valeur d'exemple `change-me…`), `TS_AUTHKEY` par la clé de l'étape 4. Ce fichier ne quitte jamais la VM.
+5. `cp infrastructure/compose/.env.example infrastructure/compose/.env`, puis remplir : `POSTGRES_PASSWORD` par `openssl rand -hex 24`, `AUTH_JWT_SECRET` par `openssl rand -base64 48` (l'API refuse de démarrer sur la valeur d'exemple `change-me…`), `TS_AUTHKEY` par la clé de l'étape 4, `NOTES_COLLABORATION_URL` par `wss://cocooning.<tailnet>.ts.net/collab` (l'adresse de la PWA). Ce fichier ne quitte jamais la VM.
 
 ### Démarrer ou mettre à jour
 
-1. `cd ~/cocooning && git pull`
+1. `cd ~/cocooning && git pull`, puis comparer `infrastructure/compose/.env` à `.env.example` : une variable ajoutée par la release s'y ajoute avant le build (dernière en date : `NOTES_COLLABORATION_URL`, PWA de l'étape notes).
 2. `docker compose -f infrastructure/compose/docker-compose.prod.yml up -d --build`. Le premier build dure une dizaine de minutes sur la VM ; le certificat HTTPS de Tailscale arrive une minute après le démarrage. Les migrations s'appliquent avant le démarrage de l'API.
 3. `docker image prune -f` pour libérer la place des anciennes images.
 
@@ -65,6 +65,6 @@ Créer le dossier avant : `mkdir -p ~/backups`. Copier ces fichiers hors de la V
 ## Escalade
 
 - `migrate` sort en erreur : lire ses logs ; l'API ne démarre pas tant qu'il échoue, l'ancienne version reste arrêtée. Corriger la migration dans le dépôt, ou revenir au commit précédent (`git checkout <sha>`) et relancer l'étape 2.
-- `web` redémarre en boucle avec « Invalid environment variables » : `API_URL` ou `API_TIMEOUT_MS` manque dans le bloc `environment` de `web` du compose (`apps/couple/web/src/env/server.ts`).
+- `web` redémarre en boucle avec « Invalid environment variables » : `API_URL`, `API_TIMEOUT_MS` ou `NOTES_COLLABORATION_URL` manque dans le bloc `environment` de `web` du compose, ou `NOTES_COLLABORATION_URL` dans `infrastructure/compose/.env` (`apps/couple/web/src/env/server.ts`).
 - Le nom `cocooning` n'apparaît pas dans le tailnet : `docker compose ... logs tailscale`. Une clé expirée ou déjà utilisée se remplace dans `.env`, puis `docker compose ... up -d --force-recreate tailscale`.
 - Restaurer une sauvegarde : `docker compose ... exec -T postgres pg_restore -U cocooning -d cocooning --clean < ~/backups/cocooning-<date>.dump`, API arrêtée (`docker compose ... stop api web`).
