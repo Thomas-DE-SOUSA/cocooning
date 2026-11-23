@@ -44,7 +44,7 @@ The only deliberate addition to the Malta layout is the memory layer: `_brain/`,
 
 ## 🔷 Project map
 
-Cocooning is a pnpm + Turborepo monorepo for a couple's shared life (notes edited together in real time, shared calendar, photo and flash messages), built with DDD bounded contexts and hexagonal architecture (ports and adapters): NestJS backend, Next.js PWA frontend. Phase 0: the law and the tooling exist, no application code yet. Phases and target tree: `_malta-blueprint/00-BLUEPRINT.md` §4 and §6.
+Cocooning is a pnpm + Turborepo monorepo for a couple's shared life (notes edited together in real time, shared calendar, photo and flash messages), built with DDD bounded contexts and hexagonal architecture (ports and adapters): NestJS backend, Next.js PWA frontend. Phase 3 in progress (state in `_brain/STATE.md`). Phases and target tree: `_malta-blueprint/00-BLUEPRINT.md` §4 and §6.
 
 ### Turborepo commands (root `package.json`)
 
@@ -61,21 +61,21 @@ Cocooning is a pnpm + Turborepo monorepo for a couple's shared life (notes edite
 ```
 cocooning/
 ├── apps/couple/
-│   ├── api/                        # * NestJS API, composition root (env, health, session guard, E2E harness), context modules (pairing)
-│   └── web/                        # * Next.js 16 PWA on port 3200: root layout, French i18n (Serwist, Web Push to come)
+│   ├── api/                        # * NestJS API, composition root (env, health, session guard, E2E harness), context modules (authentication, pairing), operating commands (create-account)
+│   └── web/                        # * Next.js 16 PWA on port 3200: root layout, French i18n, Serwist, proxy.ts, sign-in screen (module authentication), then Web Push
 ├── packages/
 │   ├── couple/                     # contexts: pairing, then authentication, notes, agenda, messaging
 │   │   ├── server-business-logic/  # * Domain + Application layers (DDD)
-│   │   ├── client-business-logic/  # * Frontend business logic, framework-free (ApiError, Translator)
-│   │   ├── client-infrastructure/  # * Frontend adapters: HTTP config of the couple, then gateways, Yjs, push
+│   │   ├── client-business-logic/  # * Frontend business logic, framework-free (ApiError, Translator, authentication: sign-in form, gateway port, use case; testing fakes)
+│   │   ├── client-infrastructure/  # * Frontend adapters: HTTP config of the couple, authentication gateway and module, then Yjs, push
 │   │   ├── prisma/                 # * Prisma 7 schema, PrismaService, unit of work, soft delete, locks
 │   │   ├── shared-kernel/          # * Business enums, api and web routers, MissingExecutionContextException
 │   │   ├── contract/               # * Zod contracts: error response, pagination, one subpath per context
 │   │   ├── e2e-shared/             # * Test harness: Postgres 17 container, Jest global setup, fixtures
 │   ├── shared-kernel/              # * DDD primitives, ports, exceptions, test fakes
 │   ├── server-infrastructure/      # * NestJS plumbing (filter, Zod pipes), pino, clock, ids, disk storage, in-process events
-│   ├── client-infrastructure/      # * Domain-agnostic frontend adapters: the single HTTP client
-│   ├── design-system/              # * Tailwind 4 tokens, Button, Skeleton, Toaster, cn (read from src, no build)
+│   ├── client-infrastructure/      # * Domain-agnostic frontend adapters: the single HTTP client, FakeFetch (testing)
+│   ├── design-system/              # * Tailwind 4 tokens, Button, Field, Input, Label, Skeleton, Spinner, Toaster, cn (read from src, no build)
 ├── config/                         # ts, eslint, prettier, jest configs (@cocooning/*), one CLAUDE.md each
 ├── infrastructure/                 # * Dockerfiles (nest, next) and the production docker compose (Oracle VM, Tailscale)
 ├── docs/                           # * Documentation (French): architecture, guides, platform, couple

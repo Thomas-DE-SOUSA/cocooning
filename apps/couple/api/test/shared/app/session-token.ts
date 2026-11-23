@@ -4,7 +4,7 @@ import { TEST_AUTH_JWT_SECRET } from '../env/test-secrets';
 
 export type SessionTokenClaims = Readonly<Record<string, string | number>>;
 
-// Signed like the authentication context will sign at sign-in (decision 0030): no endpoint signs in phase 2.
+// Signed like JwtSessionTokenSigner at sign-in (decision 0034), so a spec can forge the claims it needs.
 export function signSessionToken(
     claims: SessionTokenClaims,
     secret: string = TEST_AUTH_JWT_SECRET,

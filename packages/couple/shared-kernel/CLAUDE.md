@@ -3,7 +3,8 @@
 Ce que le serveur et la PWA du couple partagent sans passer par HTTP. Sous-chemins :
 
 - `enums` : enums metier `as const`, un fichier par enum (decision 0002) : `CouplePairingStatusEnum` (`PENDING`, `PAIRED`), lu par `pairing` et par la reponse HTTP de la PWA.
-- `routers` : `ApiRouterEnum` et `WebRouterEnum`, avec `API_ROUTE_GROUPS` et `WEB_ROUTE_GROUPS` (la liste des fichiers de routes, lue par la spec anti-collision) et le type `RouteGroup`. API : `HealthRouteEnum` (`HEALTH_CHECK`, route publique de sante de l'API), `PairingRouteEnum` (`COUPLE_CREATE` et `COUPLE_GET_MINE` sur `/pairing/couple`, distingues par le verbe, `COUPLE_JOIN`, `COUPLE_INVITATION_CODE_RENEW`). Web : `HomeRouteEnum` (`HOME`, `/`), `OfflineRouteEnum` (`OFFLINE`, `/~offline`, page de repli du service worker).
+- `routers` : `ApiRouterEnum` et `WebRouterEnum`, avec `API_ROUTE_GROUPS` et `WEB_ROUTE_GROUPS` (la liste des fichiers de routes, lue par la spec anti-collision) et le type `RouteGroup`. API : `HealthRouteEnum` (`HEALTH_CHECK`, route publique de sante de l'API), `AuthenticationRouteEnum` (`ACCOUNT_SESSION_OPEN` et `ACCOUNT_SESSION_CLOSE` sur `/authentication/session`, distingues par le verbe), `PairingRouteEnum` (`COUPLE_CREATE` et `COUPLE_GET_MINE` sur `/pairing/couple`, distingues par le verbe, `COUPLE_JOIN`, `COUPLE_INVITATION_CODE_RENEW`). Web : `AuthenticationRouteEnum` (`ACCOUNT_SIGN_IN`, `/sign-in`, ecran de connexion, route publique du `proxy.ts` de la PWA), `HomeRouteEnum` (`HOME`, `/`), `OfflineRouteEnum` (`OFFLINE`, `/~offline`, page de repli du service worker).
+- `limits` : bornes qui sont a la fois un invariant du domaine et une borne du contrat ou d'un formulaire : `EMAIL_ADDRESS_MAX_LENGTH`, `PASSWORD_MIN_LENGTH`, `PASSWORD_MAX_LENGTH` (decision 0032).
 - `exceptions` : `MissingExecutionContextException` (code `EXECUTION_CONTEXT_MISSING`), levee par le `ensureRequiredContextPresent` des guard services.
 
 ## A lire avant de commencer
@@ -14,8 +15,8 @@ Contenu des deux shared kernels et regles d'ajout :
 ## Consignes de code
 
 - Une seule dependance runtime : `@cocooning/shared-kernel`. Aucun framework, aucune API Node : le package est importe par l'API et par la PWA.
-- Exports par sous-chemin uniquement (`enums`, `routers`, `exceptions`), pas d'export racine. `types` pointe vers `src`, `default` vers `dist`.
-- Aucune logique metier : enums, routes et exceptions transverses seulement. Un enum utilise par un seul contexte reste dans son `domain/enums/`.
+- Exports par sous-chemin uniquement (`enums`, `routers`, `exceptions`, `limits`), pas d'export racine. `types` pointe vers `src`, `default` vers `dist`.
+- Aucune logique metier : enums, routes, bornes et exceptions transverses seulement. Un enum utilise par un seul contexte reste dans son `domain/enums/`.
 - Ajouter les routes d'un contexte : creer `src/routers/<api|web>/<contexte>.route.ts` (`export const NoteRouteEnum = { NOTE_LIST: '/notes' } as const satisfies RouteGroup;`, cles prefixees par l'agregat), puis l'ajouter a la fois dans `API_ROUTE_GROUPS` et par spread dans `ApiRouterEnum` (idem pour le web).
 - Pas de modele de permissions ni de dossier `authorization/` (decision 0026).
 - Modeles a copier : `src/exceptions/missing-execution-context.exception.ts` (exception), `src/routers/api/api-router.enum.ts` (routeur).

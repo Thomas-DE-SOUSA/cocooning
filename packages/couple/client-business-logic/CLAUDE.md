@@ -1,6 +1,6 @@
 # @cocooning/couple-client-business-logic
 
-Logique metier front des contextes du couple, sans framework : partagee par toutes les vues de la PWA. Sous-chemin `shared` : `ApiError` et `ApiErrorCodeEnum` (l'erreur d'un appel a l'API vue par le front, avec le `backendCode` du contrat ou `null`) et le type `Translator` des fabriques de schemas (decision 0031). Les contextes (`pairing` d'abord) arrivent avec leur premier ecran, un sous-chemin chacun.
+Logique metier front des contextes du couple, sans framework : partagee par toutes les vues de la PWA. Sous-chemin `shared` : `ApiError` et `ApiErrorCodeEnum` (l'erreur d'un appel a l'API vue par le front, avec le `backendCode` du contrat ou `null`) et le type `Translator` des fabriques de schemas (decision 0031). Un sous-chemin par contexte, arrive avec son premier ecran : `authentication` (formulaire de connexion `createSignInFormSchema(t)`, port `AuthenticationGateway`, `SignInUseCase`, `CLAUDE.md` du contexte).
 
 ## A lire avant de commencer
 
@@ -18,6 +18,7 @@ Regles front communes :
 ## Tests
 
 - Une spec a cote du fichier, style BDD (`Feature:`, `Scenario:`), sans `should`. Fakes ecrits a la main (decision 0001).
+- Les fakes que la PWA reutilise vivent dans `src/testing/` (sous-chemin `testing`, construit, hors couverture comme `__tests__/`), comme `FakeFetch` de `@cocooning/client-infrastructure/testing`. Jamais importe par du code de production.
 - `pnpm test` echoue sous 100 % de couverture (decision plateforme 0013).
 
 ## Pieges

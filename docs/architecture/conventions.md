@@ -29,6 +29,7 @@ Cette page fixe les conventions d'architecture et de nommage communes à tout le
 | API | Contrôleur | `.controller.ts` |
 | API | Modules NestJS d'un contexte | `.module.ts`, `-service.module.ts`, `-secondary.module.ts` |
 | API | Repository et provider Prisma | `-prisma.repository.ts`, `-prisma.provider.ts` |
+| API | Adaptateur d'un port technique (hachage, signature) | `<technologie>-<port>.ts` : `argon2-password-hasher.ts`, comme `node-secure-random-generator.ts` |
 | API | Mapper Prisma, type de lecture, écriture d'un repository | `-prisma.mapper.ts`, `-prisma.payload.ts`, `-prisma.writer.ts` |
 | API | Mapper de réponse, fabrique typée des use cases | `to-*-response.mapper.ts`, `-use-case.factory.ts` |
 | API | Traduction des contraintes uniques d'un agrégat | `-unique-constraints.ts` |

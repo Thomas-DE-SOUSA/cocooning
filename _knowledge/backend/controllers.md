@@ -9,8 +9,8 @@ How a primary HTTP adapter of `apps/couple/api` receives a request: routing, aut
 
 ## Authentication
 
-3. **Private by default.** The global `SessionGuard` (`APP_GUARD` in `AppModule`) answers 401 on every route that is not marked `@Public()` (`@cocooning/server-infrastructure/nest`, decision 0030). `@Public()` is for the health route and, later, sign-in only.
-4. **The session is a cookie holding an HS256 JWT.** Its name is `SESSION_COOKIE_NAME`, its secret `AUTH_JWT_SECRET`, read through `ConfigService`. The guard requires a UUID `sub` and an `exp` (`SessionTokenPayloadSchema`), and checks expiry at the `DateTimeProvider` time (`clockTimestamp`). Missing cookie: `AUTHENTICATION_SESSION_MISSING`; anything else wrong: `AUTHENTICATION_SESSION_INVALID`; both 401.
+3. **Private by default.** The global `SessionGuard` (`APP_GUARD` in `AppModule`) answers 401 on every route that is not marked `@Public()` (`@cocooning/server-infrastructure/nest`, decision 0034). `@Public()` is for the health route and sign-in only.
+4. **The session is a cookie holding an HS256 JWT.** Its name is `SESSION_COOKIE_NAME` (`@cocooning/couple-contract/authentication`, set by the PWA server action at sign-in), its secret `AUTH_JWT_SECRET`, read through `ConfigService`. The guard only reads the cookie and calls `ResolveSessionUseCase`: `JwtSessionTokenSigner` requires a UUID `sub`, a `ver` and an `exp` (`SessionTokenPayloadSchema`) at the `DateTimeProvider` time, and the account must exist at that session version (R5). Missing cookie: `AUTHENTICATION_SESSION_MISSING`; anything else wrong: `AUTHENTICATION_SESSION_INVALID`; both 401.
 5. **Identity comes from `@CurrentPartner()`**, a `PartnerContext { userId }`, never from the body, the query or a header. The `pairing` use cases take it as is (decision 0029); the other contexts get an `ExecutionContext` built from it by the API.
 6. **Never log the cookie, the token or a request body** (core.md rules 30 and 33). The exception filter already logs every refusal with its code.
 

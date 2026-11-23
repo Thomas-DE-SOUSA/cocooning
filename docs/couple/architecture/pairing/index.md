@@ -33,7 +33,7 @@ Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/
 
 ## Endpoints
 
-Toutes les routes demandent une session (cookie `cocooning_session`, [décision 0030](../../decisions/0030-verification-du-jwt-en-phase-2.md)) ; sans elle, `401`. Le corps de chaque réponse réussie suit `CoupleResponseSchema`.
+Toutes les routes demandent une session (cookie `cocooning_session`, [décision 0034](../../decisions/0034-session-revocable.md)) ; sans elle, `401`. Le corps de chaque réponse réussie suit `CoupleResponseSchema`.
 
 | Route | Clé de `ApiRouterEnum` | Use case | Succès | Refus |
 |---|---|---|---|---|
@@ -60,7 +60,7 @@ Les trois autres use cases suivent la même recette. La durée de validité du c
 
 ## Points d'attention
 
-- **Recherches sans `coupleId`.** Les use cases reçoivent `PartnerContext = { userId }`, et `CoupleRepository.findByPartner(userId)` et `findByInvitationCode(code)` sont les deux seules exceptions du dépôt à la règle 27 de `_knowledge/core.md` ([décision 0029](../../decisions/pairing/0029-pairing-avant-le-couple.md)). Chacune répond au plus un couple, car `save` refuse un partenaire ou un code déjà pris ; aucun autre contexte ne les copie.
+- **Recherches sans `coupleId`.** Les use cases reçoivent `PartnerContext = { userId }`, et `CoupleRepository.findByPartner(userId)` et `findByInvitationCode(code)` sont, avec les deux recherches d'`AccountRepository` ([décision 0033](../../decisions/authentication/0033-authentication-hors-du-couple.md)), les seules exceptions du dépôt à la règle 27 de `_knowledge/core.md` ([décision 0029](../../decisions/pairing/0029-pairing-avant-le-couple.md)). Chacune répond au plus un couple, car `save` refuse un partenaire ou un code déjà pris ; aucun autre contexte ne les copie.
 - **Le code est un secret.** Aucun événement ne le porte : `InvitationCodeRenewedEvent` n'a pas de données.
 - **Concurrence.** Deux partenaires qui saisissent le même code en même temps : le second `save` échoue sur la version (`PAIRING_COUPLE_VERSION_CONFLICT`, `409`), car son `updateMany` attend le verrou de ligne puis ne trouve plus la version lue ; s'il ne lit le couple qu'après la validation du premier, le code a disparu et il reçoit `PAIRING_INVITATION_CODE_INVALID` (`422`). Vérifié en E2E par `apps/couple/api/test/pairing/pairing-concurrency.e2e-spec.ts`. Deux couples créés en même temps par le même partenaire : la contrainte unique du partenaire répond `PAIRING_PARTNER_ALREADY_IN_COUPLE`. Un code tiré deux fois : `PAIRING_INVITATION_CODE_CONFLICT`. L'adaptateur traduit les contraintes par leur nom (`violatedUniqueConstraint`) : `couple_partner_user_id_key`, `couple_invitation_code_key`, et `pairing_event_aggregate_id_version_key` comme un conflit de version.
 - Les tests de use case s'appuient sur `CoupleInMemoryRepository`, qui reproduit la version et les deux index uniques ; la base réelle se vérifie en E2E (`apps/couple/api/test/pairing/`), y compris l'adaptateur seul, par `app.get(CoupleRepository)`.

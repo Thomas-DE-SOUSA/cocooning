@@ -85,6 +85,9 @@ catalogs:
   validation:
     zod: ^4.6.7
 
+  security:
+    argon2: ^0.45.2
+
   logger:
     pino: ^10.4.0
     pino-pretty: ^13.2.0
@@ -102,6 +105,7 @@ catalogs:
     ts-jest: ^29.4.15
     "@testing-library/react": ^16.3.3
     jest-environment-jsdom: ^30.5.2
+    "@testing-library/user-event": ^14.6.13
 
   react:
     "@types/react": ^19.3.0
@@ -112,6 +116,8 @@ catalogs:
   next:
     "@next/eslint-plugin-next": ^16.4.6
     next: ^16.4.6
+    "@t3-oss/env-nextjs": ^0.13.11
+    server-only: ^0.0.1
 
   pwa:
     "@serwist/next": ^9.5.15
@@ -128,3 +134,10 @@ catalogs:
     sonner: ^2.0.8
     tailwind-merge: ^3.7.1
     tailwindcss: ^4.3.5
+
+  icons:
+    lucide-react: ^1.77.0
+
+  forms:
+    "@hookform/resolvers": ^7.0.8
+    react-hook-form: ^7.92.0

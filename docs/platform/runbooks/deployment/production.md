@@ -6,7 +6,7 @@ last-verified: 2026-11-23
 
 Ce runbook installe Cocooning sur la VM Oracle de Cadence, puis le met à jour à chaque merge dans `main`.
 
-Niveau de preuve : les images et la pile `postgres`, `migrate`, `api` ont tourné sur un poste ARM le 2026-11-23 ; le conteneur `tailscale` et l'installation sur la VM n'ont pas encore été exécutés.
+Niveau de preuve : exécuté en conditions réelles sur la VM le 2026-11-23 (préparation, démarrage, sauvegarde, installation de la PWA sur un téléphone) ; la mise à jour et la restauration n'ont pas encore servi.
 
 ## Quand l'utiliser
 
@@ -42,7 +42,7 @@ La VM a déjà Docker et Tailscale pour Cadence ([guide de Cadence](https://gith
 ### Démarrer ou mettre à jour
 
 1. `cd ~/cocooning && git pull`
-2. `docker compose -f infrastructure/compose/docker-compose.prod.yml up -d --build`. Le premier build dure plusieurs minutes. Les migrations s'appliquent avant le démarrage de l'API.
+2. `docker compose -f infrastructure/compose/docker-compose.prod.yml up -d --build`. Le premier build dure une dizaine de minutes sur la VM ; le certificat HTTPS de Tailscale arrive une minute après le démarrage. Les migrations s'appliquent avant le démarrage de l'API.
 3. `docker image prune -f` pour libérer la place des anciennes images.
 
 ### Sauvegarder la base
@@ -57,7 +57,7 @@ Créer le dossier avant : `mkdir -p ~/backups`. Copier ces fichiers hors de la V
 
 ## Vérification
 
-- Depuis un appareil du tailnet, https://cocooning.<tailnet>.ts.net affiche « Bienvenue sur Cocooning ».
+- Depuis un appareil du tailnet, https://cocooning.<tailnet>.ts.net renvoie vers l'écran « Connexion » (`/sign-in`) ; après la connexion d'un compte créé par le [runbook des comptes](../../../couple/infrastructure/runbooks/authentication/accounts.md), il affiche « Bienvenue sur Cocooning ». Un toast « Connexion impossible » sur un bon mot de passe : lire `docker compose ... logs web --tail 50`. « Invalid Server Actions request » signifie que `tailscale serve` n'a pas transmis le nom public (`X-Forwarded-Host`) : ajouter ce nom à `serverActions.allowedOrigins` de `apps/couple/web/next.config.ts`.
 - https://cocooning.<tailnet>.ts.net/manifest.webmanifest et `/sw.js` répondent.
 - Sur l'iPhone (Safari, « Partager », « Sur l'écran d'accueil ») et sur l'Android (Chrome, « Installer l'application »), la PWA s'installe et s'ouvre en plein écran.
 - `docker compose -f infrastructure/compose/docker-compose.prod.yml exec api node -e "fetch('http://127.0.0.1:3100/health').then((r) => r.text()).then(console.log)"` affiche `{"status":"UP"}`.
@@ -65,5 +65,6 @@ Créer le dossier avant : `mkdir -p ~/backups`. Copier ces fichiers hors de la V
 ## Escalade
 
 - `migrate` sort en erreur : lire ses logs ; l'API ne démarre pas tant qu'il échoue, l'ancienne version reste arrêtée. Corriger la migration dans le dépôt, ou revenir au commit précédent (`git checkout <sha>`) et relancer l'étape 2.
+- `web` redémarre en boucle avec « Invalid environment variables » : `API_URL` ou `API_TIMEOUT_MS` manque dans le bloc `environment` de `web` du compose (`apps/couple/web/src/env/server.ts`).
 - Le nom `cocooning` n'apparaît pas dans le tailnet : `docker compose ... logs tailscale`. Une clé expirée ou déjà utilisée se remplace dans `.env`, puis `docker compose ... up -d --force-recreate tailscale`.
 - Restaurer une sauvegarde : `docker compose ... exec -T postgres pg_restore -U cocooning -d cocooning --clean < ~/backups/cocooning-<date>.dump`, API arrêtée (`docker compose ... stop api web`).

@@ -4,38 +4,32 @@ import {
     type ExecutionContext as NestExecutionContext,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
-import { AuthenticationExceptionCodeEnum } from '@cocooning/couple-contract/authentication';
+import {
+    AuthenticationExceptionCodeEnum,
+    SESSION_COOKIE_NAME,
+} from '@cocooning/couple-contract/authentication';
+import {
+    AuthenticationException,
+    ResolveSessionUseCase,
+} from '@cocooning/couple-server-business-logic/authentication';
 import { IS_PUBLIC_KEY } from '@cocooning/server-infrastructure/nest';
-import type { PartnerContext } from '@cocooning/shared-kernel/domain';
-import { DateTimeProvider } from '@cocooning/shared-kernel/ports';
 import type { Request } from 'express';
-import { AuthenticationException } from './authentication.exception';
 import { attachPartnerContext } from './partner-context.request';
-import { SESSION_COOKIE_NAME, SESSION_TOKEN_ALGORITHM } from './session-cookie';
-import { SessionTokenPayloadSchema } from './session-token-payload';
 
-const MILLISECONDS_PER_SECOND = 1_000;
-
-const sessionInvalid = (): AuthenticationException =>
-    new AuthenticationException({
-        code: AuthenticationExceptionCodeEnum.AUTHENTICATION_SESSION_INVALID,
-        message: 'Session invalid',
-    });
-
-// Fail-closed: every route needs a valid session cookie unless it is marked @Public() (decision 0030).
+// Fail-closed: every route needs a live session unless it is marked @Public(); the use case decides (decision 0034).
 @Injectable()
 export class SessionGuard implements CanActivate {
     constructor(
         private readonly reflector: Reflector,
-        private readonly jwtService: JwtService,
-        private readonly dateTimeProvider: DateTimeProvider,
+        private readonly resolveSessionUseCase: ResolveSessionUseCase,
     ) {}
 
     async canActivate(context: NestExecutionContext): Promise<boolean> {
         if (this.isPublic(context)) return true;
         const request = context.switchToHttp().getRequest<Request>();
-        const partner = await this.verify(this.readSessionToken(request));
+        const partner = await this.resolveSessionUseCase.execute({
+            sessionToken: this.readSessionToken(request),
+        });
         attachPartnerContext(request, partner);
         return true;
     }
@@ -56,24 +50,5 @@ export class SessionGuard implements CanActivate {
             code: AuthenticationExceptionCodeEnum.AUTHENTICATION_SESSION_MISSING,
             message: 'Session missing',
         });
-    }
-
-    private async verify(token: string): Promise<PartnerContext> {
-        const payload = await this.decode(token);
-        const parsed = SessionTokenPayloadSchema.safeParse(payload);
-        if (!parsed.success) throw sessionInvalid();
-        return { userId: parsed.data.sub };
-    }
-
-    private async decode(token: string): Promise<object> {
-        const now = this.dateTimeProvider.now().getTime();
-        try {
-            return await this.jwtService.verifyAsync<object>(token, {
-                algorithms: [SESSION_TOKEN_ALGORITHM],
-                clockTimestamp: Math.floor(now / MILLISECONDS_PER_SECOND),
-            });
-        } catch {
-            throw sessionInvalid();
-        }
     }
 }
