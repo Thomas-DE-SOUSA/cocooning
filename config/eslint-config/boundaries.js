@@ -66,6 +66,11 @@ export function createBoundaries({
                 partialMatch: false,
             },
             {
+                type: `${domain}-client-business-logic`,
+                pattern: [`packages/${domain}/client-business-logic/**`],
+                partialMatch: false,
+            },
+            {
                 type: `${domain}-contract`,
                 pattern: [`packages/${domain}/contract/**`],
                 partialMatch: false,
@@ -136,6 +141,20 @@ export function createBoundaries({
             ]),
             message:
                 'server-business-logic is the framework-free domain and application layer: it must not import @nestjs/*, @prisma/*, prisma or a *-prisma package. Declare a port and implement it in an adapter.',
+        })),
+        ...domains.map((domain) => ({
+            from: { element: { type: `${domain}-client-business-logic` } },
+            disallow: forbid([
+                ...FRONTEND_FRAMEWORKS,
+                ...NEST_AND_PRISMA,
+                ...scoped('client-infrastructure'),
+                '@cocooning/*-client-infrastructure',
+                '@cocooning/*-client-infrastructure/**',
+                '@cocooning/*-server-business-logic',
+                '@cocooning/*-server-business-logic/**',
+            ]),
+            message:
+                'client-business-logic is the framework-free frontend business logic: it must not import Next.js, React, React Native, Expo, @nestjs/*, @prisma/*, an infrastructure package or server-business-logic. Declare a port and implement it in client-infrastructure.',
         })),
         ...domains.map((domain) => ({
             from: { element: { type: `${domain}-contract` } },

@@ -44,6 +44,16 @@ describe('domain boundaries (real boundaries.js on a fake repository)', () => {
             'is framework-agnostic',
         ],
         [
+            'packages/couple/client-business-logic/src/forbidden-react-import.ts',
+            'boundaries/dependencies',
+            'framework-free frontend business logic',
+        ],
+        [
+            'packages/couple/client-business-logic/src/forbidden-infrastructure-import.ts',
+            'boundaries/dependencies',
+            'framework-free frontend business logic',
+        ],
+        [
             'packages/couple/server-business-logic/src/forbidden-enum.ts',
             'no-restricted-syntax',
             'TypeScript enums are forbidden',
