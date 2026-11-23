@@ -57,7 +57,7 @@ Un service worker ne s'enregistre qu'en HTTPS, sauf sur `localhost`. Pour instal
 |---|---|---|
 | pnpm refuse de s'exécuter ou installe une autre version | Corepack inactif | `corepack enable`, puis relancer `pnpm install` |
 | Un paquet récent est refusé à l'installation | `minimumReleaseAge` de `pnpm-workspace.yaml` exige un jour d'ancienneté | Attendre, ou choisir la version précédente |
-| L'API s'arrête au démarrage sur une erreur Zod | Variable absente ou invalide dans `apps/couple/api/.env` | Comparer avec `.env.example` ; `AUTH_JWT_SECRET` fait au moins 32 caractères |
+| L'API s'arrête au démarrage sur une erreur Zod | Variable absente ou invalide dans `apps/couple/api/.env` | Comparer avec `.env.example` ; `AUTH_JWT_SECRET` fait au moins 32 caractères et ne commence pas par `change-me` (la valeur d'exemple du compose de production) |
 | `EADDRINUSE` au démarrage de l'API | Le port `PORT` est déjà pris | Changer `PORT` dans `apps/couple/api/.env` |
 | `Cannot find module '.../dist/...'` | Un package n'est pas construit | `pnpm --filter couple-api... build` |
 | Le serveur de la PWA s'arrête sur « Invalid environment variables » | `apps/couple/web/.env` manque ou n'a pas `API_URL`, `API_TIMEOUT_MS` | Le copier depuis `apps/couple/web/.env.example` |
