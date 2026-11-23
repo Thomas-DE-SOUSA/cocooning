@@ -20,7 +20,7 @@
 
 ## Prochaine étape
 
-**Étape 3 lancée** (module `pairing` web, plan D37 en 6 PR, `journal/2026-11-23.md`, « Phase 3, étape 3 : plan `pairing` web »). PR 1 décisions mergée (#43, ADR 0036 et 0037 acceptées). PR 2 mergée (#45). PR 3 mergée (#46). PR 4 mergée (#47). PR 5 saisie du code ouverte, en attente du « go » ; puis PR 6 déconnexion et mise en production. Étape 2 en production avec les deux comptes.
+**Étape 3 lancée** (module `pairing` web, plan D37 en 6 PR, `journal/2026-11-23.md`, « Phase 3, étape 3 : plan `pairing` web »). PR 1 décisions mergée (#43, ADR 0036 et 0037 acceptées). PR 2 mergée (#45). PR 3 mergée (#46). PR 4 et 5 mergées (#47, #48). PR 6 déconnexion ouverte, en attente du « go » ; puis mise en production de l'étape 3, sur accord. Étape 2 en production avec les deux comptes.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
