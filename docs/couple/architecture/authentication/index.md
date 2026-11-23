@@ -6,7 +6,7 @@ Cette page décrit comment le contexte `authentication` est construit : ses couc
 
 `authentication` garde les deux comptes du couple : adresse e-mail, mot de passe haché, version de session. Il crée un compte, ouvre une session, retrouve le partenaire d'un jeton et ferme les sessions d'un partenaire. Il ne connaît pas le couple : un compte existe avant lui ([décision 0033](../../decisions/authentication/0033-authentication-hors-du-couple.md)), et les autres contextes ne reçoivent que le `userId`.
 
-L'API expose la connexion et la déconnexion, et son garde de session passe par `ResolveSessionUseCase` à chaque requête ([décision 0034](../../decisions/0034-session-revocable.md)). `CreateAccountUseCase` n'a pas encore d'adaptateur primaire : aucun endpoint ne crée de compte (R6).
+L'API expose la connexion et la déconnexion, et son garde de session passe par `ResolveSessionUseCase` à chaque requête ([décision 0034](../../decisions/0034-session-revocable.md)). Aucun endpoint ne crée de compte (R6) : `CreateAccountUseCase` a pour seul adaptateur primaire la commande `create-account`, lancée par le propriétaire sur la VM ([décision plateforme 0016](../../../platform/decisions/0016-commandes-d-exploitation-dans-l-api.md), [runbook des comptes](../../infrastructure/runbooks/authentication/accounts.md)).
 
 ## Comment c'est construit
 
@@ -31,6 +31,7 @@ L'API expose la connexion et la déconnexion, et son garde de session passe par 
 | `SessionGuard` | Garde global de l'API : lit le cookie `cocooning_session`, appelle `ResolveSessionUseCase`, attache le `PartnerContext` | `apps/couple/api/src/modules/authentication/session.guard.ts` |
 | `AccountPrismaRepository` | Adaptateur de `AccountRepository` : verrou optimiste sur `version`, index `account_email_address_key` traduit en `AUTHENTICATION_ACCOUNT_ALREADY_EXISTS` | `apps/couple/api/src/modules/authentication/secondary/repositories/` |
 | `Argon2PasswordHasher`, `JwtSessionTokenSigner` | Adaptateurs : Argon2id (faux hachage au même coût pour une adresse inconnue) ; JWT HS256 aux claims `sub`, `ver`, `exp`, vérifié à l'heure de `DateTimeProvider` | `apps/couple/api/src/modules/authentication/secondary/providers/` |
+| `CreateAccountCommandModule`, `runCreateAccountCommand` | Commande `create-account` : contexte Nest sans HTTP sur `AuthenticationSecondaryModule`, seul fournisseur de `CreateAccountUseCase` ; adresse en argument, mot de passe lu deux fois sans écho, codes de sortie `0`, `64`, `65`, `1` | `apps/couple/api/src/commands/create-account/` |
 
 Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/authentication/`. La durée d'une session vient de `AUTH_SESSION_TTL_DAYS` (`90`), lue au démarrage par la fabrique des use cases.
 

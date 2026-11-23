@@ -22,7 +22,7 @@ Mon mot de passe fait au moins 12 et au plus 128 caractères. Seul son hachage A
 
 Les deux comptes sont créés par le propriétaire, sur la VM, par une commande qui demande le mot de passe sans l'afficher. L'application n'a pas d'écran d'inscription.
 
-- Dans le code : `CreateAccountUseCase`, qu'aucun endpoint n'expose.
+- Dans le code : `CreateAccountUseCase`, qu'aucun endpoint n'expose ; la commande `create-account` de l'API (`apps/couple/api/src/commands/create-account/`, [runbook des comptes](../../infrastructure/runbooks/authentication/accounts.md)).
 - Source : décision 0032. Validée par : Thomas De Sousa, 2026-11-23.
 
 ## À la connexion
