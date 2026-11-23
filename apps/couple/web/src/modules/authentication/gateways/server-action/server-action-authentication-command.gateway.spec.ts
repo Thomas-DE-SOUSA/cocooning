@@ -6,36 +6,48 @@ const FORM = {
     emailAddress: 'thomas@cocooning.test',
     password: 'correct horse battery',
 };
+const answers = () => Promise.resolve(ok(null));
+const rejects = () => Promise.reject(new TypeError('Failed to fetch'));
 
-describe('Feature: signing in through the server action', () => {
-    describe('Scenario: the action answers', () => {
-        it('gives its result and sends it the form', async () => {
+describe('Feature: authentication through the server actions', () => {
+    describe('Scenario: the actions answer', () => {
+        it('gives their results and sends the form to sign in', async () => {
             const sent: unknown[] = [];
-            const gateway = new ServerActionAuthenticationCommandGateway(
-                (form) => {
+            const gateway = new ServerActionAuthenticationCommandGateway({
+                signIn: (form) => {
                     sent.push(form);
-                    return Promise.resolve(ok(null));
+                    return answers();
                 },
-            );
+                signOut: answers,
+            });
 
             expect(await gateway.signIn(FORM)).toEqual(ok(null));
+            expect(await gateway.signOut()).toEqual(ok(null));
             expect(sent).toEqual([FORM]);
         });
     });
 
-    describe('Scenario: the action cannot be reached', () => {
-        it('gives a network error instead of rejecting', async () => {
-            const gateway = new ServerActionAuthenticationCommandGateway(() =>
-                Promise.reject(new TypeError('Failed to fetch')),
-            );
+    describe('Scenario: the actions cannot be reached', () => {
+        it.each(['signIn', 'signOut'] as const)(
+            'gives a network error instead of rejecting for %s',
+            async (command) => {
+                const gateway = new ServerActionAuthenticationCommandGateway({
+                    signIn: rejects,
+                    signOut: rejects,
+                });
 
-            expect(await gateway.signIn(FORM)).toEqual({
-                success: false,
-                error: expect.objectContaining({
-                    code: ApiErrorCodeEnum.NETWORK_ERROR,
-                    backendCode: null,
-                }),
-            });
-        });
+                expect(
+                    await (command === 'signIn'
+                        ? gateway.signIn(FORM)
+                        : gateway.signOut()),
+                ).toEqual({
+                    success: false,
+                    error: expect.objectContaining({
+                        code: ApiErrorCodeEnum.NETWORK_ERROR,
+                        backendCode: null,
+                    }),
+                });
+            },
+        );
     });
 });

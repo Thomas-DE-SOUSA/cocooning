@@ -7,6 +7,7 @@ import {
     PairingContainer,
     presentPairingPage,
 } from '@/modules/pairing';
+import { SignOutContainer } from '@/modules/authentication';
 
 export async function generateMetadata(): Promise<Metadata> {
     const t = await getServerTranslation(PAIRING_NAMESPACE);
@@ -26,6 +27,7 @@ export default async function PairingPage() {
                 {t('title')}
             </h1>
             <PairingContainer viewModel={page.viewModel} />
+            <SignOutContainer />
         </main>
     );
 }
