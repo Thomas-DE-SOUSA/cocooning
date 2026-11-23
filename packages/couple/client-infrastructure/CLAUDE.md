@@ -13,8 +13,8 @@ Regles front communes :
 - Une gateway etend le port de `couple-client-business-logic`, appelle `httpRequest` puis `parseResponse` avec le schema de reponse du contrat, et ne leve jamais.
 - Aucune URL en dur : `resolveRoute(apiBaseUrl, ApiRouterEnum.X)`, `apiBaseUrl` lu dans la configuration de l'app.
 - Une gateway valide sa requete par le schema de requete du contrat avant l'appel : hors contrat, `VALIDATION_ERROR` sans appel.
-- Seule la connexion transmet l'adresse IP et le User-Agent du navigateur (`x-forwarded-for`, `user-agent`, `core-frontend.md` regle 13) ; une valeur `null` n'envoie pas l'en-tete.
-- Contexte qui agit pour le partenaire connecte : la fabrique recoit `getSessionToken` sans l'appeler, la gateway passe par `sessionRequest(getSessionToken, requete, config)`, qui appelle `sessionHeaders` a chaque requete et envoie `Cookie: <SESSION_COOKIE_NAME>=<jeton>`, lu par le garde de session de l'API (decision 0036). Sans jeton, `UNAUTHORIZED` (`AUTHENTICATION_SESSION_MISSING`) sans appel.
+- Aucune gateway ne transmet l'adresse IP ni le User-Agent du navigateur (decision 0043, `core-frontend.md` regle 13).
+- Contexte qui agit pour le partenaire connecte : la fabrique recoit `getSessionToken` sans l'appeler, la gateway passe par `sessionRequest(getSessionToken, requete, config)`, qui appelle `sessionHeaders` a chaque requete et envoie `Cookie: <SESSION_COOKIE_NAME>=<jeton>`, lu par le garde de session de l'API (decision 0036). La fabrique recoit `getSessionToken` des qu'un seul de ses use cases agit pour le partenaire connecte ; un appel public de la meme fabrique part sans cookie (decision 0042). Sans jeton, `UNAUTHORIZED` (`AUTHENTICATION_SESSION_MISSING`) sans appel.
 - Modeles a copier : `src/shared/authentication/` (connexion publique, deconnexion avec la session), `src/shared/pairing/` (tous les appels au nom du partenaire).
 
 ## Tests

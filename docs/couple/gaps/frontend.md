@@ -36,4 +36,4 @@
 - Où : `apps/couple/web/src/modules/authentication/services/authentication-module.factory.ts`, `docs/couple/decisions/frontend/0036-lecture-des-donnees-par-la-page-serveur.md` (Conséquences)
 - Constat : la décision 0036 dit que la fabrique `authentication`, dont le premier appel est public, ne prend pas de `getSessionToken`. Depuis la déconnexion (décision 0034), `SignOutUseCase` agit pour le partenaire connecté : la fabrique reçoit donc `getSessionToken`, que seule la déconnexion lit. Une fabrique de contexte reçoit `getSessionToken` dès qu'un de ses use cases agit pour le partenaire connecté. Retirer le fournisseur pour suivre la décision casserait la déconnexion : sans session, l'API répond 401, que `SignOutUseCase` compte comme une session fermée, et seuls les autres appareils resteraient connectés.
 - Règle concernée : [décision 0036](../decisions/frontend/0036-lecture-des-donnees-par-la-page-serveur.md)
-- Statut : ouvert, une décision qui remplace ce point de 0036 est à proposer au propriétaire
+- Statut : clos, tranché par la [décision 0042](../decisions/frontend/0042-fournisseur-de-session-des-fabriques.md)

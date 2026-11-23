@@ -11,7 +11,6 @@ const REQUEST = {
     emailAddress: 'thomas@cocooning.test',
     password: 'correct horse battery staple',
 };
-const BROWSER = { ipAddress: '100.64.0.7', userAgent: 'Mozilla/5.0 (iPhone)' };
 const SESSION = {
     userId: '01936b2e-7c4a-7000-8000-0000000000a1',
     sessionToken: 'session-token-1',
@@ -36,13 +35,11 @@ describe('Feature: the PWA opens a session through the API', () => {
         beforeEach(() => fakeFetch.givenResponse(200, JSON.stringify(SESSION)));
 
         it('returns the session of the contract', async () => {
-            await expect(gateway.signIn(REQUEST, BROWSER)).resolves.toEqual(
-                ok(SESSION),
-            );
+            await expect(gateway.signIn(REQUEST)).resolves.toEqual(ok(SESSION));
         });
 
-        it('posts the credentials with the browser address and User-Agent', async () => {
-            await gateway.signIn(REQUEST, BROWSER);
+        it('posts the credentials without the session cookie', async () => {
+            await gateway.signIn(REQUEST);
             expect(fakeFetch.calls).toEqual([
                 {
                     url: 'http://api.test/authentication/session',
@@ -50,20 +47,10 @@ describe('Feature: the PWA opens a session through the API', () => {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'x-forwarded-for': '100.64.0.7',
-                        'user-agent': 'Mozilla/5.0 (iPhone)',
                     },
                     body: JSON.stringify(REQUEST),
                 },
             ]);
-        });
-
-        it('sends no client header that Next does not know', async () => {
-            await gateway.signIn(REQUEST, { ipAddress: null, userAgent: null });
-            expect(fakeFetch.calls[0]?.headers).toEqual({
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            });
         });
     });
 
@@ -78,7 +65,7 @@ describe('Feature: the PWA opens a session through the API', () => {
                     context: null,
                 }),
             );
-            await expect(gateway.signIn(REQUEST, BROWSER)).resolves.toEqual(
+            await expect(gateway.signIn(REQUEST)).resolves.toEqual(
                 fail({
                     code: ApiErrorCodeEnum.UNAUTHORIZED,
                     message: 'Invalid credentials',
@@ -95,7 +82,7 @@ describe('Feature: the PWA opens a session through the API', () => {
                 200,
                 JSON.stringify({ userId: SESSION.userId }),
             );
-            const result = await gateway.signIn(REQUEST, BROWSER);
+            const result = await gateway.signIn(REQUEST);
             expect(result.success === false && result.error.code).toBe(
                 ApiErrorCodeEnum.INVALID_RESPONSE,
             );
@@ -104,10 +91,7 @@ describe('Feature: the PWA opens a session through the API', () => {
 
     describe('Scenario: a request outside the contract', () => {
         it('refuses an empty password without calling the API', async () => {
-            const result = await gateway.signIn(
-                { ...REQUEST, password: '' },
-                BROWSER,
-            );
+            const result = await gateway.signIn({ ...REQUEST, password: '' });
             expect(result).toEqual(
                 fail({
                     code: ApiErrorCodeEnum.VALIDATION_ERROR,

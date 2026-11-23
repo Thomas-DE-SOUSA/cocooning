@@ -61,7 +61,7 @@ Je me déconnecte : toutes mes sessions se ferment, sur tous mes appareils. Cell
 | Créer un compte avec un mot de passe trop court ou trop long | Refusée, `AUTHENTICATION_PASSWORD_TOO_WEAK` (R2) |
 | Créer un compte avec une adresse déjà prise | Refusée, `AUTHENTICATION_ACCOUNT_ALREADY_EXISTS` (R1) |
 | Changer ou réinitialiser son mot de passe | Pas encore possible, au plus tard en phase 7 (décision 0019) ; le propriétaire recrée le compte en attendant |
-| Trop d'essais de connexion | Pas de limite pour l'instant (décision 0032) |
+| Trop d'essais de connexion | Pas de limite : le tailnet borne qui peut essayer ([décision 0043](../../decisions/authentication/0043-le-tailnet-borne-les-essais-de-connexion.md)) |
 
 ## Voir aussi
 
