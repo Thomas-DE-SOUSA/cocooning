@@ -48,7 +48,7 @@ Statuts possibles : `ouverte`, `décidée`, `appliquée`, `remplacée`.
 | D15 | Langues (CLAUDE.md, docs, commits) | décidée | code, `CLAUDE.md` racine, `_knowledge/`, commits en anglais ; `docs/` en français (« OK pour tout ») → [ADR](../docs/platform/decisions/0008-langues.md) | 2026-11-22 | — |
 | D16 | Versionnement des espaces de travail des agents | ouverte | — | — | phase 5 |
 | D17 | BMAD | ouverte | — | — | phase 5 |
-| D18 | Portes de qualité (Stryker, couverture, Playwright, Sonar) | ouverte | — | — | phase 2 |
+| D18 | Portes de qualité (Stryker, couverture, Playwright, Sonar) | décidée | 100 % de couverture imposée sur le code métier, pas de Stryker ni de Sonar (« Couverture 100 % sur le code métier (Recommandé) ») → [ADR](../docs/platform/decisions/0013-portes-de-qualite.md) | 2026-11-23 | — |
 | D19 | Storybook | décidée | pas de Storybook ; une vue prouve son isolation par son test (« Pas de Storybook (Recommandé) ») → [ADR](../docs/platform/decisions/0012-pas-de-storybook.md) | 2026-11-23 | — |
 | D20 | Trailer `Co-Authored-By` des commits IA | ouverte | — | — | phase 5 |
 | D21 | Plateforme d'observabilité | ouverte | — | — | phase 6 |

@@ -69,8 +69,7 @@ Selon la tache : `_knowledge/backend/concurrency.md` (version, contraintes uniqu
 
 ## Commandes
 
-- `pnpm --filter @cocooning/couple-server-business-logic test`
-- `pnpm --filter @cocooning/couple-server-business-logic exec jest --coverage`
+- `pnpm --filter @cocooning/couple-server-business-logic test` : echoue sous 100 % de couverture (decision plateforme 0013)
 - `pnpm --filter @cocooning/couple-server-business-logic check-types`
 - `pnpm --filter @cocooning/couple-server-business-logic lint`
 - `pnpm --filter @cocooning/couple-server-business-logic build`

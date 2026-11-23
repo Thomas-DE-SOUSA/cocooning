@@ -8,7 +8,7 @@
         "dev": "tsc -p tsconfig.build.json --watch",
         "lint": "eslint . --max-warnings=0",
         "check-types": "tsc --noEmit -p tsconfig.json",
-        "test": "jest"
+        "test": "jest --coverage"
     },
     "exports": {
         "./pairing": {
