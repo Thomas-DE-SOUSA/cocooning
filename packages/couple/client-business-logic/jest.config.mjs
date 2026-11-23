@@ -7,6 +7,13 @@ export default {
     transform: {
         '^.+\\.ts$': ['ts-jest', { tsconfig: 'tsconfig.spec.json' }],
     },
+    moduleNameMapper: {
+        '^@cocooning/shared-kernel/(.*)$':
+            '<rootDir>/../../shared-kernel/src/$1',
+        '^@cocooning/couple-shared-kernel/(.*)$':
+            '<rootDir>/../shared-kernel/src/$1',
+        '^@cocooning/couple-contract/(.*)$': '<rootDir>/../contract/src/$1',
+    },
     collectCoverageFrom: [
         'src/**/*.ts',
         '!src/**/__tests__/**',

@@ -31,7 +31,7 @@ Les deux comptes sont créés par le propriétaire, sur la VM, par une commande 
 
 Une adresse inconnue et un mauvais mot de passe reçoivent la même réponse. Dans les deux cas, un mot de passe est vérifié, pour que la réponse prenne le même temps.
 
-- Dans le code : `AuthenticationPreconditionService.loadAccountByCredentials`, `PasswordHasher.matches` (avec un hachage `null` pour une adresse inconnue), `AUTHENTICATION_CREDENTIALS_INVALID`. L'adresse saisie passe par `EmailAddress.normalize`, sans validation.
+- Dans le code : `AuthenticationPreconditionService.loadAccountByCredentials`, `PasswordHasher.matches` (avec un hachage `null` pour une adresse inconnue), `AUTHENTICATION_CREDENTIALS_INVALID`. L'adresse saisie passe par `EmailAddress.normalize`, sans validation. Côté PWA, `createSignInFormSchema` n'exige qu'une adresse et un mot de passe non vides, aux bornes brutes du contrat : il ne vérifie ni la forme de l'adresse ni la longueur minimale du mot de passe.
 - Source : décision 0032. Validée par : Thomas De Sousa, 2026-11-23.
 
 ### R4. Une session dure 90 jours

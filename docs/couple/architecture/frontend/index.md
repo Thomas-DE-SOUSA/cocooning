@@ -6,10 +6,10 @@ Comment la PWA `apps/couple/web` parle à l'API, et ce que porte chaque package 
 
 | Package | Rôle | Peut importer |
 |---|---|---|
-| `@cocooning/couple-client-business-logic` | Logique métier front sans framework : ports des gateways, use cases, schémas de formulaire, presenters. Aujourd'hui : `ApiError` et `Translator` (`shared`) | `shared-kernel`, `couple-shared-kernel`, `couple-contract`, zod |
-| `@cocooning/client-infrastructure` | Le seul `fetch` des gateways (`httpRequest`), la vérification d'une réponse par son contrat (`parseResponse`), `resolveRoute` | `shared-kernel`, zod |
-| `@cocooning/couple-client-infrastructure` | Les gateways du couple et leur configuration HTTP commune (`createCoupleHttpConfig`) | les trois précédents, `couple-contract` |
-| `@cocooning/design-system` | Composants d'interface sans domaine et couleurs du thème (clair et sombre selon le téléphone). Aujourd'hui : `Button`, `Skeleton`, `Toaster` | React, Tailwind |
+| `@cocooning/couple-client-business-logic` | Logique métier front sans framework : ports des gateways, use cases, schémas de formulaire, presenters. Aujourd'hui : `ApiError` et `Translator` (`shared`), et pour `authentication` le formulaire de connexion (`createSignInFormSchema`), le port `AuthenticationGateway` et `SignInUseCase` | `shared-kernel`, `couple-shared-kernel`, `couple-contract`, zod |
+| `@cocooning/client-infrastructure` | Le seul `fetch` des gateways (`httpRequest`), la vérification d'une réponse par son contrat (`parseResponse`), `resolveRoute`, et le faux `fetch` des specs (`FakeFetch`, sous-chemin `testing`) | `shared-kernel`, zod |
+| `@cocooning/couple-client-infrastructure` | Les gateways du couple, leur configuration HTTP commune (`createCoupleHttpConfig`) et la fabrique de chaque contexte. Aujourd'hui : `ApiAuthenticationGateway` et `createAuthenticationModule` (`authentication`) | les trois précédents, `couple-contract` |
+| `@cocooning/design-system` | Composants d'interface sans domaine et couleurs du thème (clair et sombre selon le téléphone). Aujourd'hui : `Button`, `Input`, `Label`, `Skeleton`, `Toaster` | React, Tailwind |
 | `apps/couple/web` | Pages, server actions, containers et vues. Aujourd'hui : layout racine, accueil provisoire, pages d'erreur, traduction en français (`src/i18n/`), manifeste, service worker et page hors ligne | tout ce qui précède |
 
 ESLint (`config/eslint-config/boundaries.js`) refuse les imports qui sortent de cette table : `client-business-logic` n'importe ni React, ni Next, ni un adaptateur.
@@ -32,9 +32,9 @@ Le service worker n'existe qu'après `next build --webpack` ([décision platefor
 ## Le chemin d'un appel (à partir du premier écran)
 
 1. La vue déclenche une server action ; le navigateur ne parle jamais directement à l'API.
-2. La server action appelle un use case de `couple-client-business-logic`, construit par la fabrique du module.
+2. La server action appelle un use case de `couple-client-business-logic`, construit par la fabrique du contexte (`createAuthenticationModule(apiBaseUrl, timeoutMs)`), qui garde la gateway pour elle.
 3. Le use case appelle son port ; la gateway de `couple-client-infrastructure` l'implémente.
-4. La gateway envoie la requête par `httpRequest`, puis vérifie la réponse par `parseResponse` et le schéma du contrat.
+4. La gateway vérifie la requête par le schéma de requête du contrat, l'envoie par `httpRequest`, puis vérifie la réponse par `parseResponse` et le schéma de réponse. Seule la connexion ajoute l'adresse IP et le User-Agent du navigateur (`x-forwarded-for`, `user-agent`) : sinon l'API ne verrait que le serveur Next.
 5. Tout revient en `Result` : aucune couche ne lève d'exception.
 
 ## Les erreurs

@@ -718,6 +718,19 @@ importers:
         version: 6.0.3
 
   packages/couple/client-business-logic:
+    dependencies:
+      '@cocooning/couple-contract':
+        specifier: workspace:*
+        version: link:../contract
+      '@cocooning/couple-shared-kernel':
+        specifier: workspace:*
+        version: link:../shared-kernel
+      '@cocooning/shared-kernel':
+        specifier: workspace:*
+        version: link:../../shared-kernel
+      zod:
+        specifier: catalog:validation
+        version: 4.6.7
     devDependencies:
       '@cocooning/eslint-config':
         specifier: workspace:*
@@ -758,6 +771,12 @@ importers:
       '@cocooning/couple-contract':
         specifier: workspace:*
         version: link:../contract
+      '@cocooning/couple-shared-kernel':
+        specifier: workspace:*
+        version: link:../shared-kernel
+      '@cocooning/shared-kernel':
+        specifier: workspace:*
+        version: link:../../shared-kernel
     devDependencies:
       '@cocooning/eslint-config':
         specifier: workspace:*

@@ -14,6 +14,8 @@ export default {
             '<rootDir>/../../client-infrastructure/src/$1',
         '^@cocooning/couple-client-business-logic/(.*)$':
             '<rootDir>/../client-business-logic/src/$1',
+        '^@cocooning/couple-shared-kernel/(.*)$':
+            '<rootDir>/../shared-kernel/src/$1',
         '^@cocooning/couple-contract/(.*)$': '<rootDir>/../contract/src/$1',
     },
 };
