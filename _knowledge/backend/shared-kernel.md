@@ -71,7 +71,7 @@ Excluded from the build. Each one `extends` its port (decision 0001): `Determini
 | Subpath | Contains |
 |---|---|
 | `enums` | Business enums shared by server and PWA, one file per enum, `as const` (decision 0002): `CouplePairingStatusEnum` (`PENDING`, `PAIRED`) |
-| `routers` | `ApiRouterEnum` and `WebRouterEnum`, one route file per context (plus `HealthRouteEnum`, the public API health route) spread into the enum and listed in `API_ROUTE_GROUPS` / `WEB_ROUTE_GROUPS`; a spec fails on a key declared by two groups or a group missing from the list. Never hardcode a route string |
+| `routers` | `ApiRouterEnum` and `WebRouterEnum`, one route file per context (plus `HealthRouteEnum`, the public API health route; `PairingRouteEnum` for `pairing`) spread into the enum and listed in `API_ROUTE_GROUPS` / `WEB_ROUTE_GROUPS`; a spec fails on a key declared by two groups or a group missing from the list. Never hardcode a route string |
 | `exceptions` | `MissingExecutionContextException(missing)`, code `EXECUTION_CONTEXT_MISSING`: thrown by a guard service's `ensureRequiredContextPresent` when a field of `ExecutionContext` is missing |
 
 ---
