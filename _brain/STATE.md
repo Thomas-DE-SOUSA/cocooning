@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (matin). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (après-midi). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -22,7 +22,7 @@ D19 et D25 tranchées le 2026-11-23 : pas de Storybook (plateforme 0012), schém
 
 D18 tranchée : 100 % de couverture imposée sur le code métier, sans Stryker (plateforme 0013).
 
-**Prochaine étape** : phase 3 (PWA), étape par étape, une PR chacune, accord du propriétaire entre deux étapes (il a arrêté l'autonomie). Ordre choisi le 2026-11-23 : 1. socle `apps/couple/web` (Next 16, i18n, env, Serwist, `client-business-logic`, `client-infrastructure`, design system minimal) ; 2. contexte `authentication` (connexion locale, décision 0019) et écran de connexion ; 3. module de référence `pairing`. Restent à revoir avec lui les points « À confirmer » des étapes 1 à 4 du journal (code `PAIRING_INVITATION_CODE_CONFLICT`, schéma de réponse partagé, `InProcessEventPublisher`, port 3100, suffixes). Merger `dev` dans `main` seulement à sa demande.
+**Prochaine étape** : phase 3 (PWA), une PR à la fois, accord du propriétaire entre deux PR (il a arrêté l'autonomie). Étape 1 (socle) en 4 PR : PR 1 paquets front sans React (#17, mergée), PR 2 design system (#18, mergée), PR 3 app Next.js `apps/couple/web` port 3200, français seul (#19, **ouverte, à merger sur son accord**), PR 4 PWA installable (Serwist : `@serwist/next` webpack ou `@serwist/turbopack`, à trancher par un essai, puis décision plateforme 0014 : paquets front en CJS, design system lu en source, variante Serwist ; manifeste, icônes provisoires, page hors ligne). Puis étape 2 : `authentication` + écran de connexion (première variable web `API_URL` dans `src/env/server.ts`), étape 3 : module `pairing`.
 
 **Recette d'un nouveau package** (éprouvée six fois ; un package de test comme `e2e-shared` est lu depuis `src`, sans build) : copier la forme de `packages/server-infrastructure/` (`package.json` à exports par sous-chemin `types → src`, `default → dist` ; `tsconfig.json` + `tsconfig.build.json` + `tsconfig.spec.json` en CommonJS pour Jest ; `jest.config.mjs` avec `moduleNameMapper` vers les `src` voisins ; `eslint.config.mjs` = `nestConfig` + `boundariesConfig`, ou `config` de base pour un package isomorphe comme le shared-kernel). Écrire son `CLAUDE.md` (français sans accents, sections figées) dans le même commit. Vérifier l'entrée CommonJS de toute dépendance (D31). Ajouter les versions aux catalogues de `pnpm-workspace.yaml`. Commit sans scope (`feat: …`). Vérifier `pnpm check-types && pnpm lint && pnpm test && pnpm build` à la racine avant de commiter.
 
