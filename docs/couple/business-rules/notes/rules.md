@@ -66,7 +66,7 @@ Je supprime ma note : elle disparaît pour nous deux. L'autre ne peut pas suppri
 Je donne un titre à ma note ; les espaces autour ne comptent pas, un titre vide est refusé.
 
 - Dans le code : `NoteTitle.create`, `NOTE_TITLE_MAX_LENGTH` (`@cocooning/couple-shared-kernel/limits`).
-- Source : proposition de Claude avec le domaine (PR 2 de l'étape « notes », 2026-11-23). Validée par : à compléter.
+- Source : proposition de Claude avec le domaine, acceptée par le propriétaire (« OK pour 120 », 2026-11-23). Validée par : Thomas De Sousa, 2026-11-23.
 
 ## Cas et exceptions
 
