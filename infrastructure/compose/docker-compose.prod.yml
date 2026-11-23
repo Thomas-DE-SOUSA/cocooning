@@ -1,0 +1,92 @@
+# Production stack of Cocooning on the VM (platform decision 0015).
+# Run from the repository root:
+#   docker compose -f infrastructure/compose/docker-compose.prod.yml up -d --build
+# Secrets come from infrastructure/compose/.env (copied from .env.example, never versioned).
+name: cocooning
+
+services:
+    postgres:
+        image: postgres:17-alpine
+        restart: unless-stopped
+        environment:
+            POSTGRES_USER: cocooning
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in infrastructure/compose/.env}
+            POSTGRES_DB: cocooning
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U cocooning -d cocooning']
+            interval: 5s
+            timeout: 3s
+            retries: 20
+
+    migrate:
+        build:
+            context: ../..
+            dockerfile: infrastructure/docker/nest/Dockerfile
+            target: runner-init
+        environment:
+            DATABASE_POSTGRES_URL: postgresql://cocooning:${POSTGRES_PASSWORD}@postgres:5432/cocooning
+        depends_on:
+            postgres:
+                condition: service_healthy
+        restart: 'no'
+
+    api:
+        build:
+            context: ../..
+            dockerfile: infrastructure/docker/nest/Dockerfile
+            target: runner
+        restart: unless-stopped
+        init: true
+        environment:
+            PORT: 3100
+            LOG_LEVEL: info
+            LOG_PRETTY: 'false'
+            DATABASE_POSTGRES_URL: postgresql://cocooning:${POSTGRES_PASSWORD}@postgres:5432/cocooning
+            DB_TX_TIMEOUT_MS: 5000
+            DB_TX_MAX_WAIT_MS: 2000
+            AUTH_JWT_SECRET: ${AUTH_JWT_SECRET:?set AUTH_JWT_SECRET in infrastructure/compose/.env}
+            PAIRING_INVITATION_CODE_TTL_HOURS: 48
+        depends_on:
+            migrate:
+                condition: service_completed_successfully
+        healthcheck:
+            test:
+                - CMD
+                - node
+                - -e
+                - "fetch('http://127.0.0.1:3100/health').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+            interval: 30s
+            timeout: 5s
+            retries: 3
+
+    # The web shares the network of the tailscale service: Tailscale serves it
+    # in HTTPS on https://cocooning.<tailnet>.ts.net, nothing listens on the VM.
+    web:
+        build:
+            context: ../..
+            dockerfile: infrastructure/docker/next/Dockerfile
+            target: runner
+        restart: unless-stopped
+        init: true
+        network_mode: service:tailscale
+        depends_on:
+            - tailscale
+            - api
+
+    tailscale:
+        image: tailscale/tailscale:v1.104.7
+        hostname: cocooning
+        restart: unless-stopped
+        environment:
+            TS_AUTHKEY: ${TS_AUTHKEY:?set TS_AUTHKEY in infrastructure/compose/.env}
+            TS_STATE_DIR: /var/lib/tailscale
+            TS_SERVE_CONFIG: /config/serve.json
+        volumes:
+            - tailscale-state:/var/lib/tailscale
+            - ./tailscale:/config:ro
+
+volumes:
+    postgres-data:
+    tailscale-state:

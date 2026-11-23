@@ -13,7 +13,7 @@ Le registre des décisions qui touchent tout le monorepo : dépôt, outillage, v
 | 0003 | [Le segment métier s'appelle `couple`](0003-segment-metier-couple.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
 | 0004 | [L'orchestrateur `_cocooning-orch` et le préfixe `coco-`](0004-orchestrateur-cocooning-orch.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
 | 0005 | [Versions des dépendances majeures](0005-versions-des-dependances.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
-| 0006 | [Déploiement sur une VM par `docker compose`, accès Tailscale](0006-deploiement-vm-docker-compose-tailscale.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0006 | [Déploiement sur une VM par `docker compose`, accès Tailscale](0006-deploiement-vm-docker-compose-tailscale.md) | technique | remplacée par 0015 | 2026-11-22 | Thomas De Sousa |
 | 0007 | [Une PWA, sans application native](0007-pwa-sans-application-native.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
 | 0008 | [Langues du dépôt](0008-langues.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
 | 0009 | [Flux de branches : `main`, `dev` et une branche par changement](0009-flux-de-branches.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
@@ -22,3 +22,4 @@ Le registre des décisions qui touchent tout le monorepo : dépôt, outillage, v
 | 0012 | [Pas de Storybook](0012-pas-de-storybook.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0013 | [Couverture de 100 % sur le code métier, sans Stryker](0013-portes-de-qualite.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0014 | [Socle technique de la PWA](0014-socle-technique-de-la-pwa.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0015 | [Production sur la VM Oracle de Cadence, sans Caddy](0015-production-sur-la-vm-oracle.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
