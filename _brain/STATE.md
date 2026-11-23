@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (R8 : #52 mergée, #53 ouverte). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-23 (R8 en production, release #54). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -20,7 +20,7 @@
 
 ## Prochaine étape
 
-**Revue des étapes 2 et 3 rendue** (`journal/2026-11-23.md`, « Revue des étapes 2 et 3 ») : aucun CRITICAL, 4 IMPORTANT (cache du service worker, impasse de la mise en couple si les deux créent, trous du lint, server actions non testées). Choix du propriétaire (D38) : PR 1 `fix/pairing-pending-deadlock` d'abord (règle R8 : le seul membre d'un couple en attente peut l'annuler, décision proposée puis use case et bouton), puis PR 2 (cache du service worker), puis 3 à 7 ; adresses e-mail retirées du journal dans la PR 7, sans réécriture d'historique. #52 (R8 serveur) mergée ; PR 1b web #53 ouverte, en attente du « go », puis release `dev` → `main` pour livrer le bouton. Ensuite PR 2 (cache du service worker), puis 3 à 7. Ensuite, prochaine étape de la phase 3 à choisir (notes, agenda, messages).
+**Revue des étapes 2 et 3 rendue** (`journal/2026-11-23.md`, « Revue des étapes 2 et 3 ») : aucun CRITICAL, 4 IMPORTANT (cache du service worker, impasse de la mise en couple si les deux créent, trous du lint, server actions non testées). Choix du propriétaire (D38) : PR 1 `fix/pairing-pending-deadlock` d'abord (règle R8 : le seul membre d'un couple en attente peut l'annuler, décision proposée puis use case et bouton), puis PR 2 (cache du service worker), puis 3 à 7 ; adresses e-mail retirées du journal dans la PR 7, sans réécriture d'historique. R8 en production (#52, #53, release #54). PR 2 `fix/pwa-no-page-cache` ouverte : #56, en attente du « go » (puis release). Ensuite PR 3 à 7. Ensuite, prochaine étape de la phase 3 à choisir (notes, agenda, messages).
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
@@ -44,7 +44,7 @@ Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire
 
 ## Points d'attention
 
-- Mise en couple en prod : une seule personne appuie sur « Créer notre couple », l'autre saisit le code ; sinon blocage sans issue dans l'app (correctness-1).
+- Le couple du propriétaire et de Pauline est formé en production (2026-11-23).
 
 - Malta est en lecture seule. Le blueprint contient du code propriétaire « All Rights Reserved » : ne jamais le publier.
 - Les `.env` sont protégés en lecture par une règle de permission : on peut y ajouter une ligne, pas les relire.

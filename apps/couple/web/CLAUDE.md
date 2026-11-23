@@ -45,7 +45,9 @@ Regles front communes :
 - `next lint` n'existe plus : `pnpm lint` lance `eslint .`.
 - Service worker (decision plateforme 0014) : `@serwist/next` est un plugin webpack. `pnpm build` lance `next build --webpack` ; `next.config.ts` n'applique le plugin qu'a `PHASE_PRODUCTION_BUILD`, sinon `next dev` (Turbopack) refuse de demarrer. Pas de service worker en dev : tester cache et hors ligne avec `pnpm --filter couple-web build && pnpm --filter couple-web start`.
 - `public/sw.js*` et `public/swe-worker-*` sont generes par le build : ignores par git et ESLint, sorties de `turbo.json`. Ne jamais les editer.
-- `sw.ts` tourne dans le navigateur, hors de React : pas de `t()`, pas de `@/` qui tire du code serveur. Il importe seulement `serwist`, `@serwist/next/worker` et `WebRouterEnum`.
+- `sw.ts` tourne dans le navigateur, hors de React : pas de `t()`, pas de `@/` qui tire du code serveur. Il importe seulement `serwist`, `@serwist/next/worker`, `WebRouterEnum` et `./sw-page-request`.
+- Aucune page ni charge RSC en cache (decision 0036) : la route `NetworkOnly` de `isPageRequest` passe avant `defaultCache`, et l'activation supprime les caches `pages*` et `others` d'une version precedente. Une page lisible hors ligne demande une nouvelle decision, avec purge a la deconnexion.
+- `reloadOnOnline: false` (`next.config.ts`) : le retour du reseau ne recharge pas la page, qui viderait un formulaire ; les ecrans se relisent au retour au premier plan.
 - `skipWaiting` et `clientsClaim` : une nouvelle version du service worker prend la main sans attendre la fermeture des onglets. En cas d'ecran incoherent apres un deploiement, recharger la page ; en dernier recours, desinscrire le service worker dans les outils du navigateur.
 - La page `~offline` est precachee par `additionalPrecacheEntries` (`next.config.ts`), avec une revision nouvelle a chaque build. Une autre page de repli doit y etre ajoutee aussi.
 - Le service worker ne s'enregistre qu'en HTTPS (ou sur `localhost`) : sur le telephone, passer par `tailscale serve` (`docs/guides/local-setup.md`).

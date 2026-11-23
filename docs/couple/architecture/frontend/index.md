@@ -24,7 +24,7 @@ La PWA s'installe sur l'écran d'accueil ([décision plateforme 0007](../../../p
 | `src/app/apple-icon.png` | Icône de l'écran d'accueil de l'iPhone (180 px) |
 | `src/app/layout.tsx` | `appleWebApp` (mode plein écran sur iPhone) et `viewport.themeColor`, clair et sombre |
 | `src/app/pwa-theme.ts` | Les couleurs du thème en hexadécimal, copiées des tokens du design system |
-| `src/app/sw.ts` | Service worker Serwist, compilé en `public/sw.js` : précache du build, cache des requêtes par `defaultCache`, repli vers `WebRouterEnum.OFFLINE` quand une page ne charge pas, nouvelle version active sans attendre (`skipWaiting`, `clientsClaim`) |
+| `src/app/sw.ts` | Service worker Serwist, compilé en `public/sw.js` : précache du build ; les pages et leurs charges RSC passent toujours par le réseau (`isPageRequest`, `src/app/sw-page-request.ts`), jamais par un cache, pour qu'aucune donnée du couple ne reste lisible après une déconnexion ou hors ligne ([décision 0036](../../decisions/frontend/0036-lecture-des-donnees-par-la-page-serveur.md)) ; le reste (scripts, styles, images) suit `defaultCache` ; à l'activation, les caches de pages d'une version précédente sont supprimés ; repli vers `WebRouterEnum.OFFLINE` quand une page ne charge pas ; nouvelle version active sans attendre (`skipWaiting`, `clientsClaim`) ; pas de rechargement au retour du réseau (`reloadOnOnline: false`, `next.config.ts`) |
 | `src/app/~offline/page.tsx` | Page « Hors ligne », précachée au build |
 
 Le service worker n'existe qu'après `next build --webpack` ([décision plateforme 0014](../../../platform/decisions/0014-socle-technique-de-la-pwa.md)). Les icônes sont provisoires : un « C » blanc sur la couleur principale.
