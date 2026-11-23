@@ -35,3 +35,5 @@
 ## Règles provisoires
 
 Depuis la phase 0 (2026-11-22), la loi du code est `_knowledge/core*.md`. Les fiches thématiques (`_knowledge/backend/`, `frontend/`) arrivent avec leur phase ; d'ici là, le blueprint §9 et les synthèses font foi pour les sujets non couverts. Rien n'est en attente ici.
+- **Paquets ESM typés (2026-11-23)** : Hocuspocus 4 et Yjs ont une entrée `require` mais des déclarations ESM seules ; TS 6 refuse l'import depuis l'API CommonJS (TS1479), même en `module: NodeNext`. Les charger par `createRequire` et les typer par `import type ... with { 'resolution-mode': 'import' }` dans un seul fichier (`apps/couple/api/src/modules/notes/esm-packages.ts`). crossws (couche WebSocket de Hocuspocus) est ESM seul : utiliser `ws`.
+- **HocuspocusProvider (2026-11-23)** : avec un `websocketProvider` fourni, appeler `provider.attach()` ; une fermeture de document par le serveur ne se rouvre pas seule.
