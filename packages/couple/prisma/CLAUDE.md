@@ -2,7 +2,7 @@
 
 Persistance du domaine couple : schema Prisma 7 eclate en un fichier par modele (`prisma/models/`), migrations (`prisma/migrations/`), `PrismaService` (client cree a `onModuleInit`, `transaction()` reentrant, `current`, `includingDeleted`), `PrismaModule.forRoot()` et `forRootAsync({ inject, useFactory })`, `PrismaUnitOfWork` (port `UnitOfWork`), extension de suppression logique opt-in, helper d'unicite `violatedUniqueConstraint`, verrou consultatif transactionnel, schema Zod d'environnement.
 
-Modeles : `pairing` (`Couple`, `CouplePartner`, outbox `PairingEvent`), crees par la migration `20261122233413_init`. Tables decrites dans `docs/couple/architecture/pairing/tables.md`.
+Modeles : `pairing` (`Couple`, `CouplePartner`, outbox `PairingEvent`), crees par la migration `20261122233413_init`, tables decrites dans `docs/couple/architecture/pairing/tables.md` ; `authentication` (`Account`, sans `coupleId` ni outbox), cree par `20261123131843_authentication_account`, table decrite dans `docs/couple/architecture/authentication/tables.md`.
 
 ## A lire avant de commencer
 
@@ -30,7 +30,7 @@ Transactions, verrou optimiste, verrous consultatifs :
 - Une erreur Prisma 7 porte la cause Postgres dans `meta.driverAdapterError.cause` (`kind`, `code` ou `originalCode`, `constraint.index`), en `P2002` comme en `P2010` : passer par `driverAdapterCauseOf`, jamais lire `meta.target`.
 - `$queryRaw` ne sait pas deserialiser une colonne `void` (`SELECT pg_advisory_xact_lock(...)`) : utiliser `$executeRaw`.
 - Un verrou occupe (`55P03`) annule la transaction : la laisser echouer.
-- Un index partiel (unicite tolerante a la suppression) s'ecrit a la main dans le SQL de la migration : `couple_invitation_code_key` en est un. Prisma 7.10 ne le supprime pas dans les migrations suivantes, mais chaque migration generee se relit quand meme.
+- Un index partiel (unicite tolerante a la suppression) s'ecrit a la main dans le SQL de la migration : `couple_invitation_code_key` et `account_email_address_key` en sont. Prisma 7.10 ne le supprime pas dans les migrations suivantes, mais chaque migration generee se relit quand meme.
 - `CouplePartner` n'a pas de `deletedAt` : sa contrainte `couple_partner_user_id_key` ne voit pas la suppression logique du couple.
 - Le scope de transaction (`AsyncLocalStorage`) est global au module, pas propre a une instance : deux `PrismaService` d'un meme process (tests seulement) se rejoignent. Du code lance dans la transaction d'une instance voit `isInTransaction` vrai sur l'autre et ecrit dans cette transaction.
 - Le tag `latest` de `prisma` pointe vers une RC de la v8 : rester sur `^7.10.1`.

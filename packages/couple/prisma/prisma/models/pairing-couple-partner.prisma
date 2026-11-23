@@ -1,5 +1,5 @@
 /// A member of a couple. No deletedAt: the row lives and dies with its couple.
-/// userId is the partner's JWT `sub`; no foreign key until the authentication tables exist.
+/// userId is the partner's JWT `sub`, the id of an account; no foreign key, the two contexts keep their own tables (decision 0033).
 model CouplePartner {
   coupleId String   @map("couple_id") @db.Uuid
   userId   String   @map("user_id") @db.Uuid

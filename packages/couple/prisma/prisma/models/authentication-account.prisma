@@ -1,0 +1,16 @@
+/// The account of a partner: its id is the partner's userId, the JWT `sub`. It exists before any couple, so no coupleId (decision 0033).
+/// The email address is unique among live accounts through a partial index written in its migration.
+model Account {
+  id             String    @id @db.Uuid
+  emailAddress   String    @map("email_address") @db.VarChar(254)
+  /// Argon2id encoded hash, never the password (R2).
+  passwordHash   String    @map("password_hash") @db.VarChar(255)
+  /// Raised by each sign-out: a token carrying an older one is refused (R5, decision 0034).
+  sessionVersion Int       @map("session_version")
+  version        Int       @map("version")
+  createdAt      DateTime  @map("created_at")
+  updatedAt      DateTime  @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  @@map("account")
+}
