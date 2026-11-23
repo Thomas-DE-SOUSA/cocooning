@@ -10,7 +10,7 @@ Loaded alongside core.md for any frontend work. The web app is a Next.js PWA (D1
 
 2. **Split components aggressively.** A component that does one thing well is better than a component that does three things. Extract skeletons, error states, empty states, form sections: even if used once. The parent stays clean, the child is self-contained. A React component stays within ~125 lines (decision 0008); a container keeps the ~80-line mark of the Feature Module Pattern.
 
-3. **Container/View pattern.** Views are pure: data and callbacks through props, no data call, no business state. The only hooks a view calls are `useForm` (local form state) and `useTranslation()` (decision 0009), plus the form animation hook of the design system. Containers wire hooks to views. Views must be Storybook-renderable without mocks. Every module of `apps/couple/web` follows the Feature Module Pattern: `actions/`, `gateways/{ports,server-action,fake}/`, `presenters/`, `view-models/`, `services/`, `hooks/`, `ui/{containers,views,components}/`.
+3. **Container/View pattern.** Views are pure: data and callbacks through props, no data call, no business state. The only hooks a view calls are `useForm` (local form state) and `useTranslation()` (decision 0009), plus the form animation hook of the design system. Containers wire hooks to views. A view renders alone in its test, from props only, without mocks (platform decision 0012: no Storybook). Every module of `apps/couple/web` follows the Feature Module Pattern: `actions/`, `gateways/{ports,server-action,fake}/`, `presenters/`, `view-models/`, `services/`, `hooks/`, `ui/{containers,views,components}/`.
 
 ---
 
@@ -20,11 +20,11 @@ Loaded alongside core.md for any frontend work. The web app is a Next.js PWA (D1
 
 5. **Namespace = feature path.** `authentication/sign-in-form`, `modules/notes/editor`: never a bare `notes`.
 
-6. **Zod error messages are translated, never literal text.** The convention (raw i18n key displayed with `t(error.message)`, or a schema factory that receives `t`) is open (D25): until it is decided, follow the one already used in the module and never mix both in one module.
+6. **Zod error messages are translated, never literal text.** A form schema is built by a factory that receives `t`, `create<X>Schema(t)`, with keys `form.<field>.errors.<type>` in the feature namespace (decision 0031). Never a raw key translated at display time.
 
 7. **Locale files stay in the app.** Never in shared packages: forces full rebuild on every translation change.
 
-8. **Schemas in dedicated files.** Never inside a component or a hook. The suffix (`*.zod.ts` or `*.schema.ts`) is open (D25): one suffix for the whole app once decided.
+8. **Schemas in dedicated files.** Never inside a component or a hook. Suffix `*.zod.ts` for the whole repository (decision 0031).
 
 ---
 

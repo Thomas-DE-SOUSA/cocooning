@@ -18,7 +18,9 @@
 
 **Fait au réveil du propriétaire (2026-11-23)** : décisions 0028, 0029, 0030 acceptées (PR #12) ; écarts des décisions 0001 et 0004 dans `docs/platform/gaps/decision-checks.md` (PR #13 ; 0024 relue : la règle vise bien le code métier, pas d'écart) ; `.env` de l'API et de `couple/prisma` créés en local (secret par `openssl`).
 
-**Prochaine étape** : faire trancher D19 (Storybook) et D25 (messages Zod traduits), puis lancer la phase 3 (PWA) **seulement sur son feu vert** : il a demandé d'arrêter l'autonomie. Restent à revoir avec lui les points « À confirmer » des étapes 1 à 4 du journal (code `PAIRING_INVITATION_CODE_CONFLICT`, schéma de réponse partagé, `InProcessEventPublisher`, port 3100, suffixes). Merger `dev` dans `main` seulement à sa demande.
+D19 et D25 tranchées le 2026-11-23 : pas de Storybook (plateforme 0012), schémas `create<X>Schema(t)` en `*.zod.ts` (0031).
+
+**Prochaine étape** : phase 3 (PWA), étape par étape avec le propriétaire : il a demandé d'arrêter l'autonomie. Restent à revoir avec lui les points « À confirmer » des étapes 1 à 4 du journal (code `PAIRING_INVITATION_CODE_CONFLICT`, schéma de réponse partagé, `InProcessEventPublisher`, port 3100, suffixes). Merger `dev` dans `main` seulement à sa demande.
 
 **Recette d'un nouveau package** (éprouvée six fois ; un package de test comme `e2e-shared` est lu depuis `src`, sans build) : copier la forme de `packages/server-infrastructure/` (`package.json` à exports par sous-chemin `types → src`, `default → dist` ; `tsconfig.json` + `tsconfig.build.json` + `tsconfig.spec.json` en CommonJS pour Jest ; `jest.config.mjs` avec `moduleNameMapper` vers les `src` voisins ; `eslint.config.mjs` = `nestConfig` + `boundariesConfig`, ou `config` de base pour un package isomorphe comme le shared-kernel). Écrire son `CLAUDE.md` (français sans accents, sections figées) dans le même commit. Vérifier l'entrée CommonJS de toute dépendance (D31). Ajouter les versions aux catalogues de `pnpm-workspace.yaml`. Commit sans scope (`feat: …`). Vérifier `pnpm check-types && pnpm lint && pnpm test && pnpm build` à la racine avant de commiter.
 
@@ -26,7 +28,7 @@
 
 ## Décisions qui bloquent
 
-- Phase 3 : D19 (Storybook), D25 (messages Zod traduits). D26 (tailles de fichiers) : `couple.aggregate.ts` 142 lignes, trois specs E2E à 115.
+- D26 (tailles de fichiers) : `couple.aggregate.ts` 142 lignes, trois specs E2E à 115.
 
 ## Fichiers chauds
 

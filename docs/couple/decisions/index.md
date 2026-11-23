@@ -40,3 +40,4 @@ Le registre unique des décisions du domaine `couple`, dans l'ordre chronologiqu
 | 0028 | pairing | [Règles du code d'invitation et de la mise en couple](pairing/0028-regles-du-code-d-invitation.md) | produit | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0029 | pairing | [Le contexte `pairing` travaille avant qu'un couple existe](pairing/0029-pairing-avant-le-couple.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0030 | transverse | [Vérification du JWT de session en phase 2](0030-verification-du-jwt-en-phase-2.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0031 | frontend | [Schémas de formulaire construits avec la traduction](frontend/0031-messages-zod-traduits.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
