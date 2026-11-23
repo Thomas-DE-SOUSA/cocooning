@@ -11,6 +11,7 @@ describe('shared configs', () => {
         'business-logic.js',
         'react.js',
         'next.js',
+        'feature-modules.js',
     ])('%s loads as an ES module', (file) => {
         const run = spawnSync(
             process.execPath,

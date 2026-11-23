@@ -14,7 +14,7 @@ Regles front communes :
 - Composant serveur : `const t = await getServerTranslation('<namespace>')` (une instance i18next par appel). Composant client : `useTranslation('<namespace>')` de `react-i18next`, sous le `Provider` de `src/app/provider.tsx`.
 - Aucune URL en dur : `WebRouterEnum` de `@cocooning/couple-shared-kernel/routers` (modele : `src/app/not-found.tsx`).
 - `process.env` est interdit hors de `src/env/` (lint `next.js`). Une variable serveur : son schema dans `src/env/server.ts` (`@t3-oss/env-nextjs`, `server-only`), son `.env.example`, la liste `env` de `turbo.json` et le bloc `environment` de `web` du compose de prod, dans le meme commit. Aujourd'hui : `API_URL`, `API_TIMEOUT_MS`.
-- Une route (`src/app/`) importe seulement le point d'entree d'un module (`@/modules/<module>`) ou `src/shared/` (decision 0011).
+- Une route (`src/app/`) importe seulement le point d'entree d'un module (`@/modules/<module>`) ou `src/shared/` (decision 0011). Le lint (`config/eslint-config/feature-modules.js`) refuse `@/modules/<module>/...`, un chemin relatif vers un autre module, un hook autre que `useTranslation`/`useForm` ou un import de `next/navigation`, `gateways`, `actions` dans une vue, et un `toast.error` qui lit `.message`.
 - Erreur serveur : `toast.error(titre, { description: describeApiResultError(error, t) })`, jamais `error.message` (decision 0010, `src/shared/application/api-result/`).
 - Formulaire : react-hook-form et `zodResolver`, server action qui rend un `Result` (decision 0035, modele `src/modules/authentication/`).
 - Composants d'interface : `@cocooning/design-system`, jamais une copie locale. Couleurs par les tokens (`bg-primary`, `text-muted-foreground`), jamais en dur.
