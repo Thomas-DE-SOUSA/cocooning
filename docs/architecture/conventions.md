@@ -39,6 +39,8 @@ Cette page fixe les conventions d'architecture et de nommage communes à tout le
 | Front | Container, vue | `.container.tsx`, `.view.tsx` |
 | Front | Hook | `use-*.ts` |
 | Front | Schéma de formulaire | `.zod.ts`, comme les contrats ([décision 0031](../couple/decisions/frontend/0031-messages-zod-traduits.md)) |
+| Front | Fabrique du module d'un contexte, rangée dans `services/` | `-module.factory.ts` |
+| Front | Journal d'appels d'un fake de gateway | `-call.ts` |
 | Tests | Spec unitaire, E2E, intégration | `.spec.ts`, `.e2e-spec.ts`, `.integration-spec.ts` |
 | Tests | Contexte de test, builder | `-test.context.ts`, `-input.builder.ts` |
 | Tests | App E2E d'un contexte, données de test | `-test-app.ts`, `-test-data.ts` |

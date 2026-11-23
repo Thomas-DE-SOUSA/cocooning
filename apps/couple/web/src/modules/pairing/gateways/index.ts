@@ -12,4 +12,3 @@ export const pairingCommandGateway: PairingCommandGateway =
         renewInvitationCode: pairingInvitationCodeRenewAction,
         cancelCouple: pairingCoupleCancelAction,
     });
-export { PairingCommandGateway } from './ports/pairing-command.gateway';
