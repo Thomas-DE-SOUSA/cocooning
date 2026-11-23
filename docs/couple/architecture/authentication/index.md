@@ -28,7 +28,7 @@ L'API expose la connexion et la déconnexion, et son garde de session passe par 
 | `toAccountView`, `toSessionView` | Vues rendues : compte créé (`userId`, adresse) ; session ouverte (`userId`, jeton, échéance) | `application/mappers/` |
 
 | `SignInController`, `SignOutController` | `POST ApiRouterEnum.ACCOUNT_SESSION_OPEN` (public, `200`, `SignInResponseSchema`) et `DELETE ApiRouterEnum.ACCOUNT_SESSION_CLOSE` (`204`) | `apps/couple/api/src/modules/authentication/primary/controllers/` |
-| Écran de connexion | Formulaire, server action qui pose le cookie de session, `proxy.ts` (voir [le front de la PWA](../frontend/index.md)) | `apps/couple/web/src/modules/authentication/`, `apps/couple/web/src/proxy.ts` |
+| Écrans de connexion et de déconnexion | Formulaire, server action qui pose le cookie de session, bouton « Se déconnecter » qui ferme les sessions puis retire le cookie, `proxy.ts` (voir [le front de la PWA](../frontend/index.md)) | `apps/couple/web/src/modules/authentication/`, `apps/couple/web/src/proxy.ts` |
 | `SessionGuard` | Garde global de l'API : lit le cookie `cocooning_session`, appelle `ResolveSessionUseCase`, attache le `PartnerContext` | `apps/couple/api/src/modules/authentication/session.guard.ts` |
 | `AccountPrismaRepository` | Adaptateur de `AccountRepository` : verrou optimiste sur `version`, index `account_email_address_key` traduit en `AUTHENTICATION_ACCOUNT_ALREADY_EXISTS` | `apps/couple/api/src/modules/authentication/secondary/repositories/` |
 | `Argon2PasswordHasher`, `JwtSessionTokenSigner` | Adaptateurs : Argon2id (faux hachage au même coût pour une adresse inconnue) ; JWT HS256 aux claims `sub`, `ver`, `exp`, vérifié à l'heure de `DateTimeProvider` | `apps/couple/api/src/modules/authentication/secondary/providers/` |

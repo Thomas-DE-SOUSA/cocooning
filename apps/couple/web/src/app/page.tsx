@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getServerTranslation } from '@/i18n/server';
 import { loadMyCouple, resolveHomeDestination } from '@/modules/pairing';
+import { SignOutContainer } from '@/modules/authentication';
 
 // Read for the signed-in partner on every request, never prerendered at build (decision 0036).
 export const dynamic = 'force-dynamic';
@@ -17,6 +18,7 @@ export default async function HomePage() {
             <p className="text-sm text-muted-foreground">
                 {t('home.subtitle')}
             </p>
+            <SignOutContainer />
         </main>
     );
 }

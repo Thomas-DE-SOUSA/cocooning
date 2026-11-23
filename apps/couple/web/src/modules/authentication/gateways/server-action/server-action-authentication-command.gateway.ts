@@ -6,27 +6,38 @@ import {
 import { fail, type Result } from '@cocooning/shared-kernel/utils';
 import { AuthenticationCommandGateway } from '../ports/authentication-command.gateway';
 
-export type SignInAction = (
-    form: SignInForm,
-) => Promise<Result<null, ApiError>>;
+export type AuthenticationCommandActions = {
+    readonly signIn: (form: SignInForm) => Promise<Result<null, ApiError>>;
+    readonly signOut: () => Promise<Result<null, ApiError>>;
+};
 
 const UNREACHABLE: ApiError = {
     code: ApiErrorCodeEnum.NETWORK_ERROR,
-    message: 'Sign-in server action unreachable',
+    message: 'Authentication server action unreachable',
     backendCode: null,
 };
 
+// The call rejects when the phone is offline or the page predates a deployment (unknown action id): the hook gets a Result either way.
+async function runAction(
+    action: () => Promise<Result<null, ApiError>>,
+): Promise<Result<null, ApiError>> {
+    try {
+        return await action();
+    } catch {
+        return fail(UNREACHABLE);
+    }
+}
+
 export class ServerActionAuthenticationCommandGateway extends AuthenticationCommandGateway {
-    constructor(private readonly signInAction: SignInAction) {
+    constructor(private readonly actions: AuthenticationCommandActions) {
         super();
     }
 
-    // The call rejects when the phone is offline or the page predates a deployment (unknown action id): the hook gets a Result either way.
-    override async signIn(form: SignInForm): Promise<Result<null, ApiError>> {
-        try {
-            return await this.signInAction(form);
-        } catch {
-            return fail(UNREACHABLE);
-        }
+    override signIn(form: SignInForm): Promise<Result<null, ApiError>> {
+        return runAction(() => this.actions.signIn(form));
+    }
+
+    override signOut(): Promise<Result<null, ApiError>> {
+        return runAction(this.actions.signOut);
     }
 }
