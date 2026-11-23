@@ -9,7 +9,7 @@ Comment la PWA `apps/couple/web` parle à l'API, et ce que porte chaque package 
 | `@cocooning/couple-client-business-logic` | Logique métier front sans framework : ports des gateways, use cases, schémas de formulaire, presenters. Aujourd'hui : `ApiError` et `Translator` (`shared`) | `shared-kernel`, `couple-shared-kernel`, `couple-contract`, zod |
 | `@cocooning/client-infrastructure` | Le seul `fetch` des gateways (`httpRequest`), la vérification d'une réponse par son contrat (`parseResponse`), `resolveRoute` | `shared-kernel`, zod |
 | `@cocooning/couple-client-infrastructure` | Les gateways du couple et leur configuration HTTP commune (`createCoupleHttpConfig`) | les trois précédents, `couple-contract` |
-| `@cocooning/design-system` | Composants d'interface sans domaine | React, Tailwind |
+| `@cocooning/design-system` | Composants d'interface sans domaine et couleurs du thème (clair et sombre selon le téléphone). Aujourd'hui : `Button`, `Skeleton`, `Toaster` | React, Tailwind |
 | `apps/couple/web` | Pages, server actions, containers et vues | tout ce qui précède |
 
 ESLint (`config/eslint-config/boundaries.js`) refuse les imports qui sortent de cette table : `client-business-logic` n'importe ni React, ni Next, ni un adaptateur.
