@@ -19,7 +19,8 @@ export type NotesGatewayCall =
           readonly request: RenameNoteRequest;
       }
     | {
-          readonly operation: 'shareNote' | 'makeNotePrivate' | 'deleteNote';
+          readonly operation:
+              'getNote' | 'shareNote' | 'makeNotePrivate' | 'deleteNote';
           readonly noteId: string;
       };
 
@@ -52,6 +53,10 @@ export class FakeNotesGateway extends NotesGateway {
         query: OffsetPaginationQuery,
     ): Promise<Result<NotePageResponse, ApiError>> {
         return this.respond({ operation: 'listNotes', query }, A_NOTE_PAGE);
+    }
+
+    override getNote(noteId: string): Promise<Result<NoteResponse, ApiError>> {
+        return this.respond({ operation: 'getNote', noteId }, A_SHARED_NOTE);
     }
 
     override createNote(

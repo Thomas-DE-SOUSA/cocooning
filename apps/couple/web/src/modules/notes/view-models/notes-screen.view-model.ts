@@ -2,6 +2,7 @@ import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 
 export type NoteListItem = {
     readonly noteId: string;
+    readonly href: string;
     readonly title: string;
     readonly isShared: boolean;
     readonly isOwner: boolean;

@@ -8,6 +8,7 @@ import { NoteListView } from './note-list.view';
 
 const MY_SHARED_NOTE: NoteListItem = {
     noteId: 'note-mine',
+    href: '/notes/note-mine',
     title: 'Courses',
     isShared: true,
     isOwner: true,
@@ -15,6 +16,7 @@ const MY_SHARED_NOTE: NoteListItem = {
 };
 const PARTNER_NOTE: NoteListItem = {
     noteId: 'note-partner',
+    href: '/notes/note-partner',
     title: 'Vacances',
     isShared: true,
     isOwner: false,
@@ -23,6 +25,7 @@ const PARTNER_NOTE: NoteListItem = {
 const MY_PRIVATE_NOTE: NoteListItem = {
     ...MY_SHARED_NOTE,
     noteId: 'note-private',
+    href: '/notes/note-private',
     title: 'Idées cadeaux',
     isShared: false,
 };

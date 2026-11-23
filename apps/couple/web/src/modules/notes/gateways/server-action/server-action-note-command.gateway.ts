@@ -13,6 +13,10 @@ export type NoteCommandActions = {
     readonly createNote: (
         form: NoteTitleForm,
     ) => Promise<Result<null, ApiError>>;
+    readonly renameNote: (
+        noteId: string,
+        form: NoteTitleForm,
+    ) => Promise<Result<null, ApiError>>;
     readonly shareNote: NoteAction;
     readonly makeNotePrivate: NoteAction;
     readonly deleteNote: NoteAction;
@@ -32,6 +36,16 @@ export class ServerActionNoteCommandGateway extends NoteCommandGateway {
     override createNote(form: NoteTitleForm): Promise<Result<null, ApiError>> {
         return runServerAction(
             () => this.actions.createNote(form),
+            UNREACHABLE,
+        );
+    }
+
+    override renameNote(
+        noteId: string,
+        form: NoteTitleForm,
+    ): Promise<Result<null, ApiError>> {
+        return runServerAction(
+            () => this.actions.renameNote(noteId, form),
             UNREACHABLE,
         );
     }

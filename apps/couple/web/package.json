@@ -12,6 +12,7 @@
         "test": "jest"
     },
     "dependencies": {
+        "@cocooning/client-infrastructure": "workspace:*",
         "@cocooning/couple-client-business-logic": "workspace:*",
         "@cocooning/couple-client-infrastructure": "workspace:*",
         "@cocooning/couple-contract": "workspace:*",

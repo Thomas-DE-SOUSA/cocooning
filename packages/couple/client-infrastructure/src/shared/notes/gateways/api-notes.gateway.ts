@@ -83,6 +83,14 @@ export class ApiNotesGateway extends NotesGateway {
         );
     }
 
+    override getNote(noteId: string): Promise<Result<NoteResponse, ApiError>> {
+        return this.note(
+            HttpMethodEnum.GET,
+            this.endpoints.note(noteId),
+            NO_BODY,
+        );
+    }
+
     override shareNote(
         noteId: string,
     ): Promise<Result<NoteResponse, ApiError>> {

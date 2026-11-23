@@ -12,7 +12,7 @@ export function resolveNotesEndpoints(apiBaseUrl: string): NotesEndpoints {
     return {
         notes: resolveRoute(apiBaseUrl, ApiRouterEnum.NOTE_LIST),
         note: (noteId) =>
-            resolveRoute(apiBaseUrl, ApiRouterEnum.NOTE_RENAME, { noteId }),
+            resolveRoute(apiBaseUrl, ApiRouterEnum.NOTE_GET, { noteId }),
         share: (noteId) =>
             resolveRoute(apiBaseUrl, ApiRouterEnum.NOTE_SHARE, { noteId }),
         makePrivate: (noteId) =>

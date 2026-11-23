@@ -19,6 +19,8 @@ export default {
         '^@/(.*)$': '<rootDir>/src/$1',
         '^@cocooning/design-system$':
             '<rootDir>/../../../packages/design-system/src/index.ts',
+        '^@cocooning/client-infrastructure/(.*)$':
+            '<rootDir>/../../../packages/client-infrastructure/src/$1',
         '^@cocooning/couple-shared-kernel/(.*)$':
             '<rootDir>/../../../packages/couple/shared-kernel/src/$1',
         '^@cocooning/couple-client-business-logic/(.*)$':

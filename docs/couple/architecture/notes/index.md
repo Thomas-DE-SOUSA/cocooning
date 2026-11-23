@@ -6,7 +6,7 @@ Cette page décrit comment le contexte `notes` est construit : ses couches, ses 
 
 `notes` porte les notes du couple : leur titre, leur propriétaire, leur visibilité et leur cycle de vie. Le contenu riche, document Yjs édité à deux, arrive avec le canal temps réel ([décision 0040](../../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md)). Le contexte ne connaît ni les sessions (`authentication`) ni le code d'invitation (`pairing`) : il reçoit le `coupleId` par un port étroit ([décision 0041](../../decisions/0041-couple-de-la-requete.md)).
 
-Construit aujourd'hui : domaine et application, tables `note` et `note_event` (voir [les tables](tables.md)), adaptateur Prisma de `NoteRepository` et de `PairedCoupleProvider`. Contrat HTTP et six routes de l'API, canal temps réel (voir [l'édition à deux](collaboration.md)). À venir dans l'étape « notes » : écrans de la PWA.
+Construit aujourd'hui : domaine et application, tables `note` et `note_event` (voir [les tables](tables.md)), adaptateur Prisma de `NoteRepository` et de `PairedCoupleProvider`. Contrat HTTP et sept routes de l'API, canal temps réel (voir [l'édition à deux](collaboration.md)), liste et page d'une note dans la PWA. À venir dans l'étape « notes » : l'éditeur du contenu.
 
 ## Comment c'est construit
 
@@ -23,10 +23,10 @@ Construit aujourd'hui : domaine et application, tables `note` et `note_event` (v
 | `NotePreconditionService` | Domain service : la note visible pour le partenaire, sinon `NOTE_NOT_FOUND` | `domain/services/note-precondition.service.ts` |
 | `NoteAccessValidator` | Contrôle statique : action réservée à la propriétaire (R5, R7) | `domain/services/note-access.validator.ts` |
 | `NoteCoupleGuardService` | Guard service : construit l'`ExecutionContext` depuis le `PartnerContext`, sinon `NOTE_COUPLE_NOT_PAIRED` (R3, décision 0006) | `application/services/note-couple-guard.service.ts` |
-| `CreateNoteUseCase`, `ListNotesUseCase` (page `OffsetPage<NoteView>`), `RenameNoteUseCase`, `ShareNoteUseCase`, `MakeNotePrivateUseCase`, `DeleteNoteUseCase` | Use cases, `execute(context)` ou `execute(context, command)` | `application/use-cases/` |
+| `CreateNoteUseCase`, `ListNotesUseCase` (page `OffsetPage<NoteView>`), `GetNoteUseCase`, `RenameNoteUseCase`, `ShareNoteUseCase`, `MakeNotePrivateUseCase`, `DeleteNoteUseCase` | Use cases, `execute(context)` ou `execute(context, command)` | `application/use-cases/` |
 | `NotePrismaRepository`, `PairedCouplePrismaProvider` | Adaptateurs : note et outbox dans une transaction, verrou optimiste, visibilité dans le `where` ; lecture seule du couple formé dans les tables de `pairing` (couple supprimé exclu) | `apps/couple/api/src/modules/notes/secondary/` |
 | `toNoteView` | Vue rendue pour le partenaire qui lit : identifiant, propriétaire, `isOwner` (la lectrice est la propriétaire, pour les actions de R5 et R7), titre, visibilité, dernière modification | `application/mappers/note-view.mapper.ts` |
-| Liste des notes | Accueil de la PWA (route `/`) : les notes visibles, la création par le titre, et pour la propriétaire partager, rendre privée, supprimer après une confirmation (voir [le front de la PWA](../frontend/index.md)) | `apps/couple/web/src/modules/notes/` |
+| Liste et page d'une note | Accueil de la PWA (route `/`) : les notes visibles, la création par le titre, et pour la propriétaire partager, rendre privée, supprimer après une confirmation ; page `/notes/:noteId` pour renommer (voir [le front de la PWA](../frontend/index.md)) | `apps/couple/web/src/modules/notes/` |
 
 Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/notes/`.
 
@@ -38,6 +38,7 @@ Toutes les routes demandent une session (cookie `cocooning_session`, [décision 
 |---|---|---|---|---|
 | `POST /notes`, corps `CreateNoteRequestSchema` | `NOTE_CREATE` | `CreateNoteUseCase` | `201` | `422` titre invalide |
 | `GET /notes?page&pageSize` | `NOTE_LIST` | `ListNotesUseCase` | `200`, `NotePageResponseSchema` | `422` pagination invalide |
+| `GET /notes/:noteId` | `NOTE_GET` | `GetNoteUseCase` | `200` | `404` `NOTE_NOT_FOUND` (R4) ; `422` identifiant invalide |
 | `PATCH /notes/:noteId`, corps `RenameNoteRequestSchema` | `NOTE_RENAME` | `RenameNoteUseCase` | `200` | `404` `NOTE_NOT_FOUND` ; `409` `NOTE_VERSION_CONFLICT` ; `422` |
 | `POST /notes/:noteId/share` | `NOTE_SHARE` | `ShareNoteUseCase` | `200` | `403` `NOTE_RESERVED_TO_OWNER` ; `404` |
 | `POST /notes/:noteId/make-private` | `NOTE_MAKE_PRIVATE` | `MakeNotePrivateUseCase` | `200` | `403` ; `404` |

@@ -1,6 +1,7 @@
 export * from './authorize-note-document.use-case';
 export * from './create-note.use-case';
 export * from './delete-note.use-case';
+export * from './get-note.use-case';
 export * from './list-notes.use-case';
 export * from './load-note-document.use-case';
 export * from './make-note-private.use-case';

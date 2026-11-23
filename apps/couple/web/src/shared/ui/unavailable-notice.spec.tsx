@@ -1,18 +1,17 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { WithI18n } from '@/testing/with-i18n';
-import { NotesUnavailableView } from './notes-unavailable.view';
+import { UnavailableNotice } from './unavailable-notice';
 
-describe('Feature: the notes cannot be read', () => {
+describe('Feature: a screen whose data cannot be read', () => {
     it('explains why and offers to try again', async () => {
         const taps: string[] = [];
         render(
-            <WithI18n>
-                <NotesUnavailableView
-                    description="Cocooning ne répond pas."
-                    onRefresh={() => taps.push('refresh')}
-                />
-            </WithI18n>,
+            <UnavailableNotice
+                title="Impossible d'afficher vos notes"
+                description="Cocooning ne répond pas."
+                retryLabel="Réessayer"
+                onRetry={() => taps.push('retry')}
+            />,
         );
 
         expect(screen.getByRole('alert').textContent).toContain(
@@ -21,6 +20,6 @@ describe('Feature: the notes cannot be read', () => {
         await userEvent.click(
             screen.getByRole('button', { name: 'Réessayer' }),
         );
-        expect(taps).toEqual(['refresh']);
+        expect(taps).toEqual(['retry']);
     });
 });

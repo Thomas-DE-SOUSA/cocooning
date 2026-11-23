@@ -1,9 +1,10 @@
 import type { RouteGroup } from '../route-group';
 
-// Create and list share one path, rename and delete another: the HTTP verb tells them apart.
+// Create and list share one path, get, rename and delete another: the HTTP verb tells them apart.
 export const NotesRouteEnum = {
     NOTE_CREATE: '/notes',
     NOTE_LIST: '/notes',
+    NOTE_GET: '/notes/:noteId',
     NOTE_RENAME: '/notes/:noteId',
     NOTE_DELETE: '/notes/:noteId',
     NOTE_SHARE: '/notes/:noteId/share',

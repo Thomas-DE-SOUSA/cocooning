@@ -1,6 +1,7 @@
 import {
     CreateNoteUseCase,
     DeleteNoteUseCase,
+    GetNoteUseCase,
     ListNotesUseCase,
     MakeNotePrivateUseCase,
     RenameNoteUseCase,
@@ -13,6 +14,7 @@ import { ApiNotesGateway } from './gateways/api-notes.gateway';
 
 export type NotesModule = {
     readonly listNotes: ListNotesUseCase;
+    readonly getNote: GetNoteUseCase;
     readonly createNote: CreateNoteUseCase;
     readonly renameNote: RenameNoteUseCase;
     readonly shareNote: ShareNoteUseCase;
@@ -33,6 +35,7 @@ export function createNotesModule(
     );
     return {
         listNotes: new ListNotesUseCase(gateway),
+        getNote: new GetNoteUseCase(gateway),
         createNote: new CreateNoteUseCase(gateway),
         renameNote: new RenameNoteUseCase(gateway),
         shareNote: new ShareNoteUseCase(gateway),

@@ -3,6 +3,7 @@ import { NOTE_TITLE_MAX_LENGTH } from '@cocooning/couple-shared-kernel/limits';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { WithI18n } from '@/testing/with-i18n';
+import { NOTES_NAMESPACE } from '../../data/notes-i18n-namespaces';
 import { useNoteTitleForm } from '../../hooks/use-note-title-form';
 import { CreateNoteFormView } from './create-note-form.view';
 
@@ -13,7 +14,7 @@ function CreateNoteFormHarness({
     readonly isPending: boolean;
     readonly created: NoteTitleForm[];
 }) {
-    const form = useNoteTitleForm();
+    const form = useNoteTitleForm(NOTES_NAMESPACE, '');
     return (
         <CreateNoteFormView
             form={form}

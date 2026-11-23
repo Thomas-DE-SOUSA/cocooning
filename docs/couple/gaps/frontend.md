@@ -24,7 +24,7 @@
 
 - Type : test manquant
 - Constaté le : 2026-11-23, revue des étapes 2 et 3
-- Où : `apps/couple/web/src/app/(home)/page.tsx`, `apps/couple/web/src/app/pairing/page.tsx`, `apps/couple/web/src/modules/*/ui/containers/`, `apps/couple/web/src/modules/pairing/hooks/use-pairing-screen.ts`, `apps/couple/web/src/modules/notes/hooks/use-notes-screen.ts`
+- Où : `apps/couple/web/src/app/(home)/page.tsx`, `apps/couple/web/src/app/pairing/page.tsx`, `apps/couple/web/src/modules/*/ui/containers/`, `apps/couple/web/src/modules/pairing/hooks/use-pairing-screen.ts`, `apps/couple/web/src/modules/notes/hooks/use-notes-screen.ts`, `apps/couple/web/src/app/notes/[noteId]/page.tsx`, `apps/couple/web/src/modules/notes/hooks/use-note-page-screen.ts`
 - Constat : une route qui monte un container importe la server action et `serverEnv`, que t3-env refuse sous jsdom ; `use-pairing-screen` appelle `useRouter` de `next/navigation`, sans routeur dans un test. Les décisions qu'ils portent sont sorties dans des fonctions testées (`presentPairingPage`, `resolveHomeDestination`, `resolveCommandFailureFollowUp`, `closeSignOutSession`, `isSecureCookie`), mais le câblage lui-même (choix de la vue, clés des toasts, redirection) n'est vérifié qu'à la main.
 - Règle concernée : `core-backend.md` règle 20 pour l'esprit (E2E des points d'entrée) ; aucune règle front écrite
 - Statut : ouvert

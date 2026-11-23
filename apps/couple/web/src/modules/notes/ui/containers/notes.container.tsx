@@ -1,5 +1,8 @@
 'use client';
 
+import { useTranslation } from 'react-i18next';
+import { UnavailableNotice } from '@/shared/ui/unavailable-notice';
+import { NOTES_NAMESPACE } from '../../data/notes-i18n-namespaces';
 import { noteCommandGateway } from '../../gateways';
 import { useNotesScreen } from '../../hooks/use-notes-screen';
 import { NoteCommandEnum } from '../../view-models/note-command.view-model';
@@ -9,19 +12,21 @@ import {
 } from '../../view-models/notes-screen.view-model';
 import { CreateNoteFormView } from '../views/create-note-form.view';
 import { NoteListView } from '../views/note-list.view';
-import { NotesUnavailableView } from '../views/notes-unavailable.view';
 
 export function NotesContainer({
     viewModel,
 }: {
     readonly viewModel: NotesScreenViewModel;
 }) {
+    const { t } = useTranslation(NOTES_NAMESPACE);
     const screen = useNotesScreen(noteCommandGateway);
     if (viewModel.step === NotesStepEnum.UNAVAILABLE) {
         return (
-            <NotesUnavailableView
+            <UnavailableNotice
+                title={t('unavailable.title')}
                 description={screen.describeError(viewModel.error)}
-                onRefresh={screen.refresh}
+                retryLabel={t('unavailable.refresh')}
+                onRetry={screen.refresh}
             />
         );
     }
