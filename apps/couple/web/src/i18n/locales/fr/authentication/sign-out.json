@@ -7,6 +7,7 @@
         "signOutFailed": "Déconnexion impossible"
     },
     "apiErrors": {
+        "AUTHENTICATION_ACCOUNT_VERSION_CONFLICT": "Une autre déconnexion vient d'avoir lieu. Réessayez.",
         "NETWORK_ERROR": "Cocooning ne répond pas. Vérifiez la connexion du téléphone, puis réessayez.",
         "INVALID_RESPONSE": "La réponse du serveur est illisible. Réessayez dans un instant.",
         "VALIDATION_ERROR": "La demande envoyée est invalide.",

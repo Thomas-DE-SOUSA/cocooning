@@ -27,7 +27,7 @@ Regles front communes :
 
 - Composant client sous traduction : l'envelopper dans `WithI18n` (`src/testing/with-i18n.tsx`), le vrai provider, pas un mock.
 - Specs a cote du fichier, `*.spec.tsx` en jsdom avec Testing Library, style BDD, sans `should`.
-- Composant serveur async : `render(await Page())` (modele : `src/app/page.spec.tsx`).
+- Composant serveur async : `render(await Page())` (modele : `src/app/~offline/page.spec.tsx`). Une page qui lit l'API monte un container : voir le piege t3-env ci-dessous et l'ecart frontend 003.
 - `src/i18n/__tests__/locale-files.spec.ts` refuse un `{placeholder}` a accolade simple et des cles qui different entre langues.
 
 ## Pieges
