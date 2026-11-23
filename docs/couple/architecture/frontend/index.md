@@ -10,7 +10,7 @@ Comment la PWA `apps/couple/web` parle à l'API, et ce que porte chaque package 
 | `@cocooning/client-infrastructure` | Le seul `fetch` des gateways (`httpRequest`), la vérification d'une réponse par son contrat (`parseResponse`), `resolveRoute`, et le faux `fetch` des specs (`FakeFetch`, sous-chemin `testing`) | `shared-kernel`, zod |
 | `@cocooning/couple-client-infrastructure` | Les gateways du couple, leur configuration HTTP commune (`createCoupleHttpConfig`) et la fabrique de chaque contexte. Aujourd'hui : `ApiAuthenticationGateway` et `createAuthenticationModule` (`authentication`), `ApiPairingGateway` et `createPairingModule` (`pairing`), et `sessionHeaders`, qui renvoie la session du partenaire à l'API dans l'en-tête `Cookie` ([décision 0036](../../decisions/frontend/0036-lecture-des-donnees-par-la-page-serveur.md)) | les trois précédents, `couple-contract` |
 | `@cocooning/design-system` | Composants d'interface sans domaine et couleurs du thème (clair et sombre selon le téléphone). Aujourd'hui : `Button`, `Field` et `FieldError`, `Input`, `Label`, `Skeleton`, `Spinner`, `Toaster` | React, Tailwind |
-| `apps/couple/web` | Pages, server actions, containers et vues. Aujourd'hui : layout racine, accueil provisoire, pages d'erreur, traduction en français (`src/i18n/`), manifeste, service worker et page hors ligne, `proxy.ts`, écran de connexion (module `authentication`), descripteur des erreurs serveur (`src/shared/application/api-result/`) | tout ce qui précède |
+| `apps/couple/web` | Pages, server actions, containers et vues. Aujourd'hui : layout racine, accueil provisoire (réservé à un couple formé), pages d'erreur, traduction en français (`src/i18n/`), manifeste, service worker et page hors ligne, `proxy.ts`, écran de connexion (module `authentication`), mise en couple (module `pairing`), descripteur des erreurs serveur (`src/shared/application/api-result/`) | tout ce qui précède |
 
 ESLint (`config/eslint-config/boundaries.js`) refuse les imports qui sortent de cette table : `client-business-logic` n'importe ni React, ni Next, ni un adaptateur. Dans `apps/couple/web`, `config/eslint-config/feature-modules.js` tient les règles des modules : vues pures ([décision 0009](../../decisions/frontend/0009-use-translation-dans-les-vues.md)), erreurs serveur par le descripteur unique ([décision 0010](../../decisions/frontend/0010-affichage-erreur-serveur.md)), un module n'importe d'un autre que son point d'entrée ([décision 0011](../../decisions/frontend/0011-pwa-rangee-par-fonctionnalite.md)).
 
@@ -40,6 +40,15 @@ Exemple réel : la connexion, dans `apps/couple/web/src/modules/authentication/`
 5. Le use case appelle son port ; la gateway `ApiAuthenticationGateway` de `couple-client-infrastructure` vérifie la requête par le schéma du contrat, l'envoie par `httpRequest`, puis vérifie la réponse par `parseResponse`. Seule la connexion ajoute `x-forwarded-for` et `user-agent` : sinon l'API ne verrait que le serveur Next.
 6. Tout revient en `Result` : aucune couche ne lève d'exception. Après un succès, le container navigue vers `WebRouterEnum.HOME`.
 
+## Le chemin d'une lecture
+
+Exemple réel : la mise en couple, dans `apps/couple/web/src/modules/pairing/` ([décision 0036](../../decisions/frontend/0036-lecture-des-donnees-par-la-page-serveur.md)).
+
+1. La page `src/app/pairing/page.tsx` (rendue à chaque requête, `dynamic = 'force-dynamic'`) appelle `loadMyCouple()`, qui exécute `GetMyCoupleUseCase` du module construit par `pairingModule()`.
+2. La fabrique reçoit `getSessionToken` (`src/shared/application/session/`) sans l'appeler. `ApiPairingGateway` le lit à l'appel et renvoie la session à l'API dans l'en-tête `Cookie`.
+3. Le presenter `presentPairingPage` décide : `UNAUTHORIZED` renvoie vers `WebRouterEnum.ACCOUNT_SIGN_IN`, un couple formé vers `WebRouterEnum.HOME`, sinon l'écran « sans couple », « code d'invitation » ou « indisponible ». L'accueil suit `resolveHomeDestination`.
+4. Une action (créer le couple, nouveau code) passe par une server action qui rend `Result<null, ApiError>`, puis le container appelle `router.refresh()` : la page relit le couple. L'écran se relit aussi quand la PWA revient au premier plan et sur « Actualiser ».
+
 ## La session dans la PWA
 
 | Élément | Rôle |
@@ -48,7 +57,7 @@ Exemple réel : la connexion, dans `apps/couple/web/src/modules/authentication/`
 | `src/proxy.ts` | Renvoie vers `WebRouterEnum.ACCOUNT_SIGN_IN` toute page demandée sans cookie, sauf l'écran de connexion et `WebRouterEnum.OFFLINE`. Le `matcher` exclut les fichiers de la PWA, demandés sans cookie (manifeste, icônes, service worker). Il ne vérifie que la présence du cookie : le garde de session de l'API vérifie le jeton à chaque appel |
 | `src/env/server.ts` | `API_URL` et `API_TIMEOUT_MS`, validés au démarrage du serveur par `src/instrumentation.ts`, jamais exposés au navigateur (`server-only`) |
 
-Un cookie dont la session a été fermée ailleurs n'est pas encore retiré ([écart authentication 004](../../gaps/authentication.md)).
+Une page qui reçoit `UNAUTHORIZED` renvoie vers la connexion ; le cookie refusé reste dans le navigateur jusqu'à la connexion suivante ([écart authentication 004](../../gaps/authentication.md)).
 
 ## Les erreurs
 

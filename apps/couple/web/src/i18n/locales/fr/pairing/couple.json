@@ -1,0 +1,44 @@
+{
+    "title": "Notre couple",
+    "noCouple": {
+        "intro": "Créez votre couple, puis donnez le code d'invitation à votre partenaire.",
+        "create": "Créer notre couple",
+        "creating": "Création en cours"
+    },
+    "waiting": {
+        "intro": "Donnez ce code à votre partenaire : il lui permet de rejoindre le couple.",
+        "expiresAt": "Valable jusqu'au {{expiresAt}}",
+        "share": "Partager le code",
+        "renew": "Nouveau code",
+        "renewing": "Nouveau code en cours",
+        "refresh": "Actualiser",
+        "shareText": "Rejoins-moi sur Cocooning avec le code {{invitationCode}}."
+    },
+    "unavailable": {
+        "title": "Impossible d'afficher votre couple",
+        "refresh": "Réessayer"
+    },
+    "toast": {
+        "createFailed": "Création impossible",
+        "renewFailed": "Nouveau code impossible",
+        "copied": "Code copié",
+        "shareFailed": "Partage impossible"
+    },
+    "apiErrors": {
+        "PAIRING_PARTNER_ALREADY_IN_COUPLE": "Vous êtes déjà dans un couple. Actualisez la page.",
+        "PAIRING_COUPLE_ALREADY_PAIRED": "Votre partenaire a déjà rejoint le couple. Actualisez la page.",
+        "PAIRING_COUPLE_NOT_FOUND": "Ce couple n'existe plus. Actualisez la page.",
+        "PAIRING_COUPLE_VERSION_CONFLICT": "Le couple vient de changer. Actualisez, puis réessayez.",
+        "PAIRING_INVITATION_CODE_CONFLICT": "Ce code est déjà pris. Réessayez.",
+        "PAIRING_COUPLE_DATA_CORRUPTED": "Les données du couple sont illisibles.",
+        "AUTHENTICATION_SESSION_MISSING": "Votre session a pris fin. Reconnectez-vous.",
+        "AUTHENTICATION_SESSION_INVALID": "Votre session a pris fin. Reconnectez-vous.",
+        "NETWORK_ERROR": "Cocooning ne répond pas. Vérifiez la connexion du téléphone, puis réessayez.",
+        "INVALID_RESPONSE": "La réponse du serveur est illisible. Réessayez dans un instant.",
+        "VALIDATION_ERROR": "Les informations envoyées sont invalides.",
+        "UNAUTHORIZED": "Votre session a pris fin. Reconnectez-vous.",
+        "NOT_FOUND": "Ce couple est introuvable. Actualisez la page.",
+        "CONFLICT": "Le couple vient de changer. Actualisez, puis réessayez.",
+        "UNKNOWN": "Une erreur inattendue est survenue. Réessayez dans un instant."
+    }
+}
