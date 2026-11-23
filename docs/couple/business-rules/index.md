@@ -4,3 +4,4 @@ Ce que le couple veut que l'app impose, rangé par contexte : règles, cas et gl
 
 - [Comptes et connexion](authentication/index.md) : contexte `authentication`
 - [Mise en couple](pairing/index.md) : contexte `pairing`
+- [Notes](notes/index.md) : contexte `notes`
