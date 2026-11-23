@@ -43,10 +43,12 @@ export async function writeCouple(
 }
 
 // Partners have no lifecycle of their own: rewritten with their couple (adapters.md rule 13).
+// A cancelled couple keeps none, so the unique partner index lets them pair again (R8, decision 0038).
 export async function writePartners(
     tx: Transaction,
     snapshot: CoupleSnapshot,
 ): Promise<void> {
     await tx.couplePartner.deleteMany({ where: { coupleId: snapshot.id } });
+    if (snapshot.metadata.deletedAt !== null) return;
     await tx.couplePartner.createMany({ data: toPartnerRows(snapshot) });
 }

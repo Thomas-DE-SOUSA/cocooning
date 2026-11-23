@@ -9,6 +9,7 @@ Les termes propres à la mise en couple, avec leur nom dans le code. Les termes 
 | **Rejoindre le couple** | `JoinCoupleUseCase`, `Couple.join` | Le second partenaire saisit le code et entre dans le couple |
 | **Code d'invitation** | `InvitationCode` | 8 signes, valable 48 heures, utilisable une fois |
 | **Renouveler le code** | `RenewInvitationCodeUseCase`, `Couple.renewInvitationCode` | Remplacer le code d'un couple en attente |
+| **Annuler le couple** | `CancelCoupleUseCase`, `Couple.cancel` | Le seul membre d'un couple en attente le supprime, et son code avec |
 | **Membre du couple** | `CouplePartner` | Un partenaire inscrit dans le couple, avec sa date d'arrivée |
 | **Couple en attente** | `CouplePairingStatus` `PENDING` | Un seul membre, un code valable |
 | **Couple formé** | `CouplePairingStatus` `PAIRED` | Les deux partenaires sont membres, plus de code |

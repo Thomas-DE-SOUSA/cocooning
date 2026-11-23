@@ -57,6 +57,13 @@ Je demande un nouveau code : l'ancien ne vaut plus rien et le délai repart de z
 - Dans le code : `RenewInvitationCodeUseCase`, `Couple.renewInvitationCode`.
 - Source : décision 0028. Validée par : Thomas De Sousa, 2026-11-23.
 
+### R8. Le seul membre d'un couple en attente peut l'annuler
+
+J'ai créé un couple par erreur, ou l'autre en a créé un de son côté : j'annule le mien, son code ne vaut plus rien et je peux rejoindre le couple de l'autre. Un couple formé ne s'annule pas.
+
+- Dans le code : `CancelCoupleUseCase`, `Couple.cancel` (suppression douce, lignes `couple_partner` effacées).
+- Source : [décision 0038](../../decisions/pairing/0038-annuler-un-couple-en-attente.md). Validée par : Thomas De Sousa, 2026-11-23.
+
 ## Cas et exceptions
 
 | Situation | Ce qui s'applique |
@@ -65,8 +72,10 @@ Je demande un nouveau code : l'ancien ne vaut plus rien et le délai repart de z
 | Saisir un code quand on est déjà dans un couple, y compris le sien | Refusée, `409` `PAIRING_PARTNER_ALREADY_IN_COUPLE` (R1) |
 | Code inconnu, expiré ou déjà utilisé | Refusée, `422` `PAIRING_INVITATION_CODE_INVALID` (R6) |
 | Renouveler le code d'un couple formé | Refusée, `409` `PAIRING_COUPLE_ALREADY_PAIRED` (R7) |
+| Annuler un couple formé | Refusée, `409` `PAIRING_COUPLE_ALREADY_PAIRED` (R8) |
+| Annuler sans avoir de couple | Refusée, `404` `PAIRING_COUPLE_NOT_FOUND` (R8) |
 | Demander son couple sans en avoir | Refusée, `404` `PAIRING_COUPLE_NOT_FOUND` : l'app montre l'écran d'invitation |
-| Quitter un couple | Pas encore possible, à décider avec le propriétaire |
+| Quitter un couple formé | Pas encore possible, à décider avec le propriétaire |
 
 ## Voir aussi
 
