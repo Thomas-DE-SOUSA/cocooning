@@ -44,7 +44,7 @@ Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire
 
 ## Points d'attention
 
-- Mise en couple en prod : si les deux ont créé un couple, l'un appuie sur « Annuler ce couple » puis saisit le code de l'autre (R8, en production depuis #54).
+- Le couple du propriétaire et de Pauline est formé en production (2026-11-23).
 
 - Malta est en lecture seule. Le blueprint contient du code propriétaire « All Rights Reserved » : ne jamais le publier.
 - Les `.env` sont protégés en lecture par une règle de permission : on peut y ajouter une ligne, pas les relire.
