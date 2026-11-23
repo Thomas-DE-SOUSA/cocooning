@@ -12,4 +12,14 @@ describe('Feature: build the URL of an API route', () => {
             'http://localhost:3100/pairing/couple',
         );
     });
+
+    describe('Scenario: a route with a parameter', () => {
+        it('fills the segment with the encoded value', () => {
+            expect(
+                resolveRoute('http://api.test', '/notes/:noteId/share', {
+                    noteId: 'a b/c',
+                }),
+            ).toBe('http://api.test/notes/a%20b%2Fc/share');
+        });
+    });
 });
