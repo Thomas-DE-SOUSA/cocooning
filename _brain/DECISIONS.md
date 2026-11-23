@@ -49,13 +49,13 @@ Statuts possibles : `ouverte`, `décidée`, `appliquée`, `remplacée`.
 | D16 | Versionnement des espaces de travail des agents | ouverte | — | — | phase 5 |
 | D17 | BMAD | ouverte | — | — | phase 5 |
 | D18 | Portes de qualité (Stryker, couverture, Playwright, Sonar) | ouverte | — | — | phase 2 |
-| D19 | Storybook | ouverte | — | — | phase 3 |
+| D19 | Storybook | décidée | pas de Storybook ; une vue prouve son isolation par son test (« Pas de Storybook (Recommandé) ») → [ADR](../docs/platform/decisions/0012-pas-de-storybook.md) | 2026-11-23 | — |
 | D20 | Trailer `Co-Authored-By` des commits IA | ouverte | — | — | phase 5 |
 | D21 | Plateforme d'observabilité | ouverte | — | — | phase 6 |
 | D22 | Assistant IA | ouverte | — | — | phase 7 |
 | D23 | Flux de branches | décidée | `main` (stable), `dev` (intégration, branche par défaut), une branche par feature depuis `dev`, commits atomiques (« git atomic branch main qui sera sur un dev puis chaque feature en branch ») → [ADR](../docs/platform/decisions/0009-flux-de-branches.md) | 2026-11-22 | — |
 | D24 | Numérotation des ADR fondatrices | décidée | ADR fondatrices renumérotées 0001 à 0012, chacune citant son contrôle automatique (« OK pour tout ») → [ADR](../docs/platform/decisions/0010-numerotation-adr-fondatrices.md) | 2026-11-22 | — |
-| D25 | Messages Zod traduits et suffixe des schémas | ouverte | — | — | phase 3 |
+| D25 | Messages Zod traduits et suffixe des schémas | décidée | factory `create<X>Schema(t)`, clés `form.<field>.errors.<type>`, suffixe `*.zod.ts` (« Schéma qui reçoit la traduction (Recommandé) ») → [ADR](../docs/couple/decisions/frontend/0031-messages-zod-traduits.md) | 2026-11-23 | — |
 | D26 | Exceptions aux tailles de fichiers | ouverte | — | — | phase 2 |
 | D27 | Ports transverses d'un composite | ouverte | — | — | premier composite |
 | D28 | Review agentique au démarrage | ouverte | — | — | phase 5 |
