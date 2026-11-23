@@ -18,7 +18,11 @@ import {
     type SignInResponse,
     SignInResponseSchema,
 } from '@cocooning/couple-contract/authentication';
-import { fail, type Result } from '@cocooning/shared-kernel/utils';
+import { fail, ok, type Result } from '@cocooning/shared-kernel/utils';
+import {
+    type SessionTokenProvider,
+    sessionHeaders,
+} from '../../session/session-headers';
 import type { AuthenticationEndpoints } from '../endpoints/authentication.endpoints';
 
 const INVALID_REQUEST: ApiError = {
@@ -43,6 +47,7 @@ export class ApiAuthenticationGateway extends AuthenticationGateway {
     constructor(
         private readonly endpoints: AuthenticationEndpoints,
         private readonly httpConfig: HttpRequestConfig<ApiError>,
+        private readonly getSessionToken: SessionTokenProvider,
     ) {
         super();
     }
@@ -63,5 +68,21 @@ export class ApiAuthenticationGateway extends AuthenticationGateway {
             this.httpConfig,
         );
         return parseResponse(result, SignInResponseSchema, this.httpConfig);
+    }
+
+    // 204 without body: the sessions of every device are closed (decision 0034).
+    override async signOut(): Promise<Result<null, ApiError>> {
+        const headers = await sessionHeaders(this.getSessionToken);
+        if (!headers.success) return headers;
+        const result = await httpRequest(
+            {
+                url: this.endpoints.signOut,
+                method: HttpMethodEnum.DELETE,
+                headers: headers.value,
+                body: null,
+            },
+            this.httpConfig,
+        );
+        return result.success ? ok(null) : result;
     }
 }
