@@ -49,5 +49,5 @@ Le registre unique des décisions du domaine `couple`, dans l'ordre chronologiqu
 | 0037 | frontend | [Chaque écran traduit les erreurs qu'il peut recevoir](frontend/0037-traductions-des-erreurs-par-ecran.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0038 | pairing | [Annuler un couple en attente](pairing/0038-annuler-un-couple-en-attente.md) | produit | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0039 | notes | [Règles des notes](notes/0039-regles-des-notes.md) | produit | acceptée | 2026-11-23 | Thomas De Sousa |
-| 0040 | notes | [Édition à deux par Hocuspocus dans l'API](notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md) | technique | proposée | 2026-11-23 | à compléter |
-| 0041 | transverse | [Le couple de la requête vient de `pairing`](0041-couple-de-la-requete.md) | technique | proposée | 2026-11-23 | à compléter |
+| 0040 | notes | [Édition à deux par Hocuspocus dans l'API](notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0041 | transverse | [Le couple de la requête vient de `pairing`](0041-couple-de-la-requete.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
