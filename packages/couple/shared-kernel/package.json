@@ -22,6 +22,10 @@
         "./exceptions": {
             "types": "./src/exceptions/index.ts",
             "default": "./dist/exceptions/index.js"
+        },
+        "./limits": {
+            "types": "./src/limits/index.ts",
+            "default": "./dist/limits/index.js"
         }
     },
     "dependencies": {

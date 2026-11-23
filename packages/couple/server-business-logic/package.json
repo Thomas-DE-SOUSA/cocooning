@@ -11,6 +11,10 @@
         "test": "jest --coverage"
     },
     "exports": {
+        "./authentication": {
+            "types": "./src/authentication/index.ts",
+            "default": "./dist/authentication/index.js"
+        },
         "./pairing": {
             "types": "./src/pairing/index.ts",
             "default": "./dist/pairing/index.js"

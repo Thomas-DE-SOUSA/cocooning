@@ -11,6 +11,16 @@ export const EXCEPTION_STATUSES: ExceptionStatusTable = {
         HttpStatus.UNAUTHORIZED,
     [AuthenticationExceptionCodeEnum.AUTHENTICATION_SESSION_INVALID]:
         HttpStatus.UNAUTHORIZED,
+    [AuthenticationExceptionCodeEnum.AUTHENTICATION_CREDENTIALS_INVALID]:
+        HttpStatus.UNAUTHORIZED,
+    [AuthenticationExceptionCodeEnum.AUTHENTICATION_EMAIL_ADDRESS_INVALID]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
+    [AuthenticationExceptionCodeEnum.AUTHENTICATION_PASSWORD_TOO_WEAK]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
+    [AuthenticationExceptionCodeEnum.AUTHENTICATION_ACCOUNT_ALREADY_EXISTS]:
+        HttpStatus.CONFLICT,
+    [AuthenticationExceptionCodeEnum.AUTHENTICATION_ACCOUNT_VERSION_CONFLICT]:
+        HttpStatus.CONFLICT,
     [PairingExceptionCodeEnum.PAIRING_PARTNER_ALREADY_IN_COUPLE]:
         HttpStatus.CONFLICT,
     [PairingExceptionCodeEnum.PAIRING_INVITATION_CODE_INVALID]:
