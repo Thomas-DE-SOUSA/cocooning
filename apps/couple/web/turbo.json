@@ -4,6 +4,7 @@
     "tasks": {
         "build": {
             "env": ["API_URL", "API_TIMEOUT_MS"],
+            "passThroughEnv": ["NEXT_PHASE"],
             "outputs": [
                 ".next/**",
                 "!.next/cache/**",
