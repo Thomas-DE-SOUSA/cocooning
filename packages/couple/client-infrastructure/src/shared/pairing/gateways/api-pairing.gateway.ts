@@ -15,7 +15,7 @@ import {
     type JoinCoupleRequest,
     JoinCoupleRequestSchema,
 } from '@cocooning/couple-contract/pairing';
-import { fail, type Result } from '@cocooning/shared-kernel/utils';
+import { fail, ok, type Result } from '@cocooning/shared-kernel/utils';
 import type { SessionTokenProvider } from '../../session/session-headers';
 import { sessionRequest } from '../../session/session-request';
 import type { PairingEndpoints } from '../endpoints/pairing.endpoints';
@@ -67,6 +67,20 @@ export class ApiPairingGateway extends PairingGateway {
             this.endpoints.renewInvitationCode,
             NO_BODY,
         );
+    }
+
+    // R8: the API answers 204 without a body.
+    override async cancelCouple(): Promise<Result<null, ApiError>> {
+        const result = await sessionRequest(
+            this.getSessionToken,
+            {
+                url: this.endpoints.cancelCouple,
+                method: HttpMethodEnum.DELETE,
+                body: NO_BODY,
+            },
+            this.httpConfig,
+        );
+        return result.success ? ok(null) : result;
     }
 
     private async send(

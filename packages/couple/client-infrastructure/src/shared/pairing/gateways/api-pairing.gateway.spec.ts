@@ -76,6 +76,43 @@ describe('Feature: the PWA forms the couple through the API', () => {
         });
     });
 
+    describe('Scenario: R8, the partner cancels a pending couple', () => {
+        it('deletes the couple with the session cookie, from a 204 without body', async () => {
+            fakeFetch.givenResponse(204, '');
+
+            await expect(aGateway().cancelCouple()).resolves.toEqual(ok(null));
+            expect(fakeFetch.calls).toEqual([
+                {
+                    url: 'http://api.test/pairing/couple',
+                    method: 'DELETE',
+                    headers: { ...ACCEPT, ...SESSION_COOKIE },
+                    body: null,
+                },
+            ]);
+        });
+
+        it('returns CONFLICT with the backend code of a formed couple', async () => {
+            fakeFetch.givenResponse(
+                409,
+                JSON.stringify({
+                    status: 409,
+                    code: PairingExceptionCodeEnum.PAIRING_COUPLE_ALREADY_PAIRED,
+                    message: 'Couple already paired',
+                    context: null,
+                }),
+            );
+
+            await expect(aGateway().cancelCouple()).resolves.toEqual(
+                fail({
+                    code: ApiErrorCodeEnum.CONFLICT,
+                    message: 'Couple already paired',
+                    backendCode:
+                        PairingExceptionCodeEnum.PAIRING_COUPLE_ALREADY_PAIRED,
+                }),
+            );
+        });
+    });
+
     describe('Scenario: R6, the API refuses the code', () => {
         it('returns VALIDATION_ERROR with the backend code', async () => {
             fakeFetch.givenResponse(
