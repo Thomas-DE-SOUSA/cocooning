@@ -18,4 +18,4 @@
 - Où : `apps/couple/web/src/modules/authentication/data/authentication-i18n-namespaces.spec.ts`
 - Constat : la décision 0010 annonce un test qui vérifie que chaque code d'exception du contrat `@cocooning/couple-contract` a sa clé `apiErrors.<code>` « dans chaque fichier de langue ». Le seul test existant vérifie les codes que la connexion peut recevoir, dans le namespace de son écran. Exiger tous les codes du contrat dans chaque namespace d'écran ferait traduire des refus qu'un écran ne reçoit jamais ; la portée reste à fixer avant le deuxième écran.
 - Règle concernée : [décision 0010](../decisions/frontend/0010-affichage-erreur-serveur.md)
-- Statut : ouvert
+- Statut : clos, tranché par la [décision 0037](../decisions/frontend/0037-traductions-des-erreurs-par-ecran.md)

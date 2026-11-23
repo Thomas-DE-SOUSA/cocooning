@@ -1,10 +1,10 @@
 ---
 nature: technique
-status: proposée
+status: acceptée
 date: 2026-11-23
 deciders: [Thomas De Sousa]
-validated-by: à compléter
-validated-on:
+validated-by: Thomas De Sousa, 2026-11-23
+validated-on: 2026-11-23
 supersedes:
 superseded-by:
 premortem:
@@ -14,7 +14,7 @@ premortem:
 
 ## Contexte
 
-La [décision 0010](0010-affichage-erreur-serveur.md) range les clés `apiErrors.<code>` dans le fichier de langue de l'écran et annonce un test qui vérifie que « chaque code d'exception du contrat » a sa clé. Le contrat compte déjà quatorze codes (`authentication`, `pairing`) et en comptera bien plus. Exiger tous les codes dans chaque écran ferait traduire, dans l'écran de connexion, des refus de mise en couple qu'il ne reçoit jamais ([écart frontend 002](../../gaps/frontend.md)). Le plan de l'étape 3 (D37) propose de trancher cette portée.
+La [décision 0010](0010-affichage-erreur-serveur.md) range les clés `apiErrors.<code>` dans le fichier de langue de l'écran et annonce un test qui vérifie que « chaque code d'exception du contrat » a sa clé. Le contrat compte déjà quatorze codes (`authentication`, `pairing`) et en comptera bien plus. Exiger tous les codes dans chaque écran ferait traduire, dans l'écran de connexion, des refus de mise en couple qu'il ne reçoit jamais ([écart frontend 002](../../gaps/frontend.md)). Le propriétaire a tranché cette portée avec le plan de l'étape 3 (D37, « go » sur la PR 1).
 
 ## Décision
 
