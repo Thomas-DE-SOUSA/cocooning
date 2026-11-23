@@ -17,6 +17,7 @@ Regles front communes :
 - Une route (`src/app/`) importe seulement le point d'entree d'un module (`@/modules/<module>`) ou `src/shared/` (decision 0011). Le lint (`config/eslint-config/feature-modules.js`) refuse `@/modules/<module>/...`, un chemin relatif vers un autre module, un hook autre que `useTranslation`/`useForm` ou un import de `next/navigation`, `gateways`, `actions` dans une vue, et un `toast.error` qui lit `.message`.
 - Erreur serveur : `toast.error(titre, { description: describeApiResultError(error, t) })`, jamais `error.message` (decision 0010, `src/shared/application/api-result/`).
 - Formulaire : react-hook-form et `zodResolver`, server action qui rend un `Result` (decision 0035, modele `src/modules/authentication/`).
+- Gateway `server-action/` d'un module : chaque appel passe par `runServerAction(action, UNREACHABLE)` (`src/shared/application/server-action/`), qui rend `NETWORK_ERROR` quand l'action rejette et recharge la page quand elle date d'avant un deploiement. Jamais de `try/catch` recopie dans un module.
 - Composants d'interface : `@cocooning/design-system`, jamais une copie locale. Couleurs par les tokens (`bg-primary`, `text-muted-foreground`), jamais en dur.
 - `*.tsx` : 125 lignes visees, 200 au plus (decision 0008).
 - Couleurs du telephone (manifeste, `viewport.themeColor`) : `src/app/pwa-theme.ts`, copie en hexadecimal des tokens oklch du design system. Un token de fond change : le reporter ici.

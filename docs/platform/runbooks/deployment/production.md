@@ -15,7 +15,7 @@ Niveau de preuve : exécuté en conditions réelles sur la VM le 2026-11-23 (pr�
 
 ## Impact
 
-Pendant une mise à jour, la PWA et l'API redémarrent : quelques secondes d'indisponibilité. Les données restent dans les volumes `postgres-data` et `tailscale-state`.
+Pendant une mise à jour, la PWA et l'API redémarrent : quelques secondes d'indisponibilité. Les données restent dans les volumes `postgres-data` et `tailscale-state`. Une PWA restée ouverte pendant la mise à jour se recharge d'elle-même à sa prochaine action (`runServerAction`) ou à son retour au premier plan.
 
 ## Diagnostic
 
