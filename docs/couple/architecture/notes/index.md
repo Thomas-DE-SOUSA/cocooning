@@ -6,7 +6,7 @@ Cette page décrit comment le contexte `notes` est construit : ses couches, ses 
 
 `notes` porte les notes du couple : leur titre, leur propriétaire, leur visibilité et leur cycle de vie. Le contenu riche, document Yjs édité à deux, arrive avec le canal temps réel ([décision 0040](../../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md)). Le contexte ne connaît ni les sessions (`authentication`) ni le code d'invitation (`pairing`) : il reçoit le `coupleId` par un port étroit ([décision 0041](../../decisions/0041-couple-de-la-requete.md)).
 
-Construit aujourd'hui : domaine et application, tables `note` et `note_event` (voir [les tables](tables.md)), adaptateur Prisma de `NoteRepository` et de `PairedCoupleProvider`. Contrat HTTP et six routes de l'API. À venir dans l'étape « notes » : canal temps réel, écrans de la PWA.
+Construit aujourd'hui : domaine et application, tables `note` et `note_event` (voir [les tables](tables.md)), adaptateur Prisma de `NoteRepository` et de `PairedCoupleProvider`. Contrat HTTP et six routes de l'API, canal temps réel (voir [l'édition à deux](collaboration.md)). À venir dans l'étape « notes » : écrans de la PWA.
 
 ## Comment c'est construit
 
@@ -17,6 +17,8 @@ Construit aujourd'hui : domaine et application, tables `note` et `note_event` (v
 | `NoteVisibilityEnum` | `PRIVATE`, `SHARED`, partagé avec la PWA | `packages/couple/shared-kernel/src/enums/note-visibility.enum.ts` |
 | `NoteException` | Exception du contexte, codes de `NoteExceptionCodeEnum` | `domain/exceptions/`, `packages/couple/contract/src/notes/exceptions/exception-codes.ts` |
 | `NoteRepository` | Port : `save`, `findVisibleById`, `findVisible` (une page par offset et le total, [décision 0025](../../decisions/0025-pagination.md)) ; la visibilité est filtrée par la requête (R4) | `domain/ports/note.repository.ts` |
+| `NoteContentRepository`, `NoteCollaborationProvider` | Ports du canal temps réel : état Yjs de la note ; déconnexion des éditeurs qui perdent la note (R5, R7) | `domain/ports/` |
+| `AuthorizeNoteDocumentUseCase`, `LoadNoteDocumentUseCase`, `SaveNoteDocumentUseCase` | Use cases du canal : accès à l'ouverture, chargement, enregistrement du document | `application/use-cases/` |
 | `PairedCoupleProvider` | Port : le couple formé d'un partenaire, seule recherche sans `coupleId` du contexte (décision 0041) | `domain/ports/paired-couple.provider.ts` |
 | `NotePreconditionService` | Domain service : la note visible pour le partenaire, sinon `NOTE_NOT_FOUND` | `domain/services/note-precondition.service.ts` |
 | `NoteAccessValidator` | Contrôle statique : action réservée à la propriétaire (R5, R7) | `domain/services/note-access.validator.ts` |

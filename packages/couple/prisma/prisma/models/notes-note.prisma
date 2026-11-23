@@ -1,15 +1,17 @@
-/// A note of the couple (decision 0039): metadata of the aggregate `Note`. Its rich content arrives with the real-time channel (decision 0040).
+/// A note of the couple (decision 0039): metadata of the aggregate `Note`, and the Yjs state of its content (decision 0040).
 model Note {
-  id         String    @id @db.Uuid
-  coupleId   String    @map("couple_id") @db.Uuid
-  ownerId    String    @map("owner_id") @db.Uuid
+  id           String    @id @db.Uuid
+  coupleId     String    @map("couple_id") @db.Uuid
+  ownerId      String    @map("owner_id") @db.Uuid
   /// NOTE_TITLE_MAX_LENGTH of the couple shared kernel (R8).
-  title      String    @db.VarChar(120)
-  visibility String    @db.VarChar(20)
-  version    Int       @map("version")
-  createdAt  DateTime  @map("created_at")
-  updatedAt  DateTime  @map("updated_at")
-  deletedAt  DateTime? @map("deleted_at")
+  title        String    @db.VarChar(120)
+  visibility   String    @db.VarChar(20)
+  /// Yjs state of the content, written by the real-time channel; null until the first edit.
+  contentState Bytes?    @map("content_state")
+  version      Int       @map("version")
+  createdAt    DateTime  @map("created_at")
+  updatedAt    DateTime  @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
 
   // The list of a couple, most recently changed first (core.md rule 27: coupleId leads).
   @@index([coupleId, updatedAt(sort: Desc)])

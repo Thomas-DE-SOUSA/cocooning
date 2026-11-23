@@ -47,7 +47,7 @@ Je partage ma note ou je la rends privée ; l'autre ne peut ni l'un ni l'autre. 
 
 Nous écrivons tous les deux dans la liste de courses en même temps : rien ne se perd, chacun voit les frappes de l'autre.
 
-- Dans le code : `RenameNoteUseCase` pour le titre ; le contenu arrive avec le canal temps réel ([décision 0040](../../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md)).
+- Dans le code : `RenameNoteUseCase` pour le titre ; le contenu passe par le canal temps réel, `AuthorizeNoteDocumentUseCase`, `LoadNoteDocumentUseCase`, `SaveNoteDocumentUseCase` ([décision 0040](../../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md)).
 - Source : [décision 0016](../../decisions/0016-edition-des-notes-en-temps-reel.md), décision 0039. Validée par : Thomas De Sousa, 2026-11-23.
 
 ## Suppression

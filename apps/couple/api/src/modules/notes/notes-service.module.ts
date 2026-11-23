@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import {
+    AuthorizeNoteDocumentUseCase,
     CreateNoteUseCase,
     DeleteNoteUseCase,
     ListNotesUseCase,
+    LoadNoteDocumentUseCase,
     MakeNotePrivateUseCase,
     NoteCoupleGuardService,
     PairedCoupleProvider,
     RenameNoteUseCase,
+    SaveNoteDocumentUseCase,
     ShareNoteUseCase,
 } from '@cocooning/couple-server-business-logic/notes';
 import { NotesSecondaryModule } from './notes-secondary.module';
@@ -20,6 +23,24 @@ const mutation = <T>(
         (d) => new token(d.repository, d.preconditions, d.clock, d.publishing),
     );
 
+// R5, R7: a change that withdraws the note disconnects its editors (decision 0040).
+const revoking = <T>(
+    token: new (
+        ...args: ConstructorParameters<typeof MakeNotePrivateUseCase>
+    ) => T,
+) =>
+    notesUseCase(
+        token,
+        (d) =>
+            new token(
+                d.repository,
+                d.preconditions,
+                d.collaboration,
+                d.clock,
+                d.publishing,
+            ),
+    );
+
 const useCases = [
     notesUseCase(
         CreateNoteUseCase,
@@ -28,8 +49,20 @@ const useCases = [
     notesUseCase(ListNotesUseCase, (d) => new ListNotesUseCase(d.repository)),
     mutation(RenameNoteUseCase),
     mutation(ShareNoteUseCase),
-    mutation(MakeNotePrivateUseCase),
-    mutation(DeleteNoteUseCase),
+    revoking(MakeNotePrivateUseCase),
+    revoking(DeleteNoteUseCase),
+    notesUseCase(
+        AuthorizeNoteDocumentUseCase,
+        (d) => new AuthorizeNoteDocumentUseCase(d.preconditions),
+    ),
+    notesUseCase(
+        LoadNoteDocumentUseCase,
+        (d) => new LoadNoteDocumentUseCase(d.contents, d.preconditions),
+    ),
+    notesUseCase(
+        SaveNoteDocumentUseCase,
+        (d) => new SaveNoteDocumentUseCase(d.contents, d.clock),
+    ),
 ];
 
 // Decision 0006: the guard service reading pairing is a provider, injected where the couple of a request is needed.
@@ -44,6 +77,7 @@ const noteCoupleGuardService = {
     imports: [NotesSecondaryModule],
     providers: [...useCases, noteCoupleGuardService],
     exports: [
+        NotesSecondaryModule,
         ...useCases.map(({ provide }) => provide),
         NoteCoupleGuardService,
     ],

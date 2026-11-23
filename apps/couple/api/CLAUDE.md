@@ -11,7 +11,7 @@ API NestJS 11 (CommonJS, decision plateforme 0011) du domaine couple : racine de
 - `src/commands/` : commandes d'exploitation lancees sur la VM (decision plateforme 0016, `CLAUDE.md` du dossier). `create-account/` cree un compte (R6) dans un contexte Nest sans HTTP, sur `AuthenticationSecondaryModule`.
 - `src/modules/pairing/` : premier contexte (stub `CLAUDE.md`). Trois modules : `PairingModule` (quatre controleurs), `PairingServiceModule` (use cases par `pairingUseCase()`, `PairingPreconditionService` et `EventPublishingService` crees dans la fabrique), `PairingSecondaryModule` (`provide: CoupleRepository`, `useClass: CouplePrismaRepository`). Routes `ApiRouterEnum.COUPLE_*`. `env.ts` du module : `PAIRING_INVITATION_CODE_TTL_HOURS`.
 - `MessagingModule` (`@cocooning/server-infrastructure/messaging`) fournit `EventPublisher` : publication en processus, qui ne fait que journaliser tant qu'aucun abonne n'existe ; le relais de l'outbox livre (decision 0021).
-- `src/modules/notes/` : premier contexte du couple (stub `CLAUDE.md`). `NotesModule` : six controleurs (`ApiRouterEnum.NOTE_*`), tous sous `@UseGuards(NoteCoupleGuard)` (`primary/couple/`), qui pose l'`ExecutionContext` du couple forme apres le garde de session (decision 0041) ; `@CurrentCouple()` le lit, sinon `EXECUTION_CONTEXT_MISSING` (500). Puis `NotesServiceModule` (use cases par `notesUseCase()`, `NoteCoupleGuardService` en provider, decision 0006), `NotesSecondaryModule` (`NoteRepository` -> `NotePrismaRepository`, `PairedCoupleProvider` -> `PairedCouplePrismaProvider`, decision 0041).
+- `src/modules/notes/` : premier contexte du couple (stub `CLAUDE.md`). `NotesModule` : six controleurs (`ApiRouterEnum.NOTE_*`), tous sous `@UseGuards(NoteCoupleGuard)` (`primary/couple/`), qui pose l'`ExecutionContext` du couple forme apres le garde de session (decision 0041) ; `@CurrentCouple()` le lit, sinon `EXECUTION_CONTEXT_MISSING` (500). Canal temps reel Hocuspocus sur `/collab` (`NoteCollaborationServer`, decision 0040). Puis `NotesServiceModule` (use cases par `notesUseCase()`, `NoteCoupleGuardService` en provider, decision 0006), `NotesSecondaryModule` (`NoteRepository` -> `NotePrismaRepository`, `PairedCoupleProvider` -> `PairedCouplePrismaProvider`, decision 0041).
 - Un nouveau contexte : `src/modules/<contexte>/`, sur le modele de `pairing`, avec son stub `CLAUDE.md` qui importe le `CLAUDE.md` du contexte metier.
 
 ## A lire avant de commencer
@@ -65,6 +65,7 @@ Transactions et verrous : `../../../_knowledge/backend/concurrency.md`.
 - Express 5 : une route joker s'ecrit `{*path}` (path-to-regexp 8).
 - `@nestjs/config` 12 et `@nestjs/jwt` 12 sont en ESM pur : rester en 4 et 11.
 - `jsonwebtoken` et `argon2` : voir les pieges de `src/modules/authentication/CLAUDE.md`.
+- Hocuspocus 4 et Yjs ont une entree `require` mais des types ESM seuls : les charger par `src/modules/notes/esm-packages.ts` (`createRequire`), jamais par un `import` (TS1479). Un hook Hocuspocus qui echoue passe par `reportingFailure`, sinon Hocuspocus imprime l'erreur et sa pile.
 - `@types/cookie-parser` type `request.cookies` en `any` : le relire en `Record<string, unknown>` et tester `typeof`.
 - `ConfigModule` lit aussi `.env` du dossier courant ; `process.env` l'emporte sur le fichier.
 

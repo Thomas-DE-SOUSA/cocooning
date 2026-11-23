@@ -6,3 +6,5 @@ Modele a copier pour le prochain contexte du couple (agenda, messages) : `primar
 
 Contexte metier :
 @../../../../../../packages/couple/server-business-logic/src/notes/CLAUDE.md
+
+Canal temps reel (decision 0040, `docs/couple/architecture/notes/collaboration.md`) : `primary/collaboration/` (`NoteCollaborationServer` sur `ApiRouterEnum.NOTE_COLLABORATION`, crochets Hocuspocus, pont `ws`), `secondary/collaboration/` (`NoteHocuspocus`, `HocuspocusNoteCollaborationProvider`), `NoteContentPrismaRepository`. Hocuspocus et Yjs se chargent par `esm-packages.ts`, jamais par un `import` direct (TS1479, D31).
