@@ -6,7 +6,7 @@ last-verified: 2026-11-23
 
 Ce runbook installe Cocooning sur la VM Oracle de Cadence, puis le met à jour à chaque merge dans `main`.
 
-Niveau de preuve : exécuté en conditions réelles sur la VM le 2026-11-23 (préparation, démarrage, sauvegarde) ; la mise à jour et la restauration n'ont pas encore servi.
+Niveau de preuve : exécuté en conditions réelles sur la VM le 2026-11-23 (préparation, démarrage, sauvegarde, installation de la PWA sur un téléphone) ; la mise à jour et la restauration n'ont pas encore servi.
 
 ## Quand l'utiliser
 
