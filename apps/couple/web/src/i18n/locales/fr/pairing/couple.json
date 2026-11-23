@@ -3,7 +3,10 @@
     "noCouple": {
         "intro": "Créez votre couple, puis donnez le code d'invitation à votre partenaire.",
         "create": "Créer notre couple",
-        "creating": "Création en cours"
+        "creating": "Création en cours",
+        "joinIntro": "Votre partenaire a déjà créé le couple ? Saisissez son code.",
+        "join": "Rejoindre le couple",
+        "joining": "Entrée dans le couple en cours"
     },
     "waiting": {
         "intro": "Donnez ce code à votre partenaire : il lui permet de rejoindre le couple.",
@@ -18,13 +21,24 @@
         "title": "Impossible d'afficher votre couple",
         "refresh": "Réessayer"
     },
+    "form": {
+        "invitationCode": {
+            "label": "Code d'invitation",
+            "errors": {
+                "required": "Indiquez le code d'invitation.",
+                "tooLong": "Ce code est trop long."
+            }
+        }
+    },
     "toast": {
         "createFailed": "Création impossible",
+        "joinFailed": "Impossible de rejoindre le couple",
         "renewFailed": "Nouveau code impossible",
         "copied": "Code copié",
         "shareFailed": "Partage impossible"
     },
     "apiErrors": {
+        "PAIRING_INVITATION_CODE_INVALID": "Ce code ne marche pas : il est faux, expiré ou déjà utilisé. Demandez-en un nouveau à votre partenaire.",
         "PAIRING_PARTNER_ALREADY_IN_COUPLE": "Vous êtes déjà dans un couple. Actualisez la page.",
         "PAIRING_COUPLE_ALREADY_PAIRED": "Votre partenaire a déjà rejoint le couple. Actualisez la page.",
         "PAIRING_COUPLE_NOT_FOUND": "Ce couple n'existe plus. Actualisez la page.",

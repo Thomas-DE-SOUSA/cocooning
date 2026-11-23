@@ -47,7 +47,7 @@ Exemple réel : la mise en couple, dans `apps/couple/web/src/modules/pairing/` (
 1. La page `src/app/pairing/page.tsx` (rendue à chaque requête, `dynamic = 'force-dynamic'`) appelle `loadMyCouple()`, qui exécute `GetMyCoupleUseCase` du module construit par `pairingModule()`.
 2. La fabrique reçoit `getSessionToken` (`src/shared/application/session/`) sans l'appeler. `ApiPairingGateway` le lit à l'appel et renvoie la session à l'API dans l'en-tête `Cookie`.
 3. Le presenter `presentPairingPage` décide : `UNAUTHORIZED` renvoie vers `WebRouterEnum.ACCOUNT_SIGN_IN`, un couple formé vers `WebRouterEnum.HOME`, sinon l'écran « sans couple », « code d'invitation » ou « indisponible ». L'accueil suit `resolveHomeDestination`.
-4. Une action (créer le couple, nouveau code) passe par une server action qui rend `Result<null, ApiError>`, puis le container appelle `router.refresh()` : la page relit le couple. L'écran se relit aussi quand la PWA revient au premier plan et sur « Actualiser ».
+4. Une action (créer le couple, saisir le code de l'autre, nouveau code) passe par une server action qui rend `Result<null, ApiError>`, puis le container appelle `router.refresh()` : la page relit le couple. L'écran se relit aussi quand la PWA revient au premier plan et sur « Actualiser ».
 
 ## La session dans la PWA
 

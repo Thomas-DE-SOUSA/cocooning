@@ -1,20 +1,14 @@
 'use client';
 
-import { toast } from '@cocooning/design-system';
-import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { describeApiResultError } from '@/shared/application/api-result/describe-api-result-error';
-import { PAIRING_NAMESPACE } from '../../data/pairing-i18n-namespaces';
 import { pairingCommandGateway } from '../../gateways';
-import { usePairingCommands } from '../../hooks/use-pairing-commands';
-import { useRefreshOnReturn } from '../../hooks/use-refresh-on-return';
-import { useShareInvitationCode } from '../../hooks/use-share-invitation-code';
+import { usePairingScreen } from '../../hooks/use-pairing-screen';
 import {
+    PairingCommandEnum,
     type PairingScreenViewModel,
     PairingStepEnum,
 } from '../../view-models/pairing-screen.view-model';
 import { InvitationCodeView } from '../views/invitation-code.view';
+import { JoinCoupleFormView } from '../views/join-couple-form.view';
 import { NoCoupleView } from '../views/no-couple.view';
 import { PairingUnavailableView } from '../views/pairing-unavailable.view';
 
@@ -23,56 +17,46 @@ export function PairingContainer({
 }: {
     readonly viewModel: PairingScreenViewModel;
 }) {
-    const { t } = useTranslation(PAIRING_NAMESPACE);
-    const router = useRouter();
-    const refresh = useCallback(() => router.refresh(), [router]);
-    useRefreshOnReturn(refresh);
-    const { createCouple, renewInvitationCode, isPending } = usePairingCommands(
-        {
-            gateway: pairingCommandGateway,
-            onDone: refresh,
-            onCreateFailed: (error) =>
-                toast.error(t('toast.createFailed'), {
-                    description: describeApiResultError(error, t),
-                }),
-            onRenewFailed: (error) =>
-                toast.error(t('toast.renewFailed'), {
-                    description: describeApiResultError(error, t),
-                }),
-        },
-    );
-    const share = useShareInvitationCode({
-        onCopied: () => toast.success(t('toast.copied')),
-        onShareFailed: () => toast.error(t('toast.shareFailed')),
-    });
-
+    const screen = usePairingScreen(pairingCommandGateway);
     if (viewModel.step === PairingStepEnum.NO_COUPLE) {
         return (
-            <NoCoupleView
-                isPending={isPending}
-                onCreateCouple={createCouple}
-            />
+            <>
+                <NoCoupleView
+                    isPending={
+                        screen.pendingCommand ===
+                        PairingCommandEnum.CREATE_COUPLE
+                    }
+                    onCreateCouple={screen.createCouple}
+                />
+                <JoinCoupleFormView
+                    form={screen.joinForm}
+                    isPending={
+                        screen.pendingCommand === PairingCommandEnum.JOIN_COUPLE
+                    }
+                    onJoin={screen.joinCouple}
+                />
+            </>
         );
     }
     if (viewModel.step === PairingStepEnum.UNAVAILABLE) {
         return (
             <PairingUnavailableView
-                description={describeApiResultError(viewModel.error, t)}
-                onRefresh={refresh}
+                description={screen.describeError(viewModel.error)}
+                onRefresh={screen.refresh}
             />
         );
     }
-    const { invitationCode } = viewModel;
     return (
         <InvitationCodeView
-            invitationCode={invitationCode}
+            invitationCode={viewModel.invitationCode}
             expiresAt={viewModel.expiresAt}
-            isPending={isPending}
-            onShare={() =>
-                void share(t('waiting.shareText', { invitationCode }))
+            isPending={
+                screen.pendingCommand ===
+                PairingCommandEnum.RENEW_INVITATION_CODE
             }
-            onRenew={renewInvitationCode}
-            onRefresh={refresh}
+            onShare={() => screen.shareInvitationCode(viewModel.invitationCode)}
+            onRenew={screen.renewInvitationCode}
+            onRefresh={screen.refresh}
         />
     );
 }

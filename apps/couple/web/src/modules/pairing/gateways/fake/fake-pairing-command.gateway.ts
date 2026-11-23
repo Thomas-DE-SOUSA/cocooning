@@ -1,3 +1,4 @@
+import type { JoinCoupleForm } from '@cocooning/couple-client-business-logic/pairing';
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import { ok, type Result } from '@cocooning/shared-kernel/utils';
 import { PairingCommandGateway } from '../ports/pairing-command.gateway';
@@ -17,6 +18,10 @@ export class FakePairingCommandGateway extends PairingCommandGateway {
 
     override createCouple(): Promise<Result<null, ApiError>> {
         return this.answer({ operation: 'createCouple' });
+    }
+
+    override joinCouple(form: JoinCoupleForm): Promise<Result<null, ApiError>> {
+        return this.answer({ operation: 'joinCouple', form });
     }
 
     override renewInvitationCode(): Promise<Result<null, ApiError>> {
