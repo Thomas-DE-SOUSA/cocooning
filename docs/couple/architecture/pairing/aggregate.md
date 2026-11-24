@@ -19,7 +19,7 @@ Cette page décrit l'agrégat `Couple` du contexte `pairing` : son état, ses tr
 | `CouplePairingValidator` | `ensureMember`, `ensureNotMember`, `ensurePending`, `ensurePaired`, `ensureJoinableWith` | `domain/services/couple-pairing.validator.ts` |
 | `InvitationCode` | `generate`, `from`, `normalize`, `isValidAt`, `matches` | `domain/value-objects/invitation-code.vo.ts` |
 | `TogetherPeriod`, `TogetherPeriods` | Une période (jour de début, jour de fin ou `null`) et la liste du couple : `create` valide R9, `from` relit sans valider, `empty` pour un nouveau couple | `domain/value-objects/together-period.vo.ts`, `together-periods.vo.ts` |
-| `isCalendarDay`, `coupleCalendarDayAt` | Un vrai jour `YYYY-MM-DD` ; le jour de Paris (`COUPLE_TIME_ZONE`) d'un instant | `domain/value-objects/calendar-day.ts` |
+| `coupleCalendarDayAt` | Le jour de Paris (`COUPLE_TIME_ZONE`) d'un instant ; un vrai jour `YYYY-MM-DD` se vérifie par `isCalendarDay` de `@cocooning/shared-kernel/utils` | `domain/value-objects/calendar-day.ts` |
 
 Les chemins partent de `packages/couple/server-business-logic/src/pairing/`.
 

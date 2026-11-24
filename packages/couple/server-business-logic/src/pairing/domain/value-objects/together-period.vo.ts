@@ -1,7 +1,7 @@
 import { PairingExceptionCodeEnum } from '@cocooning/couple-contract/pairing';
 import { ValueObject } from '@cocooning/shared-kernel/domain';
+import { isCalendarDay } from '@cocooning/shared-kernel/utils';
 import { PairingException } from '../exceptions/pairing.exception';
-import { isCalendarDay } from './calendar-day';
 
 export type TogetherPeriodSnapshot = {
     readonly startedOn: string;

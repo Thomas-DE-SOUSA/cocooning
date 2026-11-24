@@ -1,0 +1,44 @@
+# Agenda
+
+Cette page décrit comment le contexte `agenda` est construit : ses couches, ses use cases et la façon dont il trouve le couple de la requête. À lire avant de modifier `packages/couple/server-business-logic/src/agenda/`.
+
+## Rôle et limites
+
+`agenda` porte les événements d'agenda du couple : leur titre, leur description, leur moment, leur auteur, leur visibilité et leur cycle de vie ([décision 0046](../../decisions/agenda/0046-regles-de-l-agenda.md)). Les jours et les heures sont des heures de Paris, gardées telles quelles ([décision 0047](../../decisions/agenda/0047-moments-de-l-agenda-en-heure-de-paris.md)). Le contexte ne connaît ni les sessions (`authentication`) ni le créateur du couple (`pairing`) : il reçoit le `coupleId` par un port étroit ([décision 0041](../../decisions/0041-couple-de-la-requete.md)), et la PWA colore l'auteur en comparant `ownerId` au créateur du couple.
+
+Construit aujourd'hui : domaine et application. À venir dans l'étape « agenda » : tables, adaptateurs Prisma, contrat HTTP et routes de l'API, écran de la PWA.
+
+## Comment c'est construit
+
+| Élément | Rôle | Chemin |
+|---|---|---|
+| `CalendarEvent` | Agrégat : titre, description, moment, auteur, visibilité (voir [l'agrégat](aggregate.md)) | `domain/models/calendar-event.aggregate.ts` |
+| `CalendarEventId`, `CalendarEventTitle`, `CalendarEventDescription`, `CalendarEventMoment` | Value objects : identité UUID v7, titre de 1 à `CALENDAR_EVENT_TITLE_MAX_LENGTH` signes (R2), description d'au plus `CALENDAR_EVENT_DESCRIPTION_MAX_LENGTH` signes (R6), moment (R5) | `domain/value-objects/` |
+| `createCalendarEventDetails` | Valide d'un coup le titre, la description et le moment saisis, à la création comme à la modification | `domain/value-objects/calendar-event-details.ts` |
+| `CalendarEventVisibilityEnum` | `PRIVATE`, `SHARED`, partagé avec la PWA | `packages/couple/shared-kernel/src/enums/calendar-event-visibility.enum.ts` |
+| `AgendaException` | Exception du contexte, codes `CALENDAR_EVENT_*` de `AgendaExceptionCodeEnum` | `domain/exceptions/`, `packages/couple/contract/src/agenda/exceptions/exception-codes.ts` |
+| `CalendarEventRepository` | Port : `save`, `findVisibleById`, `findVisibleOverlapping` (les événements qui touchent un jour de la plage, dans l'ordre des jours) ; la visibilité est filtrée par la requête (R7) | `domain/ports/calendar-event.repository.ts` |
+| `PairedCoupleProvider` | Port : le couple formé d'un partenaire, seule recherche sans `coupleId` du contexte (décision 0041) | `domain/ports/paired-couple.provider.ts` |
+| `CalendarEventPreconditionService` | Domain service : l'événement visible pour le partenaire, sinon `CALENDAR_EVENT_NOT_FOUND` | `domain/services/calendar-event-precondition.service.ts` |
+| `CalendarEventAccessValidator` | Contrôle statique : visibilité réservée à l'auteur (R8) | `domain/services/calendar-event-access.validator.ts` |
+| `CalendarEventRangeValidator` | Contrôle statique : deux vrais jours dans l'ordre, au plus `CALENDAR_EVENT_RANGE_MAX_DAYS` jours, sinon `CALENDAR_EVENT_RANGE_INVALID` | `domain/services/calendar-event-range.validator.ts` |
+| `AgendaCoupleGuardService` | Guard service : construit l'`ExecutionContext` depuis le `PartnerContext`, sinon `CALENDAR_EVENT_COUPLE_NOT_PAIRED` (R4, décision 0006) | `application/services/agenda-couple-guard.service.ts` |
+| `CreateCalendarEventUseCase`, `ListCalendarEventsUseCase`, `GetCalendarEventUseCase`, `EditCalendarEventUseCase`, `ShareCalendarEventUseCase`, `MakeCalendarEventPrivateUseCase`, `DeleteCalendarEventUseCase` | Use cases, `execute(context, command)` | `application/use-cases/` |
+| `toCalendarEventView` | Vue rendue pour le partenaire qui lit : identifiant, auteur (`ownerId`), `isOwner` (pour les actions de R8), titre, description, moment, visibilité, dernière modification | `application/mappers/calendar-event-view.mapper.ts` |
+
+Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/agenda/`.
+
+## Points d'attention
+
+- **Couple de la requête.** Les use cases reçoivent un `ExecutionContext` complet. L'API le construira par `AgendaCoupleGuardService` avant d'appeler un use case ; sans couple formé, `CALENDAR_EVENT_COUPLE_NOT_PAIRED`.
+- **Visibilité dans la requête.** `findVisibleById` et `findVisibleOverlapping` ne rendent que les événements vivants du couple, partagés ou à ce partenaire (`core-backend.md` règle 12) : l'événement privé de l'autre répond `CALENDAR_EVENT_NOT_FOUND`, comme un événement inexistant (R7). Modifier et supprimer passent par cette lecture : les deux partenaires agissent sur un événement partagé, l'auteur seul sur son événement privé (R9).
+- **Plage de jours.** La liste lit les événements de `from` à `to` inclus : un événement la touche quand `startsOn <= to` et que son dernier jour (`endsOn`, ou `startsOn` sans dernier jour) est `>= from`. Une plage dépasse rarement six semaines (la grille d'un mois) ; `CALENDAR_EVENT_RANGE_MAX_DAYS` (62) borne la lecture sans pagination.
+- **Modifier, c'est tout renvoyer.** `EditCalendarEventUseCase` reçoit tous les détails (titre, description, moment) et les valide ensemble, comme à la création : le formulaire les montre et les renvoie tous.
+- **Le contenu appartient au couple.** Aucun événement de domaine ne porte le titre, la description ni les jours (`core.md` règle 33).
+
+## Décisions liées
+
+- [Décision 0046](../../decisions/agenda/0046-regles-de-l-agenda.md) : règles de l'agenda
+- [Décision 0047](../../decisions/agenda/0047-moments-de-l-agenda-en-heure-de-paris.md) : jours et heures de Paris, sans instant
+- [Décision 0041](../../decisions/0041-couple-de-la-requete.md) : le couple de la requête vient de `pairing`
+- [Décision 0018](../../decisions/0018-portee-par-couple-et-proprietaire.md) : portée par couple et propriétaire

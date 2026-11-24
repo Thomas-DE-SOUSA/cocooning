@@ -1,3 +1,4 @@
+import { AgendaExceptionCodeEnum } from '@cocooning/couple-contract/agenda';
 import { AuthenticationExceptionCodeEnum } from '@cocooning/couple-contract/authentication';
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
 import { PairingExceptionCodeEnum } from '@cocooning/couple-contract/pairing';
@@ -11,6 +12,7 @@ const EVERY_CODE_ENUM = [
     AuthenticationExceptionCodeEnum,
     PairingExceptionCodeEnum,
     NoteExceptionCodeEnum,
+    AgendaExceptionCodeEnum,
     PersistenceExceptionCodeEnum,
     CoupleSharedKernelExceptionCodeEnum,
     SharedKernelExceptionCodeEnum,
@@ -21,6 +23,7 @@ const EVERY_CODE_ENUM = [
 const INTERNAL_CODES: readonly string[] = [
     PairingExceptionCodeEnum.PAIRING_COUPLE_DATA_CORRUPTED,
     NoteExceptionCodeEnum.NOTE_DATA_CORRUPTED,
+    AgendaExceptionCodeEnum.CALENDAR_EVENT_DATA_CORRUPTED,
     PersistenceExceptionCodeEnum.PERSISTENCE_NOT_INITIALIZED,
     PersistenceExceptionCodeEnum.PERSISTENCE_LOCK_OUTSIDE_TRANSACTION,
     CoupleSharedKernelExceptionCodeEnum.EXECUTION_CONTEXT_MISSING,
