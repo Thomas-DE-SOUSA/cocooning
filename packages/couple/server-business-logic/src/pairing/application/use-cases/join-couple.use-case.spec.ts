@@ -58,6 +58,7 @@ describe('Feature: join the couple', () => {
                     { userId: PARTNER_B, joinedAt: JOINED_AT },
                 ],
                 invitationCode: null,
+                togetherPeriods: [],
             });
         });
 

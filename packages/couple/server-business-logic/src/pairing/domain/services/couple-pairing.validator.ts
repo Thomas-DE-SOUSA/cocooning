@@ -49,6 +49,15 @@ export class CouplePairingValidator {
         });
     }
 
+    // R9: only a formed couple records its together periods.
+    static ensurePaired(pairingStatus: CouplePairingStatus): void {
+        if (pairingStatus === CouplePairingStatusEnum.PAIRED) return;
+        throw new PairingException({
+            code: PairingExceptionCodeEnum.PAIRING_COUPLE_NOT_PAIRED,
+            message: 'Couple not paired yet',
+        });
+    }
+
     // R6: unknown, expired or used, the answer is the same.
     static ensureJoinableWith(
         state: JoinableState,

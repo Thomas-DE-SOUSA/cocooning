@@ -14,6 +14,7 @@ import {
 } from '../../__tests__/fixtures/pairing-test.context';
 import { CoupleId } from '../value-objects/couple-id.vo';
 import { InvitationCode } from '../value-objects/invitation-code.vo';
+import { TogetherPeriods } from '../value-objects/together-periods.vo';
 import { Couple } from './couple.aggregate';
 
 const LATER = new Date('2026-11-24T10:00:00.000Z');
@@ -21,6 +22,10 @@ const RENEWED_CODE = InvitationCode.from({
     value: 'RENEWED2',
     expiresAt: '2026-11-26T10:00:00.000Z',
 });
+
+const PERIODS = TogetherPeriods.from([
+    { startedOn: '2020-01-10', endedOn: null },
+]);
 
 const pairedCouple = (): Couple => {
     const couple = Couple.create(aCreateCoupleInput(), NOW);
@@ -104,6 +109,21 @@ describe('Feature: the couple aggregate', () => {
         });
     });
 
+    describe('Scenario: INV-010, only a member of a formed couple records its periods', () => {
+        it('answers a stranger that the couple is not found', () => {
+            const couple = pairedCouple();
+            expect(() =>
+                couple.recordTogetherPeriods(PARTNER_C, PERIODS, LATER),
+            ).toThrow(
+                expect.objectContaining({
+                    code: PairingExceptionCodeEnum.PAIRING_COUPLE_NOT_FOUND,
+                }),
+            );
+            expect(couple.togetherPeriods.count).toBe(0);
+            expect(couple.getDomainEvents()).toEqual([]);
+        });
+    });
+
     describe('Scenario: INV-004, the version belongs to the database', () => {
         it('keeps the version it was read with through every change', () => {
             const couple = Couple.fromSnapshot({
@@ -119,6 +139,10 @@ describe('Feature: the couple aggregate', () => {
     describe('Scenario: storing and reading a couple', () => {
         it('rebuilds the same couple from its snapshot', () => {
             const couple = pairedCouple();
+            couple.recordTogetherPeriods(PARTNER_A, PERIODS, LATER);
+            expect(couple.toSnapshot().togetherPeriods).toEqual([
+                { startedOn: '2020-01-10', endedOn: null },
+            ]);
             expect(
                 Couple.fromSnapshot(couple.toSnapshot()).toSnapshot(),
             ).toEqual(couple.toSnapshot());

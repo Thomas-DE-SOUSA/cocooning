@@ -4,7 +4,7 @@ Cette page décrit comment le contexte `pairing` est construit : ses couches, se
 
 ## Rôle et limites
 
-`pairing` relie deux comptes en un couple : il crée le couple, délivre et renouvelle le code d'invitation, fait entrer le second partenaire, annule un couple en attente et dit à un partenaire où en est son couple. Il ne connaît ni les mots de passe ni les sessions (`authentication`), et ne lit aucune donnée des notes, de l'agenda ou des messages. Quitter un couple formé n'existe pas encore.
+`pairing` relie deux comptes en un couple : il crée le couple, délivre et renouvelle le code d'invitation, fait entrer le second partenaire, annule un couple en attente, garde les périodes ensemble d'un couple formé (R9) et dit à un partenaire où en est son couple. Il ne connaît ni les mots de passe ni les sessions (`authentication`), et ne lit aucune donnée des notes, de l'agenda ou des messages. Quitter un couple formé n'existe pas encore.
 
 Le contexte est construit de bout en bout : domaine et application, tables PostgreSQL (voir [les tables](tables.md)), contrat HTTP, adaptateur Prisma de `CoupleRepository` et cinq endpoints de l'API. C'est la référence que les contextes suivants copient.
 
@@ -12,18 +12,18 @@ Le contexte est construit de bout en bout : domaine et application, tables Postg
 
 | Élément | Rôle | Chemin |
 |---|---|---|
-| `Couple` | Agrégat : partenaires, statut, code d'invitation (voir [l'agrégat](aggregate.md)) | `domain/models/couple.aggregate.ts` |
+| `Couple` | Agrégat : partenaires, statut, code d'invitation, périodes ensemble (voir [l'agrégat](aggregate.md)) | `domain/models/couple.aggregate.ts` |
 | `CouplePartner` | Entité enfant : un `userId` et sa date d'arrivée | `domain/models/couple-partner.entity.ts` |
-| `CoupleId`, `InvitationCode` | Value objects : identité UUID v7, code de 8 signes et son échéance | `domain/value-objects/` |
+| `CoupleId`, `InvitationCode`, `TogetherPeriod`, `TogetherPeriods` | Value objects : identité UUID v7, code de 8 signes et son échéance, périodes ensemble (R9) | `domain/value-objects/` |
 | `CouplePairingStatusEnum` | `PENDING`, `PAIRED`, partagé avec la PWA | `packages/couple/shared-kernel/src/enums/couple-pairing-status.enum.ts` |
 | `PairingException` | Exception du contexte, codes de `PairingExceptionCodeEnum` | `domain/exceptions/`, `packages/couple/contract/src/pairing/exceptions/exception-codes.ts` |
 | `CoupleRepository` | Port : `save`, `findByPartner`, `findByInvitationCode` | `domain/ports/couple.repository.ts` |
 | `PairingPreconditionService` | Domain service : un partenaire sans couple (R1), le couple d'un partenaire, le couple d'un code | `domain/services/pairing-precondition.service.ts` |
 | `CouplePairingValidator` | Contrôles statiques appelés par l'agrégat | `domain/services/couple-pairing.validator.ts` |
-| `CreateCoupleUseCase`, `JoinCoupleUseCase`, `RenewInvitationCodeUseCase`, `CancelCoupleUseCase`, `GetMyCoupleUseCase` | Use cases, `execute(context)` ou `execute(context, command)` | `application/use-cases/` |
+| `CreateCoupleUseCase`, `JoinCoupleUseCase`, `RenewInvitationCodeUseCase`, `CancelCoupleUseCase`, `GetMyCoupleUseCase`, `RecordTogetherPeriodsUseCase` | Use cases, `execute(context)` ou `execute(context, command)` ; le dernier n'a pas d'endpoint, seulement la commande `record-together-periods` | `application/use-cases/` |
 | Tables `couple`, `couple_partner`, `pairing_event` | Persistance de l'agrégat et outbox (voir [les tables](tables.md)) | `packages/couple/prisma/prisma/models/pairing-*.prisma` |
 | `JoinCoupleRequestSchema`, `CoupleResponseSchema` | Contrat HTTP partagé par l'API et la PWA : le code saisi, et le corps commun aux quatre actions qui rendent un couple, miroir de `CoupleView` | `packages/couple/contract/src/pairing/schemas/` |
-| `toCoupleView` | Vue rendue par les quatre use cases qui rendent un couple : identifiant, statut, partenaires, code ou `null` | `application/mappers/couple-view.mapper.ts` |
+| `toCoupleView` | Vue rendue par les use cases qui rendent un couple : identifiant, statut, partenaires, code ou `null`, périodes ensemble | `application/mappers/couple-view.mapper.ts` |
 | Contrôleurs | Un par endpoint, méthode `handle()`, partenaire lu par `@CurrentPartner()` | `apps/couple/api/src/modules/pairing/primary/controllers/` |
 | `toCoupleResponse` | `CoupleView` vers `CoupleResponseSchema`, dates en chaînes ISO | `apps/couple/api/src/modules/pairing/primary/mappers/` |
 | `CouplePrismaRepository` | Adaptateur de `CoupleRepository` : couple, partenaires et outbox dans une transaction, verrou optimiste, contraintes uniques traduites par leur nom | `apps/couple/api/src/modules/pairing/secondary/repositories/` |
@@ -73,4 +73,5 @@ Les autres use cases suivent la même recette. Annuler (`CancelCoupleUseCase`, R
 - [Décision 0028](../../decisions/pairing/0028-regles-du-code-d-invitation.md) : règles du code d'invitation
 - [Décision 0029](../../decisions/pairing/0029-pairing-avant-le-couple.md) : le contexte travaille avant qu'un couple existe
 - [Décision 0038](../../decisions/pairing/0038-annuler-un-couple-en-attente.md) : annuler un couple en attente
+- [Décision 0045](../../decisions/pairing/0045-periodes-ensemble-du-couple.md) : les périodes ensemble du couple, en base
 - [Décision 0023](../../decisions/0023-forme-des-use-cases-et-des-reactions.md) : forme des use cases
