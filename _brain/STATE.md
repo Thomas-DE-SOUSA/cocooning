@@ -1,11 +1,11 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 soir (corrections « Aujourd'hui » et clavier de la feuille mergées, PR #2 et #3, release PR #4 déployée sur la VM ; essai sur les téléphones attendu). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 nuit (retours du couple sur l'agenda : PR #2, #3, #5, #6 ; releases PR #4 et #7 sur la VM ; essai sur les téléphones attendu). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
 
-- **En production** (VM, release PR #4 du dépôt public, 2026-11-24 soir, sur la base de la release #99 de l'ancien dépôt) : notes à deux en direct, direction artistique A « Lin et terre cuite » (décision plateforme 0017), barre d'onglets Notes, Agenda, Nous (décision 0044), compteur « Ensemble dans notre cocooning depuis N jours » dans « Nous » (décision 0045, périodes saisies par `record-together-periods`), agenda partagé complet (décisions 0046 à 0048 : grille du mois, liste du jour, panneau de création, « Rien que pour moi »).
+- **En production** (VM, release PR #7 du dépôt public, 2026-11-24 nuit) : notes à deux en direct, direction artistique A « Lin et terre cuite » (décision plateforme 0017), barre d'onglets Notes, Agenda, Nous (décision 0044), compteur « Ensemble dans notre cocooning depuis N jours » dans « Nous » (décision 0045, périodes saisies par `record-together-periods`), agenda partagé complet (décisions 0046 à 0049 : grille du mois, liste du jour, panneau de création, « Rien que pour moi », « Aujourd'hui » qui défile jusqu'aux événements, suppression par glissement vers la gauche).
 - **Dépôt public depuis le 2026-11-24** (décision plateforme 0018) : https://github.com/Thomas-DE-SOUSA/cocooning, historique réécrit (e-mail d'un compte, nom de l'éditeur de Malta, chemins, tailnet retirés ; scripts Malta hors git). L'ancien dépôt, avec les PR #1 à #103, est `cocooning-archive` (privé, ne jamais le rendre public). Les numéros de PR repartent de 1.
 - **Chemins locaux, tailnet, URL de production réelle** : `CLAUDE.local.md` (non versionné). Les scripts `.claude/workflows/malta-*.js` restent sur le poste, ignorés par git.
 - Détail de la journée : `journal/2026-11-24.md` (une section par étape).
@@ -16,7 +16,7 @@
 
 ## Prochaine étape
 
-1. **Essai sur les deux téléphones** de la release PR #4 (2026-11-24) : « Aujourd'hui » après un jour touché du mois ; feuille de l'agenda, titre visible au-dessus du clavier, défilement qui ne replie plus la feuille (poignée seule, `handleOnly`, `repositionInputs={false}`). Si le titre reste caché : faire suivre à la feuille la hauteur de `visualViewport`.
+1. **Essai sur les deux téléphones** de la release PR #7 (2026-11-24) : « Aujourd'hui » choisit le jour et défile jusqu'à ses événements ; feuille de l'agenda, titre visible au-dessus du clavier, défilement qui ne la replie plus (poignée seule) ; glissement vers la gauche (à moitié : bouton « Supprimer » ; au-delà de 60 % : suppression au lâcher, décision 0049). Si le titre reste caché : faire suivre à la feuille la hauteur de `visualViewport`.
 2. **Autres retours du couple**, une petite PR chacun : sélecteurs natifs, place du « + », points de couleur, événement privé invisible chez l'autre, barre d'onglets, compteur « Nous » (2 969 jours attendus le 2026-11-24), écriture à deux dans une note, bandes système blanches du Samsung.
 3. **Messages** (photo instantanée, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : cadrer d'abord avec le propriétaire (questions, maquette sur la planche https://claude.ai/artifact/TqnctvMSZ4tRSVhGwyZFbP), puis règles, backend, client, écran, comme pour l'agenda.
 4. **Plus tard, si le couple le veut** : prénoms dans « Nous » (l'API ne les connaît pas), répétition annuelle dans l'agenda.
