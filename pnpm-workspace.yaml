@@ -138,6 +138,9 @@ catalogs:
   icons:
     lucide-react: ^1.77.0
 
+  calendar:
+    react-day-picker: ^10.0.2
+
   forms:
     "@hookform/resolvers": ^7.0.8
     react-hook-form: ^7.92.0

@@ -33,6 +33,7 @@
         "lucide-react": "catalog:icons",
         "next": "catalog:next",
         "react": "catalog:react",
+        "react-day-picker": "catalog:calendar",
         "react-dom": "catalog:react",
         "react-hook-form": "catalog:forms",
         "react-i18next": "catalog:i18n",

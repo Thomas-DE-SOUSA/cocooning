@@ -8,7 +8,7 @@ Ce que le couple veut que l'app impose à l'agenda. À lire avant de toucher au 
 
 Je crée un événement : il est à notre couple, et j'en suis l'auteur. Ma couleur le marque.
 
-- Dans le code : `CreateCalendarEventUseCase`, `CalendarEvent.create`.
+- Dans le code : `CreateCalendarEventUseCase`, `CalendarEvent.create` ; dans la PWA, la couleur de l'auteur par `presentAuthorColor` (`apps/couple/web/src/modules/agenda/`).
 - Source : [décision 0046](../../decisions/agenda/0046-regles-de-l-agenda.md), [décision 0018](../../decisions/0018-portee-par-couple-et-proprietaire.md). Validée par : Thomas De Sousa, 2026-11-24.
 
 ### R2. Un événement a un titre
@@ -54,7 +54,7 @@ J'ajoute si je veux quelques lignes de texte simple sous l'événement, 2 000 si
 
 Mon événement privé n'apparaît pas chez l'autre, ni dans la liste ni par un point sur le calendrier, et l'app ne lui dit même pas qu'il existe.
 
-- Dans le code : `CalendarEventRepository.findVisibleById` et `findVisibleOverlapping` filtrent par la requête ; `CalendarEventPreconditionService.loadVisibleCalendarEvent` refuse `CALENDAR_EVENT_NOT_FOUND` (`core.md` règle 27).
+- Dans le code : `CalendarEventRepository.findVisibleById` et `findVisibleOverlapping` filtrent par la requête ; `CalendarEventPreconditionService.loadVisibleCalendarEvent` refuse `CALENDAR_EVENT_NOT_FOUND` (`core.md` règle 27). La PWA dessine les points des seuls événements que l'API lui rend (`presentDayMarks`).
 - Source : décision 0046. Validée par : Thomas De Sousa, 2026-11-24.
 
 ### R8. Seul l'auteur change la visibilité

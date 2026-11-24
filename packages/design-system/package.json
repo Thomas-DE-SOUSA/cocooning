@@ -19,6 +19,7 @@
         "class-variance-authority": "catalog:styles",
         "clsx": "catalog:styles",
         "lucide-react": "catalog:icons",
+        "react-day-picker": "catalog:calendar",
         "sonner": "catalog:styles",
         "tailwind-merge": "catalog:styles"
     },
