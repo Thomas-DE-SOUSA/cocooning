@@ -40,6 +40,15 @@ describe('Feature: a bottom sheet', () => {
             );
         });
 
+        it('is dragged by its handle only, never by the scrolled form', () => {
+            renderDrawer(true);
+
+            const handle = screen
+                .getByRole('dialog')
+                .querySelector('[data-slot="drawer-handle"]');
+            expect(handle?.hasAttribute('data-vaul-handle')).toBe(true);
+        });
+
         it('asks to close on Escape', () => {
             const { changes } = renderDrawer(true);
 
