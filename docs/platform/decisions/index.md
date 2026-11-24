@@ -9,7 +9,7 @@ Le registre des décisions qui touchent tout le monorepo : dépôt, outillage, v
 | N° | Décision | Nature | Statut | Date | Validé par |
 |---|---|---|---|---|---|
 | 0001 | [La méthode de Malta, dimensionnée pour deux utilisateurs](0001-methode-malta-dimensionnee-pour-deux.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
-| 0002 | [Dépôt privé, analyse de Malta gardée en local](0002-depot-prive-blueprint-local.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
+| 0002 | [Dépôt privé, analyse de Malta gardée en local](0002-depot-prive-blueprint-local.md) | technique | remplacée par 0018 | 2026-11-22 | Thomas De Sousa |
 | 0003 | [Le segment métier s'appelle `couple`](0003-segment-metier-couple.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
 | 0004 | [L'orchestrateur `_cocooning-orch` et le préfixe `coco-`](0004-orchestrateur-cocooning-orch.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
 | 0005 | [Versions des dépendances majeures](0005-versions-des-dependances.md) | technique | acceptée | 2026-11-22 | Thomas De Sousa |
@@ -25,3 +25,4 @@ Le registre des décisions qui touchent tout le monorepo : dépôt, outillage, v
 | 0015 | [Production sur la VM Oracle de Cadence, sans Caddy](0015-production-sur-la-vm-oracle.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0016 | [Commandes d'exploitation dans l'API](0016-commandes-d-exploitation-dans-l-api.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0017 | [Direction artistique « Lin et terre cuite »](0017-direction-artistique-lin-et-terre-cuite.md) | produit | acceptée | 2026-11-24 | Thomas De Sousa |
+| 0018 | [Dépôt public, historique nettoyé](0018-depot-public-historique-nettoye.md) | technique | acceptée | 2026-11-24 | Thomas De Sousa |

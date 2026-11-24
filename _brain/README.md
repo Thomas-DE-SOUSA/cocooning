@@ -79,4 +79,4 @@ Depuis la phase 0 (2026-11-22), on suit le modèle de Malta : `_knowledge/` port
 - **Hooks** : ils ne s'activent qu'après `/hooks` ou un redémarrage de Claude Code. On les désactive aussi depuis `/hooks`.
 - **Transcripts** : ils sont supprimés après 30 jours par défaut. Pour les garder plus longtemps, mets `"cleanupPeriodDays": 365` dans `~/.claude/settings.json`.
 - **Git** : la vraie garantie de durée, c'est git (historique, retour arrière, sauvegarde distante). Voir la décision B1.
-- **Chemin** : lance toujours Claude depuis `<repo-root>`, car la mémoire automatique de Claude dépend de la casse du chemin. `_brain/`, lui, suit le dossier où qu'il soit.
+- **Chemin** : lance toujours Claude depuis la racine du dépôt, au chemin exact noté dans `CLAUDE.local.md`, car la mémoire automatique de Claude dépend de la casse du chemin. `_brain/`, lui, suit le dossier où qu'il soit.

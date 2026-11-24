@@ -25,11 +25,11 @@ Load the CLAUDE.md of the deepest folder you work in with the Read tool (never `
 
 ## 🔶 Mirror Malta (MANDATORY)
 
-Cocooning is a PWA for a couple: two users, iPhone and Android, self-hosted and reached over Tailscale like `<cadence-local>`. Malta (`<malta-local>`) is the model for **how to build it**: its structure, layering, DDD/hexagonal method, per-layer `CLAUDE.md`, conventions and agent tooling. It is not the model for **sizing** (decision P1). When Malta's choice is oversized for Cocooning, record the simpler choice as a decision instead of copying it.
+Cocooning is a PWA for a couple: two users, iPhone and Android, self-hosted and reached over Tailscale like the owner's app Cadence. Malta (local path in `CLAUDE.local.md`) is the model for **how to build it**: its structure, layering, DDD/hexagonal method, per-layer `CLAUDE.md`, conventions and agent tooling. It is not the model for **sizing** (decision P1). When Malta's choice is oversized for Cocooning, record the simpler choice as a decision instead of copying it.
 
 Before creating a file or folder, find its Malta counterpart through the blueprint (`_malta-blueprint/00-BLUEPRINT.md` §4 target tree, §5 rename map) and mirror its place and shape. Never improvise another layout; drop what the product does not need rather than inventing a substitute.
 
-Malta and its sibling folders under `<work-local>/` are read-only. Never write there, and never run installs, builds, tests or mutating git commands in them. `_malta-blueprint/` contains proprietary propriétaire code excerpts: never publish it, and never paste its code into Cocooning files; rewrite rules and structure for Cocooning.
+Malta and its sibling folders (local paths in `CLAUDE.local.md`, never versioned) are read-only. Never write there, and never run installs, builds, tests or mutating git commands in them. `_malta-blueprint/` contains proprietary code excerpts: never publish it, and never paste its code into Cocooning files; rewrite rules and structure for Cocooning.
 
 Code knowledge lives next to the code, layer by layer, as in Malta. Every new package, app, bounded context and frontend module gets its `CLAUDE.md` in the same change, built from the template of its level (`docs/CLAUDE.md`, "CLAUDE.md dans le code"): what it contains, its aggregates or modules, its rules, the reference files to copy, and the `docs/` pages to update. Any change to the code updates that `CLAUDE.md` and those pages in the same change. Read the deepest `CLAUDE.md` before opening code; open only the files it points to.
 
@@ -40,7 +40,7 @@ The only deliberate addition to the Malta layout is the memory layer: `_brain/`,
 - Reply in French. Code identifiers stay in English. Languages of artefacts (D15): code, this file, `_knowledge/` and commits in English; `docs/` in French; code-level `CLAUDE.md` files in French without accents.
 - Before reporting progress on background work, check real activity (transcript modification times, `journal.jsonl`). Never assume it is running.
 - Announce the estimated cost before launching a workflow of more than 10 agents.
-- Git (decision D23): `main` is stable, `dev` is integration and the default branch, and every change goes on its own branch from `dev` (`feat/…`, `fix/…`, `chore/…`, `docs/…`), merged into `dev`, then `dev` into `main`. Never commit directly on `main` or `dev`. Commits are atomic and conventional (`feat:`, `fix:`, `chore:`…). Remote: private `git@github.com:Thomas-DE-SOUSA/cocooning.git`. Commit and push only when the owner asks.
+- Git (decision D23): `main` is stable, `dev` is integration and the default branch, and every change goes on its own branch from `dev` (`feat/…`, `fix/…`, `chore/…`, `docs/…`), merged into `dev`, then `dev` into `main`. Never commit directly on `main` or `dev`. Commits are atomic and conventional (`feat:`, `fix:`, `chore:`…). Remote: public `git@github.com:Thomas-DE-SOUSA/cocooning.git` (platform decision 0018: never commit a personal datum, a local path or the tailnet; they go in `CLAUDE.local.md`). Commit and push only when the owner asks.
 
 ## 🔷 Project map
 

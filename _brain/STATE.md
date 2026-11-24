@@ -47,7 +47,7 @@ Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire
 
 ## Dépôt
 
-- Dépôt privé `Thomas-DE-SOUSA/cocooning`. `main` stable, `dev` intégration et branche par défaut, une branche par changement depuis `dev` (D23). Pas de protection de branche (D29 ouverte).
+- Dépôt public `Thomas-DE-SOUSA/cocooning` depuis le 2026-11-24 (décision plateforme 0018) ; l'ancien, avec les PR #1 à #101, est `cocooning-archive` (privé). Chemins locaux et tailnet dans `CLAUDE.local.md`. `main` stable, `dev` intégration et branche par défaut, une branche par changement depuis `dev` (D23). Pas de protection de branche (D29 ouverte).
 - `_malta-blueprint/` reste en local, hors git (B1).
 
 ## Points d'attention
