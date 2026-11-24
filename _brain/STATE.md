@@ -1,58 +1,51 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 (release #91 en production ; agenda partagé cadré (D48), plan de PR proposé). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 soir (agenda en production par la release #99 ; dépôt devenu public, historique nettoyé ; PR #1 du nouveau dépôt à merger). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
 
-- **Étape « notes » de la phase 3 terminée** (D40 à D43) : PR #66 à #77, release #78 mergée dans `main` le 2026-11-24. Liste des notes à l'accueil, page `/notes/:noteId` avec renommage, éditeur Tiptap à deux par Hocuspocus, route `/collab` dans `tailscale serve`. Détail : `journal/2026-11-23.md` (sections « Étape notes ») et `journal/2026-11-24.md`.
-- **#78 en production et vérifiée** le 2026-11-24 (conteneurs recréés à 08:49 UTC, migrations, santé, `/collab` → 101 avec `curl --http1.1`). Détail : `journal/2026-11-24.md`, « Production de #78 vérifiée ».
-- **Planche de direction artistique publiée** (D44) : https://claude.ai/artifact/TqnctvMSZ4tRSVhGwyZFbP, A, B, C en clair et sombre, contrastes WCAG vérifiés. Détail : `journal/2026-11-24.md`, « Direction artistique : planche publiée ».
-- Écarts fermés (D41) : frontend 004 (décision 0042), authentication 002 et 005 (décision 0043).
-- **Fait avant** : phases 0 à 2, phase 3 étapes 1 à 3 (socle web, connexion, mise en couple), en production depuis le 2026-11-23.
-
-## Le produit (vision du propriétaire, 2026-11-22)
-
-- App pour un couple, iPhone et Samsung, en PWA servie via Tailscale comme `/perso/cadence`.
-- Premier lot : notes riches (courses = note titrée « Courses »), agenda partagé, messages (photo + mots flash) avec Web Push. Détail : `journal/2026-11-22.md`, « Vision produit ».
+- **En production** (VM, release #99 de l'ancien dépôt, 2026-11-24 14:49 UTC) : notes à deux en direct, direction artistique A « Lin et terre cuite » (décision plateforme 0017), barre d'onglets Notes, Agenda, Nous (décision 0044), compteur « Ensemble dans notre cocooning depuis N jours » dans « Nous » (décision 0045, périodes saisies par `record-together-periods`), agenda partagé complet (décisions 0046 à 0048 : grille du mois, liste du jour, panneau de création, « Rien que pour moi »).
+- **Dépôt public depuis le 2026-11-24** (décision plateforme 0018) : https://github.com/Thomas-DE-SOUSA/cocooning, historique réécrit (e-mail d'un compte, nom de l'éditeur de Malta, chemins, tailnet retirés ; scripts Malta hors git). L'ancien dépôt, avec les PR #1 à #103, est `cocooning-archive` (privé, ne jamais le rendre public). Les numéros de PR repartent de 1.
+- **Chemins locaux, tailnet, URL de production réelle** : `CLAUDE.local.md` (non versionné). Les scripts `.claude/workflows/malta-*.js` restent sur le poste, ignorés par git.
+- Détail de la journée : `journal/2026-11-24.md` (une section par étape).
 
 ## Production
 
-- https://cocooning.<tailnet>.ts.net, VM Oracle `cadence` (`ssh cadence`), clone de `main` dans `~/cocooning`, secrets dans `~/cocooning/infrastructure/compose/.env`, `pg_dump` nocturne dans `~/backups`. Procédure : `docs/platform/runbooks/deployment/production.md`.
+- https://cocooning.<tailnet>.ts.net (vrai nom dans `CLAUDE.local.md`), VM Oracle `cadence` (`ssh cadence`), clone de `main` du nouveau dépôt dans `~/cocooning` (clé de déploiement en lecture seule), secrets dans `~/cocooning/infrastructure/compose/.env`, `pg_dump` nocturne dans `~/backups`. Procédure : `docs/platform/runbooks/deployment/production.md` (test de `/collab` en `curl --http1.1 -sv`). Un build dure 12 à 15 minutes.
 
 ## Prochaine étape
 
-Ordre validé par le propriétaire le 2026-11-24 (« on part sur ça ») :
-1. **Regarder la PWA sur les deux téléphones** (release #87 déployée le 2026-11-24 à 10:14 UTC : direction A, barre d'onglets Notes et Nous, déconnexion dans « Nous ») : barre au-dessus de la barre d'accueil de l'iPhone, clair et sombre, bandes système du Samsung (mode sombre ? le manifeste ne déclare que le clair). Puis l'essai d'écriture à deux dans une note (jamais fait).
-2. **Compteur « Nous »** : release #91 déployée le 2026-11-24 à 10:57 UTC, commande `record-together-periods` lancée (2 périodes) ; le propriétaire doit voir « Ensemble dans notre cocooning depuis 2 969 jours (8,13 années). » ce jour-là.
-3. **Prénoms dans « Nous »** : l'API ne les connaît pas ; à proposer seulement si le couple les veut.
-4. **Agenda partagé en production** (release #99, déployée le 2026-11-24 à 14:49 UTC, migration `agenda_calendar_event` appliquée, table vide) : retours du couple attendus (panneau avec clavier sur iPhone, sélecteurs natifs, position du « + », points de couleur). À proposer : mise en commun de `primary/couple/` et `PairedCouplePrismaProvider`, `isClockTime` dans le shared-kernel ; D26.
-5. **Messages** (photo, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : la « phase 4 » adaptée.
+1. **Merger la PR #1** (mémoire après la publication) sur le « go » du propriétaire.
+2. **Retours du couple sur les téléphones** : agenda (panneau avec le clavier ouvert sur iPhone, sélecteurs natifs de date et d'heure, place du « + », points de couleur, événement privé invisible chez l'autre), barre d'onglets, compteur « Nous » (2 969 jours attendus le 2026-11-24), écriture à deux dans une note (jamais essayée), bandes système blanches du Samsung (mode sombre ? le manifeste ne déclare que le clair). Chaque retour : une petite PR.
+3. **Messages** (photo instantanée, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : cadrer d'abord avec le propriétaire (questions, maquette sur la planche https://claude.ai/artifact/TqnctvMSZ4tRSVhGwyZFbP), puis règles, backend, client, écran, comme pour l'agenda.
+4. **Plus tard, si le couple le veut** : prénoms dans « Nous » (l'API ne les connaît pas), répétition annuelle dans l'agenda.
 
-Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
+Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go » ; supprimer la branche après merge, en local et sur GitHub. Le backend et le client se confient bien à un sous-agent avec un brief complet, relu avant la PR ; l'interface se maquette d'abord sur la planche.
 
-**Avant chaque commit** : `pnpm check-types && pnpm lint && pnpm test && pnpm build` à la racine, puis `pnpm --filter couple-api test:e2e`. Nouveau package : copier la forme de `packages/server-infrastructure/`, `CLAUDE.md` dans le même commit, entrée CommonJS de toute dépendance vérifiée (D31), versions dans les catalogues de `pnpm-workspace.yaml`.
+**Avant chaque commit** : `pnpm check-types && pnpm lint && pnpm test && pnpm build` à la racine, puis `pnpm --filter couple-api test:e2e`. Entrée CommonJS de toute dépendance vérifiée (D31), versions dans les catalogues de `pnpm-workspace.yaml`. Jamais de donnée personnelle (adresse, date, mot de passe), de chemin local ni de tailnet dans le dépôt : le dépôt est public.
 
 ## Décisions qui bloquent
 
 - Écart frontend 006 : l'adaptateur Hocuspocus vit dans le module web `notes`, contre la décision 0040 ; une décision est à proposer.
-- D26 (tailles de fichiers) : `couple.aggregate.ts` 158 lignes, `note.aggregate.ts` 150, `notes-test.context.ts` ~136, `notes-test-app.ts` ~128 ; specs E2E au-delà de 100 lignes (`join-couple`, `renew-invitation-code`, `cancel-couple`, `session-guard`, `account-prisma-repository`, `note-prisma-repository-writes`).
-- Écarts ouverts aussi : frontend 003 (routes et containers sans test) et 005 (liste limitée à 100 notes, laissé ouvert par le propriétaire), authentication 001 et 003.
+- D26 (tailles de fichiers) : `couple.aggregate.ts` 156 lignes, `note.aggregate.ts` 150, gateways client ~150 (`api-notes`, `api-agenda`), nombreuses specs au-delà de 100 lignes.
+- À proposer : mise en commun de `primary/couple/` et `PairedCouplePrismaProvider` (copiés de notes dans agenda, ~75 lignes), `isClockTime` dans le shared-kernel.
+- Écarts ouverts aussi : frontend 003 (routes et containers sans test) et 005 (liste limitée à 100 notes), authentication 001 et 003.
 
 ## Fichiers chauds
 
-- `apps/couple/web/src/modules/notes/`, `apps/couple/web/src/app/{(home),notes}/`, `apps/couple/web/src/shared/{ui,application/refresh}/`
-- `packages/design-system/src/`, `apps/couple/web/src/app/layout.tsx`, `docs/couple/gaps/frontend.md`
-- `infrastructure/compose/tailscale/serve.json`, `docs/platform/runbooks/deployment/production.md`
+- `apps/couple/web/src/modules/agenda/`, `apps/couple/web/src/app/(tabs)/`, `packages/design-system/src/ui/`
+- `packages/couple/server-business-logic/src/agenda/`, `apps/couple/api/src/modules/agenda/`
+- `CLAUDE.local.md` (local), `docs/platform/decisions/0018-depot-public-historique-nettoye.md`
 
 ## Dépôt
 
-- Dépôt public `Thomas-DE-SOUSA/cocooning` depuis le 2026-11-24 (décision plateforme 0018) ; l'ancien, avec les PR #1 à #101, est `cocooning-archive` (privé). Chemins locaux et tailnet dans `CLAUDE.local.md`. `main` stable, `dev` intégration et branche par défaut, une branche par changement depuis `dev` (D23). Pas de protection de branche (D29 ouverte).
-- `_malta-blueprint/` reste en local, hors git (B1).
+- Public `Thomas-DE-SOUSA/cocooning`, `dev` par défaut, `main` stable, une branche par changement depuis `dev` (D23). Pas de protection de branche (D29 ouverte).
+- `_malta-blueprint/` reste en local, hors git (B1, décision plateforme 0018).
 
 ## Points d'attention
 
-- Le couple du propriétaire et de Pauline est formé en production (2026-11-23).
-- Malta est en lecture seule. Le blueprint contient du code propriétaire « All Rights Reserved » : ne jamais le publier.
-- `.env` locaux : lecture interdite par une règle de permission ; le propriétaire autorise à y ajouter une variable sans demander (2026-11-23). Celui de la VM se modifie par `ssh cadence`, seulement pour une release validée.
-- Le scope de commit `infra` n'existe pas : un changement de `infrastructure/` lié à un contexte prend son scope (`chore(notes): …`).
+- Le couple du propriétaire et de Pauline est formé en production ; leurs deux périodes ensemble sont en base, jamais dans le dépôt.
+- Malta est en lecture seule ; le blueprint contient du code propriétaire : ne jamais le publier.
+- `.env` locaux : lecture interdite par une règle de permission ; le propriétaire autorise à y ajouter une variable sans demander. Celui de la VM se modifie par `ssh cadence`, seulement pour une release validée.
+- Le scope de commit `infra` n'existe pas : un changement de `infrastructure/` lié à un contexte prend son scope.
