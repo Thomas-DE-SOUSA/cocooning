@@ -15,14 +15,14 @@ J'envoie un mot flash ou une photo : il est à notre couple, et j'en suis l'aute
 
 J'écris un mot ou je touche un mot prêt ; les espaces autour ne comptent pas, un mot vide est refusé, il fait 140 signes au plus.
 
-- Dans le code : `FlashMessageText.create` (`FLASH_MESSAGE_TEXT_MAX_LENGTH`), refus `FLASH_MESSAGE_TEXT_INVALID` ; `SendFlashMessageRequestSchema` coupe et borne de même.
+- Dans le code : `FlashMessageText.create` (`FLASH_MESSAGE_TEXT_MAX_LENGTH`), refus `FLASH_MESSAGE_TEXT_INVALID` ; `SendFlashMessageRequestSchema` coupe et borne de même. Côté PWA, `createFlashMessageFormSchema` applique la même coupe et les mêmes bornes avant l'envoi.
 - Source : décision 0050. Validée par : Thomas De Sousa, 2026-11-24.
 
 ### R3. Une photo prise par l'appareil du téléphone
 
 Je prends la photo avec l'appareil de mon téléphone, je la vois en aperçu, puis je l'envoie ou je la reprends. Elle est en JPEG, PNG, WebP ou HEIC, de 10 Mo au plus.
 
-- Dans le code : `InstantPhotoContent.create` lit le format dans les premiers octets (`detectInstantPhotoContentType`), jamais dans le type déclaré, et borne le poids à `INSTANT_PHOTO_MAX_BYTES` ; multer s'arrête à la même borne. Refus `INSTANT_PHOTO_CONTENT_INVALID`.
+- Dans le code : `InstantPhotoContent.create` lit le format dans les premiers octets (`detectInstantPhotoContentType`), jamais dans le type déclaré, et borne le poids à `INSTANT_PHOTO_MAX_BYTES` ; multer s'arrête à la même borne. Refus `INSTANT_PHOTO_CONTENT_INVALID`. Côté PWA, `createInstantPhotoFormSchema` peut refuser avant l'envoi un type déclaré hors de `InstantPhotoContentTypeEnum`, un fichier vide ou plus lourd que `INSTANT_PHOTO_MAX_BYTES` ; l'API reste seule juge des octets.
 - Source : décision 0050 ; les formats et le poids, proposés par Claude, sont à confirmer par le propriétaire.
 
 ### R4. Les messages demandent un couple formé

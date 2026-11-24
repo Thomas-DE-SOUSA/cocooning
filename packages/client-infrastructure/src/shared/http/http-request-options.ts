@@ -1,5 +1,6 @@
 import type { HttpMethod } from './http-method.enum';
 
+// body: null for none, a FormData sent as multipart, anything else sent as JSON.
 export type HttpRequest = {
     readonly url: string;
     readonly method: HttpMethod;
