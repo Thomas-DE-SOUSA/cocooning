@@ -4,11 +4,15 @@ import type { ComponentProps } from 'react';
 import { Drawer as DrawerPrimitive } from 'vaul';
 import { cn } from '../utils/cn';
 
-// A bottom sheet (vaul, on the Radix dialog): dragged down or closed by the overlay, Escape or the app.
+// A bottom sheet (vaul, on the Radix dialog): dragged down by its handle, or closed by the overlay, Escape or the app.
+// On iPhone, Safari already lifts a focused field above the keyboard: vaul lifting the sheet too pushed its top out of
+// the screen, and a drag anywhere closed it while the form scrolled.
 export function Drawer(props: ComponentProps<typeof DrawerPrimitive.Root>) {
     return (
         <DrawerPrimitive.Root
             data-slot="drawer"
+            handleOnly
+            repositionInputs={false}
             {...props}
         />
     );
@@ -33,10 +37,9 @@ export function DrawerContent({
                 )}
                 {...props}
             >
-                <div
-                    aria-hidden
+                <DrawerPrimitive.Handle
                     data-slot="drawer-handle"
-                    className="mx-auto mt-2 h-1.5 w-10 shrink-0 rounded-full bg-muted-foreground/40"
+                    className="mt-2 h-1.5! w-10! shrink-0 rounded-full bg-muted-foreground/40! opacity-100!"
                 />
                 {children}
             </DrawerPrimitive.Content>
