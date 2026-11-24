@@ -1,10 +1,10 @@
 ---
 nature: technique
-status: proposée
+status: acceptée
 date: 2026-11-24
 deciders: [Thomas De Sousa]
-validated-by: à compléter
-validated-on:
+validated-by: Thomas De Sousa, 2026-11-24
+validated-on: 2026-11-24
 supersedes:
 superseded-by:
 premortem:
@@ -25,6 +25,9 @@ Les règles R10 et R11 des messages, R10 de l'agenda et R9 des notes demandent u
 - **Le relais n'utilise pas `EventPublisher`.** Le port publie déjà en processus après chaque sauvegarde (`EventPublishingService`) ; un abonné qui y enverrait les notifications les enverrait deux fois, après la sauvegarde puis par le relais.
 - **Les règles de notification vivent dans `messaging`**, qui lit les classes d'événements de `notes` et d'`agenda` pour leur `EVENT_NAME` ([décision 0004](../0004-noms-evenements-litteral.md)) : ces événements sont le langage publié de ces contextes.
 - **Un abonnement oublié est supprimé**, sans `deleted_at` : il n'a pas d'histoire et ses clés sont des secrets du téléphone.
+
+
+Réponse du propriétaire à la PR #15, qui présentait cette décision proposée, le 2026-11-24 : « go ».
 
 ## Alternatives écartées
 
