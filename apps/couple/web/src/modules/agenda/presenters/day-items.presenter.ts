@@ -43,6 +43,12 @@ function toDayItem(
         startsAt: isFirstDay ? event.startsAt : null,
         endsAt: isFirstDay && event.endsOn === null ? event.endsAt : null,
         span: presentSpan(event, day),
+        moment: {
+            startsOn: event.startsOn,
+            endsOn: event.endsOn,
+            startsAt: event.startsAt,
+            endsAt: event.endsAt,
+        },
         isOwner: event.isOwner,
         isPrivate: event.visibility === CalendarEventVisibilityEnum.PRIVATE,
         color: presentAuthorColor(event, creatorId),

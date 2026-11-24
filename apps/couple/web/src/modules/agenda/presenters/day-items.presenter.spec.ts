@@ -132,4 +132,26 @@ describe('Feature: the events of the chosen day', () => {
             span: { kind: EventSpanKindEnum.SINCE, day: '30 décembre 2026' },
         });
     });
+
+    it('keeps the whole moment of the event for the drawer, whatever the day shown', () => {
+        const [item] = presentDayItems(
+            [
+                anEvent({
+                    startsOn: '2026-12-30',
+                    endsOn: '2027-01-02',
+                    startsAt: '18:00',
+                    endsAt: '10:00',
+                }),
+            ],
+            '2027-01-01',
+            CREATOR_ID,
+        );
+
+        expect(item?.moment).toEqual({
+            startsOn: '2026-12-30',
+            endsOn: '2027-01-02',
+            startsAt: '18:00',
+            endsAt: '10:00',
+        });
+    });
 });

@@ -22,6 +22,64 @@
         "title": "Impossible d'afficher l'agenda",
         "refresh": "Réessayer"
     },
+    "drawer": {
+        "newEventOn": "Nouvel événement le {{day}}",
+        "createTitle": "Nouvel événement",
+        "editTitle": "Modifier l'événement",
+        "description": "Le titre, le jour, les heures et la visibilité de l'événement.",
+        "cancel": "Annuler",
+        "create": "Ajouter",
+        "creating": "Ajout en cours",
+        "save": "Enregistrer",
+        "saving": "Enregistrement en cours",
+        "delete": "Supprimer l'événement",
+        "confirmDelete": "Supprimer pour nous deux",
+        "deleting": "Suppression en cours",
+        "keep": "Garder"
+    },
+    "form": {
+        "title": {
+            "label": "Titre",
+            "errors": {
+                "required": "Donnez un titre à l'événement.",
+                "tooLong": "Ce titre est trop long : 120 signes au plus."
+            }
+        },
+        "description": {
+            "label": "Description (facultative)",
+            "errors": {
+                "tooLong": "Cette description est trop longue : 2 000 signes au plus."
+            }
+        },
+        "moment": {
+            "day": "Jour",
+            "allDay": "Toute la journée",
+            "startsAt": "De",
+            "endsAt": "À",
+            "endsOn": "Jusqu'au",
+            "clearEndsOn": "Retirer le dernier jour",
+            "errors": {
+                "startsOnRequired": "Choisissez le jour de l'événement.",
+                "dayInvalid": "Ce jour n'est pas valable.",
+                "hourInvalid": "Cette heure n'est pas valable.",
+                "endsOnNotAfterStartsOn": "Le dernier jour vient après le premier.",
+                "endsAtWithoutStartsAt": "Indiquez d'abord l'heure de début.",
+                "endsAtNotAfterStartsAt": "L'heure de fin vient après l'heure de début."
+            }
+        },
+        "isPrivate": {
+            "label": "Rien que pour moi",
+            "hint": "Ton âme sœur ne verra pas cet événement."
+        }
+    },
+    "toast": {
+        "created": "Événement ajouté",
+        "saved": "Événement modifié",
+        "deleted": "Événement supprimé",
+        "createFailed": "Ajout impossible",
+        "saveFailed": "Enregistrement impossible",
+        "deleteFailed": "Suppression impossible"
+    },
     "apiErrors": {
         "CALENDAR_EVENT_NOT_FOUND": "Cet événement n'existe plus. L'agenda est mis à jour.",
         "CALENDAR_EVENT_RESERVED_TO_OWNER": "Seul l'auteur de l'événement peut faire ça.",
