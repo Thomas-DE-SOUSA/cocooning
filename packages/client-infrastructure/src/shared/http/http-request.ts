@@ -1,5 +1,7 @@
-import { fail, ok, type Result } from '@cocooning/shared-kernel/utils';
+import { fail, type Result } from '@cocooning/shared-kernel/utils';
 import type { HttpRequest, HttpRequestConfig } from './http-request-options';
+import { sendHttpRequest } from './http-send';
+import { parseJson } from './parse-json';
 
 type ReceivedResponse = {
     readonly ok: boolean;
@@ -7,42 +9,24 @@ type ReceivedResponse = {
     readonly text: string;
 };
 
-const NO_BODY = null;
+const readText = async (response: Response): Promise<ReceivedResponse> => ({
+    ok: response.ok,
+    status: response.status,
+    text: await response.text(),
+});
 
 export async function httpRequest<TError>(
     request: HttpRequest,
     config: HttpRequestConfig<TError>,
 ): Promise<Result<unknown, TError>> {
-    const received = await send(request, config);
+    const received = await sendHttpRequest(
+        request,
+        'application/json',
+        readText,
+        config,
+    );
     if (!received.success) return received;
     return readResponse(received.value, config);
-}
-
-async function send<TError>(
-    request: HttpRequest,
-    config: HttpRequestConfig<TError>,
-): Promise<Result<ReceivedResponse, TError>> {
-    try {
-        const response = await fetch(request.url, {
-            method: request.method,
-            headers: buildHeaders(request),
-            body:
-                request.body === NO_BODY ? null : JSON.stringify(request.body),
-            signal: AbortSignal.timeout(config.timeoutMs),
-        });
-        const text = await response.text();
-        return ok({ ok: response.ok, status: response.status, text });
-    } catch (error) {
-        const message =
-            error instanceof Error ? error.message : 'Network error';
-        return fail(config.createNetworkError(message));
-    }
-}
-
-function buildHeaders(request: HttpRequest): Record<string, string> {
-    const contentType: Record<string, string> =
-        request.body === NO_BODY ? {} : { 'Content-Type': 'application/json' };
-    return { Accept: 'application/json', ...contentType, ...request.headers };
 }
 
 function readResponse<TError>(
@@ -64,13 +48,4 @@ function readResponse<TError>(
         );
     }
     return body;
-}
-
-function parseJson(text: string): Result<unknown, null> {
-    if (text.length === 0) return ok(null);
-    try {
-        return ok(JSON.parse(text) as unknown);
-    } catch {
-        return fail(null);
-    }
 }
