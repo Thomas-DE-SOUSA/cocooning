@@ -16,6 +16,7 @@ Images Docker et pile de production de Cocooning (decision plateforme 0015). `do
 - Le `web` partage le reseau du conteneur `tailscale` (`network_mode: service:tailscale`) : il n'a pas de `ports`, et `tailscale/serve.json` le joint sur `127.0.0.1:3200`. Il joint l'API par `http://api:3100` (`API_URL`), le nom du service sur le reseau du compose. Un redemarrage de `tailscale` coupe le web jusqu'au sien.
 - L'API n'a pas de port publie : seul le compose la joint, sur `http://api:3100`. `tailscale/serve.json` lui envoie le WebSocket des notes (`/collab`, decision 0040), le reste va au web.
 - `compose/.env` porte les secrets de production : il reste sur la VM, ignore par git (`.env`).
+- Les photos (decision 0027) vivent dans le volume `files`, monte sur `/data/files` de l'`api` (`FILE_STORAGE_DIRECTORY`). L'image `runner` cree ce dossier au nom de `node` : un volume nomme neuf en reprend le proprietaire, sinon l'API (`USER node`) ne peut pas ecrire.
 - `migrate` est un service a usage unique : `restart: 'no'`, et `api` attend `service_completed_successfully`.
 
 ## Commandes

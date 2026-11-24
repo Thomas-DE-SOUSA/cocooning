@@ -21,6 +21,7 @@ const apiEnvSchema = z.object({
     LOG_PRETTY: z.stringbool(),
     DB_TX_TIMEOUT_MS: z.coerce.number().int().positive(),
     DB_TX_MAX_WAIT_MS: z.coerce.number().int().positive(),
+    FILE_STORAGE_DIRECTORY: z.string().trim().min(1),
 });
 
 export const environmentSchema = apiEnvSchema

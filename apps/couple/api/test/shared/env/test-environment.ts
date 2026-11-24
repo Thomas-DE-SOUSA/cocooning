@@ -1,5 +1,8 @@
 import { UuidV7GeneratorProvider } from '@cocooning/server-infrastructure/identifier';
 import { Uuid } from '@cocooning/shared-kernel/domain';
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { TEST_AUTH_JWT_SECRET } from './test-secrets';
 
 // The only place the E2E environment is set. DATABASE_POSTGRES_URL comes from the global setup's container.
@@ -9,6 +12,8 @@ const TEST_ENVIRONMENT = {
     LOG_PRETTY: 'false',
     DB_TX_TIMEOUT_MS: '5000',
     DB_TX_MAX_WAIT_MS: '2000',
+    // One fresh directory per spec file, left to the system's temporary folder.
+    FILE_STORAGE_DIRECTORY: mkdtempSync(join(tmpdir(), 'cocooning-e2e-files-')),
     AUTH_JWT_SECRET: TEST_AUTH_JWT_SECRET,
     AUTH_SESSION_TTL_DAYS: '90',
     PAIRING_INVITATION_CODE_TTL_HOURS: '48',

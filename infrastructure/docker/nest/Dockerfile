@@ -27,6 +27,8 @@ RUN pnpm prune --prod --ignore-scripts
 FROM base AS runner
 ENV NODE_ENV=production
 COPY --from=pruned /app /app
+# Owned by node before the files volume mounts here: Docker copies this ownership into a new named volume.
+RUN mkdir -p /data/files && chown node:node /data/files
 USER node
 WORKDIR /app/apps/couple/api
 CMD ["node", "dist/main.js"]

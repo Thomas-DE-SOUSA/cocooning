@@ -15,7 +15,7 @@ Niveau de preuve : exécuté en conditions réelles sur la VM le 2026-11-23 (pr�
 
 ## Impact
 
-Pendant une mise à jour, la PWA et l'API redémarrent : quelques secondes d'indisponibilité. Les données restent dans les volumes `postgres-data` et `tailscale-state`. Une PWA restée ouverte pendant la mise à jour se recharge d'elle-même à sa prochaine action (`runServerAction`) ou à son retour au premier plan.
+Pendant une mise à jour, la PWA et l'API redémarrent : quelques secondes d'indisponibilité. Les données restent dans les volumes `postgres-data`, `files` (les photos instantanées, `FILE_STORAGE_DIRECTORY` de l'`api`, [décision 0027](../../../couple/decisions/0027-stockage-des-photos.md)) et `tailscale-state`. Une PWA restée ouverte pendant la mise à jour se recharge d'elle-même à sa prochaine action (`runServerAction`) ou à son retour au premier plan.
 
 ## Diagnostic
 
@@ -53,7 +53,7 @@ Une sauvegarde par nuit, gardée 14 jours (`crontab -e` sur la VM) :
 0 3 * * * cd /home/ubuntu/cocooning && docker compose -f infrastructure/compose/docker-compose.prod.yml exec -T postgres pg_dump -U cocooning -Fc cocooning > /home/ubuntu/backups/cocooning-$(date +\%F).dump && find /home/ubuntu/backups -name 'cocooning-*.dump' -mtime +14 -delete
 ```
 
-Créer le dossier avant : `mkdir -p ~/backups`. Copier ces fichiers hors de la VM reste à organiser.
+Créer le dossier avant : `mkdir -p ~/backups`. Copier ces fichiers hors de la VM reste à organiser. Cette sauvegarde ne couvre que la base : les photos du volume `files` n'en font pas partie, leur sauvegarde reste à organiser elle aussi.
 
 ## Vérification
 

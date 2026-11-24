@@ -5,7 +5,7 @@ Plomberie NestJS et adaptateurs des ports du shared-kernel, sans aucun domaine. 
 - `nest` : `HttpExceptionFilter` (table code -> statut, decision 0020), `ZodValidationPipe`, `ZodException` (422), `ZodResponse(schema)` / `ZodResponseInterceptor`, `RequestIdMiddleware` et `getRequestId()`, `@Public()` / `IS_PUBLIC_KEY`.
 - `logging` : `LoggerModule.forRoot({ level, pretty })` ou `forRootAsync({ inject, useFactory })` (l'API lit les options par `ConfigService`), `PinoLoggerAdapter` (port `Logger`, `requestId` ajoute a chaque ligne).
 - `date-time` : `ClockModule` (port `DateTimeProvider`). `identifier` : `IdentifierModule`, `UuidV7GeneratorProvider` (port `UuidGenerator`). `crypto` : `CryptoModule`, `NodeSecureRandomGenerator` (port `SecureRandomGenerator`).
-- `storage` : `LocalDiskFileStorage` (port `FileStorage`, decision 0027), `FileStorageException`.
+- `storage` : `StorageModule.forRootAsync({ inject, useFactory })` (global, port `FileStorage`, dossier racine passe par l'API), `LocalDiskFileStorage` (decision 0027), `FileStorageException`.
 - `messaging` : `MessagingModule` (global, port `EventPublisher`), `InProcessEventPublisher` : publication apres commit dans le processus. Aucun abonne en phase 2 : il journalise chaque evenement par ses identifiants (jamais ses donnees), le relais de l'outbox livre (decision 0021).
 
 ## A lire avant de commencer

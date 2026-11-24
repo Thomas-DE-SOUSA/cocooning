@@ -1,0 +1,8 @@
+# Module messaging de l'API
+
+Adaptateurs du contexte `messaging` : `FlashMessagePrismaRepository` et `InstantPhotoPrismaRepository` (`secondary/repositories/`, etat et outbox `messaging_event` dans une transaction, element retire filtre par l'extension de suppression douce, page du fil par `newestOf` : `coupleId`, identifiant sous le curseur, tri decroissant), `PairedCouplePrismaProvider` (`secondary/providers/`, copie de celui d'`agenda`, decision 0041) et leurs mappers Prisma (`secondary/mappers/`). `FileStorage` vient du `StorageModule` global d'`AppModule`, jamais redeclare ici. Les use cases sont construits par `messagingUseCase()` (`messaging-use-case.factory.ts`) dans `messaging-service.module.ts`, qui fournit aussi `MessagingCoupleGuardService` (decision 0006). Six controleurs (`primary/controllers/`, routes `MESSAGE_FEED_GET`, `FLASH_MESSAGE_*`, `INSTANT_PHOTO_*` de `ApiRouterEnum`), chacun sous `@UseGuards(MessagingCoupleGuard)` (`primary/couple/`). L'envoi d'une photo passe par `primary/upload/` : `InstantPhotoFileInterceptor` (multer en memoire, champ `INSTANT_PHOTO_FORM_FIELD`, `INSTANT_PHOTO_MAX_BYTES`), `InstantPhotoTooHeavyInterceptor` (le 413 de multer devient `INSTANT_PHOTO_CONTENT_INVALID`, 422) et `UploadedInstantPhotoPipe` (champ absent : 422). Specs E2E : `test/messaging/` (`MessagingTestApp`, une spec par route, `messaging-prisma-repositories.e2e-spec.ts`).
+
+La classe `MessagingModule` porte le meme nom que le module d'evenements de `@cocooning/server-infrastructure/messaging` : `AppModule` l'importe sous l'alias `MessagingContextModule`.
+
+Contexte metier :
+@../../../../../../packages/couple/server-business-logic/src/messaging/CLAUDE.md

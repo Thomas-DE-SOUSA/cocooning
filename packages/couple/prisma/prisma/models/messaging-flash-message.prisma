@@ -1,0 +1,19 @@
+/// A flash message of the couple's feed (decision 0050): the aggregate `FlashMessage`.
+model FlashMessage {
+  id        String    @id @db.Uuid
+  coupleId  String    @map("couple_id") @db.Uuid
+  /// The author, who alone may withdraw it (R1, R6).
+  ownerId   String    @map("owner_id") @db.Uuid
+  /// FLASH_MESSAGE_TEXT_MAX_LENGTH of the couple shared kernel (R2).
+  text      String    @db.VarChar(140)
+  version   Int       @map("version")
+  /// The time the feed shows, set when the word is sent (R5).
+  createdAt DateTime  @map("created_at")
+  updatedAt DateTime  @map("updated_at")
+  /// Set when the author withdraws the word (R6).
+  deletedAt DateTime? @map("deleted_at")
+
+  // The feed reads newest first by UUID v7 (decision 0025; core.md rule 27: coupleId leads).
+  @@index([coupleId, id])
+  @@map("flash_message")
+}
