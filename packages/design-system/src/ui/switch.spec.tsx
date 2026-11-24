@@ -40,4 +40,23 @@ describe('Feature: an on/off switch', () => {
             expect(changes).toEqual([true]);
         });
     });
+
+    describe('Scenario: a switch inside a form', () => {
+        it('still reports the new state', () => {
+            const changes: boolean[] = [];
+            render(
+                <form>
+                    <Switch
+                        aria-label="Toute la journée"
+                        checked
+                        onCheckedChange={(checked) => changes.push(checked)}
+                    />
+                </form>,
+            );
+
+            fireEvent.click(screen.getByRole('switch'));
+
+            expect(changes).toEqual([false]);
+        });
+    });
 });

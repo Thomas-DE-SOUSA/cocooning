@@ -31,7 +31,7 @@ Regles front communes :
 
 - Pas de build : `exports` pointe vers `src`, l'app web compile le package (`transpilePackages`). Le `'use client'` reste donc en tete du fichier livre.
 - Tailwind 4 ne lit pas `node_modules` : `@source '../'` dans `globals.css` lui fait voir les classes du package. Sans lui, les classes des composants manquent dans la page.
-- `vaul` et `@radix-ui/react-switch` suivent shadcn (pas de decision) ; ils livrent une entree CommonJS (D31), Jest les charge tels quels. `DrawerContent` porte toujours un `DrawerTitle`, et un `DrawerDescription` pour `aria-describedby` (le dialogue Radix previent sinon). Seule la feuille du bas existe : une autre direction s'ajoute le jour ou un ecran la demande.
+- `vaul` et `@radix-ui/react-switch` suivent shadcn (pas de decision) ; ils livrent une entree CommonJS (D31), Jest les charge tels quels ; jsdom n'ayant pas `ResizeObserver`, `src/testing/resize-observer-stub.ts` le remplace (`setupFiles` de `jest.config.mjs`), comme dans l'app web. `DrawerContent` porte toujours un `DrawerTitle`, et un `DrawerDescription` pour `aria-describedby` (le dialogue Radix previent sinon). Seule la feuille du bas existe : une autre direction s'ajoute le jour ou un ecran la demande.
 - `react-day-picker` raisonne en `Date` locales : l'app construit ses jours depuis `YYYY-MM-DD` composante par composante et passe `today`, sinon le serveur (UTC) et le telephone (Paris) ne dessinent pas le meme jour.
 - Les variables `--font-inter` et `--font-fraunces` sont posees par l'app (`apps/couple/web/src/app/fonts.ts`) : le package ne charge aucun fichier de police.
 
