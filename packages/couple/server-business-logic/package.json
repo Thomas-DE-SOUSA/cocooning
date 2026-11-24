@@ -22,6 +22,10 @@
         "./notes": {
             "types": "./src/notes/index.ts",
             "default": "./dist/notes/index.js"
+        },
+        "./agenda": {
+            "types": "./src/agenda/index.ts",
+            "default": "./dist/agenda/index.js"
         }
     },
     "dependencies": {

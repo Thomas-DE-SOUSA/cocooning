@@ -1,4 +1,5 @@
 import type { RouteGroup } from '../route-group';
+import { AgendaRouteEnum } from './agenda.route';
 import { AuthenticationRouteEnum } from './authentication.route';
 import { HealthRouteEnum } from './health.route';
 import { NotesRouteEnum } from './notes.route';
@@ -9,6 +10,7 @@ export const API_ROUTE_GROUPS = [
     AuthenticationRouteEnum,
     PairingRouteEnum,
     NotesRouteEnum,
+    AgendaRouteEnum,
 ] as const satisfies readonly RouteGroup[];
 
 export const ApiRouterEnum = {
@@ -16,4 +18,5 @@ export const ApiRouterEnum = {
     ...AuthenticationRouteEnum,
     ...PairingRouteEnum,
     ...NotesRouteEnum,
+    ...AgendaRouteEnum,
 } as const satisfies RouteGroup;
