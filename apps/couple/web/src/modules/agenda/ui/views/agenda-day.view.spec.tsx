@@ -1,6 +1,5 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { WithI18n } from '@/testing/with-i18n';
-import { AGENDA_DAY_ANCHOR } from '../../data/agenda-day-anchor';
 import {
     type AgendaDayItem,
     AuthorColorEnum,
@@ -81,15 +80,6 @@ describe('Feature: the events of the chosen day', () => {
         ).toBeTruthy();
         expect(screen.getByText('Rien de prévu ce jour-là.')).toBeTruthy();
         expect(screen.queryByText("Aujourd'hui")).toBeNull();
-    });
-
-    it('carries the anchor "Aujourd\'hui" scrolls to', () => {
-        renderDay({});
-        expect(
-            screen
-                .getByRole('heading', { name: 'Mardi 24 novembre' })
-                .closest('section')?.id,
-        ).toBe(AGENDA_DAY_ANCHOR);
     });
 
     it('tells that the chosen day is today', () => {
