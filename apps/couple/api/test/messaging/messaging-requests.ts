@@ -6,6 +6,7 @@ import type {
     TestResponse,
 } from '../shared/app/test-client';
 import { feedItemOf, JPEG_PHOTO, LOVE } from './messaging-test-data';
+import { PushSubscriptionRequests } from './push-subscription-requests';
 
 const withId = (route: string, name: string, id: string): string =>
     route.replace(`:${name}`, id);
@@ -22,8 +23,8 @@ const photoForm = (
 };
 
 // One method per route of the messages, sent as a partner signed in at the clock of the test app.
-export abstract class MessagingRequests {
-    abstract as(userId: string): TestClient;
+export abstract class MessagingRequests extends PushSubscriptionRequests {
+    abstract override as(userId: string): TestClient;
 
     sendFlashMessage(userId: string, text = LOVE): Promise<TestResponse> {
         return this.as(userId).post(ApiRouterEnum.FLASH_MESSAGE_SEND, { text });

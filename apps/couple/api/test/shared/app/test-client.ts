@@ -79,6 +79,15 @@ export class TestClient {
         };
     }
 
+    async put(path: string, body: unknown): Promise<TestResponse> {
+        const response = await fetch(`${this.baseUrl}${path}`, {
+            method: 'PUT',
+            headers: { ...this.headers(), 'Content-Type': JSON_CONTENT_TYPE },
+            body: JSON.stringify(body),
+        });
+        return { status: response.status, body: await readBody(response) };
+    }
+
     async patch(path: string, body: unknown): Promise<TestResponse> {
         const response = await fetch(`${this.baseUrl}${path}`, {
             method: 'PATCH',

@@ -7,5 +7,6 @@ export * from './read-agenda-events';
 export * from './read-messaging-events';
 export * from './read-note-events';
 export * from './read-pairing-events';
+export * from './read-push-subscriptions';
 export * from './truncate-all-tables';
 export * from './while-advisory-lock-held';

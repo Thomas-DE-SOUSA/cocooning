@@ -14,9 +14,17 @@ import {
     DeterministicDateTimeProvider,
     FakeSecureRandomGenerator,
 } from '@cocooning/shared-kernel/testing';
-import { PhotoPromptScheduler } from '../../src/modules/messaging/primary/scheduler';
+import {
+    PushNotificationSender,
+    RelayOutboxEventsUseCase,
+} from '@cocooning/couple-server-business-logic/messaging';
+import {
+    OutboxRelayScheduler,
+    PhotoPromptScheduler,
+} from '../../src/modules/messaging/primary/scheduler';
 import { closeTestApp, createTestApp } from '../shared/app/create-test-app';
 import { TestClient } from '../shared/app/test-client';
+import { FakePushNotificationSender } from './fake-push-notification-sender';
 import { MessagingRequests } from './messaging-requests';
 import {
     COUPLES,
@@ -32,6 +40,7 @@ import {
 export class MessagingTestApp extends MessagingRequests {
     readonly clock = new DeterministicDateTimeProvider(NOW);
     readonly random = new FakeSecureRandomGenerator();
+    readonly pushSender = new FakePushNotificationSender();
     private app: INestApplication | null = null;
     private client: TestClient | null = null;
 
@@ -43,12 +52,18 @@ export class MessagingTestApp extends MessagingRequests {
         return this.started().app.get(FileStorage);
     }
 
+    // A provider of the running app, such as a repository tested through it (e2e.md rule 14).
+    get<T>(token: abstract new (...args: never[]) => T): T {
+        return this.started().app.get(token);
+    }
+
     async start(): Promise<void> {
         const app = await createTestApp({
             controllers: [],
             overrides: [
                 { provide: DateTimeProvider, useValue: this.clock },
                 { provide: SecureRandomGenerator, useValue: this.random },
+                { provide: PushNotificationSender, useValue: this.pushSender },
             ],
         });
         this.app = app;
@@ -61,6 +76,7 @@ export class MessagingTestApp extends MessagingRequests {
 
     async reset(): Promise<void> {
         this.clock.setNow(NOW);
+        this.pushSender.reset();
         await truncateAllTables(this.prisma);
         await Promise.all([
             ...PARTNERS.map((userId) =>
@@ -73,6 +89,17 @@ export class MessagingTestApp extends MessagingRequests {
     // R7: one tick of the scheduled task, at the clock of the test app; its timer is off in the E2E environment.
     tick(): Promise<void> {
         return this.started().app.get(PhotoPromptScheduler).tick();
+    }
+
+    // R10: one tick of the outbox relay, at the clock of the test app; its timer is off in the E2E environment.
+    relay(): Promise<void> {
+        return this.started().app.get(OutboxRelayScheduler).tick();
+    }
+
+    // Two relays in two transactions at once, as two API processes would run them, around the scheduler's guard.
+    async relayTwiceAtOnce(): Promise<void> {
+        const relay = this.started().app.get(RelayOutboxEventsUseCase);
+        await Promise.all([relay.execute(), relay.execute()]);
     }
 
     // Today's prompt of the couple of A and B, drawn at 10:00 Paris and issued now: its id.

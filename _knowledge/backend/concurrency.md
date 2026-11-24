@@ -25,7 +25,7 @@ How the API protects an aggregate against concurrent writes: one unit of work pe
 
 ## Outbox relay
 
-13. **The relay claims rows atomically**: `updateMany({ where: { id: { in }, published: false } })`, with `publishedAt` from `DateTimeProvider`. A single API instance is planned (decision 0021); the claim keeps a second one harmless.
+13. **The relay claims rows inside its transaction** (decision 0051): `RelayOutboxEventsUseCase` runs in `unitOfWork.run`, `OutboxEventPrismaRepository.claimPending` reads each outbox with `FOR UPDATE SKIP LOCKED`, the notifications are attempted, then `markPublished` sets `published` and `publishedAt` (from `DateTimeProvider`) with `updateMany({ where: { id: { in }, published: false } })` before the commit. A failed transaction leaves the batch unpublished for the next tick (at least once); a second API instance skips the locked rows. The sends happen inside the transaction, so their timeout (`PUSH_REQUEST_TIMEOUT_MS`) stays well under `DB_TX_TIMEOUT_MS`.
 
 ## Tests
 

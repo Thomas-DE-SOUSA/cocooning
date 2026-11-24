@@ -13,6 +13,7 @@ import {
     WithdrawInstantPhotoUseCase,
 } from '@cocooning/couple-server-business-logic/messaging';
 import { MessagingSecondaryModule } from './messaging-secondary.module';
+import { pushUseCases } from './messaging-push-use-cases';
 import { messagingUseCase } from './messaging-use-case.factory';
 
 const useCases = [
@@ -98,10 +99,10 @@ const messagingCoupleGuardService = {
 
 @Module({
     imports: [MessagingSecondaryModule],
-    providers: [...useCases, messagingCoupleGuardService],
+    providers: [...useCases, ...pushUseCases, messagingCoupleGuardService],
     exports: [
         MessagingSecondaryModule,
-        ...useCases.map(({ provide }) => provide),
+        ...[...useCases, ...pushUseCases].map(({ provide }) => provide),
         MessagingCoupleGuardService,
     ],
 })

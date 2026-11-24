@@ -6,7 +6,7 @@ Cette page décrit comment le contexte `messaging` est construit : ses couches, 
 
 `messaging` porte le fil à deux du couple : les mots flash et les photos instantanées, gardés du plus récent au plus ancien, chacun avec son auteur et son heure ([décision 0050](../../decisions/messaging/0050-regles-des-messages.md)). Les deux partenaires voient tout le fil ; seul l'auteur retire ce qu'il a envoyé. Le contexte reçoit le `coupleId` par un port étroit ([décision 0041](../../decisions/0041-couple-de-la-requete.md)). Les octets d'une photo vivent sur le disque de la VM derrière le port `FileStorage` ([décision 0027](../../decisions/0027-stockage-des-photos.md)), jamais en base.
 
-Construit aujourd'hui : domaine et application des mots flash, des photos spontanées et de la photo du jour (R7 à R9), tables `flash_message`, `instant_photo`, `photo_prompt` et `messaging_event` (voir [les tables](tables.md)), adaptateurs Prisma, tâche planifiée de l'invitation, contrat HTTP et huit routes de l'API. À venir avec les PR suivantes : le relais de l'outbox et le Web Push (R10, R11), puis le client et l'onglet « Messages ».
+Construit aujourd'hui : domaine et application des mots flash, des photos spontanées et de la photo du jour (R7 à R9), des abonnements aux notifications et du relais de l'outbox (R10, R11, voir [le relais](relay.md)), tables `flash_message`, `instant_photo`, `photo_prompt`, `push_subscription` et `messaging_event` (voir [les tables](tables.md)), adaptateurs Prisma, envoi Web Push, tâches planifiées de l'invitation et du relais, contrat HTTP et onze routes de l'API. À venir avec les PR suivantes : le client, le service worker des notifications et l'onglet « Messages ».
 
 ## Comment c'est construit
 
@@ -34,6 +34,14 @@ Construit aujourd'hui : domaine et application des mots flash, des photos sponta
 | `toMessageFeedItemView`, `toMessageFeedPageView`, `toInstantPhotoFileView`, `toTodayPhotoPromptView` | Vues : élément du fil (sorte, identifiant, auteur, `isOwner`, heure d'envoi, texte ou type de contenu, invitation, retard, photo cachée), page, octets d'une photo, invitation du jour | `application/mappers/` |
 | `FlashMessagePrismaRepository`, `InstantPhotoPrismaRepository`, `PhotoPromptPrismaRepository`, `PairedCouplePrismaProvider` | Adaptateurs : élément et outbox dans une transaction, verrou optimiste, `coupleId` dans chaque `where` | `apps/couple/api/src/modules/messaging/secondary/` |
 | `PhotoPromptScheduler` | Adaptateur primaire de la tâche planifiée : un passage par minute dans le processus de l'API, jamais deux à la fois ; un échec est journalisé et repris au passage suivant | `apps/couple/api/src/modules/messaging/primary/scheduler/` |
+| `PushSubscription`, `PushEndpoint`, `PushSubscriptionKeys`, `PushSubscriptionId` | Agrégat et value objects d'un téléphone abonné : adresse `https` d'au plus `PUSH_SUBSCRIPTION_ENDPOINT_MAX_LENGTH`, clés base64url d'au plus `PUSH_SUBSCRIPTION_KEY_MAX_LENGTH` (R11) | `domain/models/`, `domain/value-objects/` |
+| `PushSubscriptionRepository` | Port : `save`, `findByEndpoint`, `findOfOwner` (abonnement du seul partenaire), `findOfCouples` (une requête), `forget` (suppression définitive) | `domain/ports/push-subscription.repository.ts` |
+| `PushSubscriptionRegistrationService`, `PushSubscriptionPreconditionService` | Abonnement nouveau ou renouvelé pour le partenaire connecté (R11) ; son propre abonnement, sinon `PUSH_SUBSCRIPTION_NOT_FOUND` | `domain/services/` |
+| `OutboxEventRepository`, `PushNotificationSender`, `PushNotificationService`, `pushNotificationsOf` | Le relais de l'outbox et l'envoi des notifications (voir [le relais](relay.md)) | `domain/` |
+| `PushNotificationKindEnum` | Genre d'une notification, seule charge envoyée au téléphone, partagé avec la PWA | `packages/couple/shared-kernel/src/enums/` |
+| `SubscribePushNotificationsUseCase`, `UnsubscribePushNotificationsUseCase` | Use cases des abonnements, `execute(context, command)` | `application/use-cases/` |
+| `GetPushPublicKeyUseCase`, `RelayOutboxEventsUseCase` | `execute()` sans contexte : la clé publique VAPID est la même pour tous ; le relais ne sert aucun partenaire | `application/use-cases/` |
+| `PushSubscriptionPrismaRepository`, `OutboxEventPrismaRepository`, `WebPushNotificationSender`, `OutboxRelayScheduler` | Adaptateurs des abonnements, des outbox, de l'envoi Web Push, et tâche du relais | `apps/couple/api/src/modules/messaging/` |
 | `StorageModule`, `LocalDiskFileStorage` | Fournit `FileStorage` à toute l'API, sous `FILE_STORAGE_DIRECTORY` | `packages/server-infrastructure/src/storage/` |
 
 Les chemins sans préfixe partent de `packages/couple/server-business-logic/src/messaging/`.
@@ -52,6 +60,9 @@ Toutes les routes demandent une session (cookie `cocooning_session`, [décision 
 | `GET /instant-photos/:instantPhotoId/file` | `INSTANT_PHOTO_FILE_GET` | `GetInstantPhotoFileUseCase` | `200`, les octets, `Content-Type` du format détecté | `404` `INSTANT_PHOTO_NOT_FOUND`, aussi pour la photo du jour de l'autre tant que le lecteur n'a pas envoyé la sienne (R9) ; `500` fichier disparu (`INSTANT_PHOTO_DATA_CORRUPTED`) |
 | `GET /photo-prompts/today` | `PHOTO_PROMPT_TODAY_GET` | `GetTodayPhotoPromptUseCase` | `200`, `TodayPhotoPromptResponseSchema` : `photoPrompt` vaut `null` avant l'envoi, sinon `id`, `issuedAt`, `lateFrom`, `closesAt`, `myInstantPhotoId`, `isAnsweredByPartner` | aucun propre |
 | `POST /photo-prompts/:photoPromptId/instant-photos`, `multipart/form-data`, champ `photo` | `PHOTO_PROMPT_ANSWER` | `AnswerPhotoPromptUseCase` | `201`, élément `INSTANT_PHOTO` avec `photoPromptId` et `isLate` | `404` `PHOTO_PROMPT_NOT_FOUND` (inconnue, d'un autre couple ou pas encore envoyée) ; `409` `PHOTO_PROMPT_ALREADY_ANSWERED`, `PHOTO_PROMPT_EXPIRED` ; `422` photo ou identifiant invalides |
+| `PUT /push-subscriptions`, corps `SubscribePushNotificationsRequestSchema` (le `PushSubscription` du navigateur : `endpoint`, `keys.p256dh`, `keys.auth`) | `PUSH_SUBSCRIPTION_SUBSCRIBE` | `SubscribePushNotificationsUseCase` | `204` ; idempotent sur l'`endpoint`, qui passe au partenaire connecté | `422` adresse ou clés invalides ; `409` `PUSH_SUBSCRIPTION_VERSION_CONFLICT` (même téléphone abonné deux fois au même moment) |
+| `POST /push-subscriptions/unsubscribe`, corps `UnsubscribePushNotificationsRequestSchema` (`endpoint`) | `PUSH_SUBSCRIPTION_UNSUBSCRIBE` | `UnsubscribePushNotificationsUseCase` | `204` | `404` `PUSH_SUBSCRIPTION_NOT_FOUND` (téléphone de l'autre, d'un autre couple ou inconnu) ; `422` adresse invalide |
+| `GET /push-subscriptions/public-key` | `PUSH_SUBSCRIPTION_PUBLIC_KEY_GET` | `GetPushPublicKeyUseCase` | `200`, `PushPublicKeyResponseSchema` (`publicKey`, clé publique VAPID) | aucun propre |
 
 ## Points d'attention
 
@@ -64,6 +75,8 @@ Toutes les routes demandent une session (cookie `cocooning_session`, [décision 
 - **Le jour est celui de Paris.** Le jour d'une invitation, la fenêtre de 9 h à 21 h et minuit sont calculés à l'heure de Paris par `couple-time.ts`, qui relit le décalage à l'instant visé : un jour de changement d'heure dure 23 ou 25 heures. L'heure tirée est gardée en instant UTC, comme `issuedAt` : la tâche la compare à l'horloge ([décision 0047](../../decisions/agenda/0047-moments-de-l-agenda-en-heure-de-paris.md), « Risques »).
 - **La photo cachée ne sort pas de l'API.** Le fil ne rend ni `contentType` ni URL de la photo du jour de l'autre tant que le lecteur n'a pas répondu à la même invitation, et son fichier répond `404` comme une photo inconnue (R9). Une requête par page du fil suffit (`findOfPhotoPrompts`), aucune sans photo du jour.
 - **Le contenu appartient au couple.** Aucun événement de domaine ni aucun log ne porte le texte d'un mot ni la photo (`core.md` règle 33).
+- **L'abonnement est un secret du téléphone.** Son adresse et ses clés ne sortent jamais dans un log, une erreur ou une réponse ; la clé privée VAPID ne quitte pas l'API. Un abonnement par téléphone et par couple (`push_subscription_couple_id_endpoint_key`) : réabonner le même téléphone renouvelle ses clés et le donne au partenaire connecté. Désabonner se fait par l'adresse, la seule chose que le navigateur connaît.
+- **Les notifications** suivent [le relais](relay.md).
 
 ## Décisions liées
 
@@ -72,3 +85,4 @@ Toutes les routes demandent une session (cookie `cocooning_session`, [décision 
 - [Décision 0025](../../decisions/0025-pagination.md) : curseur pour le défilement infini
 - [Décision 0041](../../decisions/0041-couple-de-la-requete.md) : le couple de la requête vient de `pairing`
 - [Décision 0021](../../decisions/0021-outbox-postgresql-relais-dans-l-api.md) : outbox PostgreSQL
+- [Décision 0051](../../decisions/messaging/0051-relais-des-notifications.md) : relais des notifications

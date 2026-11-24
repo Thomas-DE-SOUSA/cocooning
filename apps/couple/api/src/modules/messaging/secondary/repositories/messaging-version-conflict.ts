@@ -48,3 +48,22 @@ export const toPhotoPromptVersionConflict = (error: unknown) =>
         'photo_prompt_couple_id_day_key',
         photoPromptVersionConflict,
     );
+
+export const pushSubscriptionVersionConflict = (): MessagingException =>
+    new MessagingException({
+        code: MessagingExceptionCodeEnum.PUSH_SUBSCRIPTION_VERSION_CONFLICT,
+        message: 'Push subscription changed since it was read',
+    });
+
+// R11: the same phone subscribing twice at once collides on (couple_id, endpoint); a subscription forgotten meanwhile, on its key.
+export const toPushSubscriptionVersionConflict = (
+    error: unknown,
+): MessagingException | null => {
+    const constraint = violatedUniqueConstraint(error);
+    if (
+        constraint !== 'push_subscription_couple_id_endpoint_key' &&
+        constraint !== 'push_subscription_pkey'
+    )
+        return null;
+    return pushSubscriptionVersionConflict();
+};

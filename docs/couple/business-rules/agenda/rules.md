@@ -79,7 +79,7 @@ Nous modifions ou supprimons tous les deux n'importe quel événement partagé ;
 
 Je crée un événement partagé, ou je partage un événement privé : le téléphone de l'autre affiche « Ton âme sœur a ajouté un événement », sans le titre. Un événement « rien que pour moi » ne notifie personne.
 
-- Dans le code : à venir avec le relais de l'outbox et le Web Push du contexte `messaging`.
+- Dans le code : le relais de l'outbox du contexte `messaging` lit `agenda_event` ; `pushNotificationsOf` (`messaging/domain/models/push-notification-plan.ts`) fait d'un `CalendarEventCreatedEvent` de visibilité `SHARED` ou d'un `CalendarEventSharedEvent` un `CALENDAR_EVENT_ADDED` pour l'autre partenaire seulement ; un événement créé `PRIVATE` ne notifie personne ([décision 0051](../../decisions/messaging/0051-relais-des-notifications.md)).
 - Source : [décision 0050](../../decisions/messaging/0050-regles-des-messages.md). Validée par : Thomas De Sousa, 2026-11-24.
 
 ## Cas et exceptions

@@ -24,6 +24,8 @@ Cette page décrit les trois agrégats du contexte `messaging` : leur état, leu
 | `PhotoPrompt.issueIfDue(now)` | Envoie l'invitation dès son heure, une seule fois et avant minuit de son jour ; enregistre `PhotoPromptIssuedEvent` (R7) | idem |
 | `PhotoPrompt.answerAt(now)` | Refuse avant l'envoi (`PHOTO_PROMPT_NOT_FOUND`) et à partir de minuit (`PHOTO_PROMPT_EXPIRED`), par `PhotoPromptAnswerValidator` ; rend `isLate`, vrai plus de 10 minutes après l'envoi (R8) | idem, `domain/services/photo-prompt-answer.validator.ts` |
 | `PhotoPrompt.closesAt` | Minuit de Paris qui suit son jour (R8) | idem |
+| `PushSubscription.subscribe(input, now)` | Un téléphone d'un partenaire s'abonne : adresse et clés validées par `PushEndpoint.create` et `PushSubscriptionKeys.create` (R11) ; aucun événement, rien n'y réagit et l'abonnement est un secret | `domain/models/push-subscription.aggregate.ts` |
+| `PushSubscription.renewFor(ownerId, keys, now)` | Le même téléphone s'abonne de nouveau : nouvelles clés, partenaire connecté (R11) | idem |
 
 ## Événements
 
@@ -34,9 +36,9 @@ Cette page décrit les trois agrégats du contexte `messaging` : leur état, leu
 | `InstantPhotoSentEvent` | `messaging.instant-photo.sent` | `ownerId` |
 | `InstantPhotoWithdrawnEvent` | `messaging.instant-photo.withdrawn` | aucune (`null`) |
 | `PhotoPromptDrawnEvent` | `messaging.photo-prompt.drawn` | aucune (`null`) : l'heure tirée reste secrète |
-| `PhotoPromptIssuedEvent` | `messaging.photo-prompt.issued` | aucune (`null`) : le relais invitera les deux partenaires du couple (R10, à venir) |
+| `PhotoPromptIssuedEvent` | `messaging.photo-prompt.issued` | aucune (`null`) : le relais notifie les deux partenaires du couple (R10, [le relais](relay.md)) |
 
-Chaque événement porte l'`ExecutionContext` complet. Celui d'une invitation a pour `userId` l'UUID nul (`SCHEDULED_TASK_USER_ID`, `domain/events/photo-prompt-fact.ts`) : c'est l'app, pas un partenaire, qui tire et envoie. `ownerId` dira au relais qui notifier : l'autre partenaire seulement (R10, à venir). Aucun événement ne porte le texte d'un mot ni la photo.
+Chaque événement porte l'`ExecutionContext` complet. Celui d'une invitation a pour `userId` l'UUID nul (`SCHEDULED_TASK_USER_ID`, `domain/events/photo-prompt-fact.ts`) : c'est l'app, pas un partenaire, qui tire et envoie. Le relais notifie l'autre partenaire que le `userId` de l'événement, ou les deux pour une invitation (R10, [le relais](relay.md)). Aucun événement ne porte le texte d'un mot ni la photo.
 
 ## Invariants
 
@@ -50,6 +52,8 @@ Chaque événement porte l'`ExecutionContext` complet. Celui d'une invitation a 
 | INV-006 | Une invitation par couple et par jour de Paris, tirée entre 9 h et 21 h (R7) | `PhotoPrompt.draw`, index unique `photo_prompt_couple_id_day_key` |
 | INV-007 | Une invitation part une seule fois, à son heure ou après, jamais après minuit de son jour (R7) | `PhotoPrompt.issueIfDue` |
 | INV-008 | Une photo du jour répond à une invitation partie, avant minuit, une seule fois par partenaire vivante (R8) | `PhotoPrompt.answerAt`, `PhotoPromptPreconditionService`, index unique partiel `instant_photo_couple_id_photo_prompt_id_owner_id_key` |
+| INV-009 | Un abonnement par téléphone et par couple ; son adresse et son couple ne changent jamais, son propriétaire suit le partenaire qui l'abonne (R11) | `PushSubscriptionRegistrationService`, index unique `push_subscription_couple_id_endpoint_key` |
+| INV-010 | Une adresse d'abonnement est en `https`, les clés en base64url, bornées (`PUSH_SUBSCRIPTION_INVALID`, R11) | `PushEndpoint.create`, `PushSubscriptionKeys.create` |
 
 ## Décisions liées
 
