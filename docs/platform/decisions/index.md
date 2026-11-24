@@ -24,3 +24,4 @@ Le registre des décisions qui touchent tout le monorepo : dépôt, outillage, v
 | 0014 | [Socle technique de la PWA](0014-socle-technique-de-la-pwa.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0015 | [Production sur la VM Oracle de Cadence, sans Caddy](0015-production-sur-la-vm-oracle.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0016 | [Commandes d'exploitation dans l'API](0016-commandes-d-exploitation-dans-l-api.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0017 | [Direction artistique « Lin et terre cuite »](0017-direction-artistique-lin-et-terre-cuite.md) | produit | acceptée | 2026-11-24 | Thomas De Sousa |
