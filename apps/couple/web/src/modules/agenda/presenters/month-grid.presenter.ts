@@ -26,7 +26,7 @@ export type AgendaRanges = {
     readonly day: CalendarEventQueryRequest | null;
 };
 
-// The chosen day may lie outside the month shown: it is then read on its own.
+// The day chosen at load may lie outside the month shown: it is then read on its own.
 export function presentAgendaRanges(query: AgendaQuery): AgendaRanges {
     const grid = presentMonthGridRange(query.month);
     const isInGrid = grid.from <= query.day && query.day <= grid.to;
@@ -34,4 +34,13 @@ export function presentAgendaRanges(query: AgendaQuery): AgendaRanges {
         grid,
         day: isInGrid ? null : { from: query.day, to: query.day },
     };
+}
+
+// The days of a range, both included, in calendar order.
+export function presentRangeDays(range: CalendarEventQueryRequest): string[] {
+    const days: string[] = [];
+    for (let day = range.from; day <= range.to; day = addDays(day, 1)) {
+        days.push(day);
+    }
+    return days;
 }

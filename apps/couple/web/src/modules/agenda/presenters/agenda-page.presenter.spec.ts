@@ -9,7 +9,10 @@ import {
 import { AgendaExceptionCodeEnum } from '@cocooning/couple-contract/agenda';
 import { WebRouterEnum } from '@cocooning/couple-shared-kernel/routers';
 import { fail, ok } from '@cocooning/shared-kernel/utils';
-import { AgendaStepEnum } from '../view-models/agenda-screen.view-model';
+import {
+    type AgendaPage,
+    AgendaStepEnum,
+} from '../view-models/agenda-screen.view-model';
 import { anEvent } from './__tests__/calendar-events';
 import {
     type AgendaPageInput,
@@ -29,39 +32,76 @@ const AN_AGENDA: AgendaPageInput = {
     today: '2026-11-24',
 };
 
+function calendarOf(page: AgendaPage) {
+    if (page.viewModel?.step !== AgendaStepEnum.CALENDAR) {
+        throw new Error('Expected the calendar step');
+    }
+    return page.viewModel;
+}
+
 describe('Feature: the agenda page (decision 0036)', () => {
     describe('Scenario: the API gives the events of the grid', () => {
-        it('shows the month, its dots and the events of the chosen day', () => {
+        it('shows the month, its dots and starts on the chosen day', () => {
             const page = presentAgendaPage(AN_AGENDA);
 
             expect(page.redirectTo).toBeNull();
             expect(page.viewModel).toMatchObject({
                 step: AgendaStepEnum.CALENDAR,
+                initialDay: '2026-12-05',
                 calendar: {
                     today: '2026-11-24',
-                    selectedDay: '2026-12-05',
                     month: '2026-12',
                     firstYear: 2015,
                     lastYear: 2036,
                 },
-                day: { label: 'Samedi 5 décembre', isToday: false },
             });
         });
 
-        it('reads the chosen day from its own list when another month is shown', () => {
-            const page = presentAgendaPage({
-                ...AN_AGENDA,
-                query: { day: '2026-11-24', month: '2027-03' },
-                dayEvents: ok({
-                    items: [
-                        anEvent({ startsOn: '2026-11-24', title: 'Ce soir' }),
-                    ],
-                }),
-            });
+        it('holds every day of the grid, so that a tap needs no server', () => {
+            const { days } = calendarOf(presentAgendaPage(AN_AGENDA));
 
-            expect(page.viewModel).toMatchObject({
-                day: { isToday: true, items: [{ title: 'Ce soir' }] },
+            const keys = Object.keys(days);
+            expect(keys).toHaveLength(35);
+            expect([keys[0], keys.at(-1)]).toEqual([
+                '2026-11-30',
+                '2027-01-03',
+            ]);
+            expect(days['2026-12-05']).toMatchObject({
+                label: 'Samedi 5 décembre',
+                isToday: false,
+                items: [
+                    { title: 'Cadeau surprise' },
+                    { title: 'Diner chez Lea' },
+                ],
             });
+            expect(days['2026-12-06']).toEqual({
+                label: 'Dimanche 6 décembre',
+                isToday: false,
+                items: [],
+            });
+        });
+
+        it('adds the chosen day from its own list when another month is shown', () => {
+            const { days } = calendarOf(
+                presentAgendaPage({
+                    ...AN_AGENDA,
+                    query: { day: '2026-11-24', month: '2027-03' },
+                    dayEvents: ok({
+                        items: [
+                            anEvent({
+                                startsOn: '2026-11-24',
+                                title: 'Ce soir',
+                            }),
+                        ],
+                    }),
+                }),
+            );
+
+            expect(days['2026-11-24']).toMatchObject({
+                isToday: true,
+                items: [{ title: 'Ce soir' }],
+            });
+            expect(Object.keys(days)).toHaveLength(36);
         });
     });
 

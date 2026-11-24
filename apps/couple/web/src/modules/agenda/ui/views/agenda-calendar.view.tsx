@@ -18,6 +18,7 @@ const LAST_MONTH = 12;
 
 type Props = {
     readonly calendar: AgendaCalendarViewModel;
+    readonly selectedDay: string;
     readonly onSelectDay: (day: string) => void;
     readonly onChangeMonth: (month: string) => void;
 };
@@ -25,6 +26,7 @@ type Props = {
 // The month grid (decision 0048): a day is chosen by a tap, the month and the year from the caption or the chevrons.
 export function AgendaCalendarView({
     calendar,
+    selectedDay,
     onSelectDay,
     onChangeMonth,
 }: Props) {
@@ -49,7 +51,7 @@ export function AgendaCalendarView({
                         onChangeMonth(monthOf(fromLocalDate(month)))
                     }
                     today={toLocalDate(calendar.today)}
-                    selected={toLocalDate(calendar.selectedDay)}
+                    selected={toLocalDate(selectedDay)}
                     onSelect={(day) => onSelectDay(fromLocalDate(day))}
                     labels={{
                         labelPrevious: () => t('calendar.previousMonth'),

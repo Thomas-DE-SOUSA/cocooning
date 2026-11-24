@@ -8,8 +8,8 @@ import type {
     DayMarks,
 } from '../view-models/agenda-screen.view-model';
 import { presentAuthorColor } from './author-color.presenter';
-import { addDays } from './calendar-day.presenter';
 import { compareCalendarEvents } from './calendar-event-order.presenter';
+import { presentRangeDays } from './month-grid.presenter';
 
 export const MAX_MARKS_PER_DAY = 3;
 
@@ -20,9 +20,7 @@ function daysCovered(
     const first = event.startsOn > range.from ? event.startsOn : range.from;
     const lastOfEvent = event.endsOn ?? event.startsOn;
     const last = lastOfEvent < range.to ? lastOfEvent : range.to;
-    const days: string[] = [];
-    for (let day = first; day <= last; day = addDays(day, 1)) days.push(day);
-    return days;
+    return presentRangeDays({ from: first, to: last });
 }
 
 // R7: the API sends the other's private events to nobody; a private one of mine is a hollow ring.

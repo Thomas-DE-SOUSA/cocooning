@@ -58,7 +58,10 @@ export default async function AgendaPage({ searchParams }: Props) {
                     {t('today')}
                 </Link>
             </header>
-            <AgendaContainer viewModel={page.viewModel} />
+            <AgendaContainer
+                key={`${query.day}/${query.month}`}
+                viewModel={page.viewModel}
+            />
         </main>
     );
 }

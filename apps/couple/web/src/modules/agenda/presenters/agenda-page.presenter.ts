@@ -8,6 +8,7 @@ import {
     type AgendaPage,
     AgendaStepEnum,
 } from '../view-models/agenda-screen.view-model';
+import { presentAgendaDays } from './agenda-days.presenter';
 import {
     AGENDA_FIRST_YEAR,
     presentAgendaLastYear,
@@ -17,10 +18,11 @@ import {
     presentAgendaRefusal,
 } from './agenda-refusal.presenter';
 import { presentCoupleCreatorId } from './author-color.presenter';
-import { presentDayItems } from './day-items.presenter';
-import { presentLongDay } from './day-label.presenter';
 import { presentDayMarks } from './day-marks.presenter';
-import { presentMonthGridRange } from './month-grid.presenter';
+import {
+    presentMonthGridRange,
+    presentRangeDays,
+} from './month-grid.presenter';
 
 export type AgendaPageInput = {
     readonly couple: Result<CoupleResponse | null, ApiError>;
@@ -45,28 +47,35 @@ export function presentAgendaPage({
         return presentAgendaRefusal(dayEvents.error);
     }
     const creatorId = presentCoupleCreatorId(couple.value.partners);
-    const dayList = dayEvents === null ? events.value : dayEvents.value;
+    const grid = presentMonthGridRange(query.month);
+    const gridDays = presentAgendaDays({
+        events: events.value.items,
+        days: presentRangeDays(grid),
+        today,
+        creatorId,
+    });
+    const outsideDay =
+        dayEvents === null
+            ? {}
+            : presentAgendaDays({
+                  events: dayEvents.value.items,
+                  days: [query.day],
+                  today,
+                  creatorId,
+              });
     return {
         redirectTo: null,
         viewModel: {
             step: AgendaStepEnum.CALENDAR,
+            initialDay: query.day,
             calendar: {
                 today,
-                selectedDay: query.day,
                 month: query.month,
                 firstYear: AGENDA_FIRST_YEAR,
                 lastYear: presentAgendaLastYear(today),
-                marks: presentDayMarks(
-                    events.value.items,
-                    creatorId,
-                    presentMonthGridRange(query.month),
-                ),
+                marks: presentDayMarks(events.value.items, creatorId, grid),
             },
-            day: {
-                label: presentLongDay(query.day, today),
-                isToday: query.day === today,
-                items: presentDayItems(dayList.items, query.day, creatorId),
-            },
+            days: { ...gridDays, ...outsideDay },
         },
     };
 }

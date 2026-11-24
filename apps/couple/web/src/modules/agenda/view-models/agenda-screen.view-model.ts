@@ -41,7 +41,6 @@ export type AgendaDayItem = {
 
 export type AgendaCalendarViewModel = {
     readonly today: string;
-    readonly selectedDay: string;
     readonly month: string;
     readonly firstYear: number;
     readonly lastYear: number;
@@ -54,6 +53,9 @@ export type AgendaDayViewModel = {
     readonly items: readonly AgendaDayItem[];
 };
 
+// Every day of the visible grid, and the chosen day when it lies outside: a tap shows one without the server.
+export type AgendaDays = Readonly<Record<string, AgendaDayViewModel>>;
+
 export const AgendaStepEnum = {
     CALENDAR: 'CALENDAR',
     UNAVAILABLE: 'UNAVAILABLE',
@@ -62,13 +64,19 @@ export const AgendaStepEnum = {
 export type AgendaScreenViewModel =
     | {
           readonly step: typeof AgendaStepEnum.CALENDAR;
+          readonly initialDay: string;
           readonly calendar: AgendaCalendarViewModel;
-          readonly day: AgendaDayViewModel;
+          readonly days: AgendaDays;
       }
     | {
           readonly step: typeof AgendaStepEnum.UNAVAILABLE;
           readonly error: ApiError;
       };
+
+export type AgendaCalendarScreen = Extract<
+    AgendaScreenViewModel,
+    { readonly step: typeof AgendaStepEnum.CALENDAR }
+>;
 
 export type AgendaPage =
     | { readonly redirectTo: string; readonly viewModel: null }

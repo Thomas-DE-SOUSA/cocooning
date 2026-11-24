@@ -8,7 +8,6 @@ import { AgendaCalendarView } from './agenda-calendar.view';
 
 const NOVEMBER: AgendaCalendarViewModel = {
     today: '2026-11-24',
-    selectedDay: '2026-11-12',
     month: '2026-11',
     firstYear: 2015,
     lastYear: 2036,
@@ -34,6 +33,7 @@ function renderCalendar() {
         <WithI18n>
             <AgendaCalendarView
                 calendar={NOVEMBER}
+                selectedDay="2026-11-12"
                 onSelectDay={(day) => choices.push(`day:${day}`)}
                 onChangeMonth={(month) => choices.push(`month:${month}`)}
             />
