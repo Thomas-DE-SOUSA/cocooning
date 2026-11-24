@@ -26,6 +26,7 @@ Le couple parle français, le code est en anglais. Aucune réglementation ne fix
 | **Message flash** | `FlashMessage` | Un mot court envoyé à l'autre (« je t'aime »), notifié par Web Push |
 | **Photo instantanée** | `InstantPhoto` | Une photo prise dans l'app et envoyée directement à l'autre |
 | **Invitation photo** | `PhotoPrompt` | La demande, à une heure tirée au hasard, de prendre une photo instantanée |
+| **Notification** | `PushNotification` | Le message discret, sans contenu, qu'un téléphone reçoit quand l'autre envoie un mot ou une photo, ajoute un événement ou partage une note (contexte `messaging`) |
 
 ## Vocabulaire d'architecture
 

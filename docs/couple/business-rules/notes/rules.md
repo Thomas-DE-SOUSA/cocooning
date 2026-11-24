@@ -68,6 +68,15 @@ Je donne un titre à ma note ; les espaces autour ne comptent pas, un titre vide
 - Dans le code : `NoteTitle.create`, `NOTE_TITLE_MAX_LENGTH` (`@cocooning/couple-shared-kernel/limits`).
 - Source : proposition de Claude avec le domaine, acceptée par le propriétaire (« OK pour 120 », 2026-11-23). Validée par : Thomas De Sousa, 2026-11-23.
 
+## Notification
+
+### R9. Une note qui devient visible pour l'autre le notifie
+
+Je crée une note partagée, ou je partage une note privée : le téléphone de l'autre affiche « Ton âme sœur a partagé une note avec toi », sans le titre. Une note privée ne notifie personne.
+
+- Dans le code : à venir avec le relais de l'outbox et le Web Push du contexte `messaging`.
+- Source : [décision 0050](../../decisions/messaging/0050-regles-des-messages.md). Validée par : Thomas De Sousa, 2026-11-24.
+
 ## Cas et exceptions
 
 | Situation | Ce qui s'applique |

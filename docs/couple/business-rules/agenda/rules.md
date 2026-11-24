@@ -73,6 +73,15 @@ Nous modifions ou supprimons tous les deux n'importe quel événement partagé ;
 - Dans le code : `EditCalendarEventUseCase`, `DeleteCalendarEventUseCase`, `CalendarEvent.edit`, `CalendarEvent.delete` (suppression douce, `core-backend.md` règle 13) ; un événement privé n'est chargé que pour son auteur (R7).
 - Source : décision 0046. Validée par : Thomas De Sousa, 2026-11-24.
 
+## Notification
+
+### R10. Un événement qui devient visible pour l'autre le notifie
+
+Je crée un événement partagé, ou je partage un événement privé : le téléphone de l'autre affiche « Ton âme sœur a ajouté un événement », sans le titre. Un événement « rien que pour moi » ne notifie personne.
+
+- Dans le code : à venir avec le relais de l'outbox et le Web Push du contexte `messaging`.
+- Source : [décision 0050](../../decisions/messaging/0050-regles-des-messages.md). Validée par : Thomas De Sousa, 2026-11-24.
+
 ## Cas et exceptions
 
 | Situation | Ce qui s'applique |
