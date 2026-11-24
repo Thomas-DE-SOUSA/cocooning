@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 nuit (messages : backend A, B, C mergé (PR #13 à #15), test E2E stabilisé et décision 0051 acceptée (PR #16), client D ouvert (PR #17) ; ensuite l'écran E, puis release). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 nuit (messages : D client mergé (#17), E écran ouvert (#18) ; questions au propriétaire : ordre dans un jour, schéma photo inutilisé, moment de la release ; puis ses idées sur les notes). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -18,8 +18,9 @@
 
 1. **Essai sur les deux téléphones** de la release PR #9 (2026-11-24) : « Aujourd'hui » change le jour sans faire défiler (choix du propriétaire, PR #8 annule #5) ; feuille de l'agenda, titre visible au-dessus du clavier, défilement qui ne la replie plus (poignée seule) ; glissement vers la gauche (à moitié : bouton « Supprimer » ; au-delà de 60 % : suppression au lâcher, décision 0049). Si le titre reste caché : faire suivre à la feuille la hauteur de `visualViewport`.
 2. **Autres retours du couple**, une petite PR chacun : sélecteurs natifs, place du « + », points de couleur, événement privé invisible chez l'autre, barre d'onglets, compteur « Nous » (2 969 jours attendus le 2026-11-24), écriture à deux dans une note, bandes système blanches du Samsung.
-3. **Messages** (décisions 0050, 0051) : A fil (#13), B photo du jour (#14), C notifications (#15) mergées ; D client ouvert (#17, à merger) ; puis E écran (maquette `Messages`, contrôler seulement le poids de la photo, pas le type déclaré), release (générer une paire VAPID pour la VM avec l'accord du propriétaire, sinon l'API ne démarre pas), F service worker et « Activer les notifications », release. Variables API ajoutées : `FILE_STORAGE_DIRECTORY`, `PHOTO_PROMPT_SCHEDULER_ENABLED`, `OUTBOX_RELAY_ENABLED`, `WEB_PUSH_VAPID_*` (toutes dans le `.env` local). À faire à part : agenda/notes 500 au lieu de 409 sur suppression concurrente ; sauvegarde nocturne sans les photos ; formats et 10 Mo à confirmer (R3).
-4. **Plus tard, si le couple le veut** : prénoms dans « Nous » (l'API ne les connaît pas), répétition annuelle dans l'agenda.
+3. **Messages** (décisions 0050, 0051) : A à D mergées (#13 à #17), E écran ouvert (#18). Questions en attente : ordre dans un jour (R5 « plus récent d'abord » contre ordre de chat, Claude penche pour le chat), retirer `createInstantPhotoFormSchema` inutilisé, release maintenant ou après F. Release : générer une paire VAPID pour la VM avec l'accord du propriétaire (sinon l'API ne démarre pas). Puis F (service worker, « Activer les notifications »). À vérifier sur téléphone : clavier iOS sur le composeur, appareil photo, HEIC sur Samsung, photo de 10 Mo. À faire à part : agenda/notes 500 au lieu de 409 ; sauvegarde nocturne sans les photos ; R3 à confirmer.
+4. **Idées du propriétaire sur les notes** : il veut y revenir dès la PR E finie ; les recueillir, proposer chaque correction avant d'agir.
+5. **Plus tard, si le couple le veut** : prénoms dans « Nous » (l'API ne les connaît pas), répétition annuelle dans l'agenda.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go » ; supprimer la branche après merge, en local et sur GitHub. Le backend et le client se confient bien à un sous-agent avec un brief complet, relu avant la PR ; l'interface se maquette d'abord sur la planche.
 
