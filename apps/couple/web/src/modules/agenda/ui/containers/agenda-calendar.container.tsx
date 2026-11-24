@@ -2,8 +2,10 @@
 
 import { useTranslation } from 'react-i18next';
 import { AGENDA_NAMESPACE } from '../../data/agenda-i18n-namespaces';
+import { calendarEventCommandGateway } from '../../gateways';
 import { useAgendaScreen } from '../../hooks/use-agenda-screen';
 import { useCalendarEventDrawer } from '../../hooks/use-calendar-event-drawer';
+import { useCalendarEventQuickDeletion } from '../../hooks/use-calendar-event-quick-deletion';
 import { presentShortDay } from '../../presenters/day-label.presenter';
 import type { AgendaCalendarScreen } from '../../view-models/agenda-screen.view-model';
 import { NewCalendarEventButton } from '../components/new-calendar-event-button';
@@ -21,6 +23,7 @@ export function AgendaCalendarContainer({
     const { t } = useTranslation(AGENDA_NAMESPACE);
     const screen = useAgendaScreen(viewModel);
     const drawer = useCalendarEventDrawer();
+    const deletion = useCalendarEventQuickDeletion(calendarEventCommandGateway);
     // Only days the view model holds are ever chosen: the initial one and the tapped ones of the grid.
     const day = viewModel.days[screen.selectedDay];
     return (
@@ -35,7 +38,12 @@ export function AgendaCalendarContainer({
             {day === undefined ? null : (
                 <AgendaDayView
                     day={day}
+                    removedEventId={deletion.removedEventId}
+                    isDeletionBusy={deletion.isBusy}
                     onOpenEvent={drawer.openEdition}
+                    onDeleteEvent={(item) =>
+                        deletion.deleteCalendarEvent(item.calendarEventId)
+                    }
                 />
             )}
             <NewCalendarEventButton

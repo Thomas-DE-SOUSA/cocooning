@@ -44,7 +44,10 @@ const MY_SURPRISE: AgendaDayItem = {
     color: AuthorColorEnum.TERRACOTTA,
 };
 
-function renderDay(day: Partial<AgendaDayViewModel>) {
+function renderDay(
+    day: Partial<AgendaDayViewModel>,
+    removedEventId: string | null = null,
+) {
     const opened: string[] = [];
     render(
         <WithI18n>
@@ -55,7 +58,12 @@ function renderDay(day: Partial<AgendaDayViewModel>) {
                     items: [],
                     ...day,
                 }}
+                removedEventId={removedEventId}
+                isDeletionBusy={false}
                 onOpenEvent={(item) => opened.push(item.calendarEventId)}
+                onDeleteEvent={(item) =>
+                    opened.push(`delete:${item.calendarEventId}`)
+                }
             />
         </WithI18n>,
     );
@@ -118,5 +126,18 @@ describe('Feature: the events of the chosen day', () => {
         );
 
         expect(opened).toEqual(['event-surprise']);
+    });
+
+    it('R9, slides out the event being deleted by a swipe', () => {
+        renderDay({ items: [A_DINNER, MY_SURPRISE] }, 'event-surprise');
+
+        const rowOf = (title: string) =>
+            screen
+                .getByRole('heading', { name: title })
+                .closest<HTMLElement>('[data-slot="swipe-to-delete-row"]')!;
+        expect(rowOf('Cadeau surprise').style.transform).toBe(
+            'translateX(-100%)',
+        );
+        expect(rowOf('Dîner chez Léa').style.transform).toBe('translateX(0px)');
     });
 });
