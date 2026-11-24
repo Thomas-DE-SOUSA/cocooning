@@ -6,3 +6,4 @@ Ce que le couple veut que l'app impose, rangé par contexte : règles, cas et gl
 - [Mise en couple](pairing/index.md) : contexte `pairing`
 - [Notes](notes/index.md) : contexte `notes`
 - [Agenda](agenda/index.md) : contexte `agenda`
+- [Messages](messaging/index.md) : contexte `messaging`
