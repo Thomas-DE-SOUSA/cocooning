@@ -14,5 +14,10 @@
     "offline": {
         "title": "Hors ligne",
         "message": "Pas de connexion pour le moment. Cocooning reviendra dès que le réseau sera de retour."
+    },
+    "navigation": {
+        "label": "Navigation principale",
+        "notes": "Notes",
+        "couple": "Nous"
     }
 }

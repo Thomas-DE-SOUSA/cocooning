@@ -16,5 +16,9 @@
         "NOT_FOUND": "Le service de déconnexion est introuvable.",
         "CONFLICT": "La déconnexion a été refusée. Réessayez.",
         "UNKNOWN": "Une erreur inattendue est survenue. Réessayez dans un instant."
+    },
+    "device": {
+        "title": "Ce téléphone",
+        "hint": "Après la déconnexion, il faudra saisir à nouveau l'adresse e-mail et le mot de passe."
     }
 }

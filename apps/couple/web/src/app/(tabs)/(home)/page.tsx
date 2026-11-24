@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getServerTranslation } from '@/i18n/server';
-import { SignOutContainer } from '@/modules/authentication';
 import {
     loadNotes,
     NOTES_NAMESPACE,
@@ -29,7 +28,6 @@ export default async function HomePage() {
         <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col gap-6 px-5 pt-10 pb-6">
             <h1 className="text-3xl font-semibold">{t('title')}</h1>
             <NotesContainer viewModel={page.viewModel} />
-            <SignOutContainer />
         </main>
     );
 }
