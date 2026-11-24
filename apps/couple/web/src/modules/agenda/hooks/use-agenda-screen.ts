@@ -1,5 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { AGENDA_DAY_ANCHOR } from '../data/agenda-day-anchor';
 import { resolveAgendaHref } from '../presenters/agenda-href.presenter';
 import { monthOf } from '../presenters/calendar-day.presenter';
 import type { AgendaCalendarScreen } from '../view-models/agenda-screen.view-model';
@@ -10,6 +11,10 @@ export function useAgendaScreen(screen: AgendaCalendarScreen) {
     const [selectedDay, setSelectedDay] = useState(screen.initialDay);
     const navigate = (day: string, month: string) =>
         router.push(resolveAgendaHref({ day, month }), { scroll: false });
+    const showDayEvents = () =>
+        document
+            .getElementById(AGENDA_DAY_ANCHOR)
+            ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     const selectDay = (day: string) => {
         if (!Object.hasOwn(screen.days, day)) {
             navigate(day, monthOf(day));
@@ -30,9 +35,12 @@ export function useAgendaScreen(screen: AgendaCalendarScreen) {
         showToday: () => {
             if (monthOf(today) === month) {
                 selectDay(today);
+                showDayEvents();
                 return;
             }
-            navigate(today, monthOf(today));
+            router.push(
+                `${resolveAgendaHref({ day: today, month: monthOf(today) })}#${AGENDA_DAY_ANCHOR}`,
+            );
         },
     };
 }
