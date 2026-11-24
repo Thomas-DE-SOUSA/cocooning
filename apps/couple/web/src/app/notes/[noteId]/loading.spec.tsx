@@ -6,7 +6,7 @@ describe('Feature: the page of a note while it loads', () => {
         const { container } = render(<NoteLoading />);
 
         const skeletons = container.querySelectorAll('[data-slot="skeleton"]');
-        expect(skeletons).toHaveLength(3);
+        expect(skeletons).toHaveLength(5);
         for (const skeleton of skeletons) {
             expect(skeleton.getAttribute('aria-hidden')).toBe('true');
         }

@@ -49,7 +49,7 @@ export function NoteOwnerActions(props: NoteOwnerActionsProps) {
         <div className="flex flex-wrap gap-2">
             {props.isShared ? (
                 <CommandButton
-                    variant="secondary"
+                    variant="outline"
                     label={t('note.makePrivate')}
                     pendingLabel={t('note.makingPrivate')}
                     isPending={isRunning(NoteCommandEnum.MAKE_NOTE_PRIVATE)}
@@ -58,7 +58,7 @@ export function NoteOwnerActions(props: NoteOwnerActionsProps) {
                 />
             ) : (
                 <CommandButton
-                    variant="secondary"
+                    variant="outline"
                     label={t('note.share')}
                     pendingLabel={t('note.sharing')}
                     isPending={isRunning(NoteCommandEnum.SHARE_NOTE)}

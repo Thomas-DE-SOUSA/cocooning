@@ -24,7 +24,7 @@ export default async function NotePage({ params }: Props) {
     const page = presentNotePage(await loadNote(noteId));
     if (page.redirectTo !== null) redirect(page.redirectTo);
     return (
-        <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col gap-4 p-4">
+        <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col gap-4 px-5 pt-6 pb-6">
             <NotePageContainer
                 key={noteId}
                 viewModel={page.viewModel}
