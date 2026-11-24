@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 (release #91 en production, périodes ensemble enregistrées sur la VM ; compteur à regarder dans « Nous »). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 (release #91 en production ; agenda partagé cadré (D48), plan de PR proposé). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -26,7 +26,7 @@ Ordre validé par le propriétaire le 2026-11-24 (« on part sur ça ») :
 1. **Regarder la PWA sur les deux téléphones** (release #87 déployée le 2026-11-24 à 10:14 UTC : direction A, barre d'onglets Notes et Nous, déconnexion dans « Nous ») : barre au-dessus de la barre d'accueil de l'iPhone, clair et sombre, bandes système du Samsung (mode sombre ? le manifeste ne déclare que le clair). Puis l'essai d'écriture à deux dans une note (jamais fait).
 2. **Compteur « Nous »** : release #91 déployée le 2026-11-24 à 10:57 UTC, commande `record-together-periods` lancée (2 périodes) ; le propriétaire doit voir « Ensemble dans notre cocooning depuis 2 969 jours (8,13 années). » ce jour-là.
 3. **Prénoms dans « Nous »** : l'API ne les connaît pas ; à proposer seulement si le couple les veut.
-4. **Agenda partagé** (pas de notifications).
+4. **Agenda partagé** (D48, décision 0046) : maquette `Agenda` validée (« go »), PR des règles `docs/agenda-rules` ouverte. Ensuite : domaine, persistance et API (sous-agent possible, relu), client, écran mois + jour (shadcn `Calendar` = react-day-picker, décision technique à écrire), panneau de création (`Drawer`), onglet Agenda entre Notes et Nous, release. Limite de 2 000 signes de la description à confirmer.
 5. **Messages** (photo, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : la « phase 4 » adaptée.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
