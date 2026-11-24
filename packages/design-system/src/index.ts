@@ -9,6 +9,7 @@ export * from './ui/input';
 export * from './ui/label';
 export * from './ui/skeleton';
 export * from './ui/spinner';
+export * from './ui/swipe-to-delete';
 export * from './ui/switch';
 export * from './ui/textarea';
 export * from './ui/toaster';

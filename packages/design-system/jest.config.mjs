@@ -5,7 +5,10 @@ export default {
     displayName: '@cocooning/design-system',
     ...jestConfig,
     testEnvironment: 'jsdom',
-    setupFiles: ['<rootDir>/src/testing/resize-observer-stub.ts'],
+    setupFiles: [
+        '<rootDir>/src/testing/resize-observer-stub.ts',
+        '<rootDir>/src/testing/pointer-event-stub.ts',
+    ],
     testMatch: ['**/*.spec.tsx', '**/*.spec.ts'],
     transform: {
         '^.+\\.tsx?$': ['ts-jest', { tsconfig: 'tsconfig.spec.json' }],

@@ -16,7 +16,8 @@
         "since": "Depuis le {{day}}",
         "mine": "Moi",
         "partner": "Mon âme sœur",
-        "private": "Rien que pour moi"
+        "private": "Rien que pour moi",
+        "swipeDelete": "Supprimer"
     },
     "unavailable": {
         "title": "Impossible d'afficher l'agenda",
