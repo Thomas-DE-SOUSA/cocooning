@@ -22,7 +22,7 @@ J'écris un mot ou je touche un mot prêt ; les espaces autour ne comptent pas, 
 
 Je prends la photo avec l'appareil de mon téléphone, je la vois en aperçu, puis je l'envoie ou je la reprends. Elle est en JPEG, PNG, WebP ou HEIC, de 10 Mo au plus.
 
-- Dans le code : `InstantPhotoContent.create` lit le format dans les premiers octets (`detectInstantPhotoContentType`), jamais dans le type déclaré, et borne le poids à `INSTANT_PHOTO_MAX_BYTES` ; multer s'arrête à la même borne. Refus `INSTANT_PHOTO_CONTENT_INVALID`. Côté PWA, `createInstantPhotoFormSchema` peut refuser avant l'envoi un type déclaré hors de `InstantPhotoContentTypeEnum`, un fichier vide ou plus lourd que `INSTANT_PHOTO_MAX_BYTES` ; l'API reste seule juge des octets.
+- Dans le code : `InstantPhotoContent.create` lit le format dans les premiers octets (`detectInstantPhotoContentType`), jamais dans le type déclaré, et borne le poids à `INSTANT_PHOTO_MAX_BYTES` ; multer s'arrête à la même borne. Refus `INSTANT_PHOTO_CONTENT_INVALID`. Côté PWA, l'écran « Messages » ouvre l'appareil par un champ fichier (`capture="environment"`), montre l'aperçu, et ne refuse avant l'envoi qu'un fichier vide ou plus lourd que `INSTANT_PHOTO_MAX_BYTES` (`presentInstantPhotoRefusalKey`, revérifié par la server action) ; jamais le type déclaré, qu'un iPhone peut donner en `image/heif` ou pas du tout. `createInstantPhotoFormSchema`, qui vérifie aussi le type, n'est pas utilisé par l'écran. L'API reste seule juge des octets.
 - Source : décision 0050 ; les formats et le poids, proposés par Claude, sont à confirmer par le propriétaire.
 
 ### R4. Les messages demandent un couple formé
@@ -38,14 +38,14 @@ Tant que nous ne sommes pas en couple dans l'app, je n'ai pas de messages.
 
 Nos mots et nos photos restent dans un fil à deux, que nous revoyons quand nous voulons. Chacun porte son heure ; les miens sont à droite, ceux de l'autre à gauche.
 
-- Dans le code : `MessageFeedService.readPage` et `ListMessageFeedUseCase`, lecture par curseur ([décision 0025](../../decisions/0025-pagination.md)) ; chaque élément porte `sentAt` et `ownerId`.
+- Dans le code : `MessageFeedService.readPage` et `ListMessageFeedUseCase`, lecture par curseur ([décision 0025](../../decisions/0025-pagination.md)) ; chaque élément porte `sentAt` et `ownerId`. Côté PWA, `presentMessageFeedDays` groupe le fil par jour de Paris (« Aujourd'hui », « Hier », puis la date) avec l'heure de Paris de chaque élément ; « Voir les plus anciens » lit la page suivante.
 - Source : décision 0050. Validée par : Thomas De Sousa, 2026-11-24.
 
 ### R6. Seul l'auteur retire ce qu'il a envoyé
 
 Je retire un mot ou une photo que j'ai envoyé : il disparaît pour nous deux. Je ne peux pas retirer ce que l'autre m'a envoyé.
 
-- Dans le code : `FlashMessage.withdraw` et `InstantPhoto.withdraw` (suppression douce, `core-backend.md` règle 13 ; refus `FLASH_MESSAGE_RESERVED_TO_OWNER`, `INSTANT_PHOTO_RESERVED_TO_OWNER`) ; `WithdrawInstantPhotoUseCase` supprime le fichier par `FileStorage`.
+- Dans le code : `FlashMessage.withdraw` et `InstantPhoto.withdraw` (suppression douce, `core-backend.md` règle 13 ; refus `FLASH_MESSAGE_RESERVED_TO_OWNER`, `INSTANT_PHOTO_RESERVED_TO_OWNER`) ; `WithdrawInstantPhotoUseCase` supprime le fichier par `FileStorage`. Côté PWA, seuls mes éléments sont des boutons : un toucher ouvre la feuille « Retirer pour nous deux » ou « Garder » (pas d'appui long, peu fiable dans une PWA sur iPhone).
 - Source : décision 0050. Validée par : Thomas De Sousa, 2026-11-24.
 
 ## La photo du jour
@@ -68,7 +68,7 @@ J'envoie une seule photo du jour, jusqu'à minuit (heure de Paris). Envoyée plu
 
 Je sais que l'autre a envoyé sa photo du jour, mais je ne la vois qu'après avoir envoyé la mienne. Une photo spontanée se voit tout de suite.
 
-- Dans le code : `isHiddenFrom` (`domain/models/photo-of-the-day.ts`) ; `ListMessageFeedUseCase` rend la photo cachée avec `isHidden: true` et sans `contentType`, et `InstantPhotoPreconditionService.ensureVisibleTo` fait répondre `404` à son fichier. L'API ne rend pas la photo cachée, la PWA ne fait pas que la flouter.
+- Dans le code : `isHiddenFrom` (`domain/models/photo-of-the-day.ts`) ; `ListMessageFeedUseCase` rend la photo cachée avec `isHidden: true` et sans `contentType`, et `InstantPhotoPreconditionService.ensureVisibleTo` fait répondre `404` à son fichier. L'API ne rend pas la photo cachée, la PWA ne fait pas que la flouter : elle n'en connaît pas l'adresse, montre un cadenas et « Envoie la tienne pour voir la sienne », et ne demande jamais ses octets.
 - Source : décision 0050. Validée par : Thomas De Sousa, 2026-11-24.
 
 ## Notifications
