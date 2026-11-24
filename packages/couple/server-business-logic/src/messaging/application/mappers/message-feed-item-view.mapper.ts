@@ -5,6 +5,10 @@ import {
 import { FlashMessage } from '../../domain/models/flash-message.aggregate';
 import type { InstantPhoto } from '../../domain/models/instant-photo.aggregate';
 import type { MessageFeedItem } from '../../domain/models/message-feed-item';
+import {
+    type AnsweredPhotoPrompts,
+    isHiddenFrom,
+} from '../../domain/models/photo-of-the-day';
 
 type MessageFeedItemBaseView = {
     readonly id: string;
@@ -18,10 +22,21 @@ export type FlashMessageView = MessageFeedItemBaseView & {
     readonly text: string;
 };
 
-export type InstantPhotoView = MessageFeedItemBaseView & {
+type InstantPhotoBaseView = MessageFeedItemBaseView & {
     readonly type: typeof MessageFeedItemTypeEnum.INSTANT_PHOTO;
-    readonly contentType: InstantPhotoContentType;
+    readonly photoPromptId: string | null;
+    readonly isLate: boolean;
 };
+
+// R9: a hidden photo of the day says it exists, never its content type.
+export type InstantPhotoView = InstantPhotoBaseView &
+    (
+        | {
+              readonly isHidden: false;
+              readonly contentType: InstantPhotoContentType;
+          }
+        | { readonly isHidden: true }
+    );
 
 export type MessageFeedItemView = FlashMessageView | InstantPhotoView;
 
@@ -44,22 +59,29 @@ export const toFlashMessageView = (
 export const toInstantPhotoView = (
     instantPhoto: InstantPhoto,
     readerId: string,
+    answered: AnsweredPhotoPrompts,
 ): InstantPhotoView => {
-    const { id, ownerId, contentType } = instantPhoto.toSnapshot();
-    return {
+    const { id, ownerId, contentType, photoPromptId, isLate } =
+        instantPhoto.toSnapshot();
+    const base: InstantPhotoBaseView = {
         type: MessageFeedItemTypeEnum.INSTANT_PHOTO,
         id,
         ownerId,
         isOwner: ownerId === readerId,
         sentAt: instantPhoto.sentAt,
-        contentType,
+        photoPromptId,
+        isLate,
     };
+    return isHiddenFrom(instantPhoto, readerId, answered)
+        ? { ...base, isHidden: true }
+        : { ...base, isHidden: false, contentType };
 };
 
 export const toMessageFeedItemView = (
     item: MessageFeedItem,
     readerId: string,
+    answered: AnsweredPhotoPrompts,
 ): MessageFeedItemView =>
     item instanceof FlashMessage
         ? toFlashMessageView(item, readerId)
-        : toInstantPhotoView(item, readerId);
+        : toInstantPhotoView(item, readerId, answered);

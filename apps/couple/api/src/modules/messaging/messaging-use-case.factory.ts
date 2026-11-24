@@ -1,10 +1,15 @@
 import type { FactoryProvider, Type } from '@nestjs/common';
 import {
-    FlashMessagePreconditionService,
+    type FlashMessagePreconditionService,
     FlashMessageRepository,
-    InstantPhotoPreconditionService,
+    type InstantPhotoPreconditionService,
     InstantPhotoRepository,
-    MessageFeedService,
+    type MessageFeedService,
+    PairedCoupleProvider,
+    type PhotoOfTheDayService,
+    type PhotoPromptPreconditionService,
+    PhotoPromptRepository,
+    type PhotoPromptScheduleService,
 } from '@cocooning/couple-server-business-logic/messaging';
 import { EventPublishingService } from '@cocooning/shared-kernel/application';
 import {
@@ -12,14 +17,21 @@ import {
     EventPublisher,
     FileStorage,
     Logger,
+    SecureRandomGenerator,
 } from '@cocooning/shared-kernel/ports';
+import { messagingDomainServicesOf } from './messaging-domain-services';
 
 export type MessagingDependencies = {
     readonly flashMessages: FlashMessageRepository;
     readonly instantPhotos: InstantPhotoRepository;
+    readonly photoPrompts: PhotoPromptRepository;
+    readonly pairedCouples: PairedCoupleProvider;
     readonly fileStorage: FileStorage;
     readonly flashMessagePreconditions: FlashMessagePreconditionService;
     readonly instantPhotoPreconditions: InstantPhotoPreconditionService;
+    readonly photoPromptPreconditions: PhotoPromptPreconditionService;
+    readonly photoPromptSchedule: PhotoPromptScheduleService;
+    readonly photoOfTheDay: PhotoOfTheDayService;
     readonly feed: MessageFeedService;
     readonly clock: DateTimeProvider;
     readonly publishing: EventPublishingService;
@@ -28,35 +40,44 @@ export type MessagingDependencies = {
 const DEPENDENCIES = [
     FlashMessageRepository,
     InstantPhotoRepository,
+    PhotoPromptRepository,
+    PairedCoupleProvider,
     FileStorage,
+    SecureRandomGenerator,
     DateTimeProvider,
     EventPublisher,
     Logger,
 ];
 
-// Domain services are created inline, never providers (decision 0005).
 const collect = (
     flashMessages: FlashMessageRepository,
     instantPhotos: InstantPhotoRepository,
+    photoPrompts: PhotoPromptRepository,
+    pairedCouples: PairedCoupleProvider,
     fileStorage: FileStorage,
+    random: SecureRandomGenerator,
     clock: DateTimeProvider,
     publisher: EventPublisher,
     logger: Logger,
 ): MessagingDependencies => {
     logger.setContext(EventPublishingService.name);
+    const ports = {
+        flashMessages,
+        instantPhotos,
+        photoPrompts,
+        pairedCouples,
+        fileStorage,
+        random,
+        clock,
+    };
     return {
         flashMessages,
         instantPhotos,
+        photoPrompts,
+        pairedCouples,
         fileStorage,
-        flashMessagePreconditions: new FlashMessagePreconditionService(
-            flashMessages,
-        ),
-        instantPhotoPreconditions: new InstantPhotoPreconditionService(
-            instantPhotos,
-            fileStorage,
-        ),
-        feed: new MessageFeedService(flashMessages, instantPhotos),
         clock,
+        ...messagingDomainServicesOf(ports),
         publishing: new EventPublishingService(publisher, logger),
     };
 };

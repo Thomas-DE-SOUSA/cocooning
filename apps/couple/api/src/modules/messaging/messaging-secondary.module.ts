@@ -3,11 +3,13 @@ import {
     FlashMessageRepository,
     InstantPhotoRepository,
     PairedCoupleProvider,
+    PhotoPromptRepository,
 } from '@cocooning/couple-server-business-logic/messaging';
 import { PairedCouplePrismaProvider } from './secondary/providers';
 import {
     FlashMessagePrismaRepository,
     InstantPhotoPrismaRepository,
+    PhotoPromptPrismaRepository,
 } from './secondary/repositories';
 
 // FileStorage is provided once, by the global StorageModule of AppModule (wiring.md rule 9).
@@ -20,6 +22,7 @@ const adapters = [
         provide: InstantPhotoRepository,
         useClass: InstantPhotoPrismaRepository,
     },
+    { provide: PhotoPromptRepository, useClass: PhotoPromptPrismaRepository },
     { provide: PairedCoupleProvider, useClass: PairedCouplePrismaProvider },
 ];
 

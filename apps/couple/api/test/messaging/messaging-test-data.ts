@@ -3,6 +3,8 @@ import {
     MessageFeedItemResponseSchema,
     type MessageFeedPageResponse,
     MessageFeedPageResponseSchema,
+    type TodayPhotoPromptResponse,
+    TodayPhotoPromptResponseSchema,
 } from '@cocooning/couple-contract/messaging';
 import type {
     TestAccount,
@@ -70,3 +72,15 @@ export const feedItemOf = (response: TestResponse): MessageFeedItemResponse =>
 
 export const feedPageOf = (response: TestResponse): MessageFeedPageResponse =>
     MessageFeedPageResponseSchema.parse(response.body);
+
+// NOW is 11:00 in Paris; the random port answers 600, the minute of 10:00 Paris.
+export const SEVEN_AM = new Date('2026-11-24T06:00:00.000Z');
+export const TEN_AM_MINUTE = 600;
+export const TEN_AM = new Date('2026-11-24T09:00:00.000Z');
+export const MIDNIGHT = new Date('2026-11-24T23:00:00.000Z');
+export const MILLISECONDS_PER_MINUTE = 60_000;
+
+export const todayPhotoPromptOf = (
+    response: TestResponse,
+): TodayPhotoPromptResponse =>
+    TodayPhotoPromptResponseSchema.parse(response.body);

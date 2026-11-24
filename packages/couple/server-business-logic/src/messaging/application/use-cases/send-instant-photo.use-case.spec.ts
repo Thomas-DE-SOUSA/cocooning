@@ -36,6 +36,9 @@ describe('Feature: send an instant photo', () => {
                 isOwner: true,
                 sentAt: NOW,
                 contentType: JPEG,
+                photoPromptId: null,
+                isLate: false,
+                isHidden: false,
             });
         });
 
@@ -47,6 +50,8 @@ describe('Feature: send an instant photo', () => {
                     coupleId: COUPLE_ID,
                     ownerId: PARTNER_A,
                     contentType: JPEG,
+                    photoPromptId: null,
+                    isLate: false,
                     version: 1,
                     metadata: {
                         createdAt: NOW.toISOString(),

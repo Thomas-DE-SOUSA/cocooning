@@ -49,6 +49,8 @@ services:
             AUTH_JWT_SECRET: ${AUTH_JWT_SECRET:?set AUTH_JWT_SECRET in infrastructure/compose/.env}
             AUTH_SESSION_TTL_DAYS: 90
             PAIRING_INVITATION_CODE_TTL_HOURS: 48
+            # The scheduled task of the daily photo prompt (R7 of messaging), inside the API process.
+            PHOTO_PROMPT_SCHEDULER_ENABLED: 'true'
             # The instant photos (decision 0027), kept in the files volume.
             FILE_STORAGE_DIRECTORY: /data/files
         volumes:

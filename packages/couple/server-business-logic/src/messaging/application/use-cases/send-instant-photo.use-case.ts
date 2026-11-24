@@ -5,6 +5,7 @@ import type {
     FileStorage,
 } from '@cocooning/shared-kernel/ports';
 import { InstantPhoto } from '../../domain/models/instant-photo.aggregate';
+import { NO_PHOTO_PROMPT_ANSWERED } from '../../domain/models/photo-of-the-day';
 import type { InstantPhotoRepository } from '../../domain/ports/instant-photo.repository';
 import { InstantPhotoContent } from '../../domain/value-objects/instant-photo-content.vo';
 import {
@@ -45,6 +46,10 @@ export class SendInstantPhotoUseCase {
         });
         await this.instantPhotoRepository.save(instantPhoto);
         await this.eventPublishingService.publishAndClear([instantPhoto]);
-        return toInstantPhotoView(instantPhoto, context.userId);
+        return toInstantPhotoView(
+            instantPhoto,
+            context.userId,
+            NO_PHOTO_PROMPT_ANSWERED,
+        );
     }
 }

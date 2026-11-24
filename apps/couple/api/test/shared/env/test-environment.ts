@@ -17,6 +17,8 @@ const TEST_ENVIRONMENT = {
     AUTH_JWT_SECRET: TEST_AUTH_JWT_SECRET,
     AUTH_SESSION_TTL_DAYS: '90',
     PAIRING_INVITATION_CODE_TTL_HOURS: '48',
+    // The specs drive the photo prompt with PhotoPromptScheduler.tick() on the clock they move, never a timer.
+    PHOTO_PROMPT_SCHEDULER_ENABLED: 'false',
 } as const;
 
 Object.assign(process.env, TEST_ENVIRONMENT);

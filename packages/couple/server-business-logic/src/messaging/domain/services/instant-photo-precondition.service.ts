@@ -3,6 +3,10 @@ import type { ExecutionContext } from '@cocooning/shared-kernel/domain';
 import type { FileStorage, StoredFile } from '@cocooning/shared-kernel/ports';
 import { MessagingException } from '../exceptions/messaging.exception';
 import type { InstantPhoto } from '../models/instant-photo.aggregate';
+import {
+    isHiddenFrom,
+    photoPromptsAnsweredBy,
+} from '../models/photo-of-the-day';
 import type { InstantPhotoRepository } from '../ports/instant-photo.repository';
 
 export class InstantPhotoPreconditionService {
@@ -21,6 +25,26 @@ export class InstantPhotoPreconditionService {
             instantPhotoId,
         );
         if (instantPhoto !== null) return instantPhoto;
+        throw new MessagingException({
+            code: MessagingExceptionCodeEnum.INSTANT_PHOTO_NOT_FOUND,
+            message: 'Instant photo not found',
+        });
+    }
+
+    // R9: the partner's photo of the day is unknown to a reader who has not answered its prompt; never its bytes.
+    async ensureVisibleTo(
+        context: ExecutionContext,
+        instantPhoto: InstantPhoto,
+    ): Promise<void> {
+        const photoPromptId = instantPhoto.photoPromptId;
+        if (photoPromptId === null) return;
+        const photosOfTheDay =
+            await this.instantPhotoRepository.findOfPhotoPrompts(
+                context.coupleId,
+                [photoPromptId],
+            );
+        const answered = photoPromptsAnsweredBy(context.userId, photosOfTheDay);
+        if (!isHiddenFrom(instantPhoto, context.userId, answered)) return;
         throw new MessagingException({
             code: MessagingExceptionCodeEnum.INSTANT_PHOTO_NOT_FOUND,
             message: 'Instant photo not found',

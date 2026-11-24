@@ -11,8 +11,12 @@ import type {
     InstantPhotoSnapshot,
     SendInstantPhotoInput,
 } from './instant-photo.aggregate.type';
+import type { PhotoPromptAnswer } from './photo-of-the-day';
 
 const INITIAL_VERSION = 1;
+
+// A spontaneous photo answers no prompt and is never late (R8, R9).
+const SPONTANEOUS = { photoPromptId: null, isLate: false } as const;
 
 // The aggregate keeps what the feed shows of a photo; its bytes live in the file storage, under fileKey.
 export class InstantPhoto extends AggregateRoot {
@@ -22,8 +26,35 @@ export class InstantPhoto extends AggregateRoot {
 
     // R1: the photo belongs to the couple and to the partner who sends it.
     static send(input: SendInstantPhotoInput, now: Date): InstantPhoto {
+        return InstantPhoto.sendAs(input, SPONTANEOUS, now);
+    }
+
+    // R8: the photo of the day answers the prompt, late or not; one per partner (unique index of the adapter).
+    static answer(
+        input: SendInstantPhotoInput,
+        answer: PhotoPromptAnswer,
+        now: Date,
+    ): InstantPhoto {
+        return InstantPhoto.sendAs(input, answer, now);
+    }
+
+    // Stored data is read back without validation (domain.md rule 5).
+    static fromSnapshot(snapshot: InstantPhotoSnapshot): InstantPhoto {
+        return new InstantPhoto({
+            ...snapshot,
+            id: InstantPhotoId.from(snapshot.id),
+            metadata: EntityMetadata.fromSnapshot(snapshot.metadata),
+        });
+    }
+
+    private static sendAs(
+        input: SendInstantPhotoInput,
+        answer: PhotoPromptAnswer | typeof SPONTANEOUS,
+        now: Date,
+    ): InstantPhoto {
         const instantPhoto = new InstantPhoto({
             ...input,
+            ...answer,
             id: InstantPhotoId.generate(),
             version: INITIAL_VERSION,
             metadata: EntityMetadata.create(now),
@@ -37,15 +68,6 @@ export class InstantPhoto extends AggregateRoot {
         );
         instantPhoto.addDomainEvent(new InstantPhotoSentEvent(params));
         return instantPhoto;
-    }
-
-    // Stored data is read back without validation (domain.md rule 5).
-    static fromSnapshot(snapshot: InstantPhotoSnapshot): InstantPhoto {
-        return new InstantPhoto({
-            ...snapshot,
-            id: InstantPhotoId.from(snapshot.id),
-            metadata: EntityMetadata.fromSnapshot(snapshot.metadata),
-        });
     }
 
     // R6: only the author withdraws the photo, softly, for both partners.
@@ -68,6 +90,14 @@ export class InstantPhoto extends AggregateRoot {
         return this.props.id;
     }
 
+    get ownerId(): string {
+        return this.props.ownerId;
+    }
+
+    get photoPromptId(): string | null {
+        return this.props.photoPromptId;
+    }
+
     get contentType(): InstantPhotoContentType {
         return this.props.contentType;
     }
@@ -82,15 +112,7 @@ export class InstantPhoto extends AggregateRoot {
     }
 
     toSnapshot(): InstantPhotoSnapshot {
-        const { id, coupleId, ownerId, contentType, version, metadata } =
-            this.props;
-        return {
-            id: id.getValue(),
-            coupleId,
-            ownerId,
-            contentType,
-            version,
-            metadata: metadata.toSnapshot(),
-        };
+        const { id, metadata, ...rest } = this.props;
+        return { ...rest, id: id.getValue(), metadata: metadata.toSnapshot() };
     }
 }

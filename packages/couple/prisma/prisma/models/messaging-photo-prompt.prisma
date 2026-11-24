@@ -1,0 +1,19 @@
+/// The photo prompt of a couple for one Paris day (R7, decision 0050): the aggregate `PhotoPrompt`.
+/// Never deleted: a passed day keeps its prompt, so no deletedAt.
+model PhotoPrompt {
+  id          String    @id @db.Uuid
+  coupleId    String    @map("couple_id") @db.Uuid
+  /// The Paris day YYYY-MM-DD of the prompt, written at midnight UTC (decision 0047).
+  day         DateTime  @db.Date
+  /// The drawn instant, between 9:00 and 21:00 Paris; secret until issuedAt is set (R7).
+  scheduledAt DateTime  @map("scheduled_at")
+  /// When the scheduled task issued it; a photo of the day is late ten minutes after (R8).
+  issuedAt    DateTime? @map("issued_at")
+  version     Int       @map("version")
+  createdAt   DateTime  @map("created_at")
+  updatedAt   DateTime  @map("updated_at")
+
+  // R7: one prompt per couple and per day; a restart or two overlapping ticks cannot draw twice (core.md rule 27: coupleId leads).
+  @@unique([coupleId, day])
+  @@map("photo_prompt")
+}

@@ -8,6 +8,7 @@ import {
 import { Logger, UnitOfWork } from '@cocooning/shared-kernel/ports';
 import { type InstantPhotoRow, toInstantPhotoSnapshot } from '../mappers';
 import { writeInstantPhoto } from './instant-photo-prisma.writer';
+import { toPhotoPromptAlreadyAnswered } from './instant-photo-unique-constraints';
 import { appendMessagingEvents } from './messaging-event-prisma.writer';
 import {
     instantPhotoVersionConflict,
@@ -43,11 +44,13 @@ export class InstantPhotoPrismaRepository extends InstantPhotoRepository {
                     snapshot,
                     instantPhotoVersionConflict,
                 );
-                await appendMessagingEvents(tx, snapshot.id, events);
+                await appendMessagingEvents(tx, events);
             });
         } catch (error) {
             if (error instanceof MessagingException) throw error;
-            const conflict = toInstantPhotoVersionConflict(error);
+            const conflict =
+                toPhotoPromptAlreadyAnswered(error) ??
+                toInstantPhotoVersionConflict(error);
             if (conflict !== null) throw conflict;
             this.logger.error('Failed to save instant photo', {
                 instantPhotoId: snapshot.id,
@@ -78,6 +81,19 @@ export class InstantPhotoPrismaRepository extends InstantPhotoRepository {
             const rows = await instantPhotos.findMany(
                 newestOf(coupleId, before, count),
             );
+            return rows.map(toInstantPhoto);
+        });
+    }
+
+    override findOfPhotoPrompts(
+        coupleId: string,
+        photoPromptIds: ReadonlyArray<string>,
+    ): Promise<ReadonlyArray<InstantPhoto>> {
+        return this.load({ coupleId }, async (instantPhotos) => {
+            const rows = await instantPhotos.findMany({
+                where: { coupleId, photoPromptId: { in: [...photoPromptIds] } },
+                orderBy: { id: 'asc' },
+            });
             return rows.map(toInstantPhoto);
         });
     }

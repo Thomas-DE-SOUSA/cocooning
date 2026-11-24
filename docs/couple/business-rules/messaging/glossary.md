@@ -1,6 +1,6 @@
 # Glossaire des messages
 
-Les termes propres aux messages, avec leur nom dans le code. Les termes communs (couple, partenaire, propriétaire, message flash, photo instantanée, invitation photo, notification) sont dans le [glossaire transverse](../../../architecture/glossary.md). Les noms de code des mots flash, des photos spontanées et du fil sont ceux du contexte codé ; ceux de la photo du jour et des notifications restent une proposition.
+Les termes propres aux messages, avec leur nom dans le code. Les termes communs (couple, partenaire, propriétaire, message flash, photo instantanée, invitation photo, notification) sont dans le [glossaire transverse](../../../architecture/glossary.md). Les noms de code des mots flash, des photos, du fil et de la photo du jour sont ceux du contexte codé ; ceux des notifications restent une proposition.
 
 | Terme | Nom dans le code | Définition |
 |---|---|---|
@@ -11,6 +11,10 @@ Les termes propres aux messages, avec leur nom dans le code. Les termes communs 
 | **Mot prêt** | calculé par la PWA | Un mot flash proposé en un toucher (« Je t'aime », « Tu me manques », « Bisous », « J'arrive ») ; envoyé, c'est un mot flash comme un autre |
 | **Texte du mot** | `FlashMessageText` | Le texte d'un mot flash, de 1 à 140 signes |
 | **Photo du jour** | `InstantPhoto` avec `photoPromptId` | La photo instantanée envoyée en réponse à l'invitation du jour |
-| **En retard** | `isLate` | Une photo du jour envoyée plus de 10 minutes après l'invitation |
+| **En retard** | `isLate` (à partir de `lateFrom`) | Une photo du jour envoyée plus de 10 minutes après l'invitation |
+| **Heure tirée** | `scheduledAt` | Le moment, tiré au hasard entre 9 h et 21 h (heure de Paris), où l'invitation du jour doit partir ; secret jusque-là |
+| **Envoi de l'invitation** | `issue`, `issuedAt` | Le moment où l'app invite les deux partenaires à prendre la photo du jour |
+| **Fin de l'invitation** | `closesAt` | Minuit, heure de Paris, à la fin du jour de l'invitation : après, elle est passée (`PHOTO_PROMPT_EXPIRED`) |
+| **Photo cachée** | `isHidden` | La photo du jour de l'autre, que je ne vois pas tant que je n'ai pas envoyé la mienne |
 | **Retirer** | `withdraw` | L'auteur enlève un mot ou une photo du fil, pour les deux |
 | **Abonnement aux notifications** | `PushSubscription` | L'autorisation d'un téléphone à recevoir les notifications Web Push d'un partenaire |

@@ -4,6 +4,7 @@ import {
     DeterministicDateTimeProvider,
     FakeEventPublisherAdapter,
     FakeLoggerAdapter,
+    FakeSecureRandomGenerator,
     FakeUuidV7GeneratorProvider,
     InMemoryFileStorage,
 } from '@cocooning/shared-kernel/testing';
@@ -12,12 +13,16 @@ import { InstantPhoto } from '../../domain/models/instant-photo.aggregate';
 import { FlashMessagePreconditionService } from '../../domain/services/flash-message-precondition.service';
 import { InstantPhotoPreconditionService } from '../../domain/services/instant-photo-precondition.service';
 import { MessageFeedService } from '../../domain/services/message-feed.service';
+import { PhotoOfTheDayService } from '../../domain/services/photo-of-the-day.service';
+import { PhotoPromptPreconditionService } from '../../domain/services/photo-prompt-precondition.service';
+import { PhotoPromptScheduleService } from '../../domain/services/photo-prompt-schedule.service';
 import { FlashMessageText } from '../../domain/value-objects/flash-message-text.vo';
 import { FlashMessageId } from '../../domain/value-objects/flash-message-id.vo';
 import { InstantPhotoContent } from '../../domain/value-objects/instant-photo-content.vo';
 import { FakePairedCoupleProvider } from '../secondary/adapters/fake-paired-couple.provider';
 import { FlashMessageInMemoryRepository } from '../secondary/adapters/flash-message-in-memory.repository';
 import { InstantPhotoInMemoryRepository } from '../secondary/adapters/instant-photo-in-memory.repository';
+import { PhotoPromptInMemoryRepository } from '../secondary/adapters/photo-prompt-in-memory.repository';
 import {
     JPEG_PHOTO,
     LOVE,
@@ -30,6 +35,8 @@ export class MessagingTestFakes {
     readonly dateTimeProvider = new DeterministicDateTimeProvider(NOW);
     readonly flashMessageRepository = new FlashMessageInMemoryRepository();
     readonly instantPhotoRepository = new InstantPhotoInMemoryRepository();
+    readonly photoPromptRepository = new PhotoPromptInMemoryRepository();
+    readonly secureRandomGenerator = new FakeSecureRandomGenerator();
     readonly fileStorage = new InMemoryFileStorage();
     readonly pairedCoupleProvider = new FakePairedCoupleProvider();
     readonly eventPublisher = new FakeEventPublisherAdapter();
@@ -49,6 +56,20 @@ export class MessagingTestFakes {
         this.flashMessageRepository,
         this.instantPhotoRepository,
     );
+    protected readonly photoOfTheDayService = new PhotoOfTheDayService(
+        this.photoPromptRepository,
+        this.instantPhotoRepository,
+    );
+    protected readonly photoPromptPreconditions =
+        new PhotoPromptPreconditionService(
+            this.photoPromptRepository,
+            this.instantPhotoRepository,
+        );
+    protected readonly photoPromptScheduleService =
+        new PhotoPromptScheduleService(
+            this.photoPromptRepository,
+            this.secureRandomGenerator,
+        );
 
     constructor() {
         FlashMessageId.configure(new FakeUuidV7GeneratorProvider());

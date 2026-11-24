@@ -30,3 +30,10 @@ export const LOVE = "Je t'aime";
 // The first bytes of a JPEG of a phone camera, enough for R3.
 export const JPEG_PHOTO = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3, 4]);
 export const JPEG = 'image/jpeg';
+
+// NOW is 11:00 in Paris, on a winter day (UTC+1).
+export const TODAY = '2026-11-24';
+export const TEN_AM_MINUTE = 10 * 60;
+export const TEN_AM = new Date('2026-11-24T09:00:00.000Z');
+export const MIDNIGHT = new Date('2026-11-24T23:00:00.000Z');
+export const MILLISECONDS_PER_MINUTE = 60_000;

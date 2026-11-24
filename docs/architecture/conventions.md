@@ -27,6 +27,7 @@ Cette page fixe les conventions d'architecture et de nommage communes à tout le
 | Application | Handler d'événement | `.handler.ts` |
 | Application | Mapper | `.mapper.ts` |
 | API | Contrôleur | `.controller.ts` |
+| API | Tâche planifiée dans le processus de l'API (adaptateur primaire) | `.scheduler.ts` |
 | API | Modules NestJS d'un contexte | `.module.ts`, `-service.module.ts`, `-secondary.module.ts` |
 | API | Repository et provider Prisma | `-prisma.repository.ts`, `-prisma.provider.ts` |
 | API | Adaptateur d'un port technique (hachage, signature) | `<technologie>-<port>.ts` : `argon2-password-hasher.ts`, comme `node-secure-random-generator.ts` |

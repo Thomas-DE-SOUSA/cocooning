@@ -8,4 +8,6 @@ export const MessagingRouteEnum = {
     INSTANT_PHOTO_SEND: '/instant-photos',
     INSTANT_PHOTO_WITHDRAW: '/instant-photos/:instantPhotoId',
     INSTANT_PHOTO_FILE_GET: '/instant-photos/:instantPhotoId/file',
+    PHOTO_PROMPT_TODAY_GET: '/photo-prompts/today',
+    PHOTO_PROMPT_ANSWER: '/photo-prompts/:photoPromptId/instant-photos',
 } as const satisfies RouteGroup;

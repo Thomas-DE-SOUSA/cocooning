@@ -50,6 +50,9 @@ describe('Feature: a partner reads the message feed (R5)', () => {
                         isOwner: false,
                         sentAt: LATER.toISOString(),
                         contentType: 'image/jpeg',
+                        photoPromptId: null,
+                        isLate: false,
+                        isHidden: false,
                     },
                     {
                         type: 'FLASH_MESSAGE',

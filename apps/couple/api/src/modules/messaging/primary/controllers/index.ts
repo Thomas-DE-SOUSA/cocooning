@@ -1,4 +1,6 @@
+export * from './answer-photo-prompt.controller';
 export * from './get-instant-photo-file.controller';
+export * from './get-today-photo-prompt.controller';
 export * from './list-message-feed.controller';
 export * from './send-flash-message.controller';
 export * from './send-instant-photo.controller';

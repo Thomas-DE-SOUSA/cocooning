@@ -10,6 +10,8 @@ export type InstantPhotoProps = {
     readonly coupleId: string;
     readonly ownerId: string;
     readonly contentType: InstantPhotoContentType;
+    readonly photoPromptId: string | null;
+    readonly isLate: boolean;
     readonly version: number;
     metadata: EntityMetadata;
 };
@@ -25,6 +27,8 @@ export type InstantPhotoSnapshot = {
     readonly coupleId: string;
     readonly ownerId: string;
     readonly contentType: InstantPhotoContentType;
+    readonly photoPromptId: string | null;
+    readonly isLate: boolean;
     readonly version: number;
     readonly metadata: EntityMetadataSnapshot;
 };
