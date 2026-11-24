@@ -1,7 +1,4 @@
-import { WebRouterEnum } from '@cocooning/couple-shared-kernel/routers';
-import { buttonVariants, cn } from '@cocooning/design-system';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getServerTranslation } from '@/i18n/server';
 import {
@@ -43,21 +40,8 @@ export default async function AgendaPage({ searchParams }: Props) {
     if (destination !== null) redirect(destination);
     const page = presentAgendaPage({ couple, events, dayEvents, query, today });
     if (page.redirectTo !== null) redirect(page.redirectTo);
-    const t = await getServerTranslation(AGENDA_NAMESPACE);
     return (
         <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col gap-6 px-5 pt-10 pb-6">
-            <header className="flex items-center justify-between gap-3">
-                <h1 className="text-3xl font-semibold">{t('title')}</h1>
-                <Link
-                    href={WebRouterEnum.AGENDA}
-                    className={cn(
-                        buttonVariants({ variant: 'outline' }),
-                        'rounded-full',
-                    )}
-                >
-                    {t('today')}
-                </Link>
-            </header>
             <AgendaContainer
                 key={`${query.day}/${query.month}`}
                 viewModel={page.viewModel}
