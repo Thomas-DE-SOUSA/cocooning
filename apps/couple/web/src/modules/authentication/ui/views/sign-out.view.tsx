@@ -13,7 +13,7 @@ export function SignOutView({ isPending, onSignOut }: Props) {
     const { t } = useTranslation(SIGN_OUT_NAMESPACE);
     return (
         <Button
-            variant="ghost"
+            variant="outline"
             onClick={onSignOut}
             disabled={isPending}
             aria-busy={isPending}
