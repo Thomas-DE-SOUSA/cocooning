@@ -1,0 +1,104 @@
+{
+    "title": "Agenda",
+    "today": "Aujourd'hui",
+    "calendar": {
+        "previousMonth": "Mois précédent",
+        "nextMonth": "Mois suivant",
+        "monthDropdown": "Choisir le mois",
+        "yearDropdown": "Choisir l'année"
+    },
+    "day": {
+        "empty": "Rien de prévu ce jour-là.",
+        "allDay": "Toute la journée"
+    },
+    "event": {
+        "until": "Jusqu'au {{day}}",
+        "since": "Depuis le {{day}}",
+        "mine": "Moi",
+        "partner": "Mon âme sœur",
+        "private": "Rien que pour moi"
+    },
+    "unavailable": {
+        "title": "Impossible d'afficher l'agenda",
+        "refresh": "Réessayer"
+    },
+    "drawer": {
+        "newEventOn": "Nouvel événement le {{day}}",
+        "createTitle": "Nouvel événement",
+        "editTitle": "Modifier l'événement",
+        "description": "Le titre, le jour, les heures et la visibilité de l'événement.",
+        "cancel": "Annuler",
+        "create": "Ajouter",
+        "creating": "Ajout en cours",
+        "save": "Enregistrer",
+        "saving": "Enregistrement en cours",
+        "delete": "Supprimer l'événement",
+        "confirmDelete": "Supprimer pour nous deux",
+        "deleting": "Suppression en cours",
+        "keep": "Garder"
+    },
+    "form": {
+        "title": {
+            "label": "Titre",
+            "errors": {
+                "required": "Donnez un titre à l'événement.",
+                "tooLong": "Ce titre est trop long : 120 signes au plus."
+            }
+        },
+        "description": {
+            "label": "Description (facultative)",
+            "errors": {
+                "tooLong": "Cette description est trop longue : 2 000 signes au plus."
+            }
+        },
+        "moment": {
+            "day": "Jour",
+            "allDay": "Toute la journée",
+            "startsAt": "De",
+            "endsAt": "À",
+            "endsOn": "Jusqu'au",
+            "clearEndsOn": "Retirer le dernier jour",
+            "errors": {
+                "startsOnRequired": "Choisissez le jour de l'événement.",
+                "dayInvalid": "Ce jour n'est pas valable.",
+                "hourInvalid": "Cette heure n'est pas valable.",
+                "endsOnNotAfterStartsOn": "Le dernier jour vient après le premier.",
+                "endsAtWithoutStartsAt": "Indiquez d'abord l'heure de début.",
+                "endsAtNotAfterStartsAt": "L'heure de fin vient après l'heure de début."
+            }
+        },
+        "isPrivate": {
+            "label": "Rien que pour moi",
+            "hint": "Ton âme sœur ne verra pas cet événement."
+        }
+    },
+    "toast": {
+        "created": "Événement ajouté",
+        "saved": "Événement modifié",
+        "deleted": "Événement supprimé",
+        "createFailed": "Ajout impossible",
+        "saveFailed": "Enregistrement impossible",
+        "deleteFailed": "Suppression impossible"
+    },
+    "apiErrors": {
+        "CALENDAR_EVENT_NOT_FOUND": "Cet événement n'existe plus. L'agenda est mis à jour.",
+        "CALENDAR_EVENT_RESERVED_TO_OWNER": "Seul l'auteur de l'événement peut faire ça.",
+        "CALENDAR_EVENT_TITLE_INVALID": "Ce titre n'est pas valable : de 1 à 120 signes.",
+        "CALENDAR_EVENT_DESCRIPTION_INVALID": "Cette description est trop longue : 2 000 signes au plus.",
+        "CALENDAR_EVENT_MOMENT_INVALID": "Ces jours ou ces heures ne se suivent pas.",
+        "CALENDAR_EVENT_RANGE_INVALID": "Cette période ne peut pas s'afficher.",
+        "CALENDAR_EVENT_COUPLE_NOT_PAIRED": "Votre couple n'est pas encore formé.",
+        "CALENDAR_EVENT_VERSION_CONFLICT": "L'événement vient de changer. Réessayez.",
+        "CALENDAR_EVENT_DATA_CORRUPTED": "Les données de l'agenda sont illisibles.",
+        "AUTHENTICATION_SESSION_MISSING": "Votre session a pris fin. Reconnectez-vous.",
+        "AUTHENTICATION_SESSION_INVALID": "Votre session a pris fin. Reconnectez-vous.",
+        "NETWORK_ERROR": "Cocooning ne répond pas pour le moment. Réessayez dans un instant ; si le problème dure, vérifiez que Tailscale est activé.",
+        "INVALID_RESPONSE": "La réponse du serveur est illisible. Réessayez dans un instant.",
+        "VALIDATION_ERROR": "Les informations envoyées sont invalides.",
+        "UNAUTHORIZED": "Votre session a pris fin. Reconnectez-vous.",
+        "FORBIDDEN": "Cette action ne vous est pas permise.",
+        "NOT_FOUND": "Cet élément est introuvable. L'agenda est mis à jour.",
+        "CONFLICT": "L'agenda vient de changer. Réessayez.",
+        "UNKNOWN": "Une erreur inattendue est survenue. Réessayez dans un instant."
+    }
+}

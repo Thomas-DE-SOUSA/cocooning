@@ -6,7 +6,7 @@ last-verified: 2026-11-24
 
 Ce runbook enregistre sur la VM les périodes où le couple est ensemble (R9 des [règles de pairing](../../../business-rules/pairing/rules.md)), puis vérifie que l'API les rend. À lire avant la première mise en production d'une version qui affiche le compte des jours, ou quand une date est à corriger.
 
-Niveau de preuve : vérifié en E2E contre un Postgres 17 de test (`apps/couple/api/test/commands/record-together-periods*.e2e-spec.ts`) ; pas encore lancé sur la VM.
+Niveau de preuve : vérifié en E2E contre un Postgres 17 de test (`apps/couple/api/test/commands/record-together-periods*.e2e-spec.ts`) ; lancé sur la VM le 2026-11-24 pour le couple en production (2 périodes enregistrées).
 
 ## Quand l'utiliser
 

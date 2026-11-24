@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 (#89 backend des périodes mergé ; PR web du compteur ouverte, en attente du « go »). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 (release #91 en production ; agenda partagé cadré (D48), plan de PR proposé). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -24,11 +24,10 @@
 
 Ordre validé par le propriétaire le 2026-11-24 (« on part sur ça ») :
 1. **Regarder la PWA sur les deux téléphones** (release #87 déployée le 2026-11-24 à 10:14 UTC : direction A, barre d'onglets Notes et Nous, déconnexion dans « Nous ») : barre au-dessus de la barre d'accueil de l'iPhone, clair et sombre, bandes système du Samsung (mode sombre ? le manifeste ne déclare que le clair). Puis l'essai d'écriture à deux dans une note (jamais fait).
-2. **Périodes ensemble (D47, décision 0045)** : backend #89 mergé dans `dev`. PR web `feat/together-time` ouverte (`presentTogetherTime`, phrase « Ensemble dans notre cocooning depuis N jours (X,XX années). »). Après le « go » : release, puis la commande `record-together-periods` sur la VM (runbook `docs/couple/infrastructure/runbooks/pairing/together-periods.md`) avec les dates du propriétaire (jamais dans le dépôt : les lui redemander si besoin), puis vérifier « Nous ».
+2. **Compteur « Nous »** : release #91 déployée le 2026-11-24 à 10:57 UTC, commande `record-together-periods` lancée (2 périodes) ; le propriétaire doit voir « Ensemble dans notre cocooning depuis 2 969 jours (8,13 années). » ce jour-là.
 3. **Prénoms dans « Nous »** : l'API ne les connaît pas ; à proposer seulement si le couple les veut.
-4. **PR `docs/` à proposer** : runbook de production, « Vérification » : le curl de `/collab` doit être `curl --http1.1 -sv -o /dev/null … 2>&1 | grep '^< HTTP'` (voir `LESSONS.md`).
-5. **Agenda partagé** (pas de notifications).
-6. **Messages** (photo, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : la « phase 4 » adaptée.
+4. **Agenda partagé** (D48, décisions 0046, 0047, 0048) : backend #94 #95, client #96, écran #97, panneau #98 (vaul `Drawer`, `Switch`, `Textarea`, visibilité appliquée à « Enregistrer »). Release puis essai sur les téléphones : panneau avec clavier ouvert sur iPhone, sélecteurs natifs, position du « + ». À proposer : mise en commun de `primary/couple/` et `PairedCouplePrismaProvider`, `isClockTime` dans le shared-kernel ; D26 (specs > 100 lignes, `use-calendar-event-commands.ts` 87).
+5. **Messages** (photo, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : la « phase 4 » adaptée.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 

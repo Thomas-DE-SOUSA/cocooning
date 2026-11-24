@@ -11,6 +11,10 @@
         "test": "jest --coverage"
     },
     "exports": {
+        "./agenda": {
+            "types": "./src/agenda/index.ts",
+            "default": "./dist/agenda/index.js"
+        },
         "./authentication": {
             "types": "./src/authentication/index.ts",
             "default": "./dist/authentication/index.js"

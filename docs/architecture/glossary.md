@@ -22,8 +22,7 @@ Le couple parle français, le code est en anglais. Aucune réglementation ne fix
 | **Note perso / partagée** | `NoteVisibility` `PRIVATE` / `SHARED` | Une note perso n'est visible que de son propriétaire ; une note partagée est visible et modifiable par les deux |
 | **Liste de courses** | `Note` | Une note ordinaire titrée « Courses ». Pas de concept propre dans le code |
 | **Agenda** | contexte `agenda` | Le calendrier partagé du couple |
-| **Événement d'agenda** | `CalendarEvent` | Un rendez-vous du calendrier, avec son auteur visible. Nommé ainsi pour ne pas le confondre avec un événement de domaine (`*.event.ts`) |
-| **Catégorie** | `CalendarCategory` | Le classement d'un événement d'agenda |
+| **Événement d'agenda** | `CalendarEvent` | Un rendez-vous du calendrier, partagé ou rien que pour son auteur, avec son auteur visible. Nommé ainsi pour ne pas le confondre avec un événement de domaine (`*.event.ts`) |
 | **Message flash** | `FlashMessage` | Un mot court envoyé à l'autre (« je t'aime »), notifié par Web Push |
 | **Photo instantanée** | `InstantPhoto` | Une photo prise dans l'app et envoyée directement à l'autre |
 | **Invitation photo** | `PhotoPrompt` | La demande, à une heure tirée au hasard, de prendre une photo instantanée |

@@ -24,6 +24,8 @@ No root export: import from a subpath. `@cocooning/shared-kernel/<domain|ports|e
 
 `parseEnum(raw, Enum, label)` (`@cocooning/shared-kernel/utils`) turns a raw string read from the database into an `as const` enum value, or throws.
 
+`isCalendarDay(value)` (`@cocooning/shared-kernel/utils`) tells a real day of the calendar written `YYYY-MM-DD` (`2021-02-29` is refused); `pairing` and `agenda` validate their days with it.
+
 `Result<TValue, TError>` with `ok(value)` and `fail(error)` (`@cocooning/shared-kernel/utils`) carries an outcome without throwing. The frontend packages return it from every gateway and use case; it lives here once so that `client-infrastructure`, which may not import a domain package, shares the same type as `couple/client-business-logic`.
 
 ---
@@ -72,9 +74,9 @@ Excluded from the build. Each one `extends` its port (decision 0001): `Determini
 
 | Subpath | Contains |
 |---|---|
-| `enums` | Business enums shared by server and PWA, one file per enum, `as const` (decision 0002): `CouplePairingStatusEnum` (`PENDING`, `PAIRED`), `NoteVisibilityEnum` (`PRIVATE`, `SHARED`) |
-| `limits` | Bounds that are both a domain invariant and a contract or form bound (`contracts.md` rule 11): `EMAIL_ADDRESS_MAX_LENGTH`, `PASSWORD_MIN_LENGTH`, `PASSWORD_MAX_LENGTH` (decision 0032), `INVITATION_CODE_ENTRY_MAX_LENGTH` (the typed invitation code, spaces included), `NOTE_TITLE_MAX_LENGTH` (decision 0039) |
-| `routers` | `ApiRouterEnum` and `WebRouterEnum`, one route file per context (plus `HealthRouteEnum`, the public API health route; `AuthenticationRouteEnum` for `authentication`; `PairingRouteEnum` for `pairing`; `NotesRouteEnum` for `notes`; web: `AuthenticationRouteEnum` for the sign-in screen, `HomeRouteEnum`, `OfflineRouteEnum` for the offline fallback page of the service worker, `PairingRouteEnum` for the pairing screen) spread into the enum and listed in `API_ROUTE_GROUPS` / `WEB_ROUTE_GROUPS`; a spec fails on a key declared by two groups or a group missing from the list. Never hardcode a route string |
+| `enums` | Business enums shared by server and PWA, one file per enum, `as const` (decision 0002): `CouplePairingStatusEnum` (`PENDING`, `PAIRED`), `NoteVisibilityEnum` (`PRIVATE`, `SHARED`), `CalendarEventVisibilityEnum` (`PRIVATE`, `SHARED`) |
+| `limits` | Bounds that are both a domain invariant and a contract or form bound (`contracts.md` rule 11): `EMAIL_ADDRESS_MAX_LENGTH`, `PASSWORD_MIN_LENGTH`, `PASSWORD_MAX_LENGTH` (decision 0032), `INVITATION_CODE_ENTRY_MAX_LENGTH` (the typed invitation code, spaces included), `NOTE_TITLE_MAX_LENGTH` (decision 0039), `CALENDAR_EVENT_TITLE_MAX_LENGTH`, `CALENDAR_EVENT_DESCRIPTION_MAX_LENGTH` (decision 0046), `CALENDAR_EVENT_RANGE_MAX_DAYS` (the widest day range of one agenda list) |
+| `routers` | `ApiRouterEnum` and `WebRouterEnum`, one route file per context (plus `HealthRouteEnum`, the public API health route; `AuthenticationRouteEnum` for `authentication`; `PairingRouteEnum` for `pairing`; `NotesRouteEnum` for `notes`; `AgendaRouteEnum` for `agenda`; web: `AuthenticationRouteEnum` for the sign-in screen, `HomeRouteEnum`, `OfflineRouteEnum` for the offline fallback page of the service worker, `PairingRouteEnum` for the pairing screen and the "Nous" tab, `AgendaRouteEnum` for the agenda screen) spread into the enum and listed in `API_ROUTE_GROUPS` / `WEB_ROUTE_GROUPS`; a spec fails on a key declared by two groups or a group missing from the list. Never hardcode a route string |
 | `exceptions` | `MissingExecutionContextException(missing)`, code `EXECUTION_CONTEXT_MISSING`: thrown by a guard service's `ensureRequiredContextPresent` when a field of `ExecutionContext` is missing |
 
 ---

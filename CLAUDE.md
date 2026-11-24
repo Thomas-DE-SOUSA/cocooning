@@ -61,7 +61,7 @@ Cocooning is a pnpm + Turborepo monorepo for a couple's shared life (notes edite
 ```
 cocooning/
 ├── apps/couple/
-│   ├── api/                        # * NestJS API, composition root (env, health, session guard, E2E harness), context modules (authentication, pairing, notes), operating commands (create-account, record-together-periods)
+│   ├── api/                        # * NestJS API, composition root (env, health, session guard, E2E harness), context modules (authentication, pairing, notes, agenda), operating commands (create-account, record-together-periods)
 │   └── web/                        # * Next.js 16 PWA on port 3200: root layout, French i18n, Serwist, proxy.ts, sign-in screen and sign-out (module authentication), pairing screen (module pairing), then Web Push
 ├── packages/
 │   ├── couple/                     # contexts: pairing, then authentication, notes, agenda, messaging
@@ -75,7 +75,7 @@ cocooning/
 │   ├── shared-kernel/              # * DDD primitives, ports, exceptions, test fakes
 │   ├── server-infrastructure/      # * NestJS plumbing (filter, Zod pipes), pino, clock, ids, disk storage, in-process events
 │   ├── client-infrastructure/      # * Domain-agnostic frontend adapters: the single HTTP client, FakeFetch (testing)
-│   ├── design-system/              # * Tailwind 4 tokens, Button, Field, Input, Label, Skeleton, Spinner, Toaster, cn (read from src, no build)
+│   ├── design-system/              # * Tailwind 4 tokens, Button, Calendar, Drawer, Field, Input, Label, Skeleton, Spinner, Switch, Textarea, Toaster, cn (read from src, no build)
 ├── config/                         # ts, eslint, prettier, jest configs (@cocooning/*), one CLAUDE.md each
 ├── infrastructure/                 # * Dockerfiles (nest, next) and the production docker compose (Oracle VM, Tailscale)
 ├── docs/                           # * Documentation (French): architecture, guides, platform, couple

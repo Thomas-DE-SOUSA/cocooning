@@ -1,0 +1,6 @@
+# Module agenda de l'API
+
+Adaptateurs du contexte `agenda` : `CalendarEventPrismaRepository` (`secondary/repositories/`, etat et outbox `agenda_event` dans une transaction, visibilite et plage de jours filtrees par la requete, `calendar-event-prisma.filters.ts`), `PairedCouplePrismaProvider` (`secondary/providers/`, lecture seule des tables de `pairing`, decision 0041) et leurs mappers Prisma (`secondary/mappers/`, jours `DATE` relus par `calendar-day-column.ts`, decision 0047). Les use cases sont construits par `agendaUseCase()` (`agenda-use-case.factory.ts`) dans `agenda-service.module.ts`, qui fournit aussi `AgendaCoupleGuardService` (decision 0006). Sept controleurs (`primary/controllers/`, `ApiRouterEnum.CALENDAR_EVENT_*`), chacun sous `@UseGuards(AgendaCoupleGuard)` (`primary/couple/`, copie de celui de `notes`) : le garde resout le couple forme du partenaire et le pose sur la requete, `@CurrentCouple()` le donne au controleur. Mappers `toCalendarEventResponse` et `toCalendarEventListResponse` (`primary/mappers/`, dates ISO). Specs E2E : `test/agenda/` (`AgendaTestApp`, une spec par route).
+
+Contexte metier :
+@../../../../../../packages/couple/server-business-logic/src/agenda/CLAUDE.md
