@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 (#78 vérifiée en production ; direction A choisie, PR #80 de la décision ouverte, en attente du « go »). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 (décision 0017 mergée par #80 ; PR des tokens de la direction A ouverte, en attente du « go »). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -24,7 +24,7 @@
 
 Ordre validé par le propriétaire le 2026-11-24 (« on part sur ça ») :
 1. **Essai réel à deux** dans la même note (jamais fait) ; PR `docs/` à proposer : ajouter `--http1.1` au curl de `/collab` dans le runbook de production (« Vérification »).
-2. **Direction artistique A « Lin et terre cuite »** (D44 décidée le 2026-11-24, décision plateforme 0017 en PR #80 vers `dev`, à merger après le « go » ; clair et sombre, mise en page des écrans de la planche approuvée aussi) : ensuite tokens (couleurs corrigées WCAG, Fraunces + Inter, rayons 20/12) dans `@cocooning/design-system`, `docs/design/`, puis écrans repassés (connexion, mise en couple, liste, note) sur le modèle de la planche. Valeurs : `journal/2026-11-24.md`, « planche publiée ».
+2. **Direction artistique A « Lin et terre cuite »** (D44, décision plateforme 0017 mergée par #80) : PR des tokens ouverte (`feat/art-direction-tokens`, design system, polices `next/font`, `docs/design/tokens.md`), merger après le « go ». Ensuite : écrans repassés sur le modèle de la planche (liste et note, puis connexion et mise en couple), avec un `Card` et sans doute une variante de bouton à contour dans le design system ; le `Toaster` garde les couleurs de sonner (`richColors`). Valeurs : `journal/2026-11-24.md`, « planche publiée ».
 3. **Agenda partagé** (pas de notifications).
 4. **Messages** (photo, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : la « phase 4 » adaptée.
 

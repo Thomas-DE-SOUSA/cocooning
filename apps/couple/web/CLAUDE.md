@@ -20,7 +20,8 @@ Regles front communes :
 - Gateway `server-action/` d'un module : chaque appel passe par `runServerAction(action, UNREACHABLE)` (`src/shared/application/server-action/`), qui rend `NETWORK_ERROR` quand l'action rejette et recharge la page quand elle date d'avant un deploiement. Jamais de `try/catch` recopie dans un module.
 - Composants d'interface : `@cocooning/design-system`, jamais une copie locale. Couleurs par les tokens (`bg-primary`, `text-muted-foreground`), jamais en dur.
 - `*.tsx` : 125 lignes visees, 200 au plus (decision 0008).
-- Couleurs du telephone (manifeste, `viewport.themeColor`) : `src/app/pwa-theme.ts`, copie en hexadecimal des tokens oklch du design system. Un token de fond change : le reporter ici.
+- Couleurs du telephone (manifeste, `viewport.themeColor`) : `src/app/pwa-theme.ts`, copie des tokens de fond du design system. Un token de fond change : le reporter ici.
+- Polices : `src/app/fonts.ts` (`next/font/google`, Fraunces et Inter), dont les variables vont sur `<html>` dans `layout.tsx` et `global-error.tsx`. Aucun `<link>` vers Google (decision plateforme 0017).
 - Une icone ajoutee au manifeste : le fichier dans `public/icons/` ; `src/app/manifest.spec.ts` refuse une icone absente du disque.
 
 ## Tests
@@ -42,7 +43,8 @@ Regles front communes :
 - `next-env.d.ts` est regenere par `next build` et n'est pas versionne ; `check-types` passe sans lui.
 - Le design system est lu depuis ses `src` (`transpilePackages` dans `next.config.ts`) ; les autres packages internes depuis leur `dist`, construit avant par turbo (`^build`).
 - Jest ne passe pas par Next : `@/`, les packages internes et les `.css` sont mappes dans `jest.config.mjs`. Un nouveau package interne importe par l'app y recoit sa ligne.
-- `global-error.tsx` remplace le layout racine : il pose lui-meme `<html>`, `<body>` et l'`I18nProvider`.
+- `global-error.tsx` remplace le layout racine : il pose lui-meme `<html>` (avec `FONT_VARIABLES`), `<body>` et l'`I18nProvider`.
+- `next/font/google` telecharge les polices pendant `next build` : sans acces a `fonts.gstatic.com`, le build passe quand meme avec un simple message `getaddrinfo ENOTFOUND`, et l'app retombe sur les polices du systeme. Jest remplace `next/font/google` par `src/testing/next-font-stub.ts`.
 - `next lint` n'existe plus : `pnpm lint` lance `eslint .`.
 - Service worker (decision plateforme 0014) : `@serwist/next` est un plugin webpack. `pnpm build` lance `next build --webpack` ; `next.config.ts` n'applique le plugin qu'a `PHASE_PRODUCTION_BUILD`, sinon `next dev` (Turbopack) refuse de demarrer. Pas de service worker en dev : tester cache et hors ligne avec `pnpm --filter couple-web build && pnpm --filter couple-web start`.
 - `public/sw.js*` et `public/swe-worker-*` sont generes par le build : ignores par git et ESLint, sorties de `turbo.json`. Ne jamais les editer.
@@ -69,6 +71,7 @@ Regles front communes :
 - Tout changement : relire chaque page qui cite le fichier ou le composant modifies, trouvee avec `rg -l '<NomDeComposant>|<chemin/du/fichier>' docs/ _knowledge/ CLAUDE.md`.
 - Chemin d'un appel, packages front : `docs/couple/architecture/frontend/index.md`.
 - Port, commandes, variables, essai sur le telephone : `docs/guides/local-setup.md`.
+- Polices, couleurs du telephone : `docs/design/tokens.md`.
 - Choix du service worker, build webpack : decision plateforme 0014 (`docs/platform/decisions/0014-socle-technique-de-la-pwa.md`), remplacee par une nouvelle decision si la variante change.
 - Module ajoute : son `CLAUDE.md` au format `docs/templates/claude-web-submodule.md` s'il a un pendant backend.
 - Variable ajoutee : `docs/guides/local-setup.md` et `docs/platform/runbooks/deployment/production.md`.
