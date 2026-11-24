@@ -53,3 +53,4 @@ Le registre unique des décisions du domaine `couple`, dans l'ordre chronologiqu
 | 0041 | transverse | [Le couple de la requête vient de `pairing`](0041-couple-de-la-requete.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0042 | frontend | [Une fabrique reçoit la session dès qu'un de ses use cases agit pour le partenaire connecté](frontend/0042-fournisseur-de-session-des-fabriques.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
 | 0043 | authentication | [Le tailnet borne les essais de connexion, la PWA ne transmet plus le navigateur](authentication/0043-le-tailnet-borne-les-essais-de-connexion.md) | technique | acceptée | 2026-11-23 | Thomas De Sousa |
+| 0044 | frontend | [Navigation par une barre d'onglets en bas](frontend/0044-navigation-par-onglets.md) | produit | acceptée | 2026-11-24 | Thomas De Sousa |
