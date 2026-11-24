@@ -1,10 +1,10 @@
 ---
 nature: technique
-status: proposée
+status: acceptée
 date: 2026-11-24
 deciders: [Thomas De Sousa]
-validated-by: à compléter
-validated-on:
+validated-by: Thomas De Sousa, 2026-11-24
+validated-on: 2026-11-24
 supersedes:
 superseded-by:
 premortem:
@@ -22,6 +22,8 @@ Un événement d'agenda commence un jour, peut finir un autre jour et peut avoir
 - La base les range en `DATE` pour les jours et en `VARCHAR(5)` pour les heures : le jour sert aux requêtes de plage, l'heure ne sert qu'à l'ordre et à l'affichage.
 - Le domaine compare jours et heures comme des chaînes : leur écriture à zéros fixes garde l'ordre du calendrier. `isCalendarDay` (`@cocooning/shared-kernel/utils`) refuse un jour qui n'existe pas.
 - Sans heure de début, l'événement dure toute la journée ; aucune heure n'est inventée pour le ranger.
+
+Réponse du propriétaire, le 2026-11-24, à « Ton « go » sur #94 vaut-il aussi pour la décision 0047 et les 2 000 signes ? » : « go ».
 
 ## Alternatives écartées
 
