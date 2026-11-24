@@ -1,10 +1,10 @@
 ---
 nature: technique
-status: proposée
+status: acceptée
 date: 2026-11-24
 deciders: [Thomas De Sousa]
-validated-by: à compléter
-validated-on:
+validated-by: Thomas De Sousa, 2026-11-24
+validated-on: 2026-11-24
 supersedes:
 superseded-by:
 premortem:
@@ -23,6 +23,8 @@ L'écran de l'agenda montre la grille du mois et, en dessous, les événements d
 - Contraste des points sur la carte (`--card`), seuil WCAG 1.4.11 de 3:1 pour un élément non textuel : en clair, terre cuite `#a65a33` sur `#fffdf8` 5,0:1 et sauge `#3f5a3c` 7,54:1 ; en sombre, terre cuite `#d98a5f` sur `#27201c` 5,92:1 et sauge `#b9d0b4` 9,73:1. Les deux couleurs se distinguent aussi par leur clarté (1,51:1 entre elles en clair, 1,64:1 en sombre) ; la liste du jour écrit l'auteur en toutes lettres, la couleur n'est jamais seule.
 - Le mois passe par l'adresse et le serveur, le jour reste dans le navigateur. L'adresse porte les deux (`/agenda?day=YYYY-MM-DD&month=YYYY-MM`). Changer de mois (chevrons, listes) ou revenir à « Aujourd'hui » navigue : la page serveur relit les événements de la grille visible, du lundi qui précède le 1er au dimanche qui suit le dernier jour (42 jours au plus, sous la limite de l'API), et prépare la liste de chacun de ces jours. Toucher un jour de la grille l'affiche depuis ces données, sans appel au serveur : l'état du container change et l'adresse suit par `window.history.replaceState`, que Next relie à son routeur depuis la version 14.1 (vérifié dans Next 16.4). Le jour choisi au chargement hors de la grille (un lien, un mois parcouru) est lu à part.
 - Les jours passent de `YYYY-MM-DD` à `Date` locale composante par composante, et la page fournit « aujourd'hui » (jour de Paris) : le serveur en UTC et le téléphone à Paris dessinent la même grille.
+
+Réponse du propriétaire, le 2026-11-24, à la PR #97 qui la proposait : « go ».
 
 ## Alternatives écartées
 
