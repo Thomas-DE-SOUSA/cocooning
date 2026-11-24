@@ -40,6 +40,7 @@ describe('Feature: validate the API environment at startup', () => {
             { LOG_LEVEL: 'verbose' },
             { LOG_PRETTY: 'maybe' },
             { DB_TX_TIMEOUT_MS: '-1' },
+            { FILE_STORAGE_DIRECTORY: '  ' },
             { AUTH_JWT_SECRET: 'shorter-than-thirty-two-chars' },
             { AUTH_JWT_SECRET: 'change-me-with-openssl-rand-base64-48' },
             { PAIRING_INVITATION_CODE_TTL_HOURS: '0' },

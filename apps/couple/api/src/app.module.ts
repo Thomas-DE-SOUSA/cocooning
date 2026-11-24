@@ -17,15 +17,19 @@ import {
     HttpExceptionFilter,
     RequestIdMiddleware,
 } from '@cocooning/server-infrastructure/nest';
+import { StorageModule } from '@cocooning/server-infrastructure/storage';
 import { Logger } from '@cocooning/shared-kernel/ports';
 import cookieParser from 'cookie-parser';
 import { loggerOptionsFactory } from './config/logger-options.factory';
 import { prismaOptionsFactory } from './config/prisma-options.factory';
+import { storageOptionsFactory } from './config/storage-options.factory';
 import { validateEnvironment } from './env';
 import { EXCEPTION_STATUSES } from './exception-statuses';
 import { HealthModule } from './health/health.module';
 import { AgendaModule } from './modules/agenda';
 import { AuthenticationModule, SessionGuard } from './modules/authentication';
+// Aliased: MessagingModule of server-infrastructure already provides the EventPublisher port.
+import { MessagingModule as MessagingContextModule } from './modules/messaging';
 import { NotesModule } from './modules/notes';
 import { PairingModule } from './modules/pairing';
 
@@ -41,11 +45,13 @@ const EVERY_ROUTE = '{*path}';
         IdentifierModule,
         CryptoModule,
         MessagingModule,
+        StorageModule.forRootAsync(storageOptionsFactory),
         AuthenticationModule,
         HealthModule,
         PairingModule,
         NotesModule,
         AgendaModule,
+        MessagingContextModule,
     ],
     providers: [
         { provide: APP_GUARD, useClass: SessionGuard },

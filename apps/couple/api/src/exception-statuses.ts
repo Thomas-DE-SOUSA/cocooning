@@ -2,6 +2,7 @@ import { HttpStatus } from '@nestjs/common';
 import { AgendaExceptionCodeEnum } from '@cocooning/couple-contract/agenda';
 import { AuthenticationExceptionCodeEnum } from '@cocooning/couple-contract/authentication';
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
+import { MessagingExceptionCodeEnum } from '@cocooning/couple-contract/messaging';
 import { PairingExceptionCodeEnum } from '@cocooning/couple-contract/pairing';
 import { PersistenceExceptionCodeEnum } from '@cocooning/couple-prisma/errors';
 import type { ExceptionStatusTable } from '@cocooning/server-infrastructure/nest';
@@ -56,6 +57,22 @@ export const EXCEPTION_STATUSES: ExceptionStatusTable = {
     [AgendaExceptionCodeEnum.CALENDAR_EVENT_RANGE_INVALID]:
         HttpStatus.UNPROCESSABLE_ENTITY,
     [AgendaExceptionCodeEnum.CALENDAR_EVENT_VERSION_CONFLICT]:
+        HttpStatus.CONFLICT,
+    [MessagingExceptionCodeEnum.MESSAGING_COUPLE_NOT_PAIRED]:
+        HttpStatus.NOT_FOUND,
+    [MessagingExceptionCodeEnum.FLASH_MESSAGE_NOT_FOUND]: HttpStatus.NOT_FOUND,
+    [MessagingExceptionCodeEnum.FLASH_MESSAGE_RESERVED_TO_OWNER]:
+        HttpStatus.FORBIDDEN,
+    [MessagingExceptionCodeEnum.FLASH_MESSAGE_TEXT_INVALID]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
+    [MessagingExceptionCodeEnum.FLASH_MESSAGE_VERSION_CONFLICT]:
+        HttpStatus.CONFLICT,
+    [MessagingExceptionCodeEnum.INSTANT_PHOTO_NOT_FOUND]: HttpStatus.NOT_FOUND,
+    [MessagingExceptionCodeEnum.INSTANT_PHOTO_RESERVED_TO_OWNER]:
+        HttpStatus.FORBIDDEN,
+    [MessagingExceptionCodeEnum.INSTANT_PHOTO_CONTENT_INVALID]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
+    [MessagingExceptionCodeEnum.INSTANT_PHOTO_VERSION_CONFLICT]:
         HttpStatus.CONFLICT,
     [PersistenceExceptionCodeEnum.PERSISTENCE_LOCK_BUSY]: HttpStatus.CONFLICT,
     [SharedKernelExceptionCodeEnum.UUID_INVALID]:

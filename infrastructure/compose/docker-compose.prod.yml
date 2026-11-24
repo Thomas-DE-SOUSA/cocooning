@@ -49,6 +49,10 @@ services:
             AUTH_JWT_SECRET: ${AUTH_JWT_SECRET:?set AUTH_JWT_SECRET in infrastructure/compose/.env}
             AUTH_SESSION_TTL_DAYS: 90
             PAIRING_INVITATION_CODE_TTL_HOURS: 48
+            # The instant photos (decision 0027), kept in the files volume.
+            FILE_STORAGE_DIRECTORY: /data/files
+        volumes:
+            - files:/data/files
         depends_on:
             migrate:
                 condition: service_completed_successfully
@@ -94,4 +98,5 @@ services:
 
 volumes:
     postgres-data:
+    files:
     tailscale-state:
