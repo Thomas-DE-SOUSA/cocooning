@@ -10,20 +10,29 @@ export function useAgendaScreen(screen: AgendaCalendarScreen) {
     const [selectedDay, setSelectedDay] = useState(screen.initialDay);
     const navigate = (day: string, month: string) =>
         router.push(resolveAgendaHref({ day, month }), { scroll: false });
+    const selectDay = (day: string) => {
+        if (!Object.hasOwn(screen.days, day)) {
+            navigate(day, monthOf(day));
+            return;
+        }
+        setSelectedDay(day);
+        window.history.replaceState(
+            null,
+            '',
+            resolveAgendaHref({ day, month: screen.calendar.month }),
+        );
+    };
+    const { today, month } = screen.calendar;
     return {
         selectedDay,
-        selectDay: (day: string) => {
-            if (!Object.hasOwn(screen.days, day)) {
-                navigate(day, monthOf(day));
+        selectDay,
+        showMonth: (shownMonth: string) => navigate(selectedDay, shownMonth),
+        showToday: () => {
+            if (monthOf(today) === month) {
+                selectDay(today);
                 return;
             }
-            setSelectedDay(day);
-            window.history.replaceState(
-                null,
-                '',
-                resolveAgendaHref({ day, month: screen.calendar.month }),
-            );
+            navigate(today, monthOf(today));
         },
-        showMonth: (month: string) => navigate(selectedDay, month),
     };
 }

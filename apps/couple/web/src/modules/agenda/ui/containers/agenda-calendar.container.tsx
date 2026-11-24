@@ -9,6 +9,7 @@ import type { AgendaCalendarScreen } from '../../view-models/agenda-screen.view-
 import { NewCalendarEventButton } from '../components/new-calendar-event-button';
 import { AgendaCalendarView } from '../views/agenda-calendar.view';
 import { AgendaDayView } from '../views/agenda-day.view';
+import { AgendaHeaderView } from '../views/agenda-header.view';
 import { CalendarEventDrawerContainer } from './calendar-event-drawer.container';
 
 // The page keys this container by the day and month it read: a new reading starts from its own chosen day.
@@ -24,6 +25,7 @@ export function AgendaCalendarContainer({
     const day = viewModel.days[screen.selectedDay];
     return (
         <>
+            <AgendaHeaderView onShowToday={screen.showToday} />
             <AgendaCalendarView
                 calendar={viewModel.calendar}
                 selectedDay={screen.selectedDay}

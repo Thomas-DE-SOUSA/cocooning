@@ -9,6 +9,7 @@ import {
     type AgendaScreenViewModel,
     AgendaStepEnum,
 } from '../../view-models/agenda-screen.view-model';
+import { AgendaHeaderView } from '../views/agenda-header.view';
 import { AgendaCalendarContainer } from './agenda-calendar.container';
 
 export function AgendaContainer({
@@ -22,11 +23,14 @@ export function AgendaContainer({
         return <AgendaCalendarContainer viewModel={viewModel} />;
     }
     return (
-        <UnavailableNotice
-            title={t('unavailable.title')}
-            description={describeApiResultError(viewModel.error, t)}
-            retryLabel={t('unavailable.refresh')}
-            onRetry={refresh}
-        />
+        <>
+            <AgendaHeaderView onShowToday={null} />
+            <UnavailableNotice
+                title={t('unavailable.title')}
+                description={describeApiResultError(viewModel.error, t)}
+                retryLabel={t('unavailable.refresh')}
+                onRetry={refresh}
+            />
+        </>
     );
 }
