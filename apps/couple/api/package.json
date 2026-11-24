@@ -8,6 +8,7 @@
         "dev": "tsc-watch -p tsconfig.build.json --onSuccess \"node dist/main.js\"",
         "start": "node dist/main.js",
         "create-account": "node dist/commands/create-account/main.js",
+        "record-together-periods": "node dist/commands/record-together-periods/main.js",
         "lint": "eslint . --max-warnings=0",
         "check-types": "tsc --noEmit -p tsconfig.json",
         "test": "jest",

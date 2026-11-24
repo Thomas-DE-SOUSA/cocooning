@@ -3,3 +3,4 @@
 Les procédures d'exploitation du domaine `couple`, rangées par contexte.
 
 - [Authentication](authentication/index.md)
+- [Pairing](pairing/index.md)
