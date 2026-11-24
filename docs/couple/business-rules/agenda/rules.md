@@ -46,7 +46,7 @@ Un événement commence un jour. Je peux ajouter un dernier jour (« jusqu'au »
 J'ajoute si je veux quelques lignes de texte simple sous l'événement, 2 000 signes au plus.
 
 - Dans le code : `CalendarEventDescription.create`, `CALENDAR_EVENT_DESCRIPTION_MAX_LENGTH` (`@cocooning/couple-shared-kernel/limits`).
-- Source : décision 0046 (description facultative, réponse du propriétaire) ; la limite de 2 000 signes est une proposition de Claude, à confirmer. Validée par : Thomas De Sousa, 2026-11-24.
+- Source : décision 0046 ; la limite de 2 000 signes, proposée par Claude, est acceptée par le propriétaire (« go », 2026-11-24). Validée par : Thomas De Sousa, 2026-11-24.
 
 ## Visibilité
 

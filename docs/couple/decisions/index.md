@@ -56,4 +56,4 @@ Le registre unique des décisions du domaine `couple`, dans l'ordre chronologiqu
 | 0044 | frontend | [Navigation par une barre d'onglets en bas](frontend/0044-navigation-par-onglets.md) | produit | acceptée | 2026-11-24 | Thomas De Sousa |
 | 0045 | pairing | [Les périodes ensemble du couple, en base](pairing/0045-periodes-ensemble-du-couple.md) | produit | acceptée | 2026-11-24 | Thomas De Sousa |
 | 0046 | agenda | [Règles de l'agenda](agenda/0046-regles-de-l-agenda.md) | produit | acceptée | 2026-11-24 | Thomas De Sousa |
-| 0047 | agenda | [Les jours et les heures de l'agenda sont ceux de Paris, sans instant](agenda/0047-moments-de-l-agenda-en-heure-de-paris.md) | technique | proposée | 2026-11-24 | à compléter |
+| 0047 | agenda | [Les jours et les heures de l'agenda sont ceux de Paris, sans instant](agenda/0047-moments-de-l-agenda-en-heure-de-paris.md) | technique | acceptée | 2026-11-24 | Thomas De Sousa |
