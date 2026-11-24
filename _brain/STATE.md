@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 (direction A : #80, #81, #82 mergées ; PR connexion et mise en couple ouverte, en attente du « go », puis release). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 (direction A en production par la release #84 ; à regarder sur les téléphones). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -23,8 +23,8 @@
 ## Prochaine étape
 
 Ordre validé par le propriétaire le 2026-11-24 (« on part sur ça ») :
-1. **Essai réel à deux** dans la même note (jamais fait) ; PR `docs/` à proposer : ajouter `--http1.1` au curl de `/collab` dans le runbook de production (« Vérification »).
-2. **Direction artistique A « Lin et terre cuite »** (D44, décision plateforme 0017 #80, tokens #81, notes #82) : PR connexion et mise en couple ouverte (`feat/auth-pairing-art-direction`), merger après le « go ». Puis release `dev` → `main` et déploiement (runbook), et regarder les écrans sur les deux téléphones en clair et en sombre (rien n'a été vu en vrai). Le `Toaster` garde les couleurs de sonner (`richColors`) ; `not-found` et `~offline` gardent leur titre en `text-2xl`.
+1. **Regarder la PWA sur les deux téléphones**, clair et sombre (direction A, release #84 déployée le 2026-11-24 à 09:43 UTC, jamais vue en vrai), et faire l'essai d'écriture à deux dans la même note (jamais fait). Retours éventuels : petites PR de correction.
+2. **PR `docs/` à proposer** : runbook de production, « Vérification » : le curl de `/collab` doit être `curl --http1.1 -sv -o /dev/null … 2>&1 | grep '^< HTTP'` (voir `LESSONS.md`).
 3. **Agenda partagé** (pas de notifications).
 4. **Messages** (photo, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : la « phase 4 » adaptée.
 
@@ -41,7 +41,7 @@ Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire
 ## Fichiers chauds
 
 - `apps/couple/web/src/modules/notes/`, `apps/couple/web/src/app/{(home),notes}/`, `apps/couple/web/src/shared/{ui,application/refresh}/`
-- `packages/design-system/src/` (prochaine étape), `apps/couple/web/src/app/layout.tsx`, `docs/couple/gaps/frontend.md`
+- `packages/design-system/src/`, `apps/couple/web/src/app/layout.tsx`, `docs/couple/gaps/frontend.md`
 - `infrastructure/compose/tailscale/serve.json`, `docs/platform/runbooks/deployment/production.md`
 
 ## Dépôt
