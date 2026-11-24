@@ -31,13 +31,44 @@ export class InstantPhotoInMemoryRepository extends InstantPhotoRepository {
         this.store.simulateConcurrentSave(instantPhoto.toSnapshot());
     }
 
+    // Mimics the partial unique index (couple_id, photo_prompt_id, owner_id) of the live photos (R8).
     override save(instantPhoto: InstantPhoto): Promise<void> {
-        return Promise.resolve().then(() =>
-            this.store.write(
-                instantPhoto.toSnapshot(),
-                instantPhoto.getDomainEvents(),
-            ),
+        return Promise.resolve().then(() => {
+            const snapshot = instantPhoto.toSnapshot();
+            if (this.answersTwice(snapshot)) {
+                throw new MessagingException({
+                    code: MessagingExceptionCodeEnum.PHOTO_PROMPT_ALREADY_ANSWERED,
+                    message: 'In-memory PHOTO_PROMPT_ALREADY_ANSWERED',
+                });
+            }
+            this.store.write(snapshot, instantPhoto.getDomainEvents());
+        });
+    }
+
+    override findOfPhotoPrompts(
+        coupleId: string,
+        photoPromptIds: ReadonlyArray<string>,
+    ): Promise<ReadonlyArray<InstantPhoto>> {
+        return Promise.resolve(
+            this.store
+                .findNewest(coupleId, null, Number.MAX_SAFE_INTEGER)
+                .filter(({ photoPromptId }) =>
+                    photoPromptIds.some((id) => id === photoPromptId),
+                )
+                .map((snapshot) => InstantPhoto.fromSnapshot(snapshot)),
         );
+    }
+
+    private answersTwice(snapshot: InstantPhotoSnapshot): boolean {
+        return this.store
+            .findNewest(snapshot.coupleId, null, Number.MAX_SAFE_INTEGER)
+            .some(
+                (stored) =>
+                    stored.id !== snapshot.id &&
+                    snapshot.photoPromptId !== null &&
+                    stored.photoPromptId === snapshot.photoPromptId &&
+                    stored.ownerId === snapshot.ownerId,
+            );
     }
 
     override findById(

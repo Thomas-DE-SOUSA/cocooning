@@ -54,21 +54,21 @@ Je retire un mot ou une photo que j'ai envoyé : il disparaît pour nous deux. J
 
 Chaque jour, à une heure tirée au hasard entre 9 h et 21 h (heure de Paris), l'app nous invite tous les deux en même temps à prendre une photo.
 
-- Dans le code : à venir avec le contexte `messaging` (tâche planifiée de l'API, hasard par un port injecté, `core.md` règle 19).
+- Dans le code : `PhotoPromptScheduler` (tâche planifiée de l'API, une fois par minute) appelle `SchedulePhotoPromptsUseCase` ; `PhotoPromptScheduleService` lit d'une requête les invitations du jour de Paris de tous les couples formés (`PairedCoupleProvider.findPairedCoupleIds`), tire celle qui manque (`PhotoPrompt.draw`, minute tirée par le port `SecureRandomGenerator`, `core.md` règle 19) et envoie celle dont l'heure est venue (`PhotoPrompt.issueIfDue`, événement `PhotoPromptIssuedEvent` dans l'outbox). L'heure tirée reste secrète : aucune route ne la rend avant l'envoi. Une invitation par couple et par jour (index unique `photo_prompt_couple_id_day_key`).
 - Source : décision 0050, [décision 0014](../../decisions/0014-photo-instantanee.md). Validée par : Thomas De Sousa, 2026-11-24.
 
 ### R8. On répond jusqu'à minuit, « en retard » après 10 minutes
 
 J'envoie une seule photo du jour, jusqu'à minuit (heure de Paris). Envoyée plus de 10 minutes après l'invitation, elle porte « en retard ». Après minuit, l'invitation est passée.
 
-- Dans le code : à venir avec le contexte `messaging`.
+- Dans le code : `AnswerPhotoPromptUseCase` ; `PhotoPrompt.answerAt` refuse après minuit (`PHOTO_PROMPT_EXPIRED`) et donne `isLate` ; `PhotoPromptPreconditionService.ensureNotAnsweredBy` refuse une seconde photo du jour (`PHOTO_PROMPT_ALREADY_ANSWERED`), comme l'index unique partiel `instant_photo_couple_id_photo_prompt_id_owner_id_key` pour deux envois simultanés. Une photo du jour retirée (R6) ne compte plus : l'auteur peut en envoyer une autre avant minuit.
 - Source : décision 0050. Validée par : Thomas De Sousa, 2026-11-24.
 
 ### R9. La photo du jour de l'autre reste cachée tant que je n'ai pas envoyé la mienne
 
 Je sais que l'autre a envoyé sa photo du jour, mais je ne la vois qu'après avoir envoyé la mienne. Une photo spontanée se voit tout de suite.
 
-- Dans le code : à venir avec le contexte `messaging` ; l'API ne rend pas la photo cachée, la PWA ne fait pas que la flouter.
+- Dans le code : `isHiddenFrom` (`domain/models/photo-of-the-day.ts`) ; `ListMessageFeedUseCase` rend la photo cachée avec `isHidden: true` et sans `contentType`, et `InstantPhotoPreconditionService.ensureVisibleTo` fait répondre `404` à son fichier. L'API ne rend pas la photo cachée, la PWA ne fait pas que la flouter.
 - Source : décision 0050. Validée par : Thomas De Sousa, 2026-11-24.
 
 ## Notifications
@@ -97,8 +97,14 @@ J'autorise les notifications sur chacun de mes téléphones ; sur iPhone, l'app 
 | Retirer un mot ou une photo de l'autre | Refusé, `403` `FLASH_MESSAGE_RESERVED_TO_OWNER` ou `INSTANT_PHOTO_RESERVED_TO_OWNER` (R6) |
 | Mot ou photo inconnu, déjà retiré ou d'un autre couple | Refusé, `404` `FLASH_MESSAGE_NOT_FOUND` ou `INSTANT_PHOTO_NOT_FOUND` |
 | Deux retraits du même élément au même moment | Le second refusé, `409` `FLASH_MESSAGE_VERSION_CONFLICT` ou `INSTANT_PHOTO_VERSION_CONFLICT` |
-| Deuxième photo du jour, ou photo du jour après minuit | Refusée, `409` (R8) |
-| Lire la photo du jour de l'autre avant d'avoir envoyé la sienne | Non rendue ; le fil dit seulement qu'elle existe (R9) |
+| Deuxième photo du jour du même partenaire, même envoyée au même moment | Refusée, `409` `PHOTO_PROMPT_ALREADY_ANSWERED` (R8) |
+| Photo du jour à minuit ou après (heure de Paris) | Refusée, `409` `PHOTO_PROMPT_EXPIRED` (R8) |
+| Photo du jour avant l'envoi de l'invitation, ou pour une invitation inconnue ou d'un autre couple | Refusée, `404` `PHOTO_PROMPT_NOT_FOUND` : avant l'envoi, l'invitation est secrète et répond comme une invitation inconnue (R7) |
+| Lire l'invitation du jour avant son envoi | `200` avec `photoPrompt: null` : l'heure tirée n'est jamais dite (R7) |
+| Lire la photo du jour de l'autre avant d'avoir envoyé la sienne | Le fil la rend avec `isHidden: true`, sans `contentType` ; son fichier répond `404` `INSTANT_PHOTO_NOT_FOUND` (R9) |
+| Retirer sa photo du jour | Elle ne compte plus : une autre peut partir avant minuit, et la photo de l'autre redevient cachée jusque-là (R6, R8, R9) |
+| L'API arrêtée à l'heure tirée | L'invitation part au premier passage de la tâche après le redémarrage, avant minuit ; jamais un autre jour (R7) |
+| Deux passages de la tâche en même temps (redémarrage) | Le second échoue sur l'index unique ou la version, `PHOTO_PROMPT_VERSION_CONFLICT`, journalisé ; rien n'est tiré ni envoyé deux fois (R7) |
 
 ## Voir aussi
 

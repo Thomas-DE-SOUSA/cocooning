@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MessagingServiceModule } from './messaging-service.module';
 import {
+    AnswerPhotoPromptController,
     GetInstantPhotoFileController,
+    GetTodayPhotoPromptController,
     ListMessageFeedController,
     SendFlashMessageController,
     SendInstantPhotoController,
@@ -9,6 +11,7 @@ import {
     WithdrawInstantPhotoController,
 } from './primary/controllers';
 import { MessagingCoupleGuard } from './primary/couple';
+import { PhotoPromptScheduler } from './primary/scheduler';
 
 @Module({
     imports: [MessagingServiceModule],
@@ -19,7 +22,9 @@ import { MessagingCoupleGuard } from './primary/couple';
         SendInstantPhotoController,
         WithdrawInstantPhotoController,
         GetInstantPhotoFileController,
+        GetTodayPhotoPromptController,
+        AnswerPhotoPromptController,
     ],
-    providers: [MessagingCoupleGuard],
+    providers: [MessagingCoupleGuard, PhotoPromptScheduler],
 })
 export class MessagingModule {}

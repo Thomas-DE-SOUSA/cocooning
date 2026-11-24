@@ -15,7 +15,9 @@ export async function writeInstantPhoto(
     snapshot: InstantPhotoSnapshot,
     conflict: () => MessagingException,
 ): Promise<void> {
-    const { id, coupleId, ownerId, contentType, metadata } = snapshot;
+    const { id, coupleId, ownerId, contentType, photoPromptId, isLate } =
+        snapshot;
+    const { metadata } = snapshot;
     const stored = await tx.instantPhoto.findFirst({
         where: { coupleId, id },
         select: { version: true },
@@ -27,6 +29,8 @@ export async function writeInstantPhoto(
                 coupleId,
                 ownerId,
                 contentType,
+                photoPromptId,
+                isLate,
                 createdAt: new Date(metadata.createdAt),
                 version: FIRST_VERSION,
                 ...toMessageState(metadata),

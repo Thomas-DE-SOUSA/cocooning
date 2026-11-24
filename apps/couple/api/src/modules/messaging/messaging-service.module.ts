@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
 import {
+    AnswerPhotoPromptUseCase,
     GetInstantPhotoFileUseCase,
+    GetTodayPhotoPromptUseCase,
     ListMessageFeedUseCase,
     MessagingCoupleGuardService,
     PairedCoupleProvider,
+    SchedulePhotoPromptsUseCase,
     SendFlashMessageUseCase,
     SendInstantPhotoUseCase,
     WithdrawFlashMessageUseCase,
@@ -30,7 +33,7 @@ const useCases = [
     ),
     messagingUseCase(
         ListMessageFeedUseCase,
-        (d) => new ListMessageFeedUseCase(d.feed),
+        (d) => new ListMessageFeedUseCase(d.feed, d.photoOfTheDay),
     ),
     messagingUseCase(
         WithdrawFlashMessageUseCase,
@@ -56,6 +59,32 @@ const useCases = [
     messagingUseCase(
         GetInstantPhotoFileUseCase,
         (d) => new GetInstantPhotoFileUseCase(d.instantPhotoPreconditions),
+    ),
+    messagingUseCase(
+        SchedulePhotoPromptsUseCase,
+        (d) =>
+            new SchedulePhotoPromptsUseCase(
+                d.photoPrompts,
+                d.photoPromptSchedule,
+                d.pairedCouples,
+                d.clock,
+                d.publishing,
+            ),
+    ),
+    messagingUseCase(
+        GetTodayPhotoPromptUseCase,
+        (d) => new GetTodayPhotoPromptUseCase(d.photoOfTheDay, d.clock),
+    ),
+    messagingUseCase(
+        AnswerPhotoPromptUseCase,
+        (d) =>
+            new AnswerPhotoPromptUseCase(
+                d.instantPhotos,
+                d.photoPromptPreconditions,
+                d.fileStorage,
+                d.clock,
+                d.publishing,
+            ),
     ),
 ];
 

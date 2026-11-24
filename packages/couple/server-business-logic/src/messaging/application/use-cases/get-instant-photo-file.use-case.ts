@@ -14,7 +14,8 @@ export class GetInstantPhotoFileUseCase {
         private readonly instantPhotoPreconditionService: InstantPhotoPreconditionService,
     ) {}
 
-    // The bytes of a live photo of the couple only: another couple and a withdrawn photo answer not found (R6).
+    // The bytes of a live photo of the couple only: another couple, a withdrawn photo (R6) and the partner's photo of
+    // the day not answered yet (R9) answer not found.
     async execute(
         context: ExecutionContext,
         command: GetInstantPhotoFileCommand,
@@ -24,6 +25,10 @@ export class GetInstantPhotoFileUseCase {
                 context,
                 command.instantPhotoId,
             );
+        await this.instantPhotoPreconditionService.ensureVisibleTo(
+            context,
+            instantPhoto,
+        );
         const file =
             await this.instantPhotoPreconditionService.loadFileOf(instantPhoto);
         return toInstantPhotoFileView(instantPhoto, file);

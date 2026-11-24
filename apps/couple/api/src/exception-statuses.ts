@@ -74,6 +74,12 @@ export const EXCEPTION_STATUSES: ExceptionStatusTable = {
         HttpStatus.UNPROCESSABLE_ENTITY,
     [MessagingExceptionCodeEnum.INSTANT_PHOTO_VERSION_CONFLICT]:
         HttpStatus.CONFLICT,
+    [MessagingExceptionCodeEnum.PHOTO_PROMPT_NOT_FOUND]: HttpStatus.NOT_FOUND,
+    [MessagingExceptionCodeEnum.PHOTO_PROMPT_EXPIRED]: HttpStatus.CONFLICT,
+    [MessagingExceptionCodeEnum.PHOTO_PROMPT_ALREADY_ANSWERED]:
+        HttpStatus.CONFLICT,
+    [MessagingExceptionCodeEnum.PHOTO_PROMPT_VERSION_CONFLICT]:
+        HttpStatus.CONFLICT,
     [PersistenceExceptionCodeEnum.PERSISTENCE_LOCK_BUSY]: HttpStatus.CONFLICT,
     [SharedKernelExceptionCodeEnum.UUID_INVALID]:
         HttpStatus.UNPROCESSABLE_ENTITY,

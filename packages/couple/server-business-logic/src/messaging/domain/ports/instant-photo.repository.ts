@@ -13,4 +13,9 @@ export abstract class InstantPhotoRepository {
         before: string | null,
         count: number,
     ): Promise<ReadonlyArray<InstantPhoto>>;
+    // R8, R9: the live photos of the day that answer these prompts of the couple, in one query.
+    abstract findOfPhotoPrompts(
+        coupleId: string,
+        photoPromptIds: ReadonlyArray<string>,
+    ): Promise<ReadonlyArray<InstantPhoto>>;
 }

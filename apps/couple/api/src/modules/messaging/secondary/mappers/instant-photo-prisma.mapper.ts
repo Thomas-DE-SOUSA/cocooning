@@ -33,6 +33,8 @@ export function toInstantPhotoSnapshot(
         coupleId: raw.coupleId,
         ownerId: raw.ownerId,
         contentType: toContentType(raw.contentType),
+        photoPromptId: raw.photoPromptId,
+        isLate: raw.isLate,
         version: raw.version,
         metadata: toMetadataSnapshot(raw),
     };

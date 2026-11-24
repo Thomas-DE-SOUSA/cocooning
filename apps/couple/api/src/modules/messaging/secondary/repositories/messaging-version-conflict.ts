@@ -29,8 +29,22 @@ const toConflict = (
     return conflict();
 };
 
+export const photoPromptVersionConflict = (): MessagingException =>
+    new MessagingException({
+        code: MessagingExceptionCodeEnum.PHOTO_PROMPT_VERSION_CONFLICT,
+        message: 'Photo prompt changed since it was read',
+    });
+
 export const toFlashMessageVersionConflict = (error: unknown) =>
     toConflict(error, 'flash_message_pkey', flashMessageVersionConflict);
 
 export const toInstantPhotoVersionConflict = (error: unknown) =>
     toConflict(error, 'instant_photo_pkey', instantPhotoVersionConflict);
+
+// R7: two ticks drawing the same day collide on (couple_id, day); the outbox key answers two issues of one prompt.
+export const toPhotoPromptVersionConflict = (error: unknown) =>
+    toConflict(
+        error,
+        'photo_prompt_couple_id_day_key',
+        photoPromptVersionConflict,
+    );

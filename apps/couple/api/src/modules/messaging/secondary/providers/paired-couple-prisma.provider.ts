@@ -34,4 +34,19 @@ export class PairedCouplePrismaProvider extends PairedCoupleProvider {
             throw error;
         }
     }
+
+    // R7: the scheduled task's only read across couples; a cancelled couple is soft-deleted, a pending one is not formed.
+    override async findPairedCoupleIds(): Promise<ReadonlyArray<string>> {
+        try {
+            const couples = await this.prismaService.current.couple.findMany({
+                where: { pairingStatus: CouplePairingStatusEnum.PAIRED },
+                select: { id: true },
+                orderBy: { id: 'asc' },
+            });
+            return couples.map(({ id }) => id);
+        } catch (error) {
+            this.logger.error('Failed to read the formed couples', { error });
+            throw error;
+        }
+    }
 }

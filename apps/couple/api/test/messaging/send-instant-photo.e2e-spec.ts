@@ -52,6 +52,9 @@ describe('Feature: a partner sends an instant photo (R1, R3)', () => {
                     isOwner: true,
                     sentAt: NOW.toISOString(),
                     contentType: 'image/png',
+                    photoPromptId: null,
+                    isLate: false,
+                    isHidden: false,
                 },
             });
         });

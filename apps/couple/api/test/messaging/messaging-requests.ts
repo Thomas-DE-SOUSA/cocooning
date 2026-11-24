@@ -85,4 +85,23 @@ export abstract class MessagingRequests {
     photoFile(userId: string, id: string): Promise<TestFileResponse> {
         return this.as(userId).getFile(this.photoFilePath(id));
     }
+
+    todayPhotoPrompt(userId: string): Promise<TestResponse> {
+        return this.as(userId).get(ApiRouterEnum.PHOTO_PROMPT_TODAY_GET);
+    }
+
+    answerPhotoPrompt(
+        userId: string,
+        photoPromptId: string,
+        bytes: Uint8Array = JPEG_PHOTO,
+    ): Promise<TestResponse> {
+        return this.as(userId).postForm(
+            withId(
+                ApiRouterEnum.PHOTO_PROMPT_ANSWER,
+                'photoPromptId',
+                photoPromptId,
+            ),
+            photoForm(bytes, INSTANT_PHOTO_FORM_FIELD, 'image/jpeg'),
+        );
+    }
 }

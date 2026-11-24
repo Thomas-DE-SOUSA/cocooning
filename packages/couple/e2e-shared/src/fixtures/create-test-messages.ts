@@ -15,6 +15,8 @@ export type TestFlashMessage = TestMessage & {
 export type TestInstantPhoto = TestMessage & {
     readonly instantPhotoId: string;
     readonly contentType: string;
+    readonly photoPromptId: string | null;
+    readonly isLate: boolean;
 };
 
 const columnsOf = (message: TestMessage) => ({
@@ -48,6 +50,8 @@ export async function createTestInstantPhotos(
         data: instantPhotos.map((instantPhoto) => ({
             id: instantPhoto.instantPhotoId,
             contentType: instantPhoto.contentType,
+            photoPromptId: instantPhoto.photoPromptId,
+            isLate: instantPhoto.isLate,
             ...columnsOf(instantPhoto),
         })),
     });

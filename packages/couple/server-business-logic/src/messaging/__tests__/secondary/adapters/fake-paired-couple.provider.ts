@@ -14,4 +14,8 @@ export class FakePairedCoupleProvider extends PairedCoupleProvider {
     override findPairedCoupleIdOf(userId: string): Promise<string | null> {
         return Promise.resolve(this.couples.get(userId) ?? null);
     }
+
+    override findPairedCoupleIds(): Promise<ReadonlyArray<string>> {
+        return Promise.resolve([...new Set(this.couples.values())]);
+    }
 }

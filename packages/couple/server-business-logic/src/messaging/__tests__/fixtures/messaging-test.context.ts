@@ -5,10 +5,13 @@ import { SendFlashMessageUseCase } from '../../application/use-cases/send-flash-
 import { SendInstantPhotoUseCase } from '../../application/use-cases/send-instant-photo.use-case';
 import { WithdrawFlashMessageUseCase } from '../../application/use-cases/withdraw-flash-message.use-case';
 import { WithdrawInstantPhotoUseCase } from '../../application/use-cases/withdraw-instant-photo.use-case';
-import { MessagingTestFakes } from './messaging-test.fakes';
+import { AnswerPhotoPromptUseCase } from '../../application/use-cases/answer-photo-prompt.use-case';
+import { GetTodayPhotoPromptUseCase } from '../../application/use-cases/get-today-photo-prompt.use-case';
+import { SchedulePhotoPromptsUseCase } from '../../application/use-cases/schedule-photo-prompts.use-case';
+import { MessagingPromptFakes } from './messaging-test.prompts';
 
 // Wires the use cases as the API does; configures the process-wide UUID generator: call `FlashMessageId.resetForTests()` in afterEach.
-export class MessagingTestContext extends MessagingTestFakes {
+export class MessagingTestContext extends MessagingPromptFakes {
     messagingCoupleGuardService(): MessagingCoupleGuardService {
         return new MessagingCoupleGuardService(this.pairedCoupleProvider);
     }
@@ -31,7 +34,10 @@ export class MessagingTestContext extends MessagingTestFakes {
     }
 
     listMessageFeedUseCase(): ListMessageFeedUseCase {
-        return new ListMessageFeedUseCase(this.messageFeedService);
+        return new ListMessageFeedUseCase(
+            this.messageFeedService,
+            this.photoOfTheDayService,
+        );
     }
 
     withdrawFlashMessageUseCase(): WithdrawFlashMessageUseCase {
@@ -55,5 +61,32 @@ export class MessagingTestContext extends MessagingTestFakes {
 
     getInstantPhotoFileUseCase(): GetInstantPhotoFileUseCase {
         return new GetInstantPhotoFileUseCase(this.instantPhotoPreconditions);
+    }
+
+    schedulePhotoPromptsUseCase(): SchedulePhotoPromptsUseCase {
+        return new SchedulePhotoPromptsUseCase(
+            this.photoPromptRepository,
+            this.photoPromptScheduleService,
+            this.pairedCoupleProvider,
+            this.dateTimeProvider,
+            this.eventPublishingService,
+        );
+    }
+
+    getTodayPhotoPromptUseCase(): GetTodayPhotoPromptUseCase {
+        return new GetTodayPhotoPromptUseCase(
+            this.photoOfTheDayService,
+            this.dateTimeProvider,
+        );
+    }
+
+    answerPhotoPromptUseCase(): AnswerPhotoPromptUseCase {
+        return new AnswerPhotoPromptUseCase(
+            this.instantPhotoRepository,
+            this.photoPromptPreconditions,
+            this.fileStorage,
+            this.dateTimeProvider,
+            this.eventPublishingService,
+        );
     }
 }

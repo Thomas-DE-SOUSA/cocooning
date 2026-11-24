@@ -43,7 +43,7 @@ export class FlashMessagePrismaRepository extends FlashMessageRepository {
                     snapshot,
                     flashMessageVersionConflict,
                 );
-                await appendMessagingEvents(tx, snapshot.id, events);
+                await appendMessagingEvents(tx, events);
             });
         } catch (error) {
             if (error instanceof MessagingException) throw error;

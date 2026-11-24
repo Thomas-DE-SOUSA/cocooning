@@ -4,6 +4,7 @@ import {
     AS_A,
     AS_B,
     AS_STRANGER,
+    COUPLE_ID,
     idNumber,
     JPEG,
     LOVE,
@@ -53,6 +54,9 @@ describe('Feature: read the message feed', () => {
                         isOwner: true,
                         sentAt: LATER,
                         contentType: JPEG,
+                        photoPromptId: null,
+                        isLate: false,
+                        isHidden: false,
                     },
                     {
                         type: 'FLASH_MESSAGE',
@@ -120,6 +124,51 @@ describe('Feature: read the message feed', () => {
                     .listMessageFeedUseCase()
                     .execute(AS_STRANGER, { cursor: null, limit: 25 }),
             ).resolves.toEqual({ items: [], nextCursor: null });
+        });
+    });
+
+    describe("Scenario: R9, the partner's photo of the day", () => {
+        const PHOTO_OF_A = {
+            type: 'INSTANT_PHOTO',
+            id: idNumber(4),
+            ownerId: PARTNER_A,
+            isOwner: false,
+            sentAt: NOW,
+            photoPromptId: idNumber(1),
+            isLate: false,
+        };
+
+        const givenAnsweredByA = async () => {
+            const photoPrompt = ctx.givenPhotoPromptOf(COUPLE_ID);
+            await ctx.givenPhotoOfTheDayOf(AS_A, photoPrompt);
+            return photoPrompt;
+        };
+
+        it('is hidden from a reader who has not sent theirs: no content type', async () => {
+            await givenAnsweredByA();
+            await expect(read()).resolves.toEqual({
+                items: [{ ...PHOTO_OF_A, isHidden: true }],
+                nextCursor: null,
+            });
+        });
+
+        it('is seen once the reader has sent theirs', async () => {
+            const photoPrompt = await givenAnsweredByA();
+            await ctx.givenPhotoOfTheDayOf(AS_B, photoPrompt);
+            const { items } = await read();
+            expect(items[1]).toEqual({
+                ...PHOTO_OF_A,
+                isHidden: false,
+                contentType: JPEG,
+            });
+        });
+
+        it('is always seen by its author', async () => {
+            await givenAnsweredByA();
+            const { items } = await ctx
+                .listMessageFeedUseCase()
+                .execute(AS_A, { cursor: null, limit: 25 });
+            expect(items).toMatchObject([{ isOwner: true, isHidden: false }]);
         });
     });
 });

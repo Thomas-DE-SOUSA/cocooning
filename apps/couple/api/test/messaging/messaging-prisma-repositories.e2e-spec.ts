@@ -40,6 +40,8 @@ const aPhoto = (suffix: string, overrides: Partial<TestInstantPhoto> = {}) => ({
     coupleId: COUPLE_ID,
     ownerId: PARTNER_B,
     contentType: 'image/jpeg',
+    photoPromptId: null,
+    isLate: false,
     sentAt: NOW,
     deletedAt: null,
     ...overrides,
