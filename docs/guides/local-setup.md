@@ -28,7 +28,7 @@ Les variables de l'API, leur rôle et leur valeur de développement sont comment
 
 ## Démarrer la PWA
 
-Lancer `pnpm --filter couple-web... build` une première fois (il construit les packages dont l'app dépend), puis `pnpm --filter couple-web dev`. La PWA répond sur http://localhost:3200 (l'API garde le port 3100) et ouvre l'écran de connexion. Elle lit deux variables, commentées dans `apps/couple/web/.env.example` : `API_URL` (l'API locale, `http://localhost:3100`) et `API_TIMEOUT_MS` (`5000`). Copier ce fichier en `apps/couple/web/.env` ; sans elles, le serveur de la PWA refuse de démarrer (`apps/couple/web/src/env/server.ts`). Pour se connecter, créer un compte local avec la commande `create-account` ([runbook des comptes](../couple/infrastructure/runbooks/authentication/accounts.md)), l'API démarrée.
+Lancer `pnpm --filter couple-web... build` une première fois (il construit les packages dont l'app dépend), puis `pnpm --filter couple-web dev`. La PWA répond sur http://localhost:3200 (l'API garde le port 3100) et ouvre l'écran de connexion. Elle lit trois variables, commentées dans `apps/couple/web/.env.example` : `API_URL` (l'API locale, `http://localhost:3100`), `API_TIMEOUT_MS` (`5000`) et `NOTES_COLLABORATION_URL` (`ws://localhost:3100/collab`, le canal temps réel des notes, ouvert par le navigateur ; le cookie de session de `localhost` part vers l'API quel que soit le port). Copier ce fichier en `apps/couple/web/.env` ; sans elles, le serveur de la PWA refuse de démarrer (`apps/couple/web/src/env/server.ts`). Pour se connecter, créer un compte local avec la commande `create-account` ([runbook des comptes](../couple/infrastructure/runbooks/authentication/accounts.md)), l'API démarrée.
 
 `next dev` tourne en Turbopack, sans service worker. Le service worker n'existe qu'après le build de production, construit en webpack ([décision plateforme 0014](../platform/decisions/0014-socle-technique-de-la-pwa.md)) : `pnpm --filter couple-web build`, puis `pnpm --filter couple-web start` (port 3200).
 
@@ -60,7 +60,7 @@ Un service worker ne s'enregistre qu'en HTTPS, sauf sur `localhost`. Pour instal
 | L'API s'arrête au démarrage sur une erreur Zod | Variable absente ou invalide dans `apps/couple/api/.env` | Comparer avec `.env.example` ; `AUTH_JWT_SECRET` fait au moins 32 caractères et ne commence pas par `change-me` (la valeur d'exemple du compose de production) |
 | `EADDRINUSE` au démarrage de l'API | Le port `PORT` est déjà pris | Changer `PORT` dans `apps/couple/api/.env` |
 | `Cannot find module '.../dist/...'` | Un package n'est pas construit | `pnpm --filter couple-api... build` |
-| Le serveur de la PWA s'arrête sur « Invalid environment variables » | `apps/couple/web/.env` manque ou n'a pas `API_URL`, `API_TIMEOUT_MS` | Le copier depuis `apps/couple/web/.env.example` |
+| Le serveur de la PWA s'arrête sur « Invalid environment variables » | `apps/couple/web/.env` manque ou n'a pas `API_URL`, `API_TIMEOUT_MS`, `NOTES_COLLABORATION_URL` | Le copier depuis `apps/couple/web/.env.example` |
 | Toast « Connexion impossible » : « Cocooning ne répond pas » | L'API ne tourne pas, ou `API_URL` pointe ailleurs | Démarrer l'API, vérifier `API_URL` |
 | `/sw.js` répond `404` | La PWA tourne en `dev`, ou le build est antérieur | `pnpm --filter couple-web build`, puis `start` |
 | Le téléphone ne propose pas l'installation | Page servie en HTTP, ou téléphone hors du tailnet | Passer par `tailscale serve` et vérifier la connexion Tailscale du téléphone |

@@ -26,6 +26,10 @@
         "./authentication": {
             "types": "./src/authentication/index.ts",
             "default": "./dist/authentication/index.js"
+        },
+        "./notes": {
+            "types": "./src/notes/index.ts",
+            "default": "./dist/notes/index.js"
         }
     },
     "dependencies": {

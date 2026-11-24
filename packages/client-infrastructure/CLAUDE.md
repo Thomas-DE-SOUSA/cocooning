@@ -1,6 +1,6 @@
 # @cocooning/client-infrastructure
 
-Adaptateurs front sans domaine. Sous-chemin `shared/http` : le seul `fetch` des gateways (`httpRequest`), la verification d'une reponse par son schema de contrat (`parseResponse`), la construction d'une URL d'API (`resolveRoute`), `HttpMethodEnum` et les types `HttpRequest` et `HttpRequestConfig<TError>`. Sous-chemin `testing` : `FakeFetch`, le faux `fetch` des specs de gateways, ici et dans les packages de domaine.
+Adaptateurs front sans domaine. Sous-chemin `shared/http` : le seul `fetch` des gateways (`httpRequest`), la verification d'une reponse par son schema de contrat (`parseResponse`), la construction d'une URL d'API (`resolveRoute(apiBaseUrl, route, params)`, qui remplit les segments `:nom` encodes), `HttpMethodEnum` et les types `HttpRequest` et `HttpRequestConfig<TError>`. Sous-chemin `testing` : `FakeFetch`, le faux `fetch` des specs de gateways, ici et dans les packages de domaine.
 
 ## A lire avant de commencer
 

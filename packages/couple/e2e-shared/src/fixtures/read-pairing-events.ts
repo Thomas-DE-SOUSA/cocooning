@@ -1,6 +1,6 @@
 import type { PrismaService } from '@cocooning/couple-prisma/nest';
 
-export type PairingEventRow = {
+export type OutboxEventRow = {
     readonly eventName: string;
     readonly coupleId: string;
     readonly aggregateId: string;
@@ -14,7 +14,7 @@ export type PairingEventRow = {
 export function readPairingEvents(
     prisma: PrismaService,
     coupleId: string,
-): Promise<PairingEventRow[]> {
+): Promise<OutboxEventRow[]> {
     return prisma.includingDeleted.pairingEvent.findMany({
         where: { coupleId },
         orderBy: { version: 'asc' },

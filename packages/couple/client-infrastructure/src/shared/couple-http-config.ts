@@ -9,6 +9,7 @@ import { HttpErrorResponseSchema } from '@cocooning/couple-contract/http-error';
 const CODE_BY_STATUS: Readonly<Record<number, ApiErrorCode>> = {
     400: ApiErrorCodeEnum.VALIDATION_ERROR,
     401: ApiErrorCodeEnum.UNAUTHORIZED,
+    403: ApiErrorCodeEnum.FORBIDDEN,
     404: ApiErrorCodeEnum.NOT_FOUND,
     409: ApiErrorCodeEnum.CONFLICT,
     422: ApiErrorCodeEnum.VALIDATION_ERROR,

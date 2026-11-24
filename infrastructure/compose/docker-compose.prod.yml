@@ -74,6 +74,7 @@ services:
         environment:
             API_URL: http://api:3100
             API_TIMEOUT_MS: 5000
+            NOTES_COLLABORATION_URL: ${NOTES_COLLABORATION_URL:?set NOTES_COLLABORATION_URL in infrastructure/compose/.env}
         network_mode: service:tailscale
         depends_on:
             - tailscale

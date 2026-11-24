@@ -1,10 +1,7 @@
 import type { INestApplication } from '@nestjs/common';
 import { SESSION_COOKIE_NAME } from '@cocooning/couple-contract/authentication';
-import { signSessionToken } from './session-token';
+import { partnerSessionToken } from './session-token';
 
-const SECONDS_PER_HOUR = 3_600;
-const FIRST_SESSION_VERSION = 1;
-const MILLISECONDS_PER_SECOND = 1_000;
 const JSON_CONTENT_TYPE = 'application/json';
 
 export type TestResponse = {
@@ -35,16 +32,8 @@ export class TestClient {
         return new TestClient(this.baseUrl, token);
     }
 
-    // A session valid for an hour from the given instant, the clock the API reads, at the first session version of the account.
     asPartner(userId: string, now: Date): TestClient {
-        const nowSeconds = Math.floor(now.getTime() / MILLISECONDS_PER_SECOND);
-        return this.withSessionToken(
-            signSessionToken({
-                sub: userId,
-                ver: FIRST_SESSION_VERSION,
-                exp: nowSeconds + SECONDS_PER_HOUR,
-            }),
-        );
+        return this.withSessionToken(partnerSessionToken(userId, now));
     }
 
     async get(path: string): Promise<TestResponse> {
@@ -59,6 +48,15 @@ export class TestClient {
             method: 'POST',
             headers: { ...this.headers(), 'Content-Type': JSON_CONTENT_TYPE },
             body: body === null ? null : JSON.stringify(body),
+        });
+        return { status: response.status, body: await readBody(response) };
+    }
+
+    async patch(path: string, body: unknown): Promise<TestResponse> {
+        const response = await fetch(`${this.baseUrl}${path}`, {
+            method: 'PATCH',
+            headers: { ...this.headers(), 'Content-Type': JSON_CONTENT_TYPE },
+            body: JSON.stringify(body),
         });
         return { status: response.status, body: await readBody(response) };
     }

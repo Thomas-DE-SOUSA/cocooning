@@ -4,4 +4,5 @@ Ce dossier décrit comment chaque bounded context du domaine `couple` est constr
 
 - [Comptes et connexion](authentication/index.md) : contexte `authentication`, les deux comptes et leurs sessions
 - [Mise en couple](pairing/index.md) : contexte `pairing`, le couple et son code d'invitation
+- [Notes](notes/index.md) : contexte `notes`, les notes du couple
 - [Front](frontend/index.md) : packages de la PWA et chemin d'un appel à l'API

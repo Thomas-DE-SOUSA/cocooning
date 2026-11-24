@@ -4,13 +4,14 @@ API NestJS 11 (CommonJS, decision plateforme 0011) du domaine couple : racine de
 
 - `src/main.ts` : `Uuid.configure(new UuidV7GeneratorProvider())` une seule fois (decision 0024), `enableShutdownHooks`, ecoute sur `PORT`. Rien d'autre : pas de `useGlobal*`, pas de prefixe global, pas de Swagger.
 - `src/env.ts` : schema Zod de l'API compose avec `couplePrismaEnvSchema` et `authenticationEnvSchema` (`.extend(fragment.shape)`, Zod 4), valide par `ConfigModule.forRoot({ validate })`. `src/env.spec.ts` parse `.env.example`.
-- `src/app.module.ts` : configuration, `LoggerModule` et `PrismaModule` en `forRootAsync` (fabriques dans `src/config/`), `ClockModule`, `IdentifierModule`, `CryptoModule`, `MessagingModule`, `AuthenticationModule`, `PairingModule`, `APP_GUARD` (`SessionGuard`), `APP_FILTER` (`HttpExceptionFilter` + `EXCEPTION_STATUSES`), `cookie-parser` puis `RequestIdMiddleware` sur toutes les routes.
+- `src/app.module.ts` : configuration, `LoggerModule` et `PrismaModule` en `forRootAsync` (fabriques dans `src/config/`), `ClockModule`, `IdentifierModule`, `CryptoModule`, `MessagingModule`, `AuthenticationModule`, `PairingModule`, `NotesModule`, `APP_GUARD` (`SessionGuard`), `APP_FILTER` (`HttpExceptionFilter` + `EXCEPTION_STATUSES`), `cookie-parser` puis `RequestIdMiddleware` sur toutes les routes.
 - `src/exception-statuses.ts` : la table code -> statut (decision 0020). Un code absent repond 500 sans son message.
 - `src/health/` : `GET ApiRouterEnum.HEALTH_CHECK`, public, `SELECT 1` par `PrismaService`.
 - `src/modules/authentication/` : connexion, deconnexion et session (decision 0034, stub `CLAUDE.md`). Trois modules comme `pairing` ; `AuthenticationModule` exporte les use cases pour que `AppModule` construise `SessionGuard`. `SessionGuard` global, ferme par defaut : lit le cookie `SESSION_COOKIE_NAME` (`@cocooning/couple-contract/authentication`) et appelle `ResolveSessionUseCase`, sinon 401 (`AUTHENTICATION_SESSION_MISSING` ou `_INVALID`). `@CurrentPartner()` donne le `PartnerContext { userId }` au controleur. `env.ts` du module : `AUTH_JWT_SECRET`, `AUTH_SESSION_TTL_DAYS`.
 - `src/commands/` : commandes d'exploitation lancees sur la VM (decision plateforme 0016, `CLAUDE.md` du dossier). `create-account/` cree un compte (R6) dans un contexte Nest sans HTTP, sur `AuthenticationSecondaryModule`.
 - `src/modules/pairing/` : premier contexte (stub `CLAUDE.md`). Trois modules : `PairingModule` (quatre controleurs), `PairingServiceModule` (use cases par `pairingUseCase()`, `PairingPreconditionService` et `EventPublishingService` crees dans la fabrique), `PairingSecondaryModule` (`provide: CoupleRepository`, `useClass: CouplePrismaRepository`). Routes `ApiRouterEnum.COUPLE_*`. `env.ts` du module : `PAIRING_INVITATION_CODE_TTL_HOURS`.
 - `MessagingModule` (`@cocooning/server-infrastructure/messaging`) fournit `EventPublisher` : publication en processus, qui ne fait que journaliser tant qu'aucun abonne n'existe ; le relais de l'outbox livre (decision 0021).
+- `src/modules/notes/` : premier contexte du couple (stub `CLAUDE.md`). `NotesModule` : sept controleurs (`ApiRouterEnum.NOTE_*`), tous sous `@UseGuards(NoteCoupleGuard)` (`primary/couple/`), qui pose l'`ExecutionContext` du couple forme apres le garde de session (decision 0041) ; `@CurrentCouple()` le lit, sinon `EXECUTION_CONTEXT_MISSING` (500). Canal temps reel Hocuspocus sur `/collab` (`NoteCollaborationServer`, decision 0040). Puis `NotesServiceModule` (use cases par `notesUseCase()`, `NoteCoupleGuardService` en provider, decision 0006), `NotesSecondaryModule` (`NoteRepository` -> `NotePrismaRepository`, `PairedCoupleProvider` -> `PairedCouplePrismaProvider`, decision 0041).
 - Un nouveau contexte : `src/modules/<contexte>/`, sur le modele de `pairing`, avec son stub `CLAUDE.md` qui importe le `CLAUDE.md` du contexte metier.
 
 ## A lire avant de commencer
@@ -54,7 +55,7 @@ Transactions et verrous : `../../../_knowledge/backend/concurrency.md`.
 - Un controleur de test est une fixture de la spec (exemple : `test/authentication/partner-probe.controller.ts`). Pas de `jest.fn` ni `jest.spyOn` (decision 0001) : une horloge se remplace par `overrides` avec `DeterministicDateTimeProvider`.
 - Une spec qui ecrit en base vide les tables par `truncateAllTables` (`@cocooning/couple-e2e-shared/fixtures`) en `beforeEach`.
 - Modele a copier : `test/health/health.e2e-spec.ts` (route simple), `test/authentication/` (garde, connexion, `AuthenticationTestApp`), `test/pairing/` (contexte : `PairingTestApp` monte l'app sur une horloge deterministe, une spec par endpoint, `pairing-concurrency.e2e-spec.ts`, specs de l'adaptateur par `app.get(CoupleRepository)` sur des lignes posees par `createTestCouple`).
-- `readPairingEvents`, `createTestCouple` et `createTestAccount` viennent de `@cocooning/couple-e2e-shared/fixtures`, jamais d'un helper local.
+- `readPairingEvents`, `readNoteEvents`, `createTestCouple`, `createTestNotes` et `createTestAccount` viennent de `@cocooning/couple-e2e-shared/fixtures`, jamais d'un helper local.
 
 ## Pieges
 
@@ -64,6 +65,7 @@ Transactions et verrous : `../../../_knowledge/backend/concurrency.md`.
 - Express 5 : une route joker s'ecrit `{*path}` (path-to-regexp 8).
 - `@nestjs/config` 12 et `@nestjs/jwt` 12 sont en ESM pur : rester en 4 et 11.
 - `jsonwebtoken` et `argon2` : voir les pieges de `src/modules/authentication/CLAUDE.md`.
+- Hocuspocus 4 et Yjs ont une entree `require` mais des types ESM seuls : les charger par `src/modules/notes/esm-packages.ts` (`createRequire`), jamais par un `import` (TS1479). Un hook Hocuspocus qui echoue passe par `reportingFailure`, sinon Hocuspocus imprime l'erreur et sa pile.
 - `@types/cookie-parser` type `request.cookies` en `any` : le relire en `Record<string, unknown>` et tester `typeof`.
 - `ConfigModule` lit aussi `.env` du dossier courant ; `process.env` l'emporte sur le fichier.
 

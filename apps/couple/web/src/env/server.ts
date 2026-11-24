@@ -8,6 +8,7 @@ export const serverEnv = createEnv({
         NODE_ENV: z.enum(['development', 'production', 'test']),
         API_URL: z.url(),
         API_TIMEOUT_MS: z.coerce.number().int().positive(),
+        NOTES_COLLABORATION_URL: z.url({ protocol: /^wss?$/ }),
     },
     experimental__runtimeEnv: {},
     emptyStringAsUndefined: true,

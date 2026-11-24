@@ -11,7 +11,6 @@ const FORM = {
     emailAddress: 'thomas@cocooning.test',
     password: 'correct horse battery staple',
 };
-const CLIENT = { ipAddress: '100.64.0.7', userAgent: 'Mozilla/5.0 (iPhone)' };
 
 describe('Feature: a partner signs in from the PWA', () => {
     let gateway: FakeAuthenticationGateway;
@@ -24,15 +23,13 @@ describe('Feature: a partner signs in from the PWA', () => {
 
     describe('Scenario: the API opens a session', () => {
         it('returns the session for the server action to set its cookie', async () => {
-            await expect(useCase.execute(FORM, CLIENT)).resolves.toEqual(
-                ok(A_SESSION),
-            );
+            await expect(useCase.execute(FORM)).resolves.toEqual(ok(A_SESSION));
         });
 
-        it('sends the credentials and the browser context once', async () => {
-            await useCase.execute(FORM, CLIENT);
+        it('sends the credentials once', async () => {
+            await useCase.execute(FORM);
             expect(gateway.calls).toEqual([
-                { operation: 'signIn', request: FORM, client: CLIENT },
+                { operation: 'signIn', request: FORM },
             ]);
         });
     });
@@ -46,9 +43,7 @@ describe('Feature: a partner signs in from the PWA', () => {
                     AuthenticationExceptionCodeEnum.AUTHENTICATION_CREDENTIALS_INVALID,
             };
             gateway.givenRefusal(refusal);
-            await expect(useCase.execute(FORM, CLIENT)).resolves.toEqual(
-                fail(refusal),
-            );
+            await expect(useCase.execute(FORM)).resolves.toEqual(fail(refusal));
         });
     });
 });

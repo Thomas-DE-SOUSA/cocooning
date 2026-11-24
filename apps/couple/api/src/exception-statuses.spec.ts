@@ -1,4 +1,5 @@
 import { AuthenticationExceptionCodeEnum } from '@cocooning/couple-contract/authentication';
+import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
 import { PairingExceptionCodeEnum } from '@cocooning/couple-contract/pairing';
 import { PersistenceExceptionCodeEnum } from '@cocooning/couple-prisma/errors';
 import { CoupleSharedKernelExceptionCodeEnum } from '@cocooning/couple-shared-kernel/exceptions';
@@ -9,6 +10,7 @@ import { EXCEPTION_STATUSES } from './exception-statuses';
 const EVERY_CODE_ENUM = [
     AuthenticationExceptionCodeEnum,
     PairingExceptionCodeEnum,
+    NoteExceptionCodeEnum,
     PersistenceExceptionCodeEnum,
     CoupleSharedKernelExceptionCodeEnum,
     SharedKernelExceptionCodeEnum,
@@ -18,6 +20,7 @@ const EVERY_CODE_ENUM = [
 // Deliberately answered 500 without detail: corrupted data or a programming error, never the client's fault.
 const INTERNAL_CODES: readonly string[] = [
     PairingExceptionCodeEnum.PAIRING_COUPLE_DATA_CORRUPTED,
+    NoteExceptionCodeEnum.NOTE_DATA_CORRUPTED,
     PersistenceExceptionCodeEnum.PERSISTENCE_NOT_INITIALIZED,
     PersistenceExceptionCodeEnum.PERSISTENCE_LOCK_OUTSIDE_TRANSACTION,
     CoupleSharedKernelExceptionCodeEnum.EXECUTION_CONTEXT_MISSING,

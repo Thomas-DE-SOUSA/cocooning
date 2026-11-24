@@ -1,6 +1,6 @@
 # @cocooning/couple-client-infrastructure
 
-Adaptateurs front des contextes du couple. Sous-chemin `shared` : `createCoupleHttpConfig(timeoutMs)`, la configuration HTTP commune a toutes les gateways du couple, qui traduit un refus de l'API (corps `HttpErrorResponse` du contrat) en `ApiError`. Les gateways d'un contexte arrivent avec son premier ecran, dans `src/shared/<contexte>/` : `endpoints/` (`resolve<Contexte>Endpoints(apiBaseUrl)`), `gateways/api-<nom>.gateway.ts`, et la fabrique `create<Contexte>Module(apiBaseUrl, timeoutMs[, getSessionToken])` qui rend les use cases et garde la gateway. Aujourd'hui : `authentication/` (`ApiAuthenticationGateway`, `createAuthenticationModule(apiBaseUrl, timeoutMs, getSessionToken)` -> `{ signIn, signOut }`, la connexion sans session, la deconnexion avec), `pairing/` (`ApiPairingGateway`, `createPairingModule(apiBaseUrl, timeoutMs, getSessionToken)` -> `{ getMyCouple, createCouple, joinCouple, renewInvitationCode, cancelCouple }`) et `session/` (`SessionTokenProvider`, `sessionHeaders`, `sessionRequest`).
+Adaptateurs front des contextes du couple. Sous-chemin `shared` : `createCoupleHttpConfig(timeoutMs)`, la configuration HTTP commune a toutes les gateways du couple, qui traduit un refus de l'API (corps `HttpErrorResponse` du contrat) en `ApiError`. Les gateways d'un contexte arrivent avec son premier ecran, dans `src/shared/<contexte>/` : `endpoints/` (`resolve<Contexte>Endpoints(apiBaseUrl)`), `gateways/api-<nom>.gateway.ts`, et la fabrique `create<Contexte>Module(apiBaseUrl, timeoutMs[, getSessionToken])` qui rend les use cases et garde la gateway. Aujourd'hui : `authentication/` (`ApiAuthenticationGateway`, `createAuthenticationModule(apiBaseUrl, timeoutMs, getSessionToken)` -> `{ signIn, signOut }`, la connexion sans session, la deconnexion avec), `pairing/` (`ApiPairingGateway`, `createPairingModule(apiBaseUrl, timeoutMs, getSessionToken)` -> `{ getMyCouple, createCouple, joinCouple, renewInvitationCode, cancelCouple }`) `notes/` (`ApiNotesGateway`, `createNotesModule(apiBaseUrl, timeoutMs, getSessionToken)` -> `{ listNotes, getNote, createNote, renameNote, shareNote, makeNotePrivate, deleteNote }`, routes a parametre par `resolveRoute(apiBaseUrl, route, { noteId })`) et `session/` (`SessionTokenProvider`, `sessionHeaders`, `sessionRequest`).
 
 ## A lire avant de commencer
 
@@ -9,12 +9,12 @@ Regles front communes :
 
 ## Consignes de code
 
-- Statut -> code : 400 et 422 `VALIDATION_ERROR`, 401 `UNAUTHORIZED`, 404 `NOT_FOUND`, 409 `CONFLICT`, tout autre `UNKNOWN`. Le `code` du corps devient `backendCode` ; l'ecran choisit son message par ce code (decision 0010).
+- Statut -> code : 400 et 422 `VALIDATION_ERROR`, 401 `UNAUTHORIZED`, 403 `FORBIDDEN`, 404 `NOT_FOUND`, 409 `CONFLICT`, tout autre `UNKNOWN`. Le `code` du corps devient `backendCode` ; l'ecran choisit son message par ce code (decision 0010).
 - Une gateway etend le port de `couple-client-business-logic`, appelle `httpRequest` puis `parseResponse` avec le schema de reponse du contrat, et ne leve jamais.
 - Aucune URL en dur : `resolveRoute(apiBaseUrl, ApiRouterEnum.X)`, `apiBaseUrl` lu dans la configuration de l'app.
 - Une gateway valide sa requete par le schema de requete du contrat avant l'appel : hors contrat, `VALIDATION_ERROR` sans appel.
-- Seule la connexion transmet l'adresse IP et le User-Agent du navigateur (`x-forwarded-for`, `user-agent`, `core-frontend.md` regle 13) ; une valeur `null` n'envoie pas l'en-tete.
-- Contexte qui agit pour le partenaire connecte : la fabrique recoit `getSessionToken` sans l'appeler, la gateway passe par `sessionRequest(getSessionToken, requete, config)`, qui appelle `sessionHeaders` a chaque requete et envoie `Cookie: <SESSION_COOKIE_NAME>=<jeton>`, lu par le garde de session de l'API (decision 0036). Sans jeton, `UNAUTHORIZED` (`AUTHENTICATION_SESSION_MISSING`) sans appel.
+- Aucune gateway ne transmet l'adresse IP ni le User-Agent du navigateur (decision 0043, `core-frontend.md` regle 13).
+- Contexte qui agit pour le partenaire connecte : la fabrique recoit `getSessionToken` sans l'appeler, la gateway passe par `sessionRequest(getSessionToken, requete, config)`, qui appelle `sessionHeaders` a chaque requete et envoie `Cookie: <SESSION_COOKIE_NAME>=<jeton>`, lu par le garde de session de l'API (decision 0036). La fabrique recoit `getSessionToken` des qu'un seul de ses use cases agit pour le partenaire connecte ; un appel public de la meme fabrique part sans cookie (decision 0042). Sans jeton, `UNAUTHORIZED` (`AUTHENTICATION_SESSION_MISSING`) sans appel.
 - Modeles a copier : `src/shared/authentication/` (connexion publique, deconnexion avec la session), `src/shared/pairing/` (tous les appels au nom du partenaire).
 
 ## Tests

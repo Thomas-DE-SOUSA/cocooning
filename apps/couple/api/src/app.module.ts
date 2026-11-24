@@ -25,6 +25,7 @@ import { validateEnvironment } from './env';
 import { EXCEPTION_STATUSES } from './exception-statuses';
 import { HealthModule } from './health/health.module';
 import { AuthenticationModule, SessionGuard } from './modules/authentication';
+import { NotesModule } from './modules/notes';
 import { PairingModule } from './modules/pairing';
 
 const EVERY_ROUTE = '{*path}';
@@ -42,6 +43,7 @@ const EVERY_ROUTE = '{*path}';
         AuthenticationModule,
         HealthModule,
         PairingModule,
+        NotesModule,
     ],
     providers: [
         { provide: APP_GUARD, useClass: SessionGuard },

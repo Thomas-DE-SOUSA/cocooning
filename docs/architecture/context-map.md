@@ -27,7 +27,8 @@ notes, agenda, messaging ──(événements via outbox)──> relais de l'API 
 
 - Les contextes métier ne lisent ni les tables d'`authentication` ni celles de `pairing` : ils reçoivent `userId` et `coupleId` du contexte d'exécution, posé par la couche API.
 - Les événements de domaine sont écrits dans l'outbox PostgreSQL dans la même transaction que l'agrégat. Un relais qui tourne dans le processus de l'API les publie et envoie les notifications Web Push (D6). Il n'y a ni file de messages ni worker séparé.
-- L'édition en temps réel des notes passe par un serveur Hocuspocus (P5). Son raccordement au contexte `notes` (persistance du document Yjs, contrôle d'accès) est décrit avec le contexte (à venir, phase 2).
+- L'édition en temps réel des notes passe par un serveur Hocuspocus dans le processus de l'API (P5, [décision 0040](../couple/decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md)) : persistance du document Yjs dans la note, contrôle d'accès à la connexion.
+- Le `coupleId` d'une requête vient de `pairing` : le couple formé du partenaire ([décision 0041](../couple/decisions/0041-couple-de-la-requete.md)).
 
 ## Points ouverts
 

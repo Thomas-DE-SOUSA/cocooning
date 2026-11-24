@@ -24,7 +24,7 @@
 
 - Type : test manquant
 - Constaté le : 2026-11-23, revue des étapes 2 et 3
-- Où : `apps/couple/web/src/app/page.tsx`, `apps/couple/web/src/app/pairing/page.tsx`, `apps/couple/web/src/modules/*/ui/containers/`, `apps/couple/web/src/modules/pairing/hooks/use-pairing-screen.ts`
+- Où : `apps/couple/web/src/app/(home)/page.tsx`, `apps/couple/web/src/app/pairing/page.tsx`, `apps/couple/web/src/modules/*/ui/containers/`, `apps/couple/web/src/modules/pairing/hooks/use-pairing-screen.ts`, `apps/couple/web/src/modules/notes/hooks/use-notes-screen.ts`, `apps/couple/web/src/app/notes/[noteId]/page.tsx`, `apps/couple/web/src/modules/notes/hooks/use-note-page-screen.ts`
 - Constat : une route qui monte un container importe la server action et `serverEnv`, que t3-env refuse sous jsdom ; `use-pairing-screen` appelle `useRouter` de `next/navigation`, sans routeur dans un test. Les décisions qu'ils portent sont sorties dans des fonctions testées (`presentPairingPage`, `resolveHomeDestination`, `resolveCommandFailureFollowUp`, `closeSignOutSession`, `isSecureCookie`), mais le câblage lui-même (choix de la vue, clés des toasts, redirection) n'est vérifié qu'à la main.
 - Règle concernée : `core-backend.md` règle 20 pour l'esprit (E2E des points d'entrée) ; aucune règle front écrite
 - Statut : ouvert
@@ -36,4 +36,22 @@
 - Où : `apps/couple/web/src/modules/authentication/services/authentication-module.factory.ts`, `docs/couple/decisions/frontend/0036-lecture-des-donnees-par-la-page-serveur.md` (Conséquences)
 - Constat : la décision 0036 dit que la fabrique `authentication`, dont le premier appel est public, ne prend pas de `getSessionToken`. Depuis la déconnexion (décision 0034), `SignOutUseCase` agit pour le partenaire connecté : la fabrique reçoit donc `getSessionToken`, que seule la déconnexion lit. Une fabrique de contexte reçoit `getSessionToken` dès qu'un de ses use cases agit pour le partenaire connecté. Retirer le fournisseur pour suivre la décision casserait la déconnexion : sans session, l'API répond 401, que `SignOutUseCase` compte comme une session fermée, et seuls les autres appareils resteraient connectés.
 - Règle concernée : [décision 0036](../decisions/frontend/0036-lecture-des-donnees-par-la-page-serveur.md)
-- Statut : ouvert, une décision qui remplace ce point de 0036 est à proposer au propriétaire
+- Statut : clos, tranché par la [décision 0042](../decisions/frontend/0042-fournisseur-de-session-des-fabriques.md)
+
+### 005. La liste des notes ne montre que les 100 plus récentes
+
+- Type : règle validée non construite
+- Constaté le : 2026-11-23, liste des notes (branche `feat/notes-list`)
+- Où : `apps/couple/web/src/modules/notes/services/load-notes.service.ts`
+- Constat : l'accueil lit la première page de `GET /notes` avec `pageSize` à `MAX_PAGE_SIZE` (100) et n'offre aucune page suivante. Au-delà de 100 notes visibles, les plus anciennes n'apparaissent plus dans la PWA ; elles restent dans la base et dans l'API.
+- Règle concernée : [décision 0025](../decisions/0025-pagination.md)
+- Statut : ouvert
+
+### 006. L'adaptateur Hocuspocus de la PWA vit dans le module web `notes`
+
+- Type : écart avec une règle validée
+- Constaté le : 2026-11-23, éditeur des notes (branche `feat/notes-editor`)
+- Où : `apps/couple/web/src/modules/notes/gateways/hocuspocus/hocuspocus-note-document.gateway.ts`, `apps/couple/web/src/modules/notes/gateways/ports/note-document.gateway.ts`
+- Constat : la décision 0040 et la règle 12 de `core-frontend.md` placent le fournisseur Hocuspocus dans `couple-client-infrastructure`. Ce package compile en CommonJS, et Hocuspocus comme Yjs n'y publient que des types ESM (TS1479, D31). L'adaptateur et son port sont donc dans le module web, compilé en ESNext par Next. Il reste un adaptateur derrière un port : aucun composant n'ouvre de socket, et le hook se teste par `FakeNoteDocumentGateway`.
+- Règle concernée : [décision 0040](../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md), `core-frontend.md` règle 12
+- Statut : ouvert, une décision qui place l'adaptateur temps réel dans le module web est à proposer au propriétaire

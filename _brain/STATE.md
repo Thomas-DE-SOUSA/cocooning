@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-23 (PR 2 de la revue en production, release #57). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 (PR 9 route /collab en attente du « go », puis release). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -20,7 +20,7 @@
 
 ## Prochaine étape
 
-**Revue des étapes 2 et 3 rendue** (`journal/2026-11-23.md`, « Revue des étapes 2 et 3 ») : aucun CRITICAL, 4 IMPORTANT (cache du service worker, impasse de la mise en couple si les deux créent, trous du lint, server actions non testées). Choix du propriétaire (D38) : PR 1 `fix/pairing-pending-deadlock` d'abord (règle R8 : le seul membre d'un couple en attente peut l'annuler, décision proposée puis use case et bouton), puis PR 2 (cache du service worker), puis 3 à 7 ; adresses e-mail retirées du journal dans la PR 7, sans réécriture d'historique. R8 en production (#52, #53, release #54). PR 2 (cache du service worker) en production (#56, release #57). Revue traitée : PR 3 à 7 mergées en autonomie (D39, #59 à #63). Release vers `main` et déploiement : voir le journal. Prochaine étape de la phase 3 à choisir avec le propriétaire (notes, agenda, messages) ; points ouverts : écarts frontend 004, authentication 005 et 002, D26. Ensuite, prochaine étape de la phase 3 à choisir (notes, agenda, messages).
+**Étape « notes » de la phase 3** (D40, `journal/2026-11-23.md`, « Étape notes : plan » ; suite dans `journal/2026-11-24.md`). Plan : 1 décisions et règles (#66) ; 2 domaine (#67) ; 3 tables et adaptateurs (#68) ; 4 contrat et routes (#69) ; 5 temps réel dans l'API (#70) ; 6 client (#71) ; 7 liste dans la PWA (#74) ; 8a page d'une note (#75) ; 8b éditeur Tiptap (#76) ; 9 route `/collab` (branche `chore/notes-collab-route`, en attente du « go ») puis release : remplir `NOTES_COLLABORATION_URL` dans `.env` de la VM avant le build. Écarts (D41) : #72 (décision 0042) et #73 (décision 0043) mergées. Reste ouvert : écarts frontend 003, 005 et 006 (adaptateur Hocuspocus dans le module web, décision à proposer) (100 notes, laissé ouvert par le propriétaire), D26.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 

@@ -141,3 +141,16 @@ catalogs:
   forms:
     "@hookform/resolvers": ^7.0.8
     react-hook-form: ^7.92.0
+  collaboration:
+    "@hocuspocus/server": ^4.9.0
+    "@hocuspocus/provider": ^4.9.0
+    "@tiptap/extension-collaboration": ^3.35.0
+    "@tiptap/extension-list": ^3.35.0
+    "@tiptap/pm": ^3.35.0
+    "@tiptap/react": ^3.35.0
+    "@tiptap/starter-kit": ^3.35.0
+    "@tiptap/y-tiptap": ^3.3.1
+    "@types/ws": ^8.18.1
+    ws: ^8.18.3
+    y-protocols: ^1.0.7
+    yjs: ^13.6.33
