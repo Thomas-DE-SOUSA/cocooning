@@ -31,6 +31,16 @@ describe('Feature: a button', () => {
         });
     });
 
+    describe('Scenario: an outline action', () => {
+        it('draws the field border around the accent color', () => {
+            render(<Button variant="outline">Renommer</Button>);
+
+            const button = screen.getByRole('button', { name: 'Renommer' });
+            expect(button.className).toContain('border-input');
+            expect(button.className).toContain('text-primary');
+        });
+    });
+
     describe('Scenario: a click', () => {
         it('calls its handler', () => {
             const clicks: string[] = [];

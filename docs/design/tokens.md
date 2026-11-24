@@ -25,6 +25,8 @@ Les couleurs sont écrites en hexadécimal, comme dans la décision, pour que le
 | `border-border` | bordure décorative d'une carte, bordure par défaut |
 | `outline-ring` | anneau de focus |
 
+Un bouton `outline` (texte terre cuite, bordure de champ) prend `bg-card` au survol, pas `bg-muted` : sur `bg-muted`, la terre cuite tombe à 4,3:1.
+
 Une couleur ajoutée suit la consigne de `packages/design-system/CLAUDE.md` et entre dans la décision qui la justifie, contraste calculé.
 
 ## Polices
@@ -36,8 +38,8 @@ Une couleur ajoutée suit la consigne de `packages/design-system/CLAUDE.md` et e
 
 | Classe | Valeur | Usage |
 |---|---|---|
-| `rounded-sm` | 8 px | étiquette |
+| `rounded-sm` | 8 px | étiquette (`Badge`) |
 | `rounded-lg` | 12 px | champ, bouton, barre d'outils |
-| `rounded-2xl` | 20 px | carte, éditeur |
+| `rounded-2xl` | 20 px | carte (`Card`), éditeur |
 | `h-11` | 44 px | `Button`, cible tactile minimale |
 | `h-12` | 48 px | `Input` |
