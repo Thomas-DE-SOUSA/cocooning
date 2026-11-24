@@ -1,4 +1,5 @@
 import type { Locale } from './config';
+import frAgendaCalendar from './locales/fr/agenda/calendar.json';
 import frSignIn from './locales/fr/authentication/sign-in.json';
 import frSignOut from './locales/fr/authentication/sign-out.json';
 import frGeneric from './locales/fr/generic.json';
@@ -14,6 +15,7 @@ export const RESOURCES = {
         'pairing/couple': frPairingCouple,
         'notes/list': frNotesList,
         'notes/note': frNotesNote,
+        'agenda/calendar': frAgendaCalendar,
     },
 } as const satisfies Record<Locale, Record<string, object>>;
 

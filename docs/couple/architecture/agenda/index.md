@@ -6,7 +6,7 @@ Cette page décrit comment le contexte `agenda` est construit : ses couches, ses
 
 `agenda` porte les événements d'agenda du couple : leur titre, leur description, leur moment, leur auteur, leur visibilité et leur cycle de vie ([décision 0046](../../decisions/agenda/0046-regles-de-l-agenda.md)). Les jours et les heures sont des heures de Paris, gardées telles quelles ([décision 0047](../../decisions/agenda/0047-moments-de-l-agenda-en-heure-de-paris.md)). Le contexte ne connaît ni les sessions (`authentication`) ni le créateur du couple (`pairing`) : il reçoit le `coupleId` par un port étroit ([décision 0041](../../decisions/0041-couple-de-la-requete.md)), et la PWA colore l'auteur en comparant `ownerId` au créateur du couple.
 
-Construit aujourd'hui : domaine et application, tables `calendar_event` et `agenda_event` (voir [les tables](tables.md)), adaptateurs Prisma de `CalendarEventRepository` et de `PairedCoupleProvider`, contrat HTTP et sept routes de l'API. À venir dans l'étape « agenda » : l'écran de la PWA.
+Construit aujourd'hui : domaine et application, tables `calendar_event` et `agenda_event` (voir [les tables](tables.md)), adaptateurs Prisma de `CalendarEventRepository` et de `PairedCoupleProvider`, contrat HTTP et sept routes de l'API, lecture de l'agenda dans la PWA (grille du mois et jour choisi, [décision 0048](../../decisions/frontend/0048-calendrier-react-day-picker.md)). À venir dans l'étape « agenda » : la création et la modification d'un événement dans la PWA.
 
 ## Comment c'est construit
 
