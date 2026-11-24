@@ -4,12 +4,16 @@ import { Button } from '@cocooning/design-system';
 import { useTranslation } from 'react-i18next';
 import { I18N_CONFIG } from '@/i18n/config';
 import { I18nProvider } from '@/i18n/i18n-provider';
+import { FONT_VARIABLES } from './fonts';
 
 type GlobalErrorProps = { readonly reset: () => void };
 
 export default function GlobalError({ reset }: GlobalErrorProps) {
     return (
-        <html lang={I18N_CONFIG.defaultLocale}>
+        <html
+            lang={I18N_CONFIG.defaultLocale}
+            className={FONT_VARIABLES}
+        >
             <body>
                 <I18nProvider>
                     <GlobalErrorContent reset={reset} />

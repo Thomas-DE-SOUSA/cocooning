@@ -16,7 +16,7 @@ Chaque domaine range le reste de sa documentation dans `architecture/`, `busines
 - [Architecture](architecture/index.md) : pourquoi cette architecture, carte des contextes, glossaire, conventions
 - [Guides](guides/index.md) : installation locale, contribution
 - `templates/` : un modèle par type de document
-- `design/` : design system et patterns d'interface partagés (à venir, phase 3)
+- [Design](design/index.md) : direction artistique, tokens du design system
 
 ## Écrire un document
 

@@ -1,13 +1,15 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 (PR 9 route /collab en attente du « go », puis release). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 (direction A : #80, #81, #82 mergées ; PR connexion et mise en couple ouverte, en attente du « go », puis release). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
 
-- **Phase 3, étape 3 terminée et en production** (2026-11-23) : module `pairing` de la PWA et déconnexion, plan D37 en 6 PR (#43 à #49), release #50.
-- **Étape 2 terminée et en production** (2026-11-23) : contexte `authentication`, écran de connexion, deux comptes créés sur la VM, garde-fous ESLint du web (#25 à #42). Détail : `journal/2026-11-23.md`, sections « Phase 3, étape 2 » à « Garde-fous ESLint ».
-- **Fait avant** : phase 0 à 2 (PR #1 à #13), phase 3 étape 1 (socle web PWA, #17 à #21), étape 2 (#25 à #42). Détail : `journal/2026-11-22.md`, `journal/2026-11-23.md`.
+- **Étape « notes » de la phase 3 terminée** (D40 à D43) : PR #66 à #77, release #78 mergée dans `main` le 2026-11-24. Liste des notes à l'accueil, page `/notes/:noteId` avec renommage, éditeur Tiptap à deux par Hocuspocus, route `/collab` dans `tailscale serve`. Détail : `journal/2026-11-23.md` (sections « Étape notes ») et `journal/2026-11-24.md`.
+- **#78 en production et vérifiée** le 2026-11-24 (conteneurs recréés à 08:49 UTC, migrations, santé, `/collab` → 101 avec `curl --http1.1`). Détail : `journal/2026-11-24.md`, « Production de #78 vérifiée ».
+- **Planche de direction artistique publiée** (D44) : https://claude.ai/artifact/TqnctvMSZ4tRSVhGwyZFbP, A, B, C en clair et sombre, contrastes WCAG vérifiés. Détail : `journal/2026-11-24.md`, « Direction artistique : planche publiée ».
+- Écarts fermés (D41) : frontend 004 (décision 0042), authentication 002 et 005 (décision 0043).
+- **Fait avant** : phases 0 à 2, phase 3 étapes 1 à 3 (socle web, connexion, mise en couple), en production depuis le 2026-11-23.
 
 ## Le produit (vision du propriétaire, 2026-11-22)
 
@@ -16,26 +18,31 @@
 
 ## Production
 
-- Depuis le 2026-11-23 : https://cocooning.<tailnet>.ts.net, VM Oracle `cadence` (`ssh cadence`), clone de `main` dans `~/cocooning`, secrets dans `~/cocooning/infrastructure/compose/.env`, `pg_dump` nocturne dans `~/backups`. Procédure : `docs/platform/runbooks/deployment/production.md`. PWA installée sur le téléphone du propriétaire.
+- https://cocooning.<tailnet>.ts.net, VM Oracle `cadence` (`ssh cadence`), clone de `main` dans `~/cocooning`, secrets dans `~/cocooning/infrastructure/compose/.env`, `pg_dump` nocturne dans `~/backups`. Procédure : `docs/platform/runbooks/deployment/production.md`.
 
 ## Prochaine étape
 
-**Étape « notes » de la phase 3** (D40, `journal/2026-11-23.md`, « Étape notes : plan » ; suite dans `journal/2026-11-24.md`). Plan : 1 décisions et règles (#66) ; 2 domaine (#67) ; 3 tables et adaptateurs (#68) ; 4 contrat et routes (#69) ; 5 temps réel dans l'API (#70) ; 6 client (#71) ; 7 liste dans la PWA (#74) ; 8a page d'une note (#75) ; 8b éditeur Tiptap (#76) ; 9 route `/collab` (branche `chore/notes-collab-route`, en attente du « go ») puis release : remplir `NOTES_COLLABORATION_URL` dans `.env` de la VM avant le build. Écarts (D41) : #72 (décision 0042) et #73 (décision 0043) mergées. Reste ouvert : écarts frontend 003, 005 et 006 (adaptateur Hocuspocus dans le module web, décision à proposer) (100 notes, laissé ouvert par le propriétaire), D26.
+Ordre validé par le propriétaire le 2026-11-24 (« on part sur ça ») :
+1. **Essai réel à deux** dans la même note (jamais fait) ; PR `docs/` à proposer : ajouter `--http1.1` au curl de `/collab` dans le runbook de production (« Vérification »).
+2. **Direction artistique A « Lin et terre cuite »** (D44, décision plateforme 0017 #80, tokens #81, notes #82) : PR connexion et mise en couple ouverte (`feat/auth-pairing-art-direction`), merger après le « go ». Puis release `dev` → `main` et déploiement (runbook), et regarder les écrans sur les deux téléphones en clair et en sombre (rien n'a été vu en vrai). Le `Toaster` garde les couleurs de sonner (`richColors`) ; `not-found` et `~offline` gardent leur titre en `text-2xl`.
+3. **Agenda partagé** (pas de notifications).
+4. **Messages** (photo, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : la « phase 4 » adaptée.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
-**Recette d'un nouveau package** (éprouvée six fois) : copier la forme de `packages/server-infrastructure/` (exports par sous-chemin `types → src`, `default → dist` ; `tsconfig.json` + `tsconfig.build.json` + `tsconfig.spec.json` en CommonJS ; `jest.config.mjs` avec `moduleNameMapper` vers les `src` ; `eslint.config.mjs`). `CLAUDE.md` dans le même commit. Vérifier l'entrée CommonJS de toute dépendance (D31). Versions dans les catalogues de `pnpm-workspace.yaml`. Avant chaque commit : `pnpm check-types && pnpm lint && pnpm test && pnpm build` à la racine, puis `pnpm --filter couple-api test:e2e`.
+**Avant chaque commit** : `pnpm check-types && pnpm lint && pnpm test && pnpm build` à la racine, puis `pnpm --filter couple-api test:e2e`. Nouveau package : copier la forme de `packages/server-infrastructure/`, `CLAUDE.md` dans le même commit, entrée CommonJS de toute dépendance vérifiée (D31), versions dans les catalogues de `pnpm-workspace.yaml`.
 
 ## Décisions qui bloquent
 
-- D26 (tailles de fichiers) : `couple.aggregate.ts` 158 lignes ; specs E2E au-delà de 100 lignes : `join-couple` 115, `renew-invitation-code` 114, `cancel-couple` 110, `session-guard` 117, `account-prisma-repository` 123 ; harnais `authentication-test-app.ts` 107, `pairing-test-app.ts` 105 (mesuré le 2026-11-23).
+- Écart frontend 006 : l'adaptateur Hocuspocus vit dans le module web `notes`, contre la décision 0040 ; une décision est à proposer.
+- D26 (tailles de fichiers) : `couple.aggregate.ts` 158 lignes, `note.aggregate.ts` 150, `notes-test.context.ts` ~136, `notes-test-app.ts` ~128 ; specs E2E au-delà de 100 lignes (`join-couple`, `renew-invitation-code`, `cancel-couple`, `session-guard`, `account-prisma-repository`, `note-prisma-repository-writes`).
+- Écarts ouverts aussi : frontend 003 (routes et containers sans test) et 005 (liste limitée à 100 notes, laissé ouvert par le propriétaire), authentication 001 et 003.
 
 ## Fichiers chauds
 
-- `apps/couple/api/src/commands/`, `apps/couple/api/src/modules/authentication/`, `apps/couple/api/test/{authentication,commands}/`, `packages/couple/server-business-logic/src/authentication/`
-- `packages/couple/e2e-shared/src/fixtures/`, `packages/couple/contract/src/authentication/`, `docs/couple/architecture/authentication/`, `docs/couple/gaps/authentication.md`, `docs/couple/infrastructure/runbooks/authentication/accounts.md`
-- `packages/couple/client-business-logic/src/authentication/`, `packages/couple/client-infrastructure/src/shared/authentication/`, `packages/design-system/src/ui/`
-- `apps/couple/web/` (PR 8), `infrastructure/compose/docker-compose.prod.yml`, `docs/platform/runbooks/deployment/production.md`
+- `apps/couple/web/src/modules/notes/`, `apps/couple/web/src/app/{(home),notes}/`, `apps/couple/web/src/shared/{ui,application/refresh}/`
+- `packages/design-system/src/` (prochaine étape), `apps/couple/web/src/app/layout.tsx`, `docs/couple/gaps/frontend.md`
+- `infrastructure/compose/tailscale/serve.json`, `docs/platform/runbooks/deployment/production.md`
 
 ## Dépôt
 
@@ -45,7 +52,6 @@ Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire
 ## Points d'attention
 
 - Le couple du propriétaire et de Pauline est formé en production (2026-11-23).
-
 - Malta est en lecture seule. Le blueprint contient du code propriétaire « All Rights Reserved » : ne jamais le publier.
-- Les `.env` sont protégés en lecture par une règle de permission : on peut y ajouter une ligne, pas les relire.
-- Les nouveaux hooks ne s'activent qu'après `/hooks` ou un redémarrage de Claude Code.
+- `.env` locaux : lecture interdite par une règle de permission ; le propriétaire autorise à y ajouter une variable sans demander (2026-11-23). Celui de la VM se modifie par `ssh cadence`, seulement pour une release validée.
+- Le scope de commit `infra` n'existe pas : un changement de `infrastructure/` lié à un contexte prend son scope (`chore(notes): …`).

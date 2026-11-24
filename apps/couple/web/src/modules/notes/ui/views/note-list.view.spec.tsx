@@ -65,9 +65,10 @@ describe('Feature: the list of the notes of the couple', () => {
 
     it('tells whose note it is, its visibility and its last change', () => {
         renderList([PARTNER_NOTE]);
+        expect(itemOf('Vacances').getByText('Partagée')).toBeTruthy();
         expect(
             itemOf('Vacances').getByText(
-                'Note de mon âme sœur · Partagée · Modifiée le 22 nov. 2026, 09:00',
+                'Note de mon âme sœur · Modifiée le 22 nov. 2026, 09:00',
             ),
         ).toBeTruthy();
     });

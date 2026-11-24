@@ -22,7 +22,7 @@ export function UnavailableNotice({
             <p className="font-medium">{title}</p>
             <p className="text-sm text-muted-foreground">{description}</p>
             <Button
-                variant="secondary"
+                variant="outline"
                 onClick={onRetry}
             >
                 {retryLabel}

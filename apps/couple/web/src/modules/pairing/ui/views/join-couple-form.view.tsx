@@ -3,6 +3,7 @@
 import type { JoinCoupleForm } from '@cocooning/couple-client-business-logic/pairing';
 import {
     Button,
+    Card,
     Field,
     FieldError,
     Input,
@@ -27,47 +28,49 @@ export function JoinCoupleFormView({ form, isPending, isBusy, onJoin }: Props) {
     const { t } = useTranslation(PAIRING_NAMESPACE);
     const { errors } = form.formState;
     return (
-        <form
-            method="post"
-            noValidate
-            onSubmit={form.handleSubmit(onJoin)}
-            className="flex w-full max-w-sm flex-col gap-4"
-        >
-            <p className="text-center text-sm text-muted-foreground">
-                {t('noCouple.joinIntro')}
-            </p>
-            <Field>
-                <Label htmlFor="invitationCode">
-                    {t('form.invitationCode.label')}
-                </Label>
-                <Input
-                    id="invitationCode"
-                    autoComplete="off"
-                    autoCapitalize="characters"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    enterKeyHint="go"
-                    className="font-mono tracking-widest uppercase"
-                    aria-invalid={Boolean(errors.invitationCode)}
-                    aria-describedby={CODE_ERROR_ID}
-                    {...form.register('invitationCode')}
-                />
-                <FieldError id={CODE_ERROR_ID}>
-                    {errors.invitationCode?.message}
-                </FieldError>
-            </Field>
-            <Button
-                type="submit"
-                variant="secondary"
-                disabled={isBusy}
-                aria-busy={isPending}
+        <Card className="w-full max-w-sm p-5">
+            <form
+                method="post"
+                noValidate
+                onSubmit={form.handleSubmit(onJoin)}
+                className="flex flex-col gap-4"
             >
-                {isPending ? (
-                    <Spinner aria-label={t('noCouple.joining')} />
-                ) : (
-                    t('noCouple.join')
-                )}
-            </Button>
-        </form>
+                <p className="text-center text-sm text-muted-foreground">
+                    {t('noCouple.joinIntro')}
+                </p>
+                <Field>
+                    <Label htmlFor="invitationCode">
+                        {t('form.invitationCode.label')}
+                    </Label>
+                    <Input
+                        id="invitationCode"
+                        autoComplete="off"
+                        autoCapitalize="characters"
+                        autoCorrect="off"
+                        spellCheck={false}
+                        enterKeyHint="go"
+                        className="font-mono tracking-widest uppercase"
+                        aria-invalid={Boolean(errors.invitationCode)}
+                        aria-describedby={CODE_ERROR_ID}
+                        {...form.register('invitationCode')}
+                    />
+                    <FieldError id={CODE_ERROR_ID}>
+                        {errors.invitationCode?.message}
+                    </FieldError>
+                </Field>
+                <Button
+                    type="submit"
+                    variant="outline"
+                    disabled={isBusy}
+                    aria-busy={isPending}
+                >
+                    {isPending ? (
+                        <Spinner aria-label={t('noCouple.joining')} />
+                    ) : (
+                        t('noCouple.join')
+                    )}
+                </Button>
+            </form>
+        </Card>
     );
 }

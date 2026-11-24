@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { I18N_CONFIG } from '@/i18n/config';
 import { getServerTranslation } from '@/i18n/server';
+import { FONT_VARIABLES } from './fonts';
 import { Provider } from './provider';
 import { PWA_THEME } from './pwa-theme';
 
@@ -33,7 +34,10 @@ export default function RootLayout({
     readonly children: ReactNode;
 }) {
     return (
-        <html lang={I18N_CONFIG.defaultLocale}>
+        <html
+            lang={I18N_CONFIG.defaultLocale}
+            className={FONT_VARIABLES}
+        >
             <body>
                 <Provider>{children}</Provider>
             </body>

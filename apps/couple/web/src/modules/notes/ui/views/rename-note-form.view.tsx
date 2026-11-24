@@ -43,7 +43,7 @@ export function RenameNoteFormView({ form, isRenaming, onRename }: Props) {
                     id="title"
                     autoComplete="off"
                     enterKeyHint="done"
-                    className="text-lg font-semibold"
+                    className="h-14 font-display text-2xl font-semibold"
                     aria-invalid={Boolean(errors.title)}
                     aria-describedby={TITLE_ERROR_ID}
                     {...form.register('title')}
@@ -54,7 +54,8 @@ export function RenameNoteFormView({ form, isRenaming, onRename }: Props) {
             </Field>
             <Button
                 type="submit"
-                variant="secondary"
+                variant="outline"
+                className="h-14"
                 disabled={!isDirty || isRenaming}
                 aria-busy={isRenaming}
             >

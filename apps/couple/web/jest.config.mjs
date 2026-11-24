@@ -30,6 +30,7 @@ export default {
         '^@cocooning/shared-kernel/(.*)$':
             '<rootDir>/../../../packages/shared-kernel/src/$1',
         '^server-only$': '<rootDir>/src/testing/server-only-stub.ts',
+        '^next/font/google$': '<rootDir>/src/testing/next-font-stub.ts',
         '\\.css$': '<rootDir>/src/testing/style-stub.ts',
     },
 };

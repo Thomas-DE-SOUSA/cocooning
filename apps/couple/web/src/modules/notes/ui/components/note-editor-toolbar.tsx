@@ -73,7 +73,7 @@ export function NoteEditorToolbar({ editor }: { readonly editor: Editor }) {
         <div
             role="toolbar"
             aria-label={t('editor.toolbar')}
-            className="sticky top-0 z-10 flex flex-wrap gap-1 bg-background py-1"
+            className="sticky top-0 z-10 flex flex-wrap gap-1 rounded-lg border border-border bg-card p-1"
         >
             {FORMATS.map((format, index) => (
                 <Button
@@ -82,6 +82,7 @@ export function NoteEditorToolbar({ editor }: { readonly editor: Editor }) {
                     variant={active[index] ? 'secondary' : 'ghost'}
                     aria-label={t(`editor.${format.key}`)}
                     aria-pressed={active[index]}
+                    className="w-11 px-0"
                     onMouseDown={(event) => event.preventDefault()}
                     onClick={() => format.toggle(editor)}
                 >
