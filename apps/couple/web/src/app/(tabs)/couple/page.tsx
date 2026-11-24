@@ -19,7 +19,7 @@ export const dynamic = 'force-dynamic';
 
 // The "Nous" tab: our couple, then this phone, where signing out lives (decision 0044).
 export default async function CoupleOverviewPage() {
-    const page = presentCoupleOverviewPage(await loadMyCouple());
+    const page = presentCoupleOverviewPage(await loadMyCouple(), new Date());
     if (page.redirectTo !== null) redirect(page.redirectTo);
     const t = await getServerTranslation(PAIRING_NAMESPACE);
     const tSignOut = await getServerTranslation('authentication/sign-out');
@@ -31,9 +31,13 @@ export default async function CoupleOverviewPage() {
                     {t('overview.couple.title')}
                 </h2>
                 <p>
-                    {t('overview.couple.since', {
-                        formedAt: page.viewModel.formedAt,
-                    })}
+                    {page.viewModel.togetherTime === null
+                        ? t('overview.couple.since', {
+                              formedAt: page.viewModel.formedAt,
+                          })
+                        : t('overview.couple.togetherFor', {
+                              ...page.viewModel.togetherTime,
+                          })}
                 </p>
             </Card>
             <Card className="mt-auto flex flex-col gap-3 p-5">

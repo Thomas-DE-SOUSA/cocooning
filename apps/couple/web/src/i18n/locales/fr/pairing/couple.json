@@ -64,7 +64,8 @@
         "title": "Nous",
         "couple": {
             "title": "Notre couple",
-            "since": "Ensemble sur Cocooning depuis le {{formedAt}}."
+            "since": "Ensemble sur Cocooning depuis le {{formedAt}}.",
+            "togetherFor": "Ensemble dans notre cocooning depuis {{days}} jours ({{years}} années)."
         }
     }
 }

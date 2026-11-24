@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 (barre d'onglets en production par #87 ; PR #89 du backend des périodes ensemble ouverte, en attente du « go »). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 (#89 backend des périodes mergé ; PR web du compteur ouverte, en attente du « go »). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -24,7 +24,7 @@
 
 Ordre validé par le propriétaire le 2026-11-24 (« on part sur ça ») :
 1. **Regarder la PWA sur les deux téléphones** (release #87 déployée le 2026-11-24 à 10:14 UTC : direction A, barre d'onglets Notes et Nous, déconnexion dans « Nous ») : barre au-dessus de la barre d'accueil de l'iPhone, clair et sombre, bandes système du Samsung (mode sombre ? le manifeste ne déclare que le clair). Puis l'essai d'écriture à deux dans une note (jamais fait).
-2. **Périodes ensemble (D47, décision 0045)** : PR #89 (backend : VO `TogetherPeriods`, R9, colonne `couple.together_periods`, `togetherPeriods` dans `CoupleResponse`, commande `record-together-periods`). Après le « go » : PR web (compteur « Ensemble dans notre cocooning depuis N jours (X,XX années) » dans « Nous », jours des périodes jusqu'à aujourd'hui, années = jours / 365,25), release, puis la commande sur la VM avec les dates du propriétaire (jamais dans le dépôt : les lui redemander si besoin).
+2. **Périodes ensemble (D47, décision 0045)** : backend #89 mergé dans `dev`. PR web `feat/together-time` ouverte (`presentTogetherTime`, phrase « Ensemble dans notre cocooning depuis N jours (X,XX années). »). Après le « go » : release, puis la commande `record-together-periods` sur la VM (runbook `docs/couple/infrastructure/runbooks/pairing/together-periods.md`) avec les dates du propriétaire (jamais dans le dépôt : les lui redemander si besoin), puis vérifier « Nous ».
 3. **Prénoms dans « Nous »** : l'API ne les connaît pas ; à proposer seulement si le couple les veut.
 4. **PR `docs/` à proposer** : runbook de production, « Vérification » : le curl de `/collab` doit être `curl --http1.1 -sv -o /dev/null … 2>&1 | grep '^< HTTP'` (voir `LESSONS.md`).
 5. **Agenda partagé** (pas de notifications).
