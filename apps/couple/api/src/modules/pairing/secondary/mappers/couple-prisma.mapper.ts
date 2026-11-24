@@ -7,6 +7,10 @@ import {
 import { CouplePairingStatusEnum } from '@cocooning/couple-shared-kernel/enums';
 import { parseEnum } from '@cocooning/shared-kernel/utils';
 import type { CouplePrismaPayload } from './couple-prisma.payload';
+import {
+    toTogetherPeriodsColumn,
+    toTogetherPeriodsSnapshot,
+} from './together-periods-prisma.mapper';
 
 type InvitationCodeSnapshot = CoupleSnapshot['invitationCode'];
 
@@ -14,6 +18,7 @@ export type CoupleStateColumns = {
     readonly pairingStatus: string;
     readonly invitationCode: string | null;
     readonly invitationCodeExpiresAt: Date | null;
+    readonly togetherPeriods: Prisma.InputJsonValue;
     readonly updatedAt: Date;
     readonly deletedAt: Date | null;
 };
@@ -55,6 +60,7 @@ export function toCoupleSnapshot(raw: CouplePrismaPayload): CoupleSnapshot {
             joinedAt: joinedAt.toISOString(),
         })),
         invitationCode: toInvitationCodeSnapshot(raw),
+        togetherPeriods: toTogetherPeriodsSnapshot(raw.togetherPeriods),
         version: raw.version,
         metadata: {
             createdAt: raw.createdAt.toISOString(),
@@ -73,6 +79,7 @@ export function toCoupleState(snapshot: CoupleSnapshot): CoupleStateColumns {
         invitationCode: invitationCode === null ? null : invitationCode.value,
         invitationCodeExpiresAt:
             invitationCode === null ? null : new Date(invitationCode.expiresAt),
+        togetherPeriods: toTogetherPeriodsColumn(snapshot.togetherPeriods),
         updatedAt: new Date(metadata.updatedAt),
         deletedAt:
             metadata.deletedAt === null ? null : new Date(metadata.deletedAt),

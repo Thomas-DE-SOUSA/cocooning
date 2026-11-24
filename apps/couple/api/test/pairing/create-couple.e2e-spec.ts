@@ -34,6 +34,7 @@ describe('Feature: a partner creates the couple (R2)', () => {
                         value: expect.stringMatching(INVITATION_CODE_PATTERN),
                         expiresAt: isoAt(48),
                     },
+                    togetherPeriods: [],
                 },
             });
         });

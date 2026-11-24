@@ -6,6 +6,8 @@ model Couple {
   /// Null once the couple is paired (INV-004).
   invitationCode          String?         @map("invitation_code") @db.VarChar(8)
   invitationCodeExpiresAt DateTime?       @map("invitation_code_expires_at")
+  /// Ordered list of periods, each a startedOn and an endedOn calendar day or null (R9); empty until the couple records it.
+  togetherPeriods         Json            @default("[]") @map("together_periods") @db.JsonB
   version                 Int             @map("version")
   createdAt               DateTime        @map("created_at")
   updatedAt               DateTime        @map("updated_at")
