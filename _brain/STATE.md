@@ -24,9 +24,10 @@
 
 Ordre validé par le propriétaire le 2026-11-24 (« on part sur ça ») :
 1. **Regarder la PWA sur les deux téléphones**, clair et sombre (direction A, release #84 déployée le 2026-11-24 à 09:43 UTC, jamais vue en vrai), et faire l'essai d'écriture à deux dans la même note (jamais fait). Retours éventuels : petites PR de correction.
-2. **PR `docs/` à proposer** : runbook de production, « Vérification » : le curl de `/collab` doit être `curl --http1.1 -sv -o /dev/null … 2>&1 | grep '^< HTTP'` (voir `LESSONS.md`).
-3. **Agenda partagé** (pas de notifications).
-4. **Messages** (photo, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : la « phase 4 » adaptée.
+2. **Navigation (D46, ouverte)** : barre d'onglets en bas et déconnexion rangée dans un onglet « Nous », proposition faite le 2026-11-24, réponse du propriétaire attendue.
+3. **PR `docs/` à proposer** : runbook de production, « Vérification » : le curl de `/collab` doit être `curl --http1.1 -sv -o /dev/null … 2>&1 | grep '^< HTTP'` (voir `LESSONS.md`).
+4. **Agenda partagé** (pas de notifications).
+5. **Messages** (photo, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : la « phase 4 » adaptée.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
