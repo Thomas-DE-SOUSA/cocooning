@@ -19,6 +19,7 @@ Regles front communes :
 - Formulaire : react-hook-form et `zodResolver`, server action qui rend un `Result` (decision 0035, modele `src/modules/authentication/`).
 - Gateway `server-action/` d'un module : chaque appel passe par `runServerAction(action, UNREACHABLE)` (`src/shared/application/server-action/`), qui rend `NETWORK_ERROR` quand l'action rejette et recharge la page quand elle date d'avant un deploiement. Jamais de `try/catch` recopie dans un module.
 - Composants d'interface : `@cocooning/design-system`, jamais une copie locale. Couleurs par les tokens (`bg-primary`, `text-muted-foreground`), jamais en dur.
+- Allure (decision plateforme 0017, `docs/design/tokens.md`) : page en `px-5`, titre `h1` en `text-3xl font-semibold` (Fraunces par defaut), chaque bloc d'un ecran dans une `Card`, une action principale en `primary`, les autres en `outline`, une action discrete en `ghost`.
 - `*.tsx` : 125 lignes visees, 200 au plus (decision 0008).
 - Couleurs du telephone (manifeste, `viewport.themeColor`) : `src/app/pwa-theme.ts`, copie des tokens de fond du design system. Un token de fond change : le reporter ici.
 - Polices : `src/app/fonts.ts` (`next/font/google`, Fraunces et Inter), dont les variables vont sur `<html>` dans `layout.tsx` et `global-error.tsx`. Aucun `<link>` vers Google (decision plateforme 0017).

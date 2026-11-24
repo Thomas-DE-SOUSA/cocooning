@@ -6,7 +6,7 @@ describe('Feature: the pairing page while it loads', () => {
         const { container } = render(<PairingLoading />);
 
         const skeletons = container.querySelectorAll('[data-slot="skeleton"]');
-        expect(skeletons).toHaveLength(4);
+        expect(skeletons).toHaveLength(3);
         for (const skeleton of skeletons) {
             expect(skeleton.getAttribute('aria-hidden')).toBe('true');
         }

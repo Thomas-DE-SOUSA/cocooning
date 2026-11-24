@@ -22,10 +22,8 @@ export default async function PairingPage() {
     if (page.redirectTo !== null) redirect(page.redirectTo);
     const t = await getServerTranslation(PAIRING_NAMESPACE);
     return (
-        <main className="flex min-h-dvh flex-col items-center justify-center gap-6 p-4">
-            <h1 className="text-2xl font-semibold tracking-tight">
-                {t('title')}
-            </h1>
+        <main className="flex min-h-dvh flex-col items-center justify-center gap-6 px-5 py-6">
+            <h1 className="text-3xl font-semibold">{t('title')}</h1>
             <PairingContainer viewModel={page.viewModel} />
             <SignOutContainer />
         </main>

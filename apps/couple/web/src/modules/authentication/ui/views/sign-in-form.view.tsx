@@ -3,6 +3,7 @@
 import type { SignInForm } from '@cocooning/couple-client-business-logic/authentication';
 import {
     Button,
+    Card,
     Field,
     FieldError,
     Input,
@@ -30,57 +31,59 @@ export function SignInFormView({
     const { t } = useTranslation(SIGN_IN_NAMESPACE);
     const { errors } = form.formState;
     return (
-        <form
-            method="post"
-            noValidate
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex w-full max-w-sm flex-col gap-4"
-        >
-            <Field>
-                <Label htmlFor="emailAddress">
-                    {t('form.emailAddress.label')}
-                </Label>
-                <Input
-                    id="emailAddress"
-                    type="email"
-                    inputMode="email"
-                    autoComplete="username"
-                    autoCapitalize="none"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    aria-invalid={Boolean(errors.emailAddress)}
-                    aria-describedby={EMAIL_ERROR_ID}
-                    {...form.register('emailAddress')}
-                />
-                <FieldError id={EMAIL_ERROR_ID}>
-                    {errors.emailAddress?.message}
-                </FieldError>
-            </Field>
-            <Field>
-                <Label htmlFor="password">{t('form.password.label')}</Label>
-                <Input
-                    id="password"
-                    type="password"
-                    autoComplete="current-password"
-                    aria-invalid={Boolean(errors.password)}
-                    aria-describedby={PASSWORD_ERROR_ID}
-                    {...form.register('password')}
-                />
-                <FieldError id={PASSWORD_ERROR_ID}>
-                    {errors.password?.message}
-                </FieldError>
-            </Field>
-            <Button
-                type="submit"
-                disabled={isPending}
-                aria-busy={isPending}
+        <Card className="w-full max-w-sm p-5">
+            <form
+                method="post"
+                noValidate
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="flex flex-col gap-4"
             >
-                {isPending ? (
-                    <Spinner aria-label={t('submit.pending')} />
-                ) : (
-                    t('submit.label')
-                )}
-            </Button>
-        </form>
+                <Field>
+                    <Label htmlFor="emailAddress">
+                        {t('form.emailAddress.label')}
+                    </Label>
+                    <Input
+                        id="emailAddress"
+                        type="email"
+                        inputMode="email"
+                        autoComplete="username"
+                        autoCapitalize="none"
+                        autoCorrect="off"
+                        spellCheck={false}
+                        aria-invalid={Boolean(errors.emailAddress)}
+                        aria-describedby={EMAIL_ERROR_ID}
+                        {...form.register('emailAddress')}
+                    />
+                    <FieldError id={EMAIL_ERROR_ID}>
+                        {errors.emailAddress?.message}
+                    </FieldError>
+                </Field>
+                <Field>
+                    <Label htmlFor="password">{t('form.password.label')}</Label>
+                    <Input
+                        id="password"
+                        type="password"
+                        autoComplete="current-password"
+                        aria-invalid={Boolean(errors.password)}
+                        aria-describedby={PASSWORD_ERROR_ID}
+                        {...form.register('password')}
+                    />
+                    <FieldError id={PASSWORD_ERROR_ID}>
+                        {errors.password?.message}
+                    </FieldError>
+                </Field>
+                <Button
+                    type="submit"
+                    disabled={isPending}
+                    aria-busy={isPending}
+                >
+                    {isPending ? (
+                        <Spinner aria-label={t('submit.pending')} />
+                    ) : (
+                        t('submit.label')
+                    )}
+                </Button>
+            </form>
+        </Card>
     );
 }

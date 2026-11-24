@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 (direction A : décision #80 et tokens #81 mergés ; PR des écrans des notes ouverte, en attente du « go »). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 (direction A : #80, #81, #82 mergées ; PR connexion et mise en couple ouverte, en attente du « go », puis release). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -24,7 +24,7 @@
 
 Ordre validé par le propriétaire le 2026-11-24 (« on part sur ça ») :
 1. **Essai réel à deux** dans la même note (jamais fait) ; PR `docs/` à proposer : ajouter `--http1.1` au curl de `/collab` dans le runbook de production (« Vérification »).
-2. **Direction artistique A « Lin et terre cuite »** (D44, décision plateforme 0017 #80, tokens #81) : PR des écrans des notes ouverte (`feat/notes-art-direction` : `Card`, `Badge`, bouton `outline`, liste et note sur le modèle de la planche), merger après le « go ». Pas vue en vrai : à regarder sur les téléphones après release. Ensuite : connexion et mise en couple dans le même style, puis une release vers `main`. Le `Toaster` garde les couleurs de sonner (`richColors`).
+2. **Direction artistique A « Lin et terre cuite »** (D44, décision plateforme 0017 #80, tokens #81, notes #82) : PR connexion et mise en couple ouverte (`feat/auth-pairing-art-direction`), merger après le « go ». Puis release `dev` → `main` et déploiement (runbook), et regarder les écrans sur les deux téléphones en clair et en sombre (rien n'a été vu en vrai). Le `Toaster` garde les couleurs de sonner (`richColors`) ; `not-found` et `~offline` gardent leur titre en `text-2xl`.
 3. **Agenda partagé** (pas de notifications).
 4. **Messages** (photo, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : la « phase 4 » adaptée.
 
