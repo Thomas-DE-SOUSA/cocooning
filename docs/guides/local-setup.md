@@ -9,7 +9,7 @@ Le dépôt contient l'outillage, les packages, l'API NestJS (`apps/couple/api`) 
 - Node.js 22 ou plus récent (`engines.node` du `package.json` racine).
 - pnpm à la version fixée par `packageManager` dans le `package.json` racine ; Corepack l'active avec `corepack enable`.
 - Docker, pour la base PostgreSQL locale et les tests d'intégration et E2E.
-- Un accès au dépôt privé `git@github.com:Thomas-DE-SOUSA/cocooning.git`.
+- Le dépôt public `https://github.com/Thomas-DE-SOUSA/cocooning` ([décision plateforme 0018](../platform/decisions/0018-depot-public-historique-nettoye.md)).
 
 ## Étapes
 

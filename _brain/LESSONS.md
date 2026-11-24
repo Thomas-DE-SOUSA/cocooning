@@ -11,7 +11,7 @@
 
 ## Environnement
 
-- **Casse du chemin.** Lancer Claude Code depuis `<repo-root>` (avec un D majuscule). Le dossier de mémoire automatique de Claude dépend de l'écriture exacte du chemin, alors que la mémoire du dépôt (`_brain/`) n'en dépend pas.
+- **Casse du chemin.** Lancer Claude Code depuis le chemin exact noté dans `CLAUDE.local.md` (avec un D majuscule). Le dossier de mémoire automatique de Claude dépend de l'écriture exacte du chemin, alors que la mémoire du dépôt (`_brain/`) n'en dépend pas.
 - **Les transcripts expirent.** Claude Code supprime les transcripts après 30 jours par défaut (`cleanupPeriodDays`). La mémoire ne doit jamais dépendre d'un transcript : `scripts/brain-last-session.sh` n'est qu'un filet de sécurité.
 - **Les hooks se chargent au démarrage.** Un hook ajouté pendant la session ne s'active qu'après `/hooks` ou un redémarrage.
 

@@ -1,12 +1,12 @@
 ---
 nature: technique
-status: acceptée
+status: remplacée
 date: 2026-11-22
 deciders: [Thomas De Sousa]
 validated-by: Thomas De Sousa, 2026-11-22
 validated-on: 2026-11-22
 supersedes:
-superseded-by:
+superseded-by: 0018
 premortem:
 ---
 
@@ -14,7 +14,7 @@ premortem:
 
 ## Contexte
 
-Le dépôt Cocooning devait être créé et poussé sur un remote. Le dossier `_malta-blueprint/`, qui contient l'analyse de Malta, cite des extraits du code de Malta, propriété de propriétaire et publié « All Rights Reserved ». Ce code ne peut pas sortir du poste du propriétaire.
+Le dépôt Cocooning devait être créé et poussé sur un remote. Le dossier `_malta-blueprint/`, qui contient l'analyse de Malta, cite des extraits du code de Malta, propriété de son éditeur et publié « All Rights Reserved ». Ce code ne peut pas sortir du poste du propriétaire.
 
 ## Décision
 
