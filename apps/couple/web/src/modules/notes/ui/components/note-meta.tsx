@@ -9,14 +9,13 @@ type Props = {
     readonly note: NoteListItem;
 };
 
-// Whose note it is, its visibility and its last change: the same line in the list and on the page of a note.
+// Whose note it is and its last change: the same line in the list and on the page of a note.
 export function NoteMeta({ namespace, note }: Props) {
     const { t } = useTranslation(namespace);
     return (
         <p className="text-sm text-muted-foreground">
             {[
                 t(note.isOwner ? 'note.mine' : 'note.partner'),
-                t(note.isShared ? 'note.shared' : 'note.private'),
                 t('note.updatedAt', { updatedAt: note.updatedAt }),
             ].join(' · ')}
         </p>

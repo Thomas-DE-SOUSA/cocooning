@@ -26,10 +26,8 @@ export default async function HomePage() {
     if (page.redirectTo !== null) redirect(page.redirectTo);
     const t = await getServerTranslation(NOTES_NAMESPACE);
     return (
-        <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col gap-6 p-4">
-            <h1 className="text-2xl font-semibold tracking-tight">
-                {t('title')}
-            </h1>
+        <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col gap-6 px-5 pt-10 pb-6">
+            <h1 className="text-3xl font-semibold">{t('title')}</h1>
             <NotesContainer viewModel={page.viewModel} />
             <SignOutContainer />
         </main>

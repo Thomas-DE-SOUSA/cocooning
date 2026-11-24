@@ -35,33 +35,36 @@ export function CreateNoteFormView({
             method="post"
             noValidate
             onSubmit={form.handleSubmit(onCreate)}
-            className="flex w-full flex-col gap-2"
+            className="w-full"
         >
             <Field>
                 <Label htmlFor="title">{t('form.title.label')}</Label>
-                <Input
-                    id="title"
-                    autoComplete="off"
-                    enterKeyHint="done"
-                    aria-invalid={Boolean(errors.title)}
-                    aria-describedby={TITLE_ERROR_ID}
-                    {...form.register('title')}
-                />
+                <div className="flex gap-2">
+                    <Input
+                        id="title"
+                        autoComplete="off"
+                        enterKeyHint="done"
+                        aria-invalid={Boolean(errors.title)}
+                        aria-describedby={TITLE_ERROR_ID}
+                        {...form.register('title')}
+                    />
+                    <Button
+                        type="submit"
+                        className="h-12 shrink-0"
+                        disabled={isBusy}
+                        aria-busy={isPending}
+                    >
+                        {isPending ? (
+                            <Spinner aria-label={t('create.creating')} />
+                        ) : (
+                            t('create.submit')
+                        )}
+                    </Button>
+                </div>
                 <FieldError id={TITLE_ERROR_ID}>
                     {errors.title?.message}
                 </FieldError>
             </Field>
-            <Button
-                type="submit"
-                disabled={isBusy}
-                aria-busy={isPending}
-            >
-                {isPending ? (
-                    <Spinner aria-label={t('create.creating')} />
-                ) : (
-                    t('create.submit')
-                )}
-            </Button>
         </form>
     );
 }
