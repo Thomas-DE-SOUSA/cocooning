@@ -11,11 +11,20 @@ import { CalendarEventItem } from '../components/calendar-event-item';
 
 type Props = {
     readonly day: AgendaDayViewModel;
+    readonly removedEventId: string | null;
+    readonly isDeletionBusy: boolean;
     readonly onOpenEvent: (item: AgendaDayItem) => void;
+    readonly onDeleteEvent: (item: AgendaDayItem) => void;
 };
 
 // The events of the chosen day, under the grid; the bottom padding keeps the last one clear of the floating button.
-export function AgendaDayView({ day, onOpenEvent }: Props) {
+export function AgendaDayView({
+    day,
+    removedEventId,
+    isDeletionBusy,
+    onOpenEvent,
+    onDeleteEvent,
+}: Props) {
     const { t } = useTranslation(AGENDA_NAMESPACE);
     return (
         <section
@@ -40,7 +49,10 @@ export function AgendaDayView({ day, onOpenEvent }: Props) {
                         <CalendarEventItem
                             key={item.calendarEventId}
                             item={item}
+                            isRemoved={item.calendarEventId === removedEventId}
+                            isBusy={isDeletionBusy}
                             onOpen={() => onOpenEvent(item)}
+                            onDelete={() => onDeleteEvent(item)}
                         />
                     ))}
                 </ul>
