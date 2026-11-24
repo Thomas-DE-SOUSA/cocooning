@@ -141,6 +141,11 @@ catalogs:
   calendar:
     react-day-picker: ^10.0.2
 
+  # Overlays and controls of the design system, in the shadcn style.
+  primitives:
+    "@radix-ui/react-switch": ^1.4.1
+    vaul: ^1.1.2
+
   forms:
     "@hookform/resolvers": ^7.0.8
     react-hook-form: ^7.92.0

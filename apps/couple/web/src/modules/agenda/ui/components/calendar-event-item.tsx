@@ -15,17 +15,31 @@ const SPAN_KEYS = {
     [EventSpanKindEnum.SINCE]: 'event.since',
 } as const;
 
-export function CalendarEventItem({ item }: { readonly item: AgendaDayItem }) {
+type Props = {
+    readonly item: AgendaDayItem;
+    readonly onOpen: () => void;
+};
+
+// The title is a button stretched over the whole card: a tap anywhere opens the drawer, the heading stays a heading.
+export function CalendarEventItem({ item, onOpen }: Props) {
     const { t } = useTranslation(AGENDA_NAMESPACE);
     return (
         <li>
-            <Card className="flex gap-4">
+            <Card className="relative flex gap-4">
                 <CalendarEventTime
                     startsAt={item.startsAt}
                     endsAt={item.endsAt}
                 />
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
-                    <h3 className="font-semibold break-words">{item.title}</h3>
+                    <h3 className="font-semibold break-words">
+                        <button
+                            type="button"
+                            onClick={onOpen}
+                            className="text-left after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ring"
+                        >
+                            {item.title}
+                        </button>
+                    </h3>
                     {item.description === null ? null : (
                         <p className="line-clamp-2 text-sm whitespace-pre-line text-muted-foreground">
                             {item.description}

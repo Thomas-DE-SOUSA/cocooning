@@ -2,14 +2,22 @@
 
 import { useTranslation } from 'react-i18next';
 import { AGENDA_NAMESPACE } from '../../data/agenda-i18n-namespaces';
-import type { AgendaDayViewModel } from '../../view-models/agenda-screen.view-model';
+import type {
+    AgendaDayItem,
+    AgendaDayViewModel,
+} from '../../view-models/agenda-screen.view-model';
 import { CalendarEventItem } from '../components/calendar-event-item';
 
-// The events of the chosen day, under the grid.
-export function AgendaDayView({ day }: { readonly day: AgendaDayViewModel }) {
+type Props = {
+    readonly day: AgendaDayViewModel;
+    readonly onOpenEvent: (item: AgendaDayItem) => void;
+};
+
+// The events of the chosen day, under the grid; the bottom padding keeps the last one clear of the floating button.
+export function AgendaDayView({ day, onOpenEvent }: Props) {
     const { t } = useTranslation(AGENDA_NAMESPACE);
     return (
-        <section className="flex flex-col gap-3">
+        <section className="flex flex-col gap-3 pb-16">
             <div className="flex items-baseline justify-between gap-3">
                 <h2 className="text-xl font-semibold">{day.label}</h2>
                 {day.isToday ? (
@@ -28,6 +36,7 @@ export function AgendaDayView({ day }: { readonly day: AgendaDayViewModel }) {
                         <CalendarEventItem
                             key={item.calendarEventId}
                             item={item}
+                            onOpen={() => onOpenEvent(item)}
                         />
                     ))}
                 </ul>

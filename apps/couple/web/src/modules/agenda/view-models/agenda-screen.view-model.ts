@@ -1,4 +1,5 @@
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
+import type { CalendarEventMoment } from './calendar-event-moment.view-model';
 
 // Glossary "Couleur de l'auteur": terracotta for the partner who created the couple, sage for the other.
 export const AuthorColorEnum = {
@@ -34,6 +35,7 @@ export type AgendaDayItem = {
     readonly startsAt: string | null;
     readonly endsAt: string | null;
     readonly span: EventSpan | null;
+    readonly moment: CalendarEventMoment;
     readonly isOwner: boolean;
     readonly isPrivate: boolean;
     readonly color: AuthorColor;

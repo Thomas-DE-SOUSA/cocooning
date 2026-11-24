@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { WithI18n } from '@/testing/with-i18n';
 import {
     type AgendaDayItem,
@@ -15,6 +15,12 @@ const A_DINNER: AgendaDayItem = {
     startsAt: '20:00',
     endsAt: '23:00',
     span: null,
+    moment: {
+        startsOn: '2026-11-24',
+        endsOn: null,
+        startsAt: '20:00',
+        endsAt: '23:00',
+    },
     isOwner: false,
     isPrivate: false,
     color: AuthorColorEnum.SAGE,
@@ -26,12 +32,19 @@ const MY_SURPRISE: AgendaDayItem = {
     startsAt: null,
     endsAt: null,
     span: { kind: EventSpanKindEnum.UNTIL, day: '29 novembre' },
+    moment: {
+        startsOn: '2026-11-24',
+        endsOn: '2026-11-29',
+        startsAt: null,
+        endsAt: null,
+    },
     isOwner: true,
     isPrivate: true,
     color: AuthorColorEnum.TERRACOTTA,
 };
 
 function renderDay(day: Partial<AgendaDayViewModel>) {
+    const opened: string[] = [];
     render(
         <WithI18n>
             <AgendaDayView
@@ -41,9 +54,11 @@ function renderDay(day: Partial<AgendaDayViewModel>) {
                     items: [],
                     ...day,
                 }}
+                onOpenEvent={(item) => opened.push(item.calendarEventId)}
             />
         </WithI18n>,
     );
+    return { opened };
 }
 
 const itemOf = (title: string) =>
@@ -83,5 +98,15 @@ describe('Feature: the events of the chosen day', () => {
         expect(surprise.getByText("Jusqu'au 29 novembre")).toBeTruthy();
         expect(surprise.getByText('Moi')).toBeTruthy();
         expect(surprise.getByText('Rien que pour moi')).toBeTruthy();
+    });
+
+    it('opens the event that is tapped', () => {
+        const { opened } = renderDay({ items: [A_DINNER, MY_SURPRISE] });
+
+        fireEvent.click(
+            screen.getByRole('button', { name: 'Cadeau surprise' }),
+        );
+
+        expect(opened).toEqual(['event-surprise']);
     });
 });
