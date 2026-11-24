@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@cocooning/design-system';
+import { Button, Card } from '@cocooning/design-system';
 import { useTranslation } from 'react-i18next';
 import { PAIRING_NAMESPACE } from '../../data/pairing-i18n-namespaces';
 import { CommandButton } from '@/shared/ui/command-button';
@@ -33,7 +33,7 @@ export function InvitationCodeView({
 }: Props) {
     const { t } = useTranslation(PAIRING_NAMESPACE);
     return (
-        <section className="flex w-full max-w-sm flex-col gap-4 text-center">
+        <Card className="flex w-full max-w-sm flex-col gap-4 p-5 text-center">
             <p className="text-sm text-muted-foreground">
                 {t('waiting.intro')}
             </p>
@@ -52,7 +52,7 @@ export function InvitationCodeView({
                 <Button onClick={onShare}>{t('waiting.share')}</Button>
             )}
             <CommandButton
-                variant={isExpired ? 'primary' : 'secondary'}
+                variant={isExpired ? 'primary' : 'outline'}
                 label={t('waiting.renew')}
                 pendingLabel={t('waiting.renewing')}
                 isPending={isRenewing}
@@ -73,6 +73,6 @@ export function InvitationCodeView({
                 isBusy={isBusy}
                 onClick={onCancel}
             />
-        </section>
+        </Card>
     );
 }
