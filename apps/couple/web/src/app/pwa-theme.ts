@@ -1,6 +1,5 @@
-// Hex copies of the oklch tokens of the design system: the manifest and the
-// theme-color meta do not accept oklch on every phone.
+// Hex copies of the background tokens of the design system, for the manifest and the theme-color meta.
 export const PWA_THEME = {
-    LIGHT: '#fdf7f3',
-    DARK: '#1c1411',
+    LIGHT: '#fbf6ee',
+    DARK: '#1c1714',
 } as const;
