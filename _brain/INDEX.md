@@ -11,7 +11,7 @@
 | Quelles décisions sont prises ou ouvertes ? | [DECISIONS.md](DECISIONS.md) |
 | Quels pièges et quelles leçons connaît-on ? | [LESSONS.md](LESSONS.md) |
 | Qu'a-t-on fait tel jour ? | [journal/](journal/), `rg -n "<mot>" _brain/journal` |
-| Quelles références et directions pour la DA ? | [journal/2026-11-24.md](journal/2026-11-24.md), « Direction artistique : recherche » |
+| Quelles références et directions pour la DA, où est la planche ? | [journal/2026-11-24.md](journal/2026-11-24.md), « Direction artistique : recherche » et « … : planche publiée » |
 | Comment fonctionne cette mémoire ? | [README.md](README.md) |
 
 ## Loi et documentation de Cocooning
