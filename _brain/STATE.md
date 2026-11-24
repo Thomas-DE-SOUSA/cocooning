@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 nuit (retours du couple sur l'agenda : PR #2, #3, #6, #8 ; release PR #9 sur la VM ; essai sur les téléphones attendu). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 nuit (agenda bouclé, release PR #9 ; règles des messages, décision 0050, mergées par la PR #11 ; prochain : backend des messages). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -18,7 +18,7 @@
 
 1. **Essai sur les deux téléphones** de la release PR #9 (2026-11-24) : « Aujourd'hui » change le jour sans faire défiler (choix du propriétaire, PR #8 annule #5) ; feuille de l'agenda, titre visible au-dessus du clavier, défilement qui ne la replie plus (poignée seule) ; glissement vers la gauche (à moitié : bouton « Supprimer » ; au-delà de 60 % : suppression au lâcher, décision 0049). Si le titre reste caché : faire suivre à la feuille la hauteur de `visualViewport`.
 2. **Autres retours du couple**, une petite PR chacun : sélecteurs natifs, place du « + », points de couleur, événement privé invisible chez l'autre, barre d'onglets, compteur « Nous » (2 969 jours attendus le 2026-11-24), écriture à deux dans une note, bandes système blanches du Samsung.
-3. **Messages** (photo instantanée, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : cadrer d'abord avec le propriétaire (questions, maquette sur la planche https://claude.ai/artifact/TqnctvMSZ4tRSVhGwyZFbP), puis règles, backend, client, écran, comme pour l'agenda.
+3. **Messages** : règles écrites (décision 0050, `docs/couple/business-rules/messaging/`, PR #11). Suite, une PR à la fois : backend (contexte `messaging`, tables, fichiers des photos, invitation quotidienne, relais de l'outbox, Web Push VAPID, notifications d'agenda et de notes), client, écran. Proposer d'abord le découpage au propriétaire. À confirmer : formats et 10 Mo des photos (R3).
 4. **Plus tard, si le couple le veut** : prénoms dans « Nous » (l'API ne les connaît pas), répétition annuelle dans l'agenda.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go » ; supprimer la branche après merge, en local et sur GitHub. Le backend et le client se confient bien à un sous-agent avec un brief complet, relu avant la PR ; l'interface se maquette d'abord sur la planche.
