@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 nuit (PR #13, backend du fil des messages, ouverte, attend le « go » ; ensuite PR B, photo du jour). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 nuit (PR #13, fil des messages, mergée ; PR B, photo du jour, en cours par un sous-agent sur `feat/messaging-photo-prompt`, non commitée). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -18,7 +18,7 @@
 
 1. **Essai sur les deux téléphones** de la release PR #9 (2026-11-24) : « Aujourd'hui » change le jour sans faire défiler (choix du propriétaire, PR #8 annule #5) ; feuille de l'agenda, titre visible au-dessus du clavier, défilement qui ne la replie plus (poignée seule) ; glissement vers la gauche (à moitié : bouton « Supprimer » ; au-delà de 60 % : suppression au lâcher, décision 0049). Si le titre reste caché : faire suivre à la feuille la hauteur de `visualViewport`.
 2. **Autres retours du couple**, une petite PR chacun : sélecteurs natifs, place du « + », points de couleur, événement privé invisible chez l'autre, barre d'onglets, compteur « Nous » (2 969 jours attendus le 2026-11-24), écriture à deux dans une note, bandes système blanches du Samsung.
-3. **Messages** : règles écrites (décision 0050). Découpage validé (« go ») : A fil (PR #13, à merger), B photo du jour (R7 à R9, tâche planifiée dans l'API), C notifications (abonnements, relais de l'outbox messages/agenda/notes, Web Push VAPID), D client, E écran, F notifications dans la PWA. Backend par sous-agent avec brief complet, relu et revérifié avant la PR. À confirmer : formats et 10 Mo des photos (R3). Nouvelle variable `FILE_STORAGE_DIRECTORY` (volume `files` en prod, ajoutée au `.env` local). À faire à part : agenda (et notes ?) répondent 500 au lieu de 409 quand une suppression croise une sauvegarde ; sauvegarde nocturne sans les photos ; un test E2E instable vu une fois.
+3. **Messages** : règles écrites (décision 0050). Découpage validé (« go ») : A fil (PR #13, mergée), B en cours sur `feat/messaging-photo-prompt` (sous-agent ; relire, revérifier, signaler une éventuelle variable d'environnement du `env.ts` du module), B photo du jour (R7 à R9, tâche planifiée dans l'API), C notifications (abonnements, relais de l'outbox messages/agenda/notes, Web Push VAPID), D client, E écran, F notifications dans la PWA. Backend par sous-agent avec brief complet, relu et revérifié avant la PR. À confirmer : formats et 10 Mo des photos (R3). Nouvelle variable `FILE_STORAGE_DIRECTORY` (volume `files` en prod, ajoutée au `.env` local). À faire à part : agenda (et notes ?) répondent 500 au lieu de 409 quand une suppression croise une sauvegarde ; sauvegarde nocturne sans les photos ; un test E2E instable vu une fois.
 4. **Plus tard, si le couple le veut** : prénoms dans « Nous » (l'API ne les connaît pas), répétition annuelle dans l'agenda.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go » ; supprimer la branche après merge, en local et sur GitHub. Le backend et le client se confient bien à un sous-agent avec un brief complet, relu avant la PR ; l'interface se maquette d'abord sur la planche.
