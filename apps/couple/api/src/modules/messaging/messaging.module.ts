@@ -3,15 +3,21 @@ import { MessagingServiceModule } from './messaging-service.module';
 import {
     AnswerPhotoPromptController,
     GetInstantPhotoFileController,
+    GetPushPublicKeyController,
     GetTodayPhotoPromptController,
     ListMessageFeedController,
     SendFlashMessageController,
     SendInstantPhotoController,
+    SubscribePushNotificationsController,
+    UnsubscribePushNotificationsController,
     WithdrawFlashMessageController,
     WithdrawInstantPhotoController,
 } from './primary/controllers';
 import { MessagingCoupleGuard } from './primary/couple';
-import { PhotoPromptScheduler } from './primary/scheduler';
+import {
+    OutboxRelayScheduler,
+    PhotoPromptScheduler,
+} from './primary/scheduler';
 
 @Module({
     imports: [MessagingServiceModule],
@@ -24,7 +30,14 @@ import { PhotoPromptScheduler } from './primary/scheduler';
         GetInstantPhotoFileController,
         GetTodayPhotoPromptController,
         AnswerPhotoPromptController,
+        SubscribePushNotificationsController,
+        UnsubscribePushNotificationsController,
+        GetPushPublicKeyController,
     ],
-    providers: [MessagingCoupleGuard, PhotoPromptScheduler],
+    providers: [
+        MessagingCoupleGuard,
+        PhotoPromptScheduler,
+        OutboxRelayScheduler,
+    ],
 })
 export class MessagingModule {}

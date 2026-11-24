@@ -8,10 +8,10 @@ import { WithdrawInstantPhotoUseCase } from '../../application/use-cases/withdra
 import { AnswerPhotoPromptUseCase } from '../../application/use-cases/answer-photo-prompt.use-case';
 import { GetTodayPhotoPromptUseCase } from '../../application/use-cases/get-today-photo-prompt.use-case';
 import { SchedulePhotoPromptsUseCase } from '../../application/use-cases/schedule-photo-prompts.use-case';
-import { MessagingPromptFakes } from './messaging-test.prompts';
+import { MessagingPushFakes } from './messaging-test.push';
 
 // Wires the use cases as the API does; configures the process-wide UUID generator: call `FlashMessageId.resetForTests()` in afterEach.
-export class MessagingTestContext extends MessagingPromptFakes {
+export class MessagingTestContext extends MessagingPushFakes {
     messagingCoupleGuardService(): MessagingCoupleGuardService {
         return new MessagingCoupleGuardService(this.pairedCoupleProvider);
     }

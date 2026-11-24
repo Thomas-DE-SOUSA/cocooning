@@ -77,14 +77,14 @@ Je sais que l'autre a envoyé sa photo du jour, mais je ne la vois qu'après avo
 
 Quand j'envoie un mot ou une photo, le téléphone de l'autre affiche « Ton âme sœur t'a envoyé quelque chose », jamais le texte ni la photo. L'invitation du jour affiche « C'est l'heure de la photo » sur nos deux téléphones.
 
-- Dans le code : à venir avec le relais de l'outbox ([décision 0021](../../decisions/0021-outbox-postgresql-relais-dans-l-api.md)) et le Web Push ; la charge ne porte que des identifiants (`core.md` règle 33).
+- Dans le code : `OutboxRelayScheduler` (relais de l'outbox dans l'API, toutes les cinq secondes, [décision 0021](../../decisions/0021-outbox-postgresql-relais-dans-l-api.md)) appelle `RelayOutboxEventsUseCase` ; `pushNotificationsOf` (`domain/models/push-notification-plan.ts`) fait d'un `FlashMessageSentEvent` ou d'un `InstantPhotoSentEvent` un `MESSAGE_RECEIVED` pour l'autre partenaire seulement, et d'un `PhotoPromptIssuedEvent` un `PHOTO_PROMPT_ISSUED` pour les deux ; `PushNotificationService` l'envoie à chaque téléphone abonné par `PushNotificationSender` (`WebPushNotificationSender`). La charge ne porte que le genre de la notification (`PushNotificationKindEnum`), ni texte, ni photo, ni identifiant (`core.md` règle 33) ; la phrase française est celle de la PWA ([décision 0051](../../decisions/messaging/0051-relais-des-notifications.md)).
 - Source : décision 0050. Validée par : Thomas De Sousa, 2026-11-24.
 
 ### R11. Chaque téléphone s'abonne aux notifications
 
 J'autorise les notifications sur chacun de mes téléphones ; sur iPhone, l'app doit être installée sur l'écran d'accueil. Un abonnement que le service de notification refuse est oublié.
 
-- Dans le code : à venir avec le contexte `messaging`.
+- Dans le code : `SubscribePushNotificationsUseCase` (`PUT /push-subscriptions`, un abonnement par téléphone, idempotent sur l'`endpoint`, qui suit le partenaire connecté sur ce téléphone), `UnsubscribePushNotificationsUseCase` (le partenaire oublie un de ses téléphones), `GetPushPublicKeyUseCase` (clé publique VAPID). `PushSubscription`, `PushEndpoint` et `PushSubscriptionKeys` valident l'abonnement (`PUSH_SUBSCRIPTION_INVALID`). Un abonnement que le service répond `404` ou `410` est supprimé par `PushNotificationService` (`PushDeliveryOutcomeEnum.GONE`).
 - Source : décision 0050. Validée par : Thomas De Sousa, 2026-11-24.
 
 ## Cas et exceptions
@@ -104,6 +104,13 @@ J'autorise les notifications sur chacun de mes téléphones ; sur iPhone, l'app 
 | Lire la photo du jour de l'autre avant d'avoir envoyé la sienne | Le fil la rend avec `isHidden: true`, sans `contentType` ; son fichier répond `404` `INSTANT_PHOTO_NOT_FOUND` (R9) |
 | Retirer sa photo du jour | Elle ne compte plus : une autre peut partir avant minuit, et la photo de l'autre redevient cachée jusque-là (R6, R8, R9) |
 | L'API arrêtée à l'heure tirée | L'invitation part au premier passage de la tâche après le redémarrage, avant minuit ; jamais un autre jour (R7) |
+| Abonnement d'une adresse qui n'est pas en `https`, ou clés hors base64url ou trop longues | Refusé, `422` (validation du contrat, puis `PUSH_SUBSCRIPTION_INVALID`) (R11) |
+| Oublier le téléphone de l'autre, d'un autre couple ou un téléphone inconnu | Refusé, `404` `PUSH_SUBSCRIPTION_NOT_FOUND` (R11) |
+| Le même téléphone abonné deux fois au même moment | Un seul abonnement ; le second peut être refusé, `409` `PUSH_SUBSCRIPTION_VERSION_CONFLICT` (R11) |
+| Le service de notification répond `404` ou `410` | L'abonnement est oublié (R11) |
+| Le service de notification échoue autrement (délai, `429`, `5xx`) | Journalisé, l'abonnement est gardé, la notification est perdue : jamais réessayée (décision 0051) |
+| Plusieurs mots envoyés coup sur coup | Une notification par passage du relais et par téléphone (R10) |
+| Une note ou un événement privé | Aucune notification (R9 des notes, R10 de l'agenda) |
 | Deux passages de la tâche en même temps (redémarrage) | Le second échoue sur l'index unique ou la version, `PHOTO_PROMPT_VERSION_CONFLICT`, journalisé ; rien n'est tiré ni envoyé deux fois (R7) |
 
 ## Voir aussi

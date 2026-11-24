@@ -1,6 +1,6 @@
 # Glossaire des messages
 
-Les termes propres aux messages, avec leur nom dans le code. Les termes communs (couple, partenaire, propriétaire, message flash, photo instantanée, invitation photo, notification) sont dans le [glossaire transverse](../../../architecture/glossary.md). Les noms de code des mots flash, des photos, du fil et de la photo du jour sont ceux du contexte codé ; ceux des notifications restent une proposition.
+Les termes propres aux messages, avec leur nom dans le code. Les termes communs (couple, partenaire, propriétaire, message flash, photo instantanée, invitation photo, notification) sont dans le [glossaire transverse](../../../architecture/glossary.md). Tous les noms de code sont ceux du contexte codé.
 
 | Terme | Nom dans le code | Définition |
 |---|---|---|
@@ -18,3 +18,6 @@ Les termes propres aux messages, avec leur nom dans le code. Les termes communs 
 | **Photo cachée** | `isHidden` | La photo du jour de l'autre, que je ne vois pas tant que je n'ai pas envoyé la mienne |
 | **Retirer** | `withdraw` | L'auteur enlève un mot ou une photo du fil, pour les deux |
 | **Abonnement aux notifications** | `PushSubscription` | L'autorisation d'un téléphone à recevoir les notifications Web Push d'un partenaire |
+| **Genre de notification** | `PushNotificationKind` (`MESSAGE_RECEIVED`, `PHOTO_PROMPT_ISSUED`, `CALENDAR_EVENT_ADDED`, `NOTE_SHARED`) | Ce que dit une notification, et rien d'autre : la PWA en fait sa phrase (« Ton âme sœur t'a envoyé quelque chose ») |
+| **Adresse du téléphone** | `PushEndpoint` | L'adresse du service de notification d'un téléphone abonné ; secrète, jamais journalisée |
+| **Relais de l'outbox** | `OutboxRelayScheduler`, `RelayOutboxEventsUseCase` | La tâche de l'API qui lit les événements nouveaux des notes, de l'agenda et des messages et envoie leurs notifications |

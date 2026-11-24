@@ -70,4 +70,4 @@ Loaded alongside core.md for any backend work. The detailed canons (`_knowledge/
 
 ## Events
 
-21. **Transactional outbox in PostgreSQL (D6).** An aggregate's state and its domain events are written in the same transaction. A relay running inside the API process (no queue, no separate worker) publishes them after commit and marks an event published only once its delivery succeeded. Web Push notifications are driven by this relay. Handlers are idempotent.
+21. **Transactional outbox in PostgreSQL (D6).** An aggregate's state and its domain events are written in the same transaction. A relay running inside the API process (no queue, no separate worker), the outbox relay of `messaging`, reads them after commit and marks an event published once its delivery was attempted, in the transaction that claimed it (decision 0051). Web Push notifications are driven by this relay. Handlers are idempotent.

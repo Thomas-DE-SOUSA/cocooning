@@ -10,4 +10,7 @@ export const MessagingRouteEnum = {
     INSTANT_PHOTO_FILE_GET: '/instant-photos/:instantPhotoId/file',
     PHOTO_PROMPT_TODAY_GET: '/photo-prompts/today',
     PHOTO_PROMPT_ANSWER: '/photo-prompts/:photoPromptId/instant-photos',
+    PUSH_SUBSCRIPTION_SUBSCRIBE: '/push-subscriptions',
+    PUSH_SUBSCRIPTION_UNSUBSCRIBE: '/push-subscriptions/unsubscribe',
+    PUSH_SUBSCRIPTION_PUBLIC_KEY_GET: '/push-subscriptions/public-key',
 } as const satisfies RouteGroup;

@@ -149,6 +149,11 @@ catalogs:
   forms:
     "@hookform/resolvers": ^7.0.8
     react-hook-form: ^7.92.0
+  # Pinned to 3.6.7: web-push 4 ships ESM only (owner decision D31, platform decision 0011).
+  push:
+    "@types/web-push": 3.6.4
+    web-push: 3.6.7
+
   collaboration:
     "@hocuspocus/server": ^4.9.0
     "@hocuspocus/provider": ^4.9.0

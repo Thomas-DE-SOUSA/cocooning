@@ -18,6 +18,7 @@ Images Docker et pile de production de Cocooning (decision plateforme 0015). `do
 - `compose/.env` porte les secrets de production : il reste sur la VM, ignore par git (`.env`).
 - Les photos (decision 0027) vivent dans le volume `files`, monte sur `/data/files` de l'`api` (`FILE_STORAGE_DIRECTORY`). L'image `runner` cree ce dossier au nom de `node` : un volume nomme neuf en reprend le proprietaire, sinon l'API (`USER node`) ne peut pas ecrire.
 - `migrate` est un service a usage unique : `restart: 'no'`, et `api` attend `service_completed_successfully`.
+- `WEB_PUSH_VAPID_*` (`compose/.env`) : la paire VAPID se genere une fois (`npx web-push generate-vapid-keys`) et ne change plus ; une nouvelle paire rend muets tous les telephones abonnes. L'API a besoin d'une sortie vers Internet pour joindre les services de notification (Apple, Google, Mozilla).
 
 ## Commandes
 

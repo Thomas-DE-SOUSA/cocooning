@@ -1,0 +1,20 @@
+/// The permission of a phone to receive the Web Push notifications of a partner (R11): the aggregate `PushSubscription`.
+/// No deletedAt: a subscription withdrawn or refused by the push service is forgotten, its keys are secrets of the phone.
+model PushSubscription {
+  id        String   @id @db.Uuid
+  coupleId  String   @map("couple_id") @db.Uuid
+  /// The partner signed in on the phone; follows them when the phone subscribes again (R11).
+  ownerId   String   @map("owner_id") @db.Uuid
+  /// PUSH_SUBSCRIPTION_ENDPOINT_MAX_LENGTH of the couple shared kernel; never logged.
+  endpoint  String   @db.VarChar(2048)
+  /// PUSH_SUBSCRIPTION_KEY_MAX_LENGTH, base64url keys of the payload encryption; never logged.
+  p256dh    String   @map("p256dh") @db.VarChar(128)
+  auth      String   @db.VarChar(128)
+  version   Int      @map("version")
+  createdAt DateTime @map("created_at")
+  updatedAt DateTime @map("updated_at")
+
+  // One subscription per phone of the couple (core.md rule 27: coupleId leads); serves findOfCouples too.
+  @@unique([coupleId, endpoint])
+  @@map("push_subscription")
+}
