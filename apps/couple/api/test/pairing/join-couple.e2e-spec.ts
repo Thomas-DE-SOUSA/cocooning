@@ -42,6 +42,7 @@ describe('Feature: the second partner joins with the code (R5, R6)', () => {
                         { userId: PARTNER_B, joinedAt: isoAt(1) },
                     ],
                     invitationCode: null,
+                    togetherPeriods: [],
                 },
             });
         });

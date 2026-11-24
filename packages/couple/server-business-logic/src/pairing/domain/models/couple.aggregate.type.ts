@@ -12,12 +12,15 @@ import type {
     CouplePartner,
     CouplePartnerSnapshot,
 } from './couple-partner.entity';
+import type { TogetherPeriods } from '../value-objects/together-periods.vo';
+import type { TogetherPeriodSnapshot } from '../value-objects/together-period.vo';
 
 export type CoupleProps = {
     readonly id: CoupleId;
     pairingStatus: CouplePairingStatus;
     partners: ReadonlyArray<CouplePartner>;
     invitationCode: InvitationCode | null;
+    togetherPeriods: TogetherPeriods;
     readonly version: number;
     metadata: EntityMetadata;
 };
@@ -32,6 +35,7 @@ export type CoupleSnapshot = {
     readonly pairingStatus: CouplePairingStatus;
     readonly partners: ReadonlyArray<CouplePartnerSnapshot>;
     readonly invitationCode: InvitationCodeSnapshot | null;
+    readonly togetherPeriods: ReadonlyArray<TogetherPeriodSnapshot>;
     readonly version: number;
     readonly metadata: EntityMetadataSnapshot;
 };

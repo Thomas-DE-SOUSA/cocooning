@@ -27,6 +27,7 @@ export const A_PENDING_COUPLE: CoupleResponse = {
         value: 'K7M2Q9XR',
         expiresAt: '2026-11-25T08:00:00.000Z',
     },
+    togetherPeriods: [],
 };
 
 export const A_PAIRED_COUPLE: CoupleResponse = {
@@ -40,6 +41,7 @@ export const A_PAIRED_COUPLE: CoupleResponse = {
         },
     ],
     invitationCode: null,
+    togetherPeriods: [],
 };
 
 // One couple answers every call, or one refusal does.

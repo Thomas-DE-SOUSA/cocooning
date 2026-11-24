@@ -10,6 +10,7 @@ import { CancelCoupleUseCase } from '../../application/use-cases/cancel-couple.u
 import { CreateCoupleUseCase } from '../../application/use-cases/create-couple.use-case';
 import { GetMyCoupleUseCase } from '../../application/use-cases/get-my-couple.use-case';
 import { JoinCoupleUseCase } from '../../application/use-cases/join-couple.use-case';
+import { RecordTogetherPeriodsUseCase } from '../../application/use-cases/record-together-periods.use-case';
 import { RenewInvitationCodeUseCase } from '../../application/use-cases/renew-invitation-code.use-case';
 import { Couple } from '../../domain/models/couple.aggregate';
 import { PairingPreconditionService } from '../../domain/services/pairing-precondition.service';
@@ -76,6 +77,15 @@ export class PairingTestContext {
 
     cancelCoupleUseCase(): CancelCoupleUseCase {
         return new CancelCoupleUseCase(
+            this.coupleRepository,
+            this.preconditions,
+            this.dateTimeProvider,
+            this.eventPublishingService,
+        );
+    }
+
+    recordTogetherPeriodsUseCase(): RecordTogetherPeriodsUseCase {
+        return new RecordTogetherPeriodsUseCase(
             this.coupleRepository,
             this.preconditions,
             this.dateTimeProvider,

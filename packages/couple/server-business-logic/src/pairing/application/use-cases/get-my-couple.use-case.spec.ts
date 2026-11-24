@@ -43,6 +43,7 @@ describe('Feature: see my couple', () => {
                         NOW.getTime() + 48 * MILLISECONDS_PER_HOUR,
                     ),
                 },
+                togetherPeriods: [],
             });
         });
     });
@@ -60,6 +61,7 @@ describe('Feature: see my couple', () => {
                         { userId: PARTNER_B, joinedAt: NOW },
                     ],
                     invitationCode: null,
+                    togetherPeriods: [],
                 });
             },
         );

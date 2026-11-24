@@ -4,7 +4,7 @@ Cette page décrit l'agrégat `Couple` du contexte `pairing` : son état, ses tr
 
 ## Rôle et limites
 
-`Couple` est l'objet pivot du domaine ([décision 0017](../../decisions/0017-couple-objet-pivot.md)) : son identifiant devient le `coupleId` de toutes les données du couple. L'agrégat porte ses partenaires, son statut et, tant qu'il attend le second partenaire, son code d'invitation. Il ne sait pas si un partenaire appartient à un autre couple : ce contrôle demande une lecture, il est fait par `PairingPreconditionService`, et le port `CoupleRepository` doit le garantir par une contrainte unique.
+`Couple` est l'objet pivot du domaine ([décision 0017](../../decisions/0017-couple-objet-pivot.md)) : son identifiant devient le `coupleId` de toutes les données du couple. L'agrégat porte ses partenaires, son statut, ses périodes ensemble (R9) et, tant qu'il attend le second partenaire, son code d'invitation. Il ne sait pas si un partenaire appartient à un autre couple : ce contrôle demande une lecture, il est fait par `PairingPreconditionService`, et le port `CoupleRepository` doit le garantir par une contrainte unique.
 
 ## Comment c'est construit
 
@@ -14,9 +14,12 @@ Cette page décrit l'agrégat `Couple` du contexte `pairing` : son état, ses tr
 | `Couple.join(partnerUserId, enteredCode, now)` | Ajoute le second partenaire, statut `PAIRED`, code retiré ; enregistre `CouplePairedEvent` | idem |
 | `Couple.renewInvitationCode(partnerUserId, invitationCode, now)` | Remplace le code d'un couple en attente ; enregistre `InvitationCodeRenewedEvent` | idem |
 | `Couple.cancel(partnerUserId, now)` | Supprime en douceur un couple en attente (`deletedAt`) ; enregistre `CoupleCancelledEvent` (R8) | idem |
-| `Couple.fromSnapshot`, `toSnapshot` | Relecture sans validation, sérialisation en primitives et dates ISO | idem |
-| `CouplePairingValidator` | `ensureMember`, `ensureNotMember`, `ensurePending`, `ensureJoinableWith` | `domain/services/couple-pairing.validator.ts` |
+| `Couple.recordTogetherPeriods(partnerUserId, togetherPeriods, now)` | Remplace les périodes ensemble d'un couple formé ; enregistre `TogetherPeriodsRecordedEvent` (R9) | idem |
+| `Couple.fromSnapshot`, `toSnapshot` | Relecture sans validation, sérialisation en primitives et dates ISO, par `couplePropsFromSnapshot` et `coupleSnapshotFromProps` | idem, `domain/models/couple.aggregate.snapshot.ts` |
+| `CouplePairingValidator` | `ensureMember`, `ensureNotMember`, `ensurePending`, `ensurePaired`, `ensureJoinableWith` | `domain/services/couple-pairing.validator.ts` |
 | `InvitationCode` | `generate`, `from`, `normalize`, `isValidAt`, `matches` | `domain/value-objects/invitation-code.vo.ts` |
+| `TogetherPeriod`, `TogetherPeriods` | Une période (jour de début, jour de fin ou `null`) et la liste du couple : `create` valide R9, `from` relit sans valider, `empty` pour un nouveau couple | `domain/value-objects/together-period.vo.ts`, `together-periods.vo.ts` |
+| `isCalendarDay`, `coupleCalendarDayAt` | Un vrai jour `YYYY-MM-DD` ; le jour de Paris (`COUPLE_TIME_ZONE`) d'un instant | `domain/value-objects/calendar-day.ts` |
 
 Les chemins partent de `packages/couple/server-business-logic/src/pairing/`.
 
@@ -30,8 +33,9 @@ Le code est tiré par `SecureRandomGenerator.generateHex(8)` : chaque octet donn
 | `CouplePairedEvent` | `pairing.couple.paired` | `partnerUserIds`, `pairingStatus` |
 | `InvitationCodeRenewedEvent` | `pairing.invitation-code.renewed` | aucune (`null`) |
 | `CoupleCancelledEvent` | `pairing.couple.cancelled` | aucune (`null`) |
+| `TogetherPeriodsRecordedEvent` | `pairing.together-periods.recorded` | `periodCount` |
 
-Chaque événement porte l'`ExecutionContext` complet : `coupleId` du couple, `userId` du partenaire qui agit. Aucun ne porte le code.
+Chaque événement porte l'`ExecutionContext` complet : `coupleId` du couple, `userId` du partenaire qui agit. Aucun ne porte le code ni un jour d'une période ensemble (règle 33 de `_knowledge/core.md`).
 
 ## Invariants
 
@@ -46,6 +50,7 @@ Chaque événement porte l'`ExecutionContext` complet : `coupleId` du couple, `u
 | INV-007 | Un partenaire appartient à un seul couple (R1) | `PairingPreconditionService`, contrainte unique de `CoupleRepository.save` |
 | INV-008 | Un code n'existe que dans un couple (`PAIRING_INVITATION_CODE_CONFLICT`) | contrainte unique de `CoupleRepository.save` |
 | INV-009 | Seul un membre d'un couple `PENDING` l'annule ; un couple `PAIRED` refuse (`PAIRING_COUPLE_ALREADY_PAIRED`, R8). Un couple annulé ne retient ni son partenaire ni son code | agrégat (`cancel`, `ensureMember`, `ensurePending`), `CoupleRepository.save` |
+| INV-010 | Seul un membre d'un couple `PAIRED` enregistre ses périodes ensemble (`PAIRING_COUPLE_NOT_FOUND`, `PAIRING_COUPLE_NOT_PAIRED`) ; la liste compte au moins une période, chacune finit le jour de son début ou après, elles se suivent sans se chevaucher, seule la dernière est ouverte et aucune ne commence après le jour de Paris (`PAIRING_TOGETHER_PERIODS_INVALID`, R9) | agrégat (`recordTogetherPeriods`, `ensurePaired`), `TogetherPeriods.create` |
 
 ## Points d'attention
 
@@ -56,4 +61,5 @@ Chaque événement porte l'`ExecutionContext` complet : `coupleId` du couple, `u
 
 - [Décision 0028](../../decisions/pairing/0028-regles-du-code-d-invitation.md) : règles du code d'invitation
 - [Décision 0038](../../decisions/pairing/0038-annuler-un-couple-en-attente.md) : annuler un couple en attente
+- [Décision 0045](../../decisions/pairing/0045-periodes-ensemble-du-couple.md) : les périodes ensemble du couple, en base
 - [Décision 0024](../../decisions/0024-determinisme-horloge-et-identifiants.md) : horloge injectée, identifiants UUID v7
