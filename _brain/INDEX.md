@@ -100,4 +100,4 @@
 | Hooks (démarrage, fin de session, rappel de sauvegarde) | [.claude/settings.json](../.claude/settings.json), [.claude/hooks/](../.claude/hooks/) |
 | Contrôle des budgets et des liens | [scripts/check-brain.sh](../scripts/check-brain.sh) |
 | Récupérer la fin de la dernière session | [scripts/brain-last-session.sh](../scripts/brain-last-session.sh) |
-| Relancer l'analyse de Malta | [.claude/workflows/](../.claude/workflows/) |
+| Relancer l'analyse de Malta | `.claude/workflows/malta-*.js`, local seulement (`CLAUDE.local.md`) |
