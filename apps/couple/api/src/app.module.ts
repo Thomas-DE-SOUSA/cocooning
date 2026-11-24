@@ -24,6 +24,7 @@ import { prismaOptionsFactory } from './config/prisma-options.factory';
 import { validateEnvironment } from './env';
 import { EXCEPTION_STATUSES } from './exception-statuses';
 import { HealthModule } from './health/health.module';
+import { AgendaModule } from './modules/agenda';
 import { AuthenticationModule, SessionGuard } from './modules/authentication';
 import { NotesModule } from './modules/notes';
 import { PairingModule } from './modules/pairing';
@@ -44,6 +45,7 @@ const EVERY_ROUTE = '{*path}';
         HealthModule,
         PairingModule,
         NotesModule,
+        AgendaModule,
     ],
     providers: [
         { provide: APP_GUARD, useClass: SessionGuard },
