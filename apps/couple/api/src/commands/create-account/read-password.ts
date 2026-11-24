@@ -1,4 +1,4 @@
-import type { CommandTerminal } from './command-terminal';
+import type { CommandTerminal } from '../command-terminal';
 import { MaskedPrompt } from './masked-prompt';
 
 // Asked twice: a typing mistake on a hidden input would otherwise leave an account nobody can sign in to.

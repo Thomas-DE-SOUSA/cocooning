@@ -2,6 +2,7 @@
 
 Points d'entree lances par le proprietaire sur la VM, jamais par une route (decision plateforme 0016). Une commande par dossier : `<commande>/main.ts`, compile en `dist/commands/<commande>/main.js`, lance dans l'image `runner` par `docker compose ... run --rm --no-deps api node dist/commands/<commande>/main.js`.
 
+- `command-terminal.ts` : `CommandTerminal`, partage par toutes les commandes.
 - `create-account/` : cree un compte (R6). `main.ts` (`Uuid.configure`, `process.exitCode`), `runCreateAccountCommand(args, terminal)` (`create-account-command.ts`), `CreateAccountCommandModule` (seul fournisseur de `CreateAccountUseCase`, par `authenticationUseCase()`), `MaskedPrompt` (lecture sans echo), `readPassword` (deux saisies), `reportCreateAccountFailure`, `CreateAccountExitCodeEnum` (`0`, `64`, `65`, `1`).
 
 ## Consignes de code
@@ -14,7 +15,7 @@ Points d'entree lances par le proprietaire sur la VM, jamais par une route (deci
 
 ## Tests
 
-- E2E `test/commands/<commande>.e2e-spec.ts` (reussite, secrets) et `<commande>-refusals.e2e-spec.ts` (refus, saisie), contre le Postgres de test : `runCreateAccount(args, typedLines)` (`test/commands/create-account-test-data.ts`) donne a la commande une entree `PassThrough` (chaque ligne finie par `\r`) et capture ses sorties ; `AuthenticationTestApp` prouve que le compte se connecte.
+- E2E `test/commands/<commande>.e2e-spec.ts` (reussite, secrets) et `<commande>-refusals.e2e-spec.ts` (refus, saisie), contre le Postgres de test : `runCreateAccount(args, typedLines)` (`test/commands/create-account-test-data.ts`) donne a la commande une entree `PassThrough` (chaque ligne finie par `\r`) et capture ses sorties par `CapturedOutput` (`test/commands/captured-output.ts`, avec `refused(code, message)`) ; `AuthenticationTestApp` prouve que le compte se connecte.
 - Un cas reussi, chaque refus du domaine, chaque erreur de saisie, et l'absence du mot de passe et de `$argon2` dans les sorties.
 - `pnpm --filter couple-api test:e2e`
 

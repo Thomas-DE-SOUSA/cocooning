@@ -5,7 +5,8 @@ import {
     PARTNER_A,
     PASSWORD,
 } from '../authentication/authentication-test-data';
-import { refused, runCreateAccount } from './create-account-test-data';
+import { refused } from './captured-output';
+import { runCreateAccount } from './create-account-test-data';
 
 describe('Feature: the command refuses to create an account (R1, R2)', () => {
     const auth = new AuthenticationTestApp();
