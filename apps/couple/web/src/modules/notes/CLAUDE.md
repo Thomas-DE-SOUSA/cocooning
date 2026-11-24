@@ -15,7 +15,7 @@ Architecture front (chemin d'une lecture, session, erreurs) :
 
 ## Consignes de code
 
-- Lecture par la page serveur (decision 0036) : `src/app/(home)/page.tsx` verifie le couple par `resolveHomeDestination` du module `pairing`, puis `loadNotes()` (`services/`, `server-only`) et le presenter pur `presentNotesPage`. La page fait le `redirect()`, jamais le presenter : `UNAUTHORIZED` vers la connexion, `NOTE_COUPLE_NOT_PAIRED` vers `/pairing` (R3).
+- Lecture par la page serveur (decision 0036) : `src/app/(tabs)/(home)/page.tsx` verifie le couple par `resolveHomeDestination` du module `pairing`, puis `loadNotes()` (`services/`, `server-only`) et le presenter pur `presentNotesPage`. La page fait le `redirect()`, jamais le presenter : `UNAUTHORIZED` vers la connexion, `NOTE_COUPLE_NOT_PAIRED` vers `/pairing` (R3).
 - `notesModule()` (`services/notes-module.factory.ts`) construit le module a chaque appel avec `getSessionToken`, jamais a l'import.
 - Les actions reservees a la proprietaire (R5, R7) ne s'affichent que sur une note `isOwner`, calcule par l'API ; la PWA ne connait pas le `userId` du partenaire. La suppression demande une confirmation (`deletionAsked` dans `hooks/use-notes-screen.ts`).
 - Les actions rendent `Result<null, ApiError>` ; `services/note-commands.service.ts` revalide le titre (`createNoteTitleFormSchema(t)`) et l'identifiant (`NoteParamsRequestSchema`) cote serveur (`core-frontend.md` regle 14). `hooks/use-note-commands.ts` : une commande a la fois, `pending` dit laquelle et sur quelle note. Apres un refus, `resolveNoteCommandFailureFollowUp` : `UNAUTHORIZED` vers la connexion ; `NOT_FOUND`, `FORBIDDEN` et `CONFLICT` relisent la liste.

@@ -59,5 +59,12 @@
         "NOT_FOUND": "Ce couple est introuvable. Actualisez la page.",
         "CONFLICT": "Le couple vient de changer. Actualisez, puis réessayez.",
         "UNKNOWN": "Une erreur inattendue est survenue. Réessayez dans un instant."
+    },
+    "overview": {
+        "title": "Nous",
+        "couple": {
+            "title": "Notre couple",
+            "since": "Ensemble sur Cocooning depuis le {{formedAt}}."
+        }
     }
 }
