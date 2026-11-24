@@ -5,6 +5,7 @@ import type { Result } from '@cocooning/shared-kernel/utils';
 import { I18N_CONFIG } from '@/i18n/config';
 import type { CoupleOverviewPage } from '../view-models/couple-overview.view-model';
 import { resolveHomeDestination } from './home-destination.presenter';
+import { presentTogetherTime } from './together-time.presenter';
 
 const FORMED_AT_FORMAT = new Intl.DateTimeFormat(I18N_CONFIG.defaultLocale, {
     dateStyle: 'long',
@@ -14,6 +15,7 @@ const FORMED_AT_FORMAT = new Intl.DateTimeFormat(I18N_CONFIG.defaultLocale, {
 // The couple is formed when its last partner joins: the latest joinedAt.
 export function presentCoupleOverviewPage(
     couple: Result<CoupleResponse | null, ApiError>,
+    now: Date,
 ): CoupleOverviewPage {
     const destination = resolveHomeDestination(couple);
     if (destination !== null)
@@ -26,6 +28,12 @@ export function presentCoupleOverviewPage(
     );
     return {
         redirectTo: null,
-        viewModel: { formedAt: FORMED_AT_FORMAT.format(formedAt) },
+        viewModel: {
+            formedAt: FORMED_AT_FORMAT.format(formedAt),
+            togetherTime: presentTogetherTime(
+                couple.value.togetherPeriods,
+                now,
+            ),
+        },
     };
 }
