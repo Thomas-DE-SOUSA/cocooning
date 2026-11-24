@@ -60,4 +60,4 @@ Le registre unique des décisions du domaine `couple`, dans l'ordre chronologiqu
 | 0048 | frontend | [La grille du mois de l'agenda est le `Calendar` du design system, sur react-day-picker](frontend/0048-calendrier-react-day-picker.md) | technique | acceptée | 2026-11-24 | Thomas De Sousa |
 | 0049 | frontend | [Supprimer un événement de l'agenda en le glissant vers la gauche](frontend/0049-suppression-par-glissement.md) | produit | acceptée | 2026-11-24 | Thomas De Sousa |
 | 0050 | messaging | [Règles des messages](messaging/0050-regles-des-messages.md) | produit | acceptée | 2026-11-24 | Thomas De Sousa |
-| 0051 | messaging | [Le relais des notifications, dans l'API, au moins une fois](messaging/0051-relais-des-notifications.md) | technique | proposée | 2026-11-24 | à compléter |
+| 0051 | messaging | [Le relais des notifications, dans l'API, au moins une fois](messaging/0051-relais-des-notifications.md) | technique | acceptée | 2026-11-24 | Thomas De Sousa |
