@@ -33,6 +33,7 @@ describe('Feature: create the couple', () => {
                 pairingStatus: CouplePairingStatusEnum.PENDING,
                 partners: [{ userId: PARTNER_A, joinedAt: NOW }],
                 invitationCode: { value: FIRST_CODE, expiresAt: EXPIRES_AT },
+                togetherPeriods: [],
             });
         });
 
@@ -49,6 +50,7 @@ describe('Feature: create the couple', () => {
                         value: FIRST_CODE,
                         expiresAt: EXPIRES_AT.toISOString(),
                     },
+                    togetherPeriods: [],
                     version: 1,
                     metadata: {
                         createdAt: NOW.toISOString(),

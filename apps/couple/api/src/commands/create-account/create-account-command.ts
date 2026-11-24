@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { CreateAccountUseCase } from '@cocooning/couple-server-business-logic/authentication';
-import type { CommandTerminal } from './command-terminal';
+import type { CommandTerminal } from '../command-terminal';
 import { CreateAccountCommandModule } from './create-account-command.module';
 import {
     type CreateAccountExitCode,

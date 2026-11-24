@@ -1,5 +1,6 @@
 import type { CouplePairingStatus } from '@cocooning/couple-shared-kernel/enums';
 import type { Couple } from '../../domain/models/couple.aggregate';
+import type { TogetherPeriodSnapshot } from '../../domain/value-objects/together-period.vo';
 
 export type CoupleView = {
     readonly coupleId: string;
@@ -12,6 +13,7 @@ export type CoupleView = {
         readonly value: string;
         readonly expiresAt: Date;
     } | null;
+    readonly togetherPeriods: ReadonlyArray<TogetherPeriodSnapshot>;
 };
 
 export const toCoupleView = (couple: Couple): CoupleView => ({
@@ -28,4 +30,5 @@ export const toCoupleView = (couple: Couple): CoupleView => ({
                   value: couple.invitationCode.value,
                   expiresAt: couple.invitationCode.expiresAt,
               },
+    togetherPeriods: couple.togetherPeriods.toSnapshot(),
 });

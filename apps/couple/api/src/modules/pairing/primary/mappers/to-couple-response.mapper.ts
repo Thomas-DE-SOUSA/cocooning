@@ -16,4 +16,8 @@ export const toCoupleResponse = (view: CoupleView): CoupleResponse => ({
                   value: view.invitationCode.value,
                   expiresAt: view.invitationCode.expiresAt.toISOString(),
               },
+    togetherPeriods: view.togetherPeriods.map(({ startedOn, endedOn }) => ({
+        startedOn,
+        endedOn,
+    })),
 });

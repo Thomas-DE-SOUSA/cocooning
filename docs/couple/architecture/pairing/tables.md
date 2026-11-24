@@ -2,7 +2,7 @@
 
 Cette page décrit les trois tables PostgreSQL du contexte `pairing` : leurs colonnes, leurs index et leurs contraintes. À lire avant de modifier un fichier de `packages/couple/prisma/prisma/models/pairing-*.prisma` ou d'écrire l'adaptateur Prisma de `CoupleRepository`.
 
-Les tables naissent avec la migration `20261122233413_init` (`packages/couple/prisma/prisma/migrations/`). Les dates sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma.
+Les tables naissent avec la migration `20261122233413_init` (`packages/couple/prisma/prisma/migrations/`) ; `20261124102747_pairing_together_periods` ajoute `couple.together_periods`. Les dates sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma.
 
 ## `couple`
 
@@ -14,6 +14,7 @@ L'agrégat `Couple` (modèle `Couple`, fichier `pairing-couple.prisma`). Pour ce
 | `pairing_status` | `VARCHAR(20)` | `PENDING` ou `PAIRED` (`CouplePairingStatusEnum`), relu par `parseEnum()` |
 | `invitation_code` | `VARCHAR(8)`, nullable | Code d'invitation en vigueur, `NULL` une fois le couple formé (INV-004) |
 | `invitation_code_expires_at` | `TIMESTAMP(3)`, nullable | Échéance du code (R4), `NULL` avec lui |
+| `together_periods` | `JSONB`, défaut `'[]'` | Périodes ensemble du couple (R9) : tableau ordonné de `{ "startedOn": "YYYY-MM-DD", "endedOn": "YYYY-MM-DD" ou null }`, vide tant que le couple ne les a pas enregistrées. Relu par un schéma Zod de `together-periods-prisma.mapper.ts` : une valeur illisible lève `PAIRING_COUPLE_DATA_CORRUPTED` |
 | `version` | `INTEGER` | Verrou optimiste : 1 à la création, incrémenté par le repository (INV-006) |
 | `created_at`, `updated_at` | `TIMESTAMP(3)` | `EntityMetadata` du domaine, fournies par `DateTimeProvider` (aucun défaut en base) |
 | `deleted_at` | `TIMESTAMP(3)`, nullable | Suppression logique : le modèle figure dans `SOFT_DELETABLE_MODELS` |

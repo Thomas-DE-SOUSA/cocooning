@@ -1,6 +1,6 @@
 # Module pairing de l'API
 
-Adaptateurs du contexte `pairing` : cinq controleurs (`primary/controllers/`), le mapper `toCoupleResponse` (`primary/mappers/`), `CouplePrismaRepository` (`secondary/repositories/`) et ses mappers Prisma (`secondary/mappers/`), le fragment d'environnement `env.ts` (`PAIRING_INVITATION_CODE_TTL_HOURS`). Les use cases sont construits par `pairingUseCase()` (`pairing-use-case.factory.ts`) dans `pairing-service.module.ts`.
+Adaptateurs du contexte `pairing` : cinq controleurs (`primary/controllers/`), le mapper `toCoupleResponse` (`primary/mappers/`), `CouplePrismaRepository` (`secondary/repositories/`) et ses mappers Prisma (`secondary/mappers/`, dont `together-periods-prisma.mapper.ts` : colonne JSONB relue par Zod, sinon `PAIRING_COUPLE_DATA_CORRUPTED`), le fragment d'environnement `env.ts` (`PAIRING_INVITATION_CODE_TTL_HOURS`). Les use cases sont construits par `pairingUseCase()` (`pairing-use-case.factory.ts`, exporte par `index.ts`) dans `pairing-service.module.ts`, sauf `RecordTogetherPeriodsUseCase`, fourni par la seule commande `record-together-periods` (`src/commands/`).
 
 Contexte metier :
 @../../../../../../packages/couple/server-business-logic/src/pairing/CLAUDE.md

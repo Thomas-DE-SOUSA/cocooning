@@ -43,6 +43,7 @@ describe('Feature: the creator renews the invitation code (R7)', () => {
                         value: expect.stringMatching(INVITATION_CODE_PATTERN),
                         expiresAt: isoAt(50),
                     },
+                    togetherPeriods: [],
                 },
             });
             expect(codeOf(response)).not.toBe(previousCode);

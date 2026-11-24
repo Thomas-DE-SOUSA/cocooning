@@ -31,6 +31,9 @@ export const EXCEPTION_STATUSES: ExceptionStatusTable = {
     [PairingExceptionCodeEnum.PAIRING_COUPLE_ALREADY_PAIRED]:
         HttpStatus.CONFLICT,
     [PairingExceptionCodeEnum.PAIRING_COUPLE_NOT_FOUND]: HttpStatus.NOT_FOUND,
+    [PairingExceptionCodeEnum.PAIRING_COUPLE_NOT_PAIRED]: HttpStatus.CONFLICT,
+    [PairingExceptionCodeEnum.PAIRING_TOGETHER_PERIODS_INVALID]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
     [PairingExceptionCodeEnum.PAIRING_COUPLE_VERSION_CONFLICT]:
         HttpStatus.CONFLICT,
     [NoteExceptionCodeEnum.NOTE_NOT_FOUND]: HttpStatus.NOT_FOUND,

@@ -42,6 +42,7 @@ describe('Feature: renew the invitation code', () => {
                 pairingStatus: CouplePairingStatusEnum.PENDING,
                 partners: [{ userId: PARTNER_A, joinedAt: NOW }],
                 invitationCode: { value: NEW_CODE, expiresAt: NEW_EXPIRY },
+                togetherPeriods: [],
             });
             expect(ctx.coupleRepository.storedSnapshots[0]).toMatchObject({
                 invitationCode: {
