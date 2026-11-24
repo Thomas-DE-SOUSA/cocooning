@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 (direction A en production par #84 ; PR de la barre d'onglets ouverte, en attente du « go »). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-24 (barre d'onglets en production par #87 ; PR #89 du backend des périodes ensemble ouverte, en attente du « go »). Dernière consolidation : aucune.
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -23,11 +23,12 @@
 ## Prochaine étape
 
 Ordre validé par le propriétaire le 2026-11-24 (« on part sur ça ») :
-1. **Regarder la PWA sur les deux téléphones**, clair et sombre (direction A, release #84 déployée le 2026-11-24 à 09:43 UTC, jamais vue en vrai), et faire l'essai d'écriture à deux dans la même note (jamais fait). Retours éventuels : petites PR de correction.
-2. **Barre d'onglets (D46, décision 0044)** : PR `feat/tab-bar` ouverte (groupe `src/app/(tabs)/`, onglets Notes et Nous, `/couple`, déconnexion dans « Nous », titre « Notes »). Après le « go » : merge, release, déploiement, regard sur les téléphones. Piste non vérifiée : bandes système blanches sur le Samsung en mode sombre, le manifeste ne déclarant que les couleurs claires.
-3. **PR `docs/` à proposer** : runbook de production, « Vérification » : le curl de `/collab` doit être `curl --http1.1 -sv -o /dev/null … 2>&1 | grep '^< HTTP'` (voir `LESSONS.md`).
-4. **Agenda partagé** (pas de notifications).
-5. **Messages** (photo, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : la « phase 4 » adaptée.
+1. **Regarder la PWA sur les deux téléphones** (release #87 déployée le 2026-11-24 à 10:14 UTC : direction A, barre d'onglets Notes et Nous, déconnexion dans « Nous ») : barre au-dessus de la barre d'accueil de l'iPhone, clair et sombre, bandes système du Samsung (mode sombre ? le manifeste ne déclare que le clair). Puis l'essai d'écriture à deux dans une note (jamais fait).
+2. **Périodes ensemble (D47, décision 0045)** : PR #89 (backend : VO `TogetherPeriods`, R9, colonne `couple.together_periods`, `togetherPeriods` dans `CoupleResponse`, commande `record-together-periods`). Après le « go » : PR web (compteur « Ensemble dans notre cocooning depuis N jours (X,XX années) » dans « Nous », jours des périodes jusqu'à aujourd'hui, années = jours / 365,25), release, puis la commande sur la VM avec les dates du propriétaire (jamais dans le dépôt : les lui redemander si besoin).
+3. **Prénoms dans « Nous »** : l'API ne les connaît pas ; à proposer seulement si le couple les veut.
+4. **PR `docs/` à proposer** : runbook de production, « Vérification » : le curl de `/collab` doit être `curl --http1.1 -sv -o /dev/null … 2>&1 | grep '^< HTTP'` (voir `LESSONS.md`).
+5. **Agenda partagé** (pas de notifications).
+6. **Messages** (photo, mots flash) avec le relais de l'outbox dans l'API (décision 0021) et le Web Push : la « phase 4 » adaptée.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go ».
 
