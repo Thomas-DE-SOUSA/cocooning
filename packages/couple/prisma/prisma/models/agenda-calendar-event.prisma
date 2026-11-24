@@ -1,0 +1,26 @@
+/// An event of the couple's agenda (decision 0046): the aggregate `CalendarEvent`.
+/// Days and hours are Paris wall-clock values, never instants (decision 0047).
+model CalendarEvent {
+  id          String    @id @db.Uuid
+  coupleId    String    @map("couple_id") @db.Uuid
+  ownerId     String    @map("owner_id") @db.Uuid
+  /// CALENDAR_EVENT_TITLE_MAX_LENGTH of the couple shared kernel (R2).
+  title       String    @db.VarChar(120)
+  /// CALENDAR_EVENT_DESCRIPTION_MAX_LENGTH of the couple shared kernel (R6).
+  description String?   @db.VarChar(2000)
+  startsOn    DateTime  @map("starts_on") @db.Date
+  /// Last day of an event over several days, null for a one-day event (R5).
+  endsOn      DateTime? @map("ends_on") @db.Date
+  /// HH:MM on the Paris wall clock; null means all day long (R5).
+  startsAt    String?   @map("starts_at") @db.VarChar(5)
+  endsAt      String?   @map("ends_at") @db.VarChar(5)
+  visibility  String    @db.VarChar(20)
+  version     Int       @map("version")
+  createdAt   DateTime  @map("created_at")
+  updatedAt   DateTime  @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  // The events of a range of days (core.md rule 27: coupleId leads).
+  @@index([coupleId, startsOn])
+  @@map("calendar_event")
+}
