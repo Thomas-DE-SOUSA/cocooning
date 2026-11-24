@@ -64,6 +64,15 @@ J'ai créé un couple par erreur, ou l'autre en a créé un de son côté : j'an
 - Dans le code : `CancelCoupleUseCase`, `Couple.cancel` (suppression douce, lignes `couple_partner` effacées).
 - Source : [décision 0038](../../decisions/pairing/0038-annuler-un-couple-en-attente.md). Validée par : Thomas De Sousa, 2026-11-23.
 
+## Quand le couple est formé
+
+### R9. Le couple enregistre ses périodes ensemble
+
+Nous disons depuis quand nous sommes ensemble, et les moments où nous ne l'étions pas : l'app garde la liste de nos périodes ensemble. Une nouvelle liste remplace la précédente. Elle compte au moins une période ; chacune finit le jour de son début ou après ; les périodes se suivent dans l'ordre sans se chevaucher ; seule la dernière peut être ouverte (elle dure encore) ; aucune ne commence après aujourd'hui (jour de Paris). Seul un couple formé enregistre ses périodes.
+
+- Dans le code : `RecordTogetherPeriodsUseCase`, `Couple.recordTogetherPeriods`, `TogetherPeriods.create` et `TogetherPeriod.create` (`PAIRING_TOGETHER_PERIODS_INVALID`), `CouplePairingValidator.ensurePaired` (`PAIRING_COUPLE_NOT_PAIRED`). Lancé par la commande `record-together-periods` de l'API ([runbook](../../infrastructure/runbooks/pairing/together-periods.md)).
+- Source : message du propriétaire du 2026-11-24 (une date de début, une séparation, une reprise ; les dates restent en base, jamais dans le dépôt) et sa réponse « Sur le couple, en base (Recommandé) » ; [décision 0045](../../decisions/pairing/0045-periodes-ensemble-du-couple.md). Validée par : Thomas De Sousa, 2026-11-24.
+
 ## Cas et exceptions
 
 | Situation | Ce qui s'applique |
@@ -75,6 +84,9 @@ J'ai créé un couple par erreur, ou l'autre en a créé un de son côté : j'an
 | Annuler un couple formé | Refusée, `409` `PAIRING_COUPLE_ALREADY_PAIRED` (R8) |
 | Annuler sans avoir de couple | Refusée, `404` `PAIRING_COUPLE_NOT_FOUND` (R8) |
 | Demander son couple sans en avoir | Refusée, `404` `PAIRING_COUPLE_NOT_FOUND` : l'app montre l'écran d'invitation |
+| Enregistrer les périodes d'un couple en attente | Refusée, `409` `PAIRING_COUPLE_NOT_PAIRED` (R9) |
+| Enregistrer une liste vide, une période qui finit avant son début, des périodes dans le désordre ou qui se chevauchent, une période ouverte avant la dernière, une période qui commence après aujourd'hui, un jour mal écrit | Refusée, `422` `PAIRING_TOGETHER_PERIODS_INVALID` (R9) |
+| Enregistrer les périodes sans avoir de couple | Refusée, `404` `PAIRING_COUPLE_NOT_FOUND` (R9) |
 | Quitter un couple formé | Pas encore possible, à décider avec le propriétaire |
 
 ## Voir aussi

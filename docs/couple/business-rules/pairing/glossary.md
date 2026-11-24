@@ -13,3 +13,5 @@ Les termes propres à la mise en couple, avec leur nom dans le code. Les termes 
 | **Membre du couple** | `CouplePartner` | Un partenaire inscrit dans le couple, avec sa date d'arrivée |
 | **Couple en attente** | `CouplePairingStatus` `PENDING` | Un seul membre, un code valable |
 | **Couple formé** | `CouplePairingStatus` `PAIRED` | Les deux partenaires sont membres, plus de code |
+| **Période ensemble** | `TogetherPeriod` | Un intervalle de jours calendaires (`YYYY-MM-DD`) où le couple est ensemble : un jour de début et, s'il est fini, un jour de fin. Une période ouverte dure encore |
+| **Périodes ensemble** | `TogetherPeriods`, `Couple.recordTogetherPeriods` | La liste ordonnée des périodes ensemble du couple, enregistrée d'un bloc |
