@@ -6,6 +6,11 @@ export const notesEnvSchema = z.object({
     WEB_SEARCH_SEARXNG_URL: z.url({ protocol: /^https?$/ }),
     // The bound in time of one search and of each page read.
     WEB_SEARCH_TIMEOUT_MS: z.coerce.number().int().positive(),
+    // OpenStreetMap through Nominatim (decision 0055): its address, the bound in time of one request, and the
+    // User-Agent its usage policy asks for, with a contact.
+    PLACE_DIRECTORY_NOMINATIM_URL: z.url({ protocol: /^https?$/ }),
+    PLACE_DIRECTORY_TIMEOUT_MS: z.coerce.number().int().positive(),
+    PLACE_DIRECTORY_USER_AGENT: z.string().trim().min(1),
     NOTE_CARD_GEMINI_API_KEY: z.string().trim(),
     NOTE_CARD_GEMINI_MODEL: z.string().trim().min(1),
     // R23: the searches a couple makes per day of Paris, all folders together.

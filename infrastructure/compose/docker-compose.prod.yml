@@ -60,6 +60,11 @@ services:
             # The search engine of the smart folders (decision 0054), on the internal network of the compose.
             WEB_SEARCH_SEARXNG_URL: http://searxng:8080
             WEB_SEARCH_TIMEOUT_MS: 8000
+            # OpenStreetMap through Nominatim, which completes the card of a place (decision 0055); the User-Agent
+            # carries a contact, as its usage policy asks, so it stays in .env.
+            PLACE_DIRECTORY_NOMINATIM_URL: https://nominatim.openstreetmap.org
+            PLACE_DIRECTORY_TIMEOUT_MS: 6000
+            PLACE_DIRECTORY_USER_AGENT: ${PLACE_DIRECTORY_USER_AGENT:?set PLACE_DIRECTORY_USER_AGENT in infrastructure/compose/.env}
             # The free Gemini of the smart folders (decision 0054): it proposes templates and writes the cards.
             NOTE_CARD_GEMINI_API_KEY: ${NOTE_CARD_GEMINI_API_KEY:?set NOTE_CARD_GEMINI_API_KEY in infrastructure/compose/.env}
             NOTE_CARD_GEMINI_MODEL: gemini-3.5-flash-lite

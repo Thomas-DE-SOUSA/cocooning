@@ -15,6 +15,7 @@ import {
 import {
     fetchWebPageReaderProvider,
     geminiNoteCardWriterProvider,
+    nominatimPlaceDirectoryProvider,
     PairedCouplePrismaProvider,
     searxngWebSearchProvider,
 } from './secondary/providers';
@@ -30,6 +31,7 @@ const technicalAdapters = [
     geminiNoteCardWriterProvider,
     searxngWebSearchProvider,
     fetchWebPageReaderProvider,
+    nominatimPlaceDirectoryProvider,
 ];
 
 const adapters = [
