@@ -32,6 +32,8 @@ export type NoteSheetTarget =
           readonly kind: typeof NoteSheetKindEnum.NOTE;
           readonly note: NoteListItem;
           readonly level: NotePlaceLevel;
+          // Where the page goes once the note is deleted; null reads the screen again.
+          readonly exitHref: string | null;
       }
     | {
           readonly kind: typeof NoteSheetKindEnum.MOVE;

@@ -2,7 +2,11 @@ import {
     type ApiError,
     ApiErrorCodeEnum,
 } from '@cocooning/couple-client-business-logic/shared';
-import { A_SHARED_NOTE } from '@cocooning/couple-client-business-logic/testing';
+import {
+    A_SHARED_FOLDER,
+    A_SHARED_NOTE,
+    A_SPACE_CONTENTS,
+} from '@cocooning/couple-client-business-logic/testing';
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
 import { WebRouterEnum } from '@cocooning/couple-shared-kernel/routers';
 import { fail, ok } from '@cocooning/shared-kernel/utils';
@@ -14,9 +18,13 @@ const aRefusal = (
     backendCode: string | null = null,
 ): ApiError => ({ code, message: 'Refused', backendCode });
 
+const VACANCES = { folderId: A_SHARED_FOLDER.folderId, name: 'Vacances' };
+
 describe('Feature: the page of one note (decision 0036)', () => {
     it('shows the note with its link, owner and visibility', () => {
-        const page = presentNotePage(ok(A_SHARED_NOTE));
+        const page = presentNotePage(
+            ok({ note: A_SHARED_NOTE, place: A_SPACE_CONTENTS }),
+        );
         expect(page.viewModel).toMatchObject({
             step: NotePageStepEnum.NOTE,
             note: {
@@ -25,6 +33,37 @@ describe('Feature: the page of one note (decision 0036)', () => {
                 title: A_SHARED_NOTE.title,
                 isShared: true,
                 isOwner: true,
+            },
+        });
+    });
+
+    it('goes back to the root of the space of a note at the root', () => {
+        const page = presentNotePage(
+            ok({ note: A_SHARED_NOTE, place: A_SPACE_CONTENTS }),
+        );
+        expect(page.viewModel).toMatchObject({
+            level: {
+                place: { folder: null, href: '/spaces/SHARED' },
+                folders: [expect.objectContaining({ name: 'Vacances' })],
+            },
+        });
+    });
+
+    it('goes back to the folder of a note, the first level of its move picker', () => {
+        const page = presentNotePage(
+            ok({
+                note: { ...A_SHARED_NOTE, folderId: VACANCES.folderId },
+                place: { ...A_SPACE_CONTENTS, path: [VACANCES], folders: [] },
+            }),
+        );
+        expect(page.viewModel).toMatchObject({
+            level: {
+                place: {
+                    folder: VACANCES,
+                    href: `/spaces/SHARED?folderId=${VACANCES.folderId}`,
+                },
+                back: { folder: null },
+                folders: [],
             },
         });
     });
@@ -48,6 +87,14 @@ describe('Feature: the page of one note (decision 0036)', () => {
             aRefusal(
                 ApiErrorCodeEnum.NOT_FOUND,
                 NoteExceptionCodeEnum.NOTE_NOT_FOUND,
+            ),
+            WebRouterEnum.HOME,
+        ],
+        [
+            'a note whose folder went meanwhile',
+            aRefusal(
+                ApiErrorCodeEnum.NOT_FOUND,
+                NoteExceptionCodeEnum.FOLDER_NOT_FOUND,
             ),
             WebRouterEnum.HOME,
         ],

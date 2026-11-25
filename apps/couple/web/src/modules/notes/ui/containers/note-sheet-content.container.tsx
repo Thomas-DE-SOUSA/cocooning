@@ -32,6 +32,7 @@ export function NoteSheetContentContainer({ target, onClose, onOpen }: Props) {
             <NoteSheetContainer
                 note={target.note}
                 level={target.level}
+                exitHref={target.exitHref}
                 onClose={onClose}
                 onOpen={onOpen}
             />

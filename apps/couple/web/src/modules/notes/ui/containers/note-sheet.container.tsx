@@ -15,15 +15,23 @@ import { NoteDeletionSheetView } from '../views/note-deletion-sheet.view';
 type Props = {
     readonly note: NoteListItem;
     readonly level: NotePlaceLevel;
+    readonly exitHref: string | null;
     readonly onClose: () => void;
     readonly onOpen: (target: NoteSheetTarget) => void;
 };
 
 // The sheet of a note; « Déplacer » turns it into the move picker, starting from the level of the note.
-export function NoteSheetContainer({ note, level, onClose, onOpen }: Props) {
+export function NoteSheetContainer({
+    note,
+    level,
+    exitHref,
+    onClose,
+    onOpen,
+}: Props) {
     const sheet = useNoteActionsSheet({
         gateways: noteSheetGateways,
         note,
+        exitHref,
         onClose,
     });
     if (sheet.isDeletionAsked) {

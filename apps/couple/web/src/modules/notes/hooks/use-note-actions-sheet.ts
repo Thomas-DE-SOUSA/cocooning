@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useState } from 'react';
 import type { NoteSheetGateways } from '../gateways/ports/note-sheet.gateways';
 import { NoteSheetCommandEnum } from '../view-models/note-sheet-command.view-model';
 import type { NoteListItem } from '../view-models/notes-screen.view-model';
@@ -8,14 +9,34 @@ import { useNoteSheetFeedback } from './use-note-sheet-feedback';
 type Options = {
     readonly gateways: NoteSheetGateways;
     readonly note: NoteListItem;
+    readonly exitHref: string | null;
     readonly onClose: () => void;
 };
 
-// Composition hook of the sheet of a note: R7, its owner deletes it after one more question, since it goes for both.
-export function useNoteActionsSheet({ gateways, note, onClose }: Options) {
+// Composition hook of the sheet of a note: R7, its owner deletes it after one more question, since it goes for both;
+// from the page of the note, the partner then goes back to the place it was in.
+export function useNoteActionsSheet({
+    gateways,
+    note,
+    exitHref,
+    onClose,
+}: Options) {
     const [isDeletionAsked, setIsDeletionAsked] = useState(false);
-    const feedback = useNoteSheetFeedback(onClose);
-    const commands = useNoteSheetCommands({ gateways, ...feedback });
+    const router = useRouter();
+    const { onDone, onFailed } = useNoteSheetFeedback(onClose);
+    const onDeleted = useCallback(() => {
+        if (exitHref === null) {
+            onDone();
+            return;
+        }
+        onClose();
+        router.replace(exitHref);
+    }, [exitHref, onDone, onClose, router]);
+    const commands = useNoteSheetCommands({
+        gateways,
+        onDone: onDeleted,
+        onFailed,
+    });
     return {
         isDeletionAsked,
         askDeletion: () => setIsDeletionAsked(true),

@@ -13,7 +13,7 @@ type Props = { readonly params: Promise<{ readonly noteId: string }> };
 
 export async function generateMetadata(): Promise<Metadata> {
     const t = await getServerTranslation(NOTE_NAMESPACE);
-    return { title: t('back') };
+    return { title: t('title') };
 }
 
 // Read for the signed-in partner on every request, never prerendered at build (decision 0036).

@@ -40,7 +40,12 @@ export function NoteSpaceContentsContainer({ screen }: Props) {
                     })
                 }
                 onNoteActions={(note) =>
-                    sheet.open({ kind: NoteSheetKindEnum.NOTE, note, level })
+                    sheet.open({
+                        kind: NoteSheetKindEnum.NOTE,
+                        note,
+                        level,
+                        exitHref: null,
+                    })
                 }
             />
             <NewItemMenuView
