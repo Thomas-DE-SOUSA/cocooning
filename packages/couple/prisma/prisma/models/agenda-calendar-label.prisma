@@ -1,0 +1,19 @@
+/// A label shared by the couple (decision 0056): the aggregate `CalendarLabel`, a name and a colour put on events (R12, R13).
+model CalendarLabel {
+  id        String    @id @db.Uuid
+  coupleId  String    @map("couple_id") @db.Uuid
+  /// The partner who created it; both partners edit and delete it (R12).
+  ownerId   String    @map("owner_id") @db.Uuid
+  /// CALENDAR_LABEL_NAME_MAX_LENGTH of the couple shared kernel (R12).
+  name      String    @db.VarChar(30)
+  /// CalendarLabelColorEnum of the couple shared kernel, one of eight tints (R12).
+  color     String    @db.VarChar(20)
+  version   Int       @map("version")
+  createdAt DateTime  @map("created_at")
+  updatedAt DateTime  @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  // The labels of a couple in creation order, and their count (core.md rule 27: coupleId leads).
+  @@index([coupleId, createdAt])
+  @@map("calendar_label")
+}

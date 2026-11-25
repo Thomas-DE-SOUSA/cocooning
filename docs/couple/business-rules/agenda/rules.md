@@ -95,7 +95,7 @@ Je crée un événement partagé, ou je partage un événement privé : le tél�
 
 Nous avons une seule liste d'étiquettes, chacune un nom de 1 à 30 signes et une couleur parmi huit. Nous les créons, renommons, recolorons et supprimons tous les deux, 20 au plus.
 
-- Dans le code : agrégat `CalendarLabel`, `CalendarLabelName`, `CalendarLabelColorEnum` ; refus `CALENDAR_LABEL_LIMIT_REACHED` au-delà de 20.
+- Dans le code : agrégat `CalendarLabel`, `CalendarLabelName`, `CalendarLabelColorEnum`, `ListCalendarLabelsUseCase`, `CreateCalendarLabelUseCase`, `EditCalendarLabelUseCase`, `DeleteCalendarLabelUseCase` ; refus `CALENDAR_LABEL_LIMIT_REACHED` au-delà de `CALENDAR_LABEL_MAX_COUNT` (`CalendarLabelPreconditionService.ensureLabelRoomLeft`), sans verrou : deux créations au même instant peuvent dépasser la borne.
 - Source : décision 0056. Validée par : Thomas De Sousa, 2026-11-25.
 
 ### R13. Une étiquette colore un événement
@@ -125,6 +125,7 @@ Je supprime l'étiquette « Sport » : les événements qui la portaient restent
 | Événement « rien que pour moi » qui n'est pas pour son auteur | Refusé, `422` `CALENDAR_EVENT_AUDIENCE_INVALID` (R11) |
 | Étiquette inconnue, supprimée ou d'un autre couple | Refusée, `404` `CALENDAR_LABEL_NOT_FOUND` (R13) |
 | 21e étiquette, nom vide ou trop long | Refusé, `409` `CALENDAR_LABEL_LIMIT_REACHED` ou `422` `CALENDAR_LABEL_NAME_INVALID` (R12) |
+| Deux écritures de la même étiquette en même temps | Refusée, `409` `CALENDAR_LABEL_VERSION_CONFLICT` |
 | Dernier jour avant le premier, heure de fin avant l'heure de début le même jour, heure de fin sans heure de début | Refusé, `422` `CALENDAR_EVENT_MOMENT_INVALID` (R5) |
 
 ## Voir aussi

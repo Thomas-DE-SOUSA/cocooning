@@ -2,6 +2,8 @@ import type { FactoryProvider, Type } from '@nestjs/common';
 import {
     CalendarEventPreconditionService,
     CalendarEventRepository,
+    CalendarLabelPreconditionService,
+    CalendarLabelRepository,
 } from '@cocooning/couple-server-business-logic/agenda';
 import { EventPublishingService } from '@cocooning/shared-kernel/application';
 import {
@@ -13,20 +15,24 @@ import {
 export type AgendaDependencies = {
     readonly repository: CalendarEventRepository;
     readonly preconditions: CalendarEventPreconditionService;
+    readonly labelRepository: CalendarLabelRepository;
+    readonly labelPreconditions: CalendarLabelPreconditionService;
     readonly clock: DateTimeProvider;
     readonly publishing: EventPublishingService;
 };
 
 const DEPENDENCIES = [
     CalendarEventRepository,
+    CalendarLabelRepository,
     DateTimeProvider,
     EventPublisher,
     Logger,
 ];
 
-// The domain service is created inline, never a provider (decision 0005).
+// The domain services are created inline, never providers (decision 0005).
 const collect = (
     repository: CalendarEventRepository,
+    labelRepository: CalendarLabelRepository,
     clock: DateTimeProvider,
     publisher: EventPublisher,
     logger: Logger,
@@ -35,6 +41,10 @@ const collect = (
     return {
         repository,
         preconditions: new CalendarEventPreconditionService(repository),
+        labelRepository,
+        labelPreconditions: new CalendarLabelPreconditionService(
+            labelRepository,
+        ),
         clock,
         publishing: new EventPublishingService(publisher, logger),
     };

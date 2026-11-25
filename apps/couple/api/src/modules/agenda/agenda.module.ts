@@ -3,10 +3,14 @@ import { AgendaServiceModule } from './agenda-service.module';
 import { AgendaCoupleGuard } from './primary/couple';
 import {
     CreateCalendarEventController,
+    CreateCalendarLabelController,
     DeleteCalendarEventController,
+    DeleteCalendarLabelController,
     EditCalendarEventController,
+    EditCalendarLabelController,
     GetCalendarEventController,
     ListCalendarEventsController,
+    ListCalendarLabelsController,
     MakeCalendarEventPrivateController,
     ShareCalendarEventController,
 } from './primary/controllers';
@@ -21,6 +25,10 @@ import {
         ShareCalendarEventController,
         MakeCalendarEventPrivateController,
         DeleteCalendarEventController,
+        ListCalendarLabelsController,
+        CreateCalendarLabelController,
+        EditCalendarLabelController,
+        DeleteCalendarLabelController,
     ],
     providers: [AgendaCoupleGuard],
 })

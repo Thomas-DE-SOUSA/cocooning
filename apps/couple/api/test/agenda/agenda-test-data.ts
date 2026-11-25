@@ -1,6 +1,8 @@
 import {
     type CalendarEventResponse,
     CalendarEventResponseSchema,
+    type CalendarLabelResponse,
+    CalendarLabelResponseSchema,
 } from '@cocooning/couple-contract/agenda';
 import type {
     TestAccount,
@@ -17,6 +19,7 @@ export const STRANGER = '01936b2e-7c4a-7000-8000-00000000000c';
 export const ALONE = '01936b2e-7c4a-7000-8000-00000000000d';
 export const PARTNERS = [PARTNER_A, PARTNER_B, STRANGER, ALONE] as const;
 export const UNKNOWN_CALENDAR_EVENT_ID = '01936b2e-7c4a-7000-8000-0000000000ff';
+export const UNKNOWN_CALENDAR_LABEL_ID = '01936b2e-7c4a-7000-8000-0000000000fe';
 export const DECEMBER = { from: '2026-12-01', to: '2026-12-31' };
 
 export type CalendarEventBody = {
@@ -95,6 +98,17 @@ export const refusal = (status: number, code: string, message: string) => ({
     status,
     body: { status, code, message, context: null },
 });
+
+export type CalendarLabelBody = {
+    readonly name: string;
+    readonly color: string;
+};
+
+export const SPORT: CalendarLabelBody = { name: 'Sport', color: 'SAGE' };
+
+export const calendarLabelOf = (
+    response: TestResponse,
+): CalendarLabelResponse => CalendarLabelResponseSchema.parse(response.body);
 
 export const calendarEventOf = (
     response: TestResponse,
