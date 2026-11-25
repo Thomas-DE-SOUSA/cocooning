@@ -8,7 +8,7 @@ Comment le couple range ses notes : les deux espaces et les dossiers classiques.
 
 J'ouvre les notes : je vois « Partagé », que nous voyons tous les deux, et « Privé », que je suis seul à voir. Mon âme sœur a son propre « Privé », que je ne vois pas.
 
-- Dans le code : `NoteSpaceEnum` (`@cocooning/couple-shared-kernel/enums`), `ListNoteSpacesUseCase` (accueil, nombre de dossiers et de notes par espace), `GetNoteSpaceContentsUseCase` ; `FolderRepository` et `NoteRepository` filtrent dans la requête : « Partagé », ou propriétaire égale au partenaire.
+- Dans le code : `NoteSpaceEnum` (`@cocooning/couple-shared-kernel/enums`), `ListNoteSpacesUseCase` (accueil, nombre de dossiers et de notes par espace), `GetNoteSpaceContentsUseCase` ; `FolderRepository` et `NoteRepository` filtrent dans la requête : « Partagé », ou propriétaire égale au partenaire. Dans la PWA, l'écran d'un espace ou d'un dossier (`WebRouterEnum.NOTE_SPACE`, `presentNoteSpacePage`, `NoteSpaceContentsView`, module `notes` de `apps/couple/web`).
 - Source : [décision 0052](../../../decisions/notes/0052-dossiers-et-dossiers-ia.md). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R11. Une note prend la visibilité de son espace
@@ -31,14 +31,14 @@ Le jour où les dossiers arrivent, nos notes partagées sont à la racine de « 
 
 Dans un espace ou dans un dossier, je crée une note ou un dossier. Un dossier a un nom de 1 à 60 signes.
 
-- Dans le code : `CreateFolderUseCase`, `Folder.create`, `FolderName.create`, `FOLDER_NAME_MAX_LENGTH` (`@cocooning/couple-shared-kernel/limits`), `CreateNoteUseCase` ; `FolderPreconditionService.loadDestination` refuse un dossier d'un autre espace (`FOLDER_SPACE_MISMATCH`).
+- Dans le code : `CreateFolderUseCase`, `Folder.create`, `FolderName.create`, `FOLDER_NAME_MAX_LENGTH` (`@cocooning/couple-shared-kernel/limits`), `CreateNoteUseCase` ; `FolderPreconditionService.loadDestination` refuse un dossier d'un autre espace (`FOLDER_SPACE_MISMATCH`). Dans la PWA, chaque dossier dit ce qu'il contient (`presentFolderContents`).
 - Source : décision 0052 ; la limite de 60 signes est une proposition de Claude, acceptée par « go ». Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R14. Un dossier de « Partagé » est à nous deux
 
 Nous créons, renommons, déplaçons et supprimons tous les deux un dossier de « Partagé ». Un dossier de mon « Privé » n'existe que pour moi, comme une note privée (R4).
 
-- Dans le code : `CreateFolderUseCase`, `RenameFolderUseCase`, `MoveFolderUseCase`, `DeleteFolderUseCase`, sans contrôle de propriétaire ; `FolderPreconditionService.loadVisibleFolder` refuse `FOLDER_NOT_FOUND`.
+- Dans le code : `CreateFolderUseCase`, `RenameFolderUseCase`, `MoveFolderUseCase`, `DeleteFolderUseCase`, sans contrôle de propriétaire ; `FolderPreconditionService.loadVisibleFolder` refuse `FOLDER_NOT_FOUND`. Dans la PWA, un dossier disparu ou privé de l'autre renvoie à la racine de l'espace (`presentNoteSpacePage`).
 - Source : décision 0052. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R15. Un dossier reste dans son espace
