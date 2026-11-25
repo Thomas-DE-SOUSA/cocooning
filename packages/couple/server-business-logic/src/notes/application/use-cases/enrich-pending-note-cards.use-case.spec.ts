@@ -73,6 +73,7 @@ describe('Feature: the background task fills the cards « en recherche » (R19 t
                     folderNames: ['Restaurants', 'Lyon'],
                     fieldNames: ['Adresse', 'Cuisine', 'Prix'],
                     query: 'Chez Paul',
+                    place: null,
                     results: RESULTS,
                     pages: [
                         {
