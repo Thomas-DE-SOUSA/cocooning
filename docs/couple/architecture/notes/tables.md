@@ -2,7 +2,7 @@
 
 Cette page décrit les trois tables PostgreSQL du contexte `notes` : leurs colonnes, leurs index et leurs contraintes. À lire avant de modifier `packages/couple/prisma/prisma/models/notes-*.prisma` ou l'adaptateur Prisma de `NoteRepository`.
 
-Les tables naissent avec la migration `20261123194115_notes_note` ; `content_state` arrive avec `notes_content_state`, la table `folder` et la colonne `note.folder_id` avec `20261125100000_notes_folders`, l'index `note_couple_id_folder_id_idx` avec `20261125100100_notes_note_folder_index`, construit en `CONCURRENTLY` sur la table remplie (`packages/couple/prisma/prisma/migrations/`). Les dates sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma.
+Les tables naissent avec la migration `20261123194115_notes_note` ; `content_state` arrive avec `notes_content_state`, la table `folder` et la colonne `note.folder_id` avec `20261125100000_notes_folders`, ses colonnes `kind`, `subject` et `card_template` avec `20261125200000_notes_smart_folders`, l'index `note_couple_id_folder_id_idx` avec `20261125100100_notes_note_folder_index`, construit en `CONCURRENTLY` sur la table remplie (`packages/couple/prisma/prisma/migrations/`). Les dates sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma.
 
 ## `note`
 
@@ -40,8 +40,11 @@ L'agrégat `Folder` (modèle `Folder`, fichier `notes-folder.prisma`, [décision
 | `couple_id` | `UUID` | Couple du dossier (`core.md` règle 27) |
 | `owner_id` | `UUID` | Partenaire qui a créé le dossier ; un dossier de « Privé » n'existe que pour lui (R14) |
 | `space` | `VARCHAR(20)` | `SHARED` ou `PRIVATE` (`NoteSpaceEnum`), fixé à la création (R15), relu par `parseEnum()` ; une valeur inconnue répond `FOLDER_DATA_CORRUPTED` |
+| `kind` | `VARCHAR(20)` | `CLASSIC` ou `SMART` (`FolderKindEnum`, R17), fixé à la création, relu par `parseEnum()` ; une valeur inconnue répond `FOLDER_DATA_CORRUPTED`. Les dossiers d'avant le lot 2 sont `CLASSIC` (migration `20261125200000_notes_smart_folders`) |
 | `parent_folder_id` | `UUID`, nullable, clé étrangère vers `folder` (`ON DELETE SET NULL`) | Dossier parent, du même espace ; `null` à la racine de l'espace |
 | `name` | `VARCHAR(60)` | Nom, `FOLDER_NAME_MAX_LENGTH` (R13) |
+| `subject` | `VARCHAR(280)`, nullable | Sujet d'un dossier IA en haut de son arbre (R17), `null` ailleurs (R18) |
+| `card_template` | `JSONB`, nullable | Fiche type : tableau de noms de cases, posé avec le sujet ; un autre contenu répond `FOLDER_DATA_CORRUPTED` |
 | `version` | `INTEGER` | Verrou optimiste : 1 à la création, incrémenté par le repository et par la remontée de R16 |
 | `created_at`, `updated_at` | `TIMESTAMP(3)` | `EntityMetadata` du domaine |
 | `deleted_at` | `TIMESTAMP(3)`, nullable | Suppression douce (R16) : le modèle figure dans `SOFT_DELETABLE_MODELS` |
@@ -52,7 +55,7 @@ L'agrégat `Folder` (modèle `Folder`, fichier `notes-folder.prisma`, [décision
 | `folder_couple_id_parent_folder_id_idx` | `couple_id`, `parent_folder_id` | Les dossiers d'un dossier ou d'une racine (`findVisibleChildren`, `countVisibleChildren`), ceux qui remontent à la suppression du parent (R16), la clé étrangère |
 | `folder_parent_folder_id_fkey` | `parent_folder_id` vers `folder.id` | Le parent existe |
 
-La visibilité se filtre dans le `where` de chaque lecture : `couple_id` du partenaire, puis `space = 'SHARED'` ou `owner_id` égal au partenaire (R14). Le chemin d'un dossier (`findPath`) se lit en une requête récursive (`WITH RECURSIVE ... CYCLE`), filtrée par `couple_id` et `deleted_at` à chaque niveau.
+La visibilité se filtre dans le `where` de chaque lecture : `couple_id` du partenaire, puis `space = 'SHARED'` ou `owner_id` égal au partenaire (R14). Le chemin d'un dossier (`findPath`) se lit en une requête récursive (`WITH RECURSIVE ... CYCLE`), filtrée par `couple_id` et `deleted_at` à chaque niveau ; sa lignée (`findLineage`, R18), par ce chemin puis une lecture des dossiers par leurs identifiants.
 
 ## `note_event`
 

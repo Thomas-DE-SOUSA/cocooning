@@ -1,4 +1,5 @@
 import {
+    FolderKindEnum,
     type NoteSpace,
     NoteSpaceEnum,
 } from '@cocooning/couple-shared-kernel/enums';
@@ -13,12 +14,16 @@ import {
 } from '@cocooning/shared-kernel/testing';
 import { CreateFolderUseCase } from '../../application/use-cases/create-folder.use-case';
 import { DeleteFolderUseCase } from '../../application/use-cases/delete-folder.use-case';
+import { EditFolderTemplateUseCase } from '../../application/use-cases/edit-folder-template.use-case';
 import { GetNoteSpaceContentsUseCase } from '../../application/use-cases/get-note-space-contents.use-case';
 import { ListNoteSpacesUseCase } from '../../application/use-cases/list-note-spaces.use-case';
 import { MoveFolderUseCase } from '../../application/use-cases/move-folder.use-case';
 import { MoveNoteUseCase } from '../../application/use-cases/move-note.use-case';
+import { ProposeFolderTemplateUseCase } from '../../application/use-cases/propose-folder-template.use-case';
 import { RenameFolderUseCase } from '../../application/use-cases/rename-folder.use-case';
 import { Folder } from '../../domain/models/folder.aggregate';
+import { createSmartFolderSettings } from '../../domain/models/smart-folder-settings';
+import { CardContextService } from '../../domain/services/card-context.service';
 import { FolderPreconditionService } from '../../domain/services/folder-precondition.service';
 import { NoteRevocationService } from '../../domain/services/note-revocation.service';
 import { FolderName } from '../../domain/value-objects/folder-name.vo';
@@ -37,6 +42,10 @@ import { Note } from '../../domain/models/note.aggregate';
 import { NotePreconditionService } from '../../domain/services/note-precondition.service';
 import { NoteId } from '../../domain/value-objects/note-id.vo';
 import { NoteTitle } from '../../domain/value-objects/note-title.vo';
+import {
+    FakeNoteCardWriter,
+    PROPOSED_TEMPLATE,
+} from '../secondary/adapters/fake-note-card.writer';
 import { FakeNoteCollaborationProvider } from '../secondary/adapters/fake-note-collaboration.provider';
 import { FakePairedCoupleProvider } from '../secondary/adapters/fake-paired-couple.provider';
 import { NoteContentInMemoryRepository } from '../secondary/adapters/note-content-in-memory.repository';
@@ -76,6 +85,7 @@ export class NotesTestContext {
     readonly unitOfWork = new InMemoryUnitOfWork();
     readonly pairedCoupleProvider = new FakePairedCoupleProvider();
     readonly noteCollaborationProvider = new FakeNoteCollaborationProvider();
+    readonly noteCardWriter = new FakeNoteCardWriter();
     readonly eventPublisher = new FakeEventPublisherAdapter();
     readonly logger = new FakeLoggerAdapter();
     private readonly eventPublishingService = new EventPublishingService(
@@ -86,6 +96,9 @@ export class NotesTestContext {
         this.noteRepository,
     );
     private readonly folderPreconditions = new FolderPreconditionService(
+        this.folderRepository,
+    );
+    private readonly cardContexts = new CardContextService(
         this.folderRepository,
     );
 
@@ -147,6 +160,24 @@ export class NotesTestContext {
 
     moveFolderUseCase(): MoveFolderUseCase {
         return new MoveFolderUseCase(...this.folderMutationDependencies());
+    }
+
+    proposeFolderTemplateUseCase(): ProposeFolderTemplateUseCase {
+        return new ProposeFolderTemplateUseCase(
+            this.folderRepository,
+            this.folderPreconditions,
+            this.noteCardWriter,
+        );
+    }
+
+    editFolderTemplateUseCase(): EditFolderTemplateUseCase {
+        return new EditFolderTemplateUseCase(
+            this.folderRepository,
+            this.folderPreconditions,
+            this.cardContexts,
+            this.dateTimeProvider,
+            this.eventPublishingService,
+        );
     }
 
     deleteFolderUseCase(): DeleteFolderUseCase {
@@ -244,6 +275,41 @@ export class NotesTestContext {
                 space,
                 parent,
                 name: FolderName.create(name),
+                kind: FolderKindEnum.CLASSIC,
+                settings: null,
+            },
+            this.dateTimeProvider.now(),
+        );
+        folder.clearDomainEvents();
+        this.folderRepository.seed(folder);
+        return folder;
+    }
+
+    // A smart folder (R17): at the top of a tree it holds PROPOSED_TEMPLATE, under a smart parent it inherits (R18).
+    givenSmartFolderOf(
+        context: ExecutionContext,
+        name: string,
+        parent: Folder | null = null,
+        space: NoteSpace = parent === null
+            ? NoteSpaceEnum.SHARED
+            : parent.space,
+    ): Folder {
+        const settings =
+            parent !== null && parent.kind === FolderKindEnum.SMART
+                ? null
+                : createSmartFolderSettings(
+                      PROPOSED_TEMPLATE.subject,
+                      PROPOSED_TEMPLATE.fieldNames,
+                  );
+        const folder = Folder.create(
+            {
+                coupleId: context.coupleId,
+                ownerId: context.userId,
+                space,
+                parent,
+                name: FolderName.create(name),
+                kind: FolderKindEnum.SMART,
+                settings,
             },
             this.dateTimeProvider.now(),
         );

@@ -6,19 +6,19 @@ Cette page décrit comment le contexte `notes` est construit : ses couches, ses 
 
 `notes` porte les notes du couple : leur titre, leur propriétaire, leur visibilité, leur dossier et leur cycle de vie, ainsi que les deux espaces et les dossiers où elles se rangent ([décision 0052](../../decisions/notes/0052-dossiers-et-dossiers-ia.md), lot 1 sans IA). Le contenu riche, document Yjs édité à deux, arrive avec le canal temps réel ([décision 0040](../../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md)). Le contexte ne connaît ni les sessions (`authentication`) ni le code d'invitation (`pairing`) : il reçoit le `coupleId` par un port étroit ([décision 0041](../../decisions/0041-couple-de-la-requete.md)).
 
-Construit aujourd'hui : domaine et application, tables `note`, `folder` et `note_event` (voir [les tables](tables.md)), adaptateurs Prisma de `NoteRepository`, `FolderRepository` et `PairedCoupleProvider`. Contrat HTTP et quatorze routes de l'API, canal temps réel (voir [l'édition à deux](collaboration.md)), liste, page et éditeur d'une note dans la PWA. À venir : les espaces et les dossiers dans la PWA (lot 1 des dossiers), la route `/collab` en production.
+Construit aujourd'hui : domaine et application, tables `note`, `folder` et `note_event` (voir [les tables](tables.md)), adaptateurs Prisma de `NoteRepository`, `FolderRepository` et `PairedCoupleProvider`. Contrat HTTP et routes de l'API, canal temps réel (voir [l'édition à deux](collaboration.md)), liste, page et éditeur d'une note dans la PWA. À venir : les espaces et les dossiers dans la PWA (lot 1 des dossiers), la route `/collab` en production.
 
 ## Comment c'est construit
 
 | Élément | Rôle | Chemin |
 |---|---|---|
 | `Note` | Agrégat : titre, propriétaire, visibilité, dossier (voir [les agrégats](aggregate.md)) | `domain/models/note.aggregate.ts` |
-| `Folder` | Agrégat : espace, dossier parent, nom (R13 à R16) | `domain/models/folder.aggregate.ts` |
-| `NoteId`, `NoteTitle`, `FolderId`, `FolderName` | Value objects : identités UUID v7, titre de 1 à `NOTE_TITLE_MAX_LENGTH` signes (R8), nom de dossier de 1 à `FOLDER_NAME_MAX_LENGTH` (R13) | `domain/value-objects/` |
+| `Folder` | Agrégat : espace, genre (classique ou IA), dossier parent, nom, sujet et fiche type en haut d'un arbre IA (R13 à R18) | `domain/models/folder.aggregate.ts` |
+| `NoteId`, `NoteTitle`, `FolderId`, `FolderName`, `FolderSubject`, `CardTemplate` | Value objects : identités UUID v7, titre de 1 à `NOTE_TITLE_MAX_LENGTH` signes (R8), nom de dossier de 1 à `FOLDER_NAME_MAX_LENGTH` (R13), sujet et fiche type d'un dossier IA (R17) | `domain/value-objects/` |
 | `NoteVisibilityEnum`, `NoteSpaceEnum` | `PRIVATE`, `SHARED` ; l'espace d'une note est celui de sa visibilité (`visibilityOfSpace`, `spaceOfVisibility`, `domain/models/note-space.ts`), partagés avec la PWA | `packages/couple/shared-kernel/src/enums/` |
 | `NoteException` | Exception du contexte, codes de `NoteExceptionCodeEnum` | `domain/exceptions/`, `packages/couple/contract/src/notes/exceptions/exception-codes.ts` |
 | `NoteRepository` | Port : `save`, `findVisibleById`, `findVisible` (une page par offset et le total, [décision 0025](../../decisions/0025-pagination.md)), `findVisibleIn` (les notes d'un dossier ou d'une racine), `countVisibleByFolder`, `countVisibleBySpace` ; la visibilité est filtrée par la requête (R4) | `domain/ports/note.repository.ts` |
-| `FolderRepository` | Port : `save`, `findVisibleById`, `findVisibleChildren` (par nom), `findPath` (de la racine au dossier, une requête), `countVisibleChildren`, `countVisibleBySpace`, `moveContentUp` (R16) ; visibilité dans la requête (R14) | `domain/ports/folder.repository.ts` |
+| `FolderRepository` | Port : `save`, `findVisibleById`, `findVisibleChildren` (par nom), `findPath` (de la racine au dossier, une requête), `findLineage` (les dossiers de la racine au dossier, R18), `countVisibleChildren`, `countVisibleBySpace`, `moveContentUp` (R16) ; visibilité dans la requête (R14) | `domain/ports/folder.repository.ts` |
 | `NoteContentRepository`, `NoteCollaborationProvider` | Ports du canal temps réel : état Yjs de la note ; déconnexion des éditeurs qui perdent la note (R5, R7) | `domain/ports/` |
 | `AuthorizeNoteDocumentUseCase`, `LoadNoteDocumentUseCase`, `SaveNoteDocumentUseCase` | Use cases du canal : accès à l'ouverture, chargement, enregistrement du document | `application/use-cases/` |
 | `PairedCoupleProvider` | Port : le couple formé d'un partenaire, seule recherche sans `coupleId` du contexte (décision 0041) | `domain/ports/paired-couple.provider.ts` |
@@ -26,10 +26,12 @@ Construit aujourd'hui : domaine et application, tables `note`, `folder` et `note
 | `NoteAccessValidator` | Contrôle statique : action réservée à la propriétaire (R5, R7) | `domain/services/note-access.validator.ts` |
 | `FolderPreconditionService` | Domain service : le dossier visible, sinon `FOLDER_NOT_FOUND` ; la destination d'une note ou d'un dossier, dans l'espace demandé | `domain/services/folder-precondition.service.ts` |
 | `FolderPlacementValidator` | Contrôle statique : dossier du bon espace (`FOLDER_SPACE_MISMATCH`), déplacement sans cycle ni changement d'espace (`FOLDER_MOVE_INVALID`) | `domain/services/folder-placement.validator.ts` |
+| `SmartFolderValidator`, `CardContextService` | Contrôle statique du genre d'un dossier créé et du dossier qui porte la fiche type (R17, R18) ; domain service qui lit la lignée d'un dossier et en tire le contexte des fiches, sinon `FOLDER_NOT_SMART` | `domain/services/` |
+| `NoteCardWriter` | Port de l'IA ([décision 0054](../../decisions/notes/0054-recherche-des-fiches-searxng-et-gemini.md)) : `proposeTemplate` ; adaptateur `GeminiNoteCardWriter` (API Interactions par `fetch`, réponse JSON validée par Zod, `NOTE_CARD_WRITER_UNAVAILABLE` sinon) | `domain/ports/note-card.writer.ts`, `apps/couple/api/src/modules/notes/secondary/providers/` |
 | `NoteRevocationService` | Domain service : une note passée dans « Privé » par `MoveNoteUseCase` ne reste ouverte que pour sa propriétaire (R5, R11) | `domain/services/note-revocation.service.ts` |
 | `NoteCoupleGuardService` | Guard service : construit l'`ExecutionContext` depuis le `PartnerContext`, sinon `NOTE_COUPLE_NOT_PAIRED` (R3, décision 0006) | `application/services/note-couple-guard.service.ts` |
 | `CreateNoteUseCase`, `ListNotesUseCase` (page `OffsetPage<NoteView>`, la plus récemment modifiée d'abord), `GetNoteUseCase`, `RenameNoteUseCase`, `ShareNoteUseCase`, `MakeNotePrivateUseCase`, `DeleteNoteUseCase`, `MoveNoteUseCase` | Use cases des notes, `execute(context)` ou `execute(context, command)` | `application/use-cases/` |
-| `ListNoteSpacesUseCase`, `GetNoteSpaceContentsUseCase`, `CreateFolderUseCase`, `RenameFolderUseCase`, `MoveFolderUseCase`, `DeleteFolderUseCase` | Use cases des espaces et des dossiers ; `DeleteFolderUseCase` sauve le dossier et fait remonter son contenu dans une `UnitOfWork` | `application/use-cases/` |
+| `ListNoteSpacesUseCase`, `GetNoteSpaceContentsUseCase`, `CreateFolderUseCase`, `RenameFolderUseCase`, `MoveFolderUseCase`, `DeleteFolderUseCase`, `ProposeFolderTemplateUseCase`, `EditFolderTemplateUseCase` | Use cases des espaces et des dossiers ; `DeleteFolderUseCase` sauve le dossier et fait remonter son contenu dans une `UnitOfWork` | `application/use-cases/` |
 | `NotePrismaRepository`, `FolderPrismaRepository`, `PairedCouplePrismaProvider` | Adaptateurs : note ou dossier et outbox `note_event` dans une transaction, comptes par `groupBy`, chemin par requête récursive, verrou optimiste, visibilité dans le `where` ; lecture seule du couple formé dans les tables de `pairing` (couple supprimé exclu) | `apps/couple/api/src/modules/notes/secondary/` |
 | `toNoteView` | Vue rendue pour le partenaire qui lit : identifiant, propriétaire, `isOwner` (la lectrice est la propriétaire, pour les actions de R5 et R7), titre, visibilité, dossier, dernière modification | `application/mappers/note-view.mapper.ts` |
 | `toFolderView`, `toNoteSpaceContentsView`, `toNoteSpacesView` | Vues d'un dossier ; du contenu d'une racine ou d'un dossier (chemin, dossiers par nom avec leurs nombres de dossiers et de notes, notes) ; des deux espaces | `application/mappers/` |
@@ -53,7 +55,9 @@ Toutes les routes demandent une session (cookie `cocooning_session`, [décision 
 | `POST /notes/:noteId/move`, corps `MoveNoteRequestSchema` | `NOTE_MOVE` | `MoveNoteUseCase` | `200` | `403` changement d'espace par l'autre ; `404` note ou dossier ; `422` `FOLDER_SPACE_MISMATCH` |
 | `GET /note-spaces` | `NOTE_SPACE_LIST` | `ListNoteSpacesUseCase` | `200`, `NoteSpacesResponseSchema` | |
 | `GET /note-spaces/:space/contents?folderId` | `NOTE_SPACE_CONTENTS_GET` | `GetNoteSpaceContentsUseCase` | `200`, `NoteSpaceContentsResponseSchema` | `404` `FOLDER_NOT_FOUND` ; `422` espace inconnu ou `FOLDER_SPACE_MISMATCH` |
-| `POST /note-folders`, corps `CreateFolderRequestSchema` | `FOLDER_CREATE` | `CreateFolderUseCase` | `201` | `404` parent ; `422` nom ou espace |
+| `POST /note-folders`, corps `CreateFolderRequestSchema` | `FOLDER_CREATE` | `CreateFolderUseCase` | `201` | `404` parent ; `422` nom, espace, genre, sujet ou fiche type |
+| `POST /note-folders/template-proposals`, corps `ProposeFolderTemplateRequestSchema` | `FOLDER_TEMPLATE_PROPOSE` | `ProposeFolderTemplateUseCase` | `200`, `FolderTemplateProposalResponseSchema` | `404` parent ; `422` `FOLDER_TEMPLATE_INHERITED` ; `503` `NOTE_CARD_WRITER_UNAVAILABLE` |
+| `PUT /note-folders/:folderId/template`, corps `EditFolderTemplateRequestSchema` | `FOLDER_TEMPLATE_EDIT` | `EditFolderTemplateUseCase` | `200`, le dossier qui porte la fiche type | `404` ; `409` ; `422` `FOLDER_NOT_SMART`, sujet ou fiche type |
 | `PATCH /note-folders/:folderId`, corps `RenameFolderRequestSchema` | `FOLDER_RENAME` | `RenameFolderUseCase` | `200` | `404` ; `409` `FOLDER_VERSION_CONFLICT` ; `422` |
 | `POST /note-folders/:folderId/move`, corps `MoveFolderRequestSchema` | `FOLDER_MOVE` | `MoveFolderUseCase` | `200` | `404` ; `409` ; `422` `FOLDER_MOVE_INVALID` |
 | `DELETE /note-folders/:folderId` | `FOLDER_DELETE` | `DeleteFolderUseCase` | `204` | `404` ; `409` |
@@ -72,3 +76,4 @@ Toutes les routes demandent une session (cookie `cocooning_session`, [décision 
 - [Décision 0041](../../decisions/0041-couple-de-la-requete.md) : le couple de la requête vient de `pairing`
 - [Décision 0018](../../decisions/0018-portee-par-couple-et-proprietaire.md) : portée par couple et propriétaire
 - [Décision 0052](../../decisions/notes/0052-dossiers-et-dossiers-ia.md) : dossiers de notes
+- [Décision 0054](../../decisions/notes/0054-recherche-des-fiches-searxng-et-gemini.md) : recherche des fiches par SearXNG et Gemini

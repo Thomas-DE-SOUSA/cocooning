@@ -12,3 +12,5 @@ export * from './create-folder.controller';
 export * from './rename-folder.controller';
 export * from './move-folder.controller';
 export * from './delete-folder.controller';
+export * from './propose-folder-template.controller';
+export * from './edit-folder-template.controller';

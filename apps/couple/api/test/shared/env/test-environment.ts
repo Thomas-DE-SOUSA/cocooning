@@ -28,6 +28,9 @@ const TEST_ENVIRONMENT = {
     WEB_PUSH_VAPID_PUBLIC_KEY: TEST_VAPID_PUBLIC_KEY,
     WEB_PUSH_VAPID_PRIVATE_KEY: TEST_VAPID_PRIVATE_KEY,
     WEB_PUSH_VAPID_SUBJECT: 'https://cocooning.test',
+    // The specs replace the AI by a fake NoteCardWriter: no key, no call to Gemini.
+    NOTE_CARD_GEMINI_API_KEY: '',
+    NOTE_CARD_GEMINI_MODEL: 'gemini-e2e-never-called',
 } as const;
 
 Object.assign(process.env, TEST_ENVIRONMENT);

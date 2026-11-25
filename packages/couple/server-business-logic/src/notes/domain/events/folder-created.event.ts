@@ -1,4 +1,7 @@
-import type { NoteSpace } from '@cocooning/couple-shared-kernel/enums';
+import type {
+    FolderKind,
+    NoteSpace,
+} from '@cocooning/couple-shared-kernel/enums';
 import { DomainEventBase } from '@cocooning/shared-kernel/domain';
 import {
     type FolderEventParams,
@@ -8,6 +11,7 @@ import {
 export type FolderCreatedData = {
     readonly ownerId: string;
     readonly space: NoteSpace;
+    readonly kind: FolderKind;
     readonly parentFolderId: string | null;
 };
 

@@ -2,6 +2,7 @@ export * from './folder-created.event';
 export * from './folder-deleted.event';
 export * from './folder-moved.event';
 export * from './folder-renamed.event';
+export * from './folder-template-edited.event';
 export * from './note-created.event';
 export * from './note-deleted.event';
 export * from './note-made-private.event';

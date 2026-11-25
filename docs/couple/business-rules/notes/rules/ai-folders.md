@@ -8,14 +8,14 @@ Comment un dossier IA complète ce que le couple y ajoute. À lire avant de touc
 
 À la création, je choisis « Classique » ou « IA ». Pour un dossier IA, l'IA propose d'après son nom un sujet (une phrase, 280 signes au plus) et une fiche type (de 1 à 10 cases, chacune nommée en 40 signes au plus). Je les corrige avant de créer le dossier, et plus tard aussi ; dans « Partagé », nous les corrigeons tous les deux.
 
-- Dans le code : à venir (lot 2).
+- Dans le code : `ProposeFolderTemplateUseCase` (port `NoteCardWriter.proposeTemplate`, adaptateur Gemini, sans recherche ni plafond), `CreateFolderUseCase` et `SmartFolderValidator.kindOf` (`FolderKindEnum`), `FolderSubject`, `CardTemplate` (`FOLDER_SUBJECT_MAX_LENGTH`, `CARD_TEMPLATE_MAX_FIELDS`, `CARD_FIELD_NAME_MAX_LENGTH`), `EditFolderTemplateUseCase` et `Folder.editTemplate`, sans contrôle de propriétaire (R14).
 - Source : [décision 0052](../../../decisions/notes/0052-dossiers-et-dossiers-ia.md) ; les limites sont une proposition de Claude, acceptées par « go ». Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R18. Un sous-dossier d'un dossier IA hérite et précise
 
 Je crée « Lyon » dans « Restaurants » : il est IA lui aussi, garde la fiche type de « Restaurants », et son nom s'ajoute au contexte des recherches. Si la fiche type de « Restaurants » change, celle de « Lyon » change avec elle.
 
-- Dans le code : à venir (lot 2).
+- Dans le code : `SmartFolderValidator.kindOf` (un dossier créé dans un dossier IA est IA, sans fiche type à lui, sinon `FOLDER_TEMPLATE_INHERITED`) ; `cardContextOf` et `CardContextService` lisent la lignée du dossier (`FolderRepository.findLineage`, une requête) et y trouvent le dossier IA qui porte le sujet et la fiche type, ainsi que les noms des dossiers depuis lui ; `EditFolderTemplateUseCase` corrige la fiche type depuis n'importe quel dossier de l'arbre.
 - Source : décision 0052. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ## L'ajout d'un élément
@@ -70,3 +70,15 @@ Je déplace une fiche dans un autre dossier IA : elle prend la fiche type du nou
 
 - Dans le code : à venir (lot 2).
 - Source : proposition de Claude (décision 0052). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
+
+## Cas et exceptions
+
+| Situation | Ce qui s'applique |
+|---|---|
+| Sujet vide ou trop long | Refusé, `422` `FOLDER_SUBJECT_INVALID` (R17) |
+| Fiche type sans case, de plus de 10 cases, case vide, trop longue ou en double (sans tenir compte de la casse) | Refusée, `422` `CARD_TEMPLATE_INVALID` (R17) |
+| Dossier IA créé sans sujet ni fiche type | Refusé, `422` `CARD_TEMPLATE_INVALID` (R17) |
+| Dossier classique créé avec un sujet ou une fiche type | Refusé, `422` `FOLDER_NOT_SMART` |
+| Sujet ou fiche type donnés à un dossier créé dans un dossier IA, ou proposition demandée pour lui | Refusés, `422` `FOLDER_TEMPLATE_INHERITED` (R18) |
+| Corriger la fiche type d'un dossier hors d'un arbre IA | Refusé, `422` `FOLDER_NOT_SMART` |
+| L'IA ne répond pas, ou répond hors des règles de R17 | `503` `NOTE_CARD_WRITER_UNAVAILABLE`, sans détail |

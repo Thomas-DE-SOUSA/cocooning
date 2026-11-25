@@ -47,6 +47,9 @@ describe('Feature: folder commands sent by the server actions', () => {
                         space: NoteSpaceEnum.SHARED,
                         parentFolderId: IN_A_FOLDER.folderId,
                         name: 'Maison',
+                        kind: 'CLASSIC',
+                        subject: null,
+                        cardTemplate: null,
                     },
                 },
             ]);

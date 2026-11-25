@@ -24,6 +24,11 @@ export abstract class FolderRepository {
         coupleId: string,
         folderId: string | null,
     ): Promise<ReadonlyArray<FolderPathItem>>;
+    // R18: the folders from the root of the space down to the folder itself, root first, in one query; empty for the root.
+    abstract findLineage(
+        coupleId: string,
+        folderId: string | null,
+    ): Promise<ReadonlyArray<Folder>>;
     // The number of folders right under each folder given, by folder id, in one grouped query.
     abstract countVisibleChildren(
         coupleId: string,

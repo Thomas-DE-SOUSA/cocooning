@@ -15,6 +15,7 @@ import {
     countChildFolders,
     countFoldersBySpace,
     foldersVisibleTo,
+    readFolderLineage,
     readFolderPath,
 } from './folder-prisma.query';
 import { moveFolderContentUp, writeFolder } from './folder-prisma.writer';
@@ -92,6 +93,17 @@ export class FolderPrismaRepository extends FolderRepository {
         if (folderId === null) return Promise.resolve([]);
         return this.read(folderId, (tx) =>
             readFolderPath(tx, coupleId, folderId),
+        );
+    }
+
+    // The caller has loaded the folder as visible: its ancestors share its space and owner (R15).
+    override findLineage(
+        coupleId: string,
+        folderId: string | null,
+    ): Promise<ReadonlyArray<Folder>> {
+        if (folderId === null) return Promise.resolve([]);
+        return this.read(folderId, async (tx) =>
+            (await readFolderLineage(tx, coupleId, folderId)).map(toFolder),
         );
     }
 

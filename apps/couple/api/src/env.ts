@@ -2,6 +2,7 @@ import { couplePrismaEnvSchema } from '@cocooning/couple-prisma/env';
 import { z } from 'zod';
 import { authenticationEnvSchema } from './modules/authentication/env';
 import { messagingEnvSchema } from './modules/messaging/env';
+import { notesEnvSchema } from './modules/notes/env';
 import { pairingEnvSchema } from './modules/pairing/env';
 
 const MAX_PORT = 65_535;
@@ -29,7 +30,8 @@ export const environmentSchema = apiEnvSchema
     .extend(couplePrismaEnvSchema.shape)
     .extend(authenticationEnvSchema.shape)
     .extend(pairingEnvSchema.shape)
-    .extend(messagingEnvSchema.shape);
+    .extend(messagingEnvSchema.shape)
+    .extend(notesEnvSchema.shape);
 
 export type Environment = z.infer<typeof environmentSchema>;
 

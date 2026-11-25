@@ -5,7 +5,12 @@ import type {
     NoteSpaceCounts,
 } from '@cocooning/couple-server-business-logic/notes';
 import { NoteSpaceEnum } from '@cocooning/couple-shared-kernel/enums';
-import { toCountsByFolder, toFolderSpace, toNoteSpaceCounts } from '../mappers';
+import {
+    type FolderRow,
+    toCountsByFolder,
+    toFolderSpace,
+    toNoteSpaceCounts,
+} from '../mappers';
 
 type Transaction = PrismaService['current'];
 
@@ -41,6 +46,20 @@ export async function readFolderPath(
         ) CYCLE "id" SET "is_cycle" USING "visited"
         SELECT "id", "name" FROM "path" WHERE NOT "is_cycle" ORDER BY "depth" DESC`);
     return rows.map(({ id, name }) => ({ folderId: id, name }));
+}
+
+// R18: the path, then its folders in one query, put back root first (core.md rule 9).
+export async function readFolderLineage(
+    tx: Transaction,
+    coupleId: string,
+    folderId: string,
+): Promise<ReadonlyArray<FolderRow>> {
+    const path = await readFolderPath(tx, coupleId, folderId);
+    const ids = path.map((step) => step.folderId);
+    const rows = await tx.folder.findMany({
+        where: { coupleId, id: { in: ids } },
+    });
+    return ids.flatMap((id) => rows.filter((row) => row.id === id));
 }
 
 export async function countChildFolders(

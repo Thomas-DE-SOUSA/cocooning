@@ -12,8 +12,11 @@ import { toNoteResponse } from './to-note-response.mapper';
 export const toFolderResponse = (view: FolderView): FolderResponse => ({
     folderId: view.folderId,
     space: view.space,
+    kind: view.kind,
     parentFolderId: view.parentFolderId,
     name: view.name,
+    subject: view.subject,
+    cardTemplate: view.cardTemplate === null ? null : [...view.cardTemplate],
     updatedAt: view.updatedAt.toISOString(),
 });
 

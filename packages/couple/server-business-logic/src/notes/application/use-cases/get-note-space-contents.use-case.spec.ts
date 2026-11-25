@@ -1,5 +1,6 @@
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
 import {
+    FolderKindEnum,
     type NoteSpace,
     NoteSpaceEnum,
     NoteVisibilityEnum,
@@ -48,8 +49,11 @@ describe('Feature: open a space or one of its folders (R10, R14)', () => {
                     {
                         folderId: restaurants.id.getValue(),
                         space: NoteSpaceEnum.SHARED,
+                        kind: FolderKindEnum.CLASSIC,
                         parentFolderId: null,
                         name: 'Restaurants',
+                        subject: null,
+                        cardTemplate: null,
                         updatedAt: NOW,
                         folderCount: 1,
                         noteCount: 1,
@@ -57,8 +61,11 @@ describe('Feature: open a space or one of its folders (R10, R14)', () => {
                     {
                         folderId: sorties.id.getValue(),
                         space: NoteSpaceEnum.SHARED,
+                        kind: FolderKindEnum.CLASSIC,
                         parentFolderId: null,
                         name: 'Sorties',
+                        subject: null,
+                        cardTemplate: null,
                         updatedAt: NOW,
                         folderCount: 0,
                         noteCount: 0,

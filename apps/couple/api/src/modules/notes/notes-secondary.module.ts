@@ -10,7 +10,10 @@ import {
     HocuspocusNoteCollaborationProvider,
     NoteHocuspocus,
 } from './secondary/collaboration';
-import { PairedCouplePrismaProvider } from './secondary/providers';
+import {
+    geminiNoteCardWriterProvider,
+    PairedCouplePrismaProvider,
+} from './secondary/providers';
 import {
     FolderPrismaRepository,
     NoteContentPrismaRepository,
@@ -29,7 +32,11 @@ const adapters = [
 ];
 
 @Module({
-    providers: [NoteHocuspocus, ...adapters],
-    exports: [NoteHocuspocus, ...adapters.map(({ provide }) => provide)],
+    providers: [NoteHocuspocus, ...adapters, geminiNoteCardWriterProvider],
+    exports: [
+        NoteHocuspocus,
+        ...adapters.map(({ provide }) => provide),
+        geminiNoteCardWriterProvider.provide,
+    ],
 })
 export class NotesSecondaryModule {}

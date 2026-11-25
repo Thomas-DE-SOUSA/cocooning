@@ -9,6 +9,11 @@ import type { TestClient, TestResponse } from '../shared/app/test-client';
 
 type Space = 'SHARED' | 'PRIVATE';
 
+export type SmartSettings = {
+    readonly subject: string;
+    readonly cardTemplate: ReadonlyArray<string>;
+};
+
 const withFolder = (route: string, folderId: string): string =>
     route.replace(':folderId', folderId);
 
@@ -43,6 +48,45 @@ export class FolderRequests {
     ): Promise<string> {
         return folderOf(await this.create(userId, name, space, parentFolderId))
             .folderId;
+    }
+
+    createSmart(
+        userId: string,
+        name: string,
+        settings: SmartSettings | null,
+        parentFolderId: string | null = null,
+    ): Promise<TestResponse> {
+        return this.as(userId).post(ApiRouterEnum.FOLDER_CREATE, {
+            space: 'SHARED',
+            parentFolderId,
+            name,
+            kind: 'SMART',
+            ...(settings ?? {}),
+        });
+    }
+
+    proposeTemplate(
+        userId: string,
+        name: string,
+        parentFolderId: string | null = null,
+        space: Space = 'SHARED',
+    ): Promise<TestResponse> {
+        return this.as(userId).post(ApiRouterEnum.FOLDER_TEMPLATE_PROPOSE, {
+            space,
+            parentFolderId,
+            name,
+        });
+    }
+
+    editTemplate(
+        userId: string,
+        folderId: string,
+        settings: SmartSettings,
+    ): Promise<TestResponse> {
+        return this.as(userId).put(
+            withFolder(ApiRouterEnum.FOLDER_TEMPLATE_EDIT, folderId),
+            settings,
+        );
     }
 
     rename(
