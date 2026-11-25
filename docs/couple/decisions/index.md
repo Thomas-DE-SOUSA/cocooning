@@ -63,3 +63,4 @@ Le registre unique des décisions du domaine `couple`, dans l'ordre chronologiqu
 | 0051 | messaging | [Le relais des notifications, dans l'API, au moins une fois](messaging/0051-relais-des-notifications.md) | technique | acceptée | 2026-11-24 | Thomas De Sousa |
 | 0052 | notes | [Dossiers de notes et dossiers IA](notes/0052-dossiers-et-dossiers-ia.md) | produit | acceptée | 2026-11-25 | Thomas De Sousa |
 | 0053 | frontend | [L'écran des espaces et des dossiers de notes](frontend/0053-ecran-des-espaces-et-des-dossiers.md) | produit | acceptée | 2026-11-25 | Thomas De Sousa |
+| 0054 | notes | [Les fiches se remplissent par SearXNG sur la VM et Gemini gratuit, en tâche de fond dans l'API](notes/0054-recherche-des-fiches-searxng-et-gemini.md) | technique | acceptée | 2026-11-25 | Thomas De Sousa |
