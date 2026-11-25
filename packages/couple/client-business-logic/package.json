@@ -19,6 +19,10 @@
             "types": "./src/authentication/index.ts",
             "default": "./dist/authentication/index.js"
         },
+        "./messaging": {
+            "types": "./src/messaging/index.ts",
+            "default": "./dist/messaging/index.js"
+        },
         "./notes": {
             "types": "./src/notes/index.ts",
             "default": "./dist/notes/index.js"

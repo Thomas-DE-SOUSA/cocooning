@@ -49,6 +49,18 @@ services:
             AUTH_JWT_SECRET: ${AUTH_JWT_SECRET:?set AUTH_JWT_SECRET in infrastructure/compose/.env}
             AUTH_SESSION_TTL_DAYS: 90
             PAIRING_INVITATION_CODE_TTL_HOURS: 48
+            # The scheduled task of the daily photo prompt (R7 of messaging), inside the API process.
+            PHOTO_PROMPT_SCHEDULER_ENABLED: 'true'
+            # The outbox relay and its Web Push notifications (R10 of messaging, decision 0021), inside the API process.
+            OUTBOX_RELAY_ENABLED: 'true'
+            # VAPID pair and subject of the Web Push notifications (R11); the private key never leaves the API.
+            WEB_PUSH_VAPID_PUBLIC_KEY: ${WEB_PUSH_VAPID_PUBLIC_KEY:?set WEB_PUSH_VAPID_PUBLIC_KEY in infrastructure/compose/.env}
+            WEB_PUSH_VAPID_PRIVATE_KEY: ${WEB_PUSH_VAPID_PRIVATE_KEY:?set WEB_PUSH_VAPID_PRIVATE_KEY in infrastructure/compose/.env}
+            WEB_PUSH_VAPID_SUBJECT: ${WEB_PUSH_VAPID_SUBJECT:?set WEB_PUSH_VAPID_SUBJECT in infrastructure/compose/.env}
+            # The instant photos (decision 0027), kept in the files volume.
+            FILE_STORAGE_DIRECTORY: /data/files
+        volumes:
+            - files:/data/files
         depends_on:
             migrate:
                 condition: service_completed_successfully
@@ -94,4 +106,5 @@ services:
 
 volumes:
     postgres-data:
+    files:
     tailscale-state:

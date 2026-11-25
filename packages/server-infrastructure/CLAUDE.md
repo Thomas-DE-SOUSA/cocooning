@@ -5,8 +5,8 @@ Plomberie NestJS et adaptateurs des ports du shared-kernel, sans aucun domaine. 
 - `nest` : `HttpExceptionFilter` (table code -> statut, decision 0020), `ZodValidationPipe`, `ZodException` (422), `ZodResponse(schema)` / `ZodResponseInterceptor`, `RequestIdMiddleware` et `getRequestId()`, `@Public()` / `IS_PUBLIC_KEY`.
 - `logging` : `LoggerModule.forRoot({ level, pretty })` ou `forRootAsync({ inject, useFactory })` (l'API lit les options par `ConfigService`), `PinoLoggerAdapter` (port `Logger`, `requestId` ajoute a chaque ligne).
 - `date-time` : `ClockModule` (port `DateTimeProvider`). `identifier` : `IdentifierModule`, `UuidV7GeneratorProvider` (port `UuidGenerator`). `crypto` : `CryptoModule`, `NodeSecureRandomGenerator` (port `SecureRandomGenerator`).
-- `storage` : `LocalDiskFileStorage` (port `FileStorage`, decision 0027), `FileStorageException`.
-- `messaging` : `MessagingModule` (global, port `EventPublisher`), `InProcessEventPublisher` : publication apres commit dans le processus. Aucun abonne en phase 2 : il journalise chaque evenement par ses identifiants (jamais ses donnees), le relais de l'outbox livre (decision 0021).
+- `storage` : `StorageModule.forRootAsync({ inject, useFactory })` (global, port `FileStorage`, dossier racine passe par l'API), `LocalDiskFileStorage` (decision 0027), `FileStorageException`.
+- `messaging` : `MessagingModule` (global, port `EventPublisher`), `InProcessEventPublisher` : publication apres commit dans le processus. Aucun abonne : il journalise chaque evenement par ses identifiants (jamais ses donnees), le relais de l'outbox du contexte `messaging` livre (decisions 0021 et 0051) ; un abonne qui notifierait doublerait chaque notification.
 
 ## A lire avant de commencer
 
@@ -37,7 +37,7 @@ Ports et primitives implementes ici :
 - Sous Jest, une erreur systeme Node (`ENOENT`) vient d'un autre realm : `instanceof Error` est faux, tester `code` sur l'objet.
 - `instanceof BaseException` donne un `BaseException<any>` refuse par le lint type : utiliser `isBaseException()`.
 - `Logger` est fourni en `Scope.TRANSIENT` : chaque classe a son adaptateur et son `setContext`. Ne pas le passer en singleton.
-- Reportes : `tracing/` et `telemetry/` (D21, phase 6), les abonnes en processus de `InProcessEventPublisher` (avec le relais de l'outbox, phase 4). La sante vit dans l'API (`apps/couple/api/src/health/`) : elle interroge Prisma, interdit ici.
+- Reportes : `tracing/` et `telemetry/` (D21, phase 6). Pas d'abonne en processus de `InProcessEventPublisher` : le relais de l'outbox lit les tables (decision 0051). La sante vit dans l'API (`apps/couple/api/src/health/`) : elle interroge Prisma, interdit ici.
 
 ## Commandes
 

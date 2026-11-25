@@ -1,5 +1,8 @@
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
-import { NoteVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    NoteSpaceEnum,
+    NoteVisibilityEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import { NoteMadePrivateEvent } from '../../domain/events/note-made-private.event';
 import { NoteId } from '../../domain/value-objects/note-id.vo';
 import {
@@ -87,6 +90,22 @@ describe('Feature: make a note private', () => {
                 code: NoteExceptionCodeEnum.NOTE_RESERVED_TO_OWNER,
             });
             expect(ctx.noteCollaborationProvider.disconnections).toEqual([]);
+        });
+    });
+
+    describe('Scenario: R11, a note filed in a folder changes space', () => {
+        it('goes to the root of its new space, the folder staying in the old one', async () => {
+            const folder = ctx.givenFolderOf(
+                AS_A,
+                'Rangement',
+                null,
+                NoteSpaceEnum.SHARED,
+            );
+            const note = ctx.givenNoteOf(AS_A, 'Courses', folder);
+            const view = await ctx
+                .makeNotePrivateUseCase()
+                .execute(AS_A, { noteId: note.id.getValue() });
+            expect(view.folderId).toBeNull();
         });
     });
 });

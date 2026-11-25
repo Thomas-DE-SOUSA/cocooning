@@ -61,6 +61,7 @@ describe('Feature: list the notes of the couple', () => {
                     isOwner: false,
                     title: 'Courses',
                     visibility: NoteVisibilityEnum.SHARED,
+                    folderId: null,
                     updatedAt: ctx.dateTimeProvider.now(),
                 },
             ],

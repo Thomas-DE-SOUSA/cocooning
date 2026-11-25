@@ -6,4 +6,5 @@ Ce dossier décrit comment chaque bounded context du domaine `couple` est constr
 - [Mise en couple](pairing/index.md) : contexte `pairing`, le couple et son code d'invitation
 - [Notes](notes/index.md) : contexte `notes`, les notes du couple
 - [Agenda](agenda/index.md) : contexte `agenda`, les événements d'agenda du couple
+- [Messages](messaging/index.md) : contexte `messaging`, le fil des mots flash et des photos instantanées
 - [Front](frontend/index.md) : packages de la PWA et chemin d'un appel à l'API

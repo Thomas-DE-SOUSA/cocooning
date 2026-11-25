@@ -1,0 +1,25 @@
+/// A folder of notes (decision 0052): it sits in one space and holds notes and other folders, without depth limit.
+model Folder {
+  id             String    @id @db.Uuid
+  coupleId       String    @map("couple_id") @db.Uuid
+  /// The partner who created it; a private folder exists for this partner only (R14).
+  ownerId        String    @map("owner_id") @db.Uuid
+  /// NoteSpaceEnum of the couple shared kernel: SHARED or PRIVATE, fixed at creation (R15).
+  space          String    @db.VarChar(20)
+  /// Null at the root of the space; a parent always has the same space (R15).
+  parentFolderId String?   @map("parent_folder_id") @db.Uuid
+  /// FOLDER_NAME_MAX_LENGTH of the couple shared kernel (R13).
+  name           String    @db.VarChar(60)
+  version        Int       @map("version")
+  createdAt      DateTime  @map("created_at")
+  updatedAt      DateTime  @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+
+  parentFolder Folder?  @relation("FolderTree", fields: [parentFolderId], references: [id], onDelete: SetNull)
+  folders      Folder[] @relation("FolderTree")
+  notes        Note[]
+
+  // The content of a folder or of a space root, and the children to move up on deletion (core.md rule 27: coupleId leads).
+  @@index([coupleId, parentFolderId])
+  @@map("folder")
+}

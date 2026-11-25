@@ -15,11 +15,12 @@ export const WITHOUT_CONTENT = { contentState: true } as const;
 export type NoteStateColumns = {
     readonly title: string;
     readonly visibility: string;
+    readonly folderId: string | null;
     readonly updatedAt: Date;
     readonly deletedAt: Date | null;
 };
 
-const toVisibility = (raw: string) => {
+export const toNoteVisibility = (raw: string) => {
     try {
         return parseEnum(raw, NoteVisibilityEnum, 'NoteVisibility');
     } catch {
@@ -36,7 +37,8 @@ export function toNoteSnapshot(raw: NoteRow): NoteSnapshot {
         coupleId: raw.coupleId,
         ownerId: raw.ownerId,
         title: raw.title,
-        visibility: toVisibility(raw.visibility),
+        visibility: toNoteVisibility(raw.visibility),
+        folderId: raw.folderId,
         version: raw.version,
         metadata: {
             createdAt: raw.createdAt.toISOString(),
@@ -53,6 +55,7 @@ export function toNoteState(snapshot: NoteSnapshot): NoteStateColumns {
     return {
         title: snapshot.title,
         visibility: snapshot.visibility,
+        folderId: snapshot.folderId,
         updatedAt: new Date(metadata.updatedAt),
         deletedAt:
             metadata.deletedAt === null ? null : new Date(metadata.deletedAt),

@@ -1,43 +1,30 @@
 {
     "title": "Notes",
-    "empty": "Pas encore de note. Créez la première, par exemple « Courses ».",
-    "note": {
-        "mine": "Ma note",
-        "partner": "Note de mon âme sœur",
-        "shared": "Partagée",
-        "private": "Privée",
-        "updatedAt": "Modifiée le {{updatedAt}}",
-        "share": "Partager",
-        "sharing": "Partage en cours",
-        "makePrivate": "Rendre privée",
-        "makingPrivate": "Passage en privé en cours",
-        "delete": "Supprimer",
-        "confirmDelete": "Supprimer pour nous deux",
-        "deleting": "Suppression en cours",
-        "keep": "Garder"
+    "spaces": {
+        "SHARED": {
+            "name": "Partagé",
+            "subtitle": "Vu par vous deux"
+        },
+        "PRIVATE": {
+            "name": "Privé",
+            "subtitle": "Rien que pour toi"
+        },
+        "contents": "{{folders}}, {{notes}}",
+        "folderCount_one": "{{count}} dossier",
+        "folderCount_other": "{{count}} dossiers",
+        "noteCount_one": "{{count}} note",
+        "noteCount_other": "{{count}} notes"
     },
-    "create": {
-        "submit": "Créer la note",
-        "creating": "Création en cours"
+    "recent": {
+        "title": "Modifiées récemment",
+        "empty": "Pas encore de note. Ouvre « Partagé » pour créer la première, par exemple « Courses »."
+    },
+    "note": {
+        "updatedAt": "Modifiée le {{updatedAt}}"
     },
     "unavailable": {
         "title": "Impossible d'afficher vos notes",
         "refresh": "Réessayer"
-    },
-    "form": {
-        "title": {
-            "label": "Titre de la nouvelle note",
-            "errors": {
-                "required": "Donnez un titre à la note.",
-                "tooLong": "Ce titre est trop long."
-            }
-        }
-    },
-    "toast": {
-        "createFailed": "Création impossible",
-        "shareFailed": "Partage impossible",
-        "makePrivateFailed": "Passage en privé impossible",
-        "deleteFailed": "Suppression impossible"
     },
     "apiErrors": {
         "NOTE_NOT_FOUND": "Cette note n'existe plus. La liste est mise à jour.",
@@ -46,6 +33,12 @@
         "NOTE_COUPLE_NOT_PAIRED": "Votre couple n'est pas encore formé.",
         "NOTE_VERSION_CONFLICT": "La note vient de changer. Réessayez.",
         "NOTE_DATA_CORRUPTED": "Les données de la note sont illisibles.",
+        "FOLDER_NOT_FOUND": "Ce dossier n'existe plus. La liste est mise à jour.",
+        "FOLDER_NAME_INVALID": "Ce nom de dossier n'est pas valable : de 1 à 60 signes.",
+        "FOLDER_SPACE_MISMATCH": "Ce dossier n'est pas dans cet espace.",
+        "FOLDER_MOVE_INVALID": "Un dossier reste dans son espace et ne va pas dans l'un de ses sous-dossiers.",
+        "FOLDER_VERSION_CONFLICT": "Le dossier vient de changer. Réessayez.",
+        "FOLDER_DATA_CORRUPTED": "Les données du dossier sont illisibles.",
         "AUTHENTICATION_SESSION_MISSING": "Votre session a pris fin. Reconnectez-vous.",
         "AUTHENTICATION_SESSION_INVALID": "Votre session a pris fin. Reconnectez-vous.",
         "NETWORK_ERROR": "Cocooning ne répond pas pour le moment. Réessayez dans un instant ; si le problème dure, vérifiez que Tailscale est activé.",

@@ -1,8 +1,8 @@
 # Tables des notes
 
-Cette page décrit les deux tables PostgreSQL du contexte `notes` : leurs colonnes, leurs index et leurs contraintes. À lire avant de modifier `packages/couple/prisma/prisma/models/notes-*.prisma` ou l'adaptateur Prisma de `NoteRepository`.
+Cette page décrit les trois tables PostgreSQL du contexte `notes` : leurs colonnes, leurs index et leurs contraintes. À lire avant de modifier `packages/couple/prisma/prisma/models/notes-*.prisma` ou l'adaptateur Prisma de `NoteRepository`.
 
-Les tables naissent avec la migration `20261123194115_notes_note` ; `content_state` arrive avec `notes_content_state` (`packages/couple/prisma/prisma/migrations/`). Les dates sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma.
+Les tables naissent avec la migration `20261123194115_notes_note` ; `content_state` arrive avec `notes_content_state`, la table `folder` et la colonne `note.folder_id` avec `20261125100000_notes_folders`, l'index `note_couple_id_folder_id_idx` avec `20261125100100_notes_note_folder_index`, construit en `CONCURRENTLY` sur la table remplie (`packages/couple/prisma/prisma/migrations/`). Les dates sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma.
 
 ## `note`
 
@@ -14,7 +14,8 @@ L'agrégat `Note` (modèle `Note`, fichier `notes-note.prisma`). Le contenu rich
 | `couple_id` | `UUID` | Couple de la note (`core.md` règle 27). Aucune clé étrangère vers `couple` : chaque contexte garde ses tables |
 | `owner_id` | `UUID` | Propriétaire, partenaire qui a créé la note (R1) |
 | `title` | `VARCHAR(120)` | Titre, `NOTE_TITLE_MAX_LENGTH` (R8) |
-| `visibility` | `VARCHAR(20)` | `SHARED` ou `PRIVATE` (`NoteVisibilityEnum`), relu par `parseEnum()` ; une valeur inconnue répond `NOTE_DATA_CORRUPTED` |
+| `visibility` | `VARCHAR(20)` | `SHARED` ou `PRIVATE` (`NoteVisibilityEnum`), relu par `parseEnum()` ; une valeur inconnue répond `NOTE_DATA_CORRUPTED`. Dit aussi l'espace de la note (R11) |
+| `folder_id` | `UUID`, nullable, clé étrangère vers `folder` (`ON DELETE SET NULL`) | Dossier de la note, `null` à la racine de son espace ; les notes d'avant les dossiers restent `null` (R12) |
 | `content_state` | `BYTEA`, nullable | État Yjs complet du contenu, `null` avant la première frappe ; lu et écrit à part de l'agrégat (`NoteContentPrismaRepository`), jamais lu par la liste |
 | `version` | `INTEGER` | Verrou optimiste : 1 à la création, incrémenté par le repository |
 | `created_at`, `updated_at` | `TIMESTAMP(3)` | `EntityMetadata` du domaine, fournies par `DateTimeProvider` |
@@ -24,15 +25,41 @@ L'agrégat `Note` (modèle `Note`, fichier `notes-note.prisma`). Le contenu rich
 |---|---|---|
 | `note_pkey` | `id` | Clé primaire |
 | `note_couple_id_updated_at_idx` | `couple_id`, `updated_at DESC` | La liste d'un couple, la plus récente d'abord (`findVisible`) ; `couple_id` en tête (`core.md` règle 27) |
+| `note_couple_id_folder_id_idx` | `couple_id`, `folder_id` | Les notes d'un dossier (`findVisibleIn`, `countVisibleByFolder`) et celles qui remontent à sa suppression (R16) |
+| `note_folder_id_fkey` | `folder_id` vers `folder.id` | Le dossier existe ; jamais supprimé en vrai, la suppression est douce |
 
 La visibilité se filtre dans le `where` de chaque lecture : `couple_id` du partenaire, puis `visibility = 'SHARED'` ou `owner_id` égal au partenaire (R4).
 
+## `folder`
+
+L'agrégat `Folder` (modèle `Folder`, fichier `notes-folder.prisma`, [décision 0052](../../decisions/notes/0052-dossiers-et-dossiers-ia.md)).
+
+| Colonne | Type | Rôle |
+|---|---|---|
+| `id` | `UUID`, clé primaire | Identifiant du dossier, généré par le domaine (`FolderId.generate()`, UUID v7) |
+| `couple_id` | `UUID` | Couple du dossier (`core.md` règle 27) |
+| `owner_id` | `UUID` | Partenaire qui a créé le dossier ; un dossier de « Privé » n'existe que pour lui (R14) |
+| `space` | `VARCHAR(20)` | `SHARED` ou `PRIVATE` (`NoteSpaceEnum`), fixé à la création (R15), relu par `parseEnum()` ; une valeur inconnue répond `FOLDER_DATA_CORRUPTED` |
+| `parent_folder_id` | `UUID`, nullable, clé étrangère vers `folder` (`ON DELETE SET NULL`) | Dossier parent, du même espace ; `null` à la racine de l'espace |
+| `name` | `VARCHAR(60)` | Nom, `FOLDER_NAME_MAX_LENGTH` (R13) |
+| `version` | `INTEGER` | Verrou optimiste : 1 à la création, incrémenté par le repository et par la remontée de R16 |
+| `created_at`, `updated_at` | `TIMESTAMP(3)` | `EntityMetadata` du domaine |
+| `deleted_at` | `TIMESTAMP(3)`, nullable | Suppression douce (R16) : le modèle figure dans `SOFT_DELETABLE_MODELS` |
+
+| Index ou contrainte | Colonnes | Pourquoi |
+|---|---|---|
+| `folder_pkey` | `id` | Clé primaire ; une sauvegarde périmée d'un dossier supprimé entre-temps la heurte, traduite en `FOLDER_VERSION_CONFLICT` |
+| `folder_couple_id_parent_folder_id_idx` | `couple_id`, `parent_folder_id` | Les dossiers d'un dossier ou d'une racine (`findVisibleChildren`, `countVisibleChildren`), ceux qui remontent à la suppression du parent (R16), la clé étrangère |
+| `folder_parent_folder_id_fkey` | `parent_folder_id` vers `folder.id` | Le parent existe |
+
+La visibilité se filtre dans le `where` de chaque lecture : `couple_id` du partenaire, puis `space = 'SHARED'` ou `owner_id` égal au partenaire (R14). Le chemin d'un dossier (`findPath`) se lit en une requête récursive (`WITH RECURSIVE ... CYCLE`), filtrée par `couple_id` et `deleted_at` à chaque niveau.
+
 ## `note_event`
 
-L'outbox du contexte (modèle `NoteEvent`, fichier `notes-event.prisma`, [décision 0021](../../decisions/0021-outbox-postgresql-relais-dans-l-api.md)), de même forme que `pairing_event` : écrite dans la transaction qui sauvegarde la note, sans clé étrangère vers elle, l'événement survit à la note. Aucun événement ne porte le titre.
+L'outbox du contexte (modèle `NoteEvent`, fichier `notes-event.prisma`, [décision 0021](../../decisions/0021-outbox-postgresql-relais-dans-l-api.md)), de même forme que `pairing_event` : écrite dans la transaction qui sauvegarde la note ou le dossier (`aggregate_id`), sans clé étrangère vers eux, l'événement leur survit. Aucun événement ne porte le titre ni le nom d'un dossier.
 
 | Index ou contrainte | Colonnes | Pourquoi |
 |---|---|---|
 | `note_event_pkey` | `id` | `eventId` généré par le domaine |
-| `note_event_aggregate_id_version_key` | `aggregate_id`, `version`, unique | Deux sauvegardes concurrentes de la même note : la seconde échoue, traduite en `NOTE_VERSION_CONFLICT` |
+| `note_event_aggregate_id_version_key` | `aggregate_id`, `version`, unique | Deux sauvegardes concurrentes de la même note ou du même dossier : la seconde échoue, traduite en `NOTE_VERSION_CONFLICT` ou `FOLDER_VERSION_CONFLICT` |
 | `note_event_published_occurred_at_idx` | `published`, `occurred_at` | Lecture du relais : les événements non publiés, dans l'ordre |

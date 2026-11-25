@@ -13,6 +13,7 @@ import {
     SaveNoteDocumentUseCase,
     ShareNoteUseCase,
 } from '@cocooning/couple-server-business-logic/notes';
+import { FOLDER_USE_CASES } from './notes-folder-use-cases';
 import { NotesSecondaryModule } from './notes-secondary.module';
 import { notesUseCase } from './notes-use-case.factory';
 
@@ -45,7 +46,13 @@ const revoking = <T>(
 const useCases = [
     notesUseCase(
         CreateNoteUseCase,
-        (d) => new CreateNoteUseCase(d.repository, d.clock, d.publishing),
+        (d) =>
+            new CreateNoteUseCase(
+                d.repository,
+                d.folderPreconditions,
+                d.clock,
+                d.publishing,
+            ),
     ),
     notesUseCase(ListNotesUseCase, (d) => new ListNotesUseCase(d.repository)),
     notesUseCase(GetNoteUseCase, (d) => new GetNoteUseCase(d.preconditions)),
@@ -65,6 +72,7 @@ const useCases = [
         SaveNoteDocumentUseCase,
         (d) => new SaveNoteDocumentUseCase(d.contents, d.clock),
     ),
+    ...FOLDER_USE_CASES,
 ];
 
 // Decision 0006: the guard service reading pairing is a provider, injected where the couple of a request is needed.

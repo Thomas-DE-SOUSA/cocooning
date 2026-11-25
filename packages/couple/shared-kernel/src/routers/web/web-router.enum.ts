@@ -2,6 +2,7 @@ import type { RouteGroup } from '../route-group';
 import { AgendaRouteEnum } from './agenda.route';
 import { AuthenticationRouteEnum } from './authentication.route';
 import { HomeRouteEnum } from './home.route';
+import { MessagingRouteEnum } from './messaging.route';
 import { NotesRouteEnum } from './notes.route';
 import { OfflineRouteEnum } from './offline.route';
 import { PairingRouteEnum } from './pairing.route';
@@ -10,6 +11,7 @@ export const WEB_ROUTE_GROUPS = [
     AgendaRouteEnum,
     AuthenticationRouteEnum,
     HomeRouteEnum,
+    MessagingRouteEnum,
     NotesRouteEnum,
     OfflineRouteEnum,
     PairingRouteEnum,
@@ -19,6 +21,7 @@ export const WebRouterEnum = {
     ...AgendaRouteEnum,
     ...AuthenticationRouteEnum,
     ...HomeRouteEnum,
+    ...MessagingRouteEnum,
     ...NotesRouteEnum,
     ...OfflineRouteEnum,
     ...PairingRouteEnum,

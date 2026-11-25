@@ -1,6 +1,6 @@
 # Règles des notes
 
-Ce que le couple veut que l'app impose aux notes. À lire avant de toucher au contexte `notes`, à l'éditeur ou à la liste des notes.
+Ce que le couple veut que l'app impose aux notes. À lire avant de toucher au contexte `notes`, à l'éditeur ou aux écrans des notes.
 
 ## À la création
 
@@ -13,10 +13,10 @@ Je crée une note : elle est à notre couple, et j'en suis la propriétaire.
 
 ### R2. Une note est partagée à sa création
 
-Ma nouvelle note est tout de suite visible et modifiable par mon âme sœur ; je peux la rendre privée ensuite.
+Ma nouvelle note est tout de suite visible et modifiable par mon âme sœur ; je peux la rendre privée ensuite. Avec les dossiers, une note créée dans « Privé » est privée dès sa création (R11 des [règles des dossiers](rules/folders.md)).
 
-- Dans le code : `Note.create`, visibilité `SHARED`.
-- Source : décision 0039. Validée par : Thomas De Sousa, 2026-11-23.
+- Dans le code : `Note.create`, visibilité de l'espace (`visibilityOfSpace`) ; `CreateNoteRequestSchema` crée à la racine de « Partagé » sans espace ni dossier, `CreateNoteUseCase` dans l'espace et le dossier demandés.
+- Source : décision 0039, [décision 0052](../../decisions/notes/0052-dossiers-et-dossiers-ia.md). Validée par : Thomas De Sousa, 2026-11-23 et 2026-11-25.
 
 ### R3. Les notes demandent un couple formé
 
@@ -68,6 +68,15 @@ Je donne un titre à ma note ; les espaces autour ne comptent pas, un titre vide
 - Dans le code : `NoteTitle.create`, `NOTE_TITLE_MAX_LENGTH` (`@cocooning/couple-shared-kernel/limits`).
 - Source : proposition de Claude avec le domaine, acceptée par le propriétaire (« OK pour 120 », 2026-11-23). Validée par : Thomas De Sousa, 2026-11-23.
 
+## Notification
+
+### R9. Une note qui devient visible pour l'autre le notifie
+
+Je crée une note partagée, ou je partage une note privée : le téléphone de l'autre affiche « Ton âme sœur a partagé une note avec toi », sans le titre. Une note privée ne notifie personne.
+
+- Dans le code : le relais de l'outbox du contexte `messaging` lit `note_event` ; `pushNotificationsOf` (`messaging/domain/models/push-notification-plan.ts`) fait d'un `NoteCreatedEvent` de visibilité `SHARED` (toute note créée, R2) ou d'un `NoteSharedEvent` un `NOTE_SHARED` pour l'autre partenaire seulement ; `NoteMadePrivateEvent` ne notifie personne ([décision 0051](../../decisions/messaging/0051-relais-des-notifications.md)). Dans la PWA, le service worker affiche la phrase de `NOTE_SHARED` (`pushNotificationOf`, `apps/couple/web/src/app/sw-push-notification.ts`) ; un toucher ouvre l'accueil des notes.
+- Source : [décision 0050](../../decisions/messaging/0050-regles-des-messages.md). Validée par : Thomas De Sousa, 2026-11-24.
+
 ## Cas et exceptions
 
 | Situation | Ce qui s'applique |
@@ -81,5 +90,6 @@ Je donne un titre à ma note ; les espaces autour ne comptent pas, un titre vide
 
 ## Voir aussi
 
+- [Règles des dossiers](rules/folders.md) et [des dossiers IA](rules/ai-folders.md)
 - [Glossaire des notes](glossary.md)
 - [Décision 0040](../../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md) : le canal temps réel

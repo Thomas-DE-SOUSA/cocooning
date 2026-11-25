@@ -1,0 +1,25 @@
+/// An instant photo of the couple's feed (decision 0050): the aggregate `InstantPhoto`.
+/// Its bytes live in the file storage under a key derived from coupleId and id (decision 0027).
+model InstantPhoto {
+  id            String    @id @db.Uuid
+  coupleId      String    @map("couple_id") @db.Uuid
+  /// The author, who alone may withdraw it (R1, R6).
+  ownerId       String    @map("owner_id") @db.Uuid
+  /// Detected from the bytes when sent: image/jpeg, image/png, image/webp or image/heic (R3).
+  contentType   String    @map("content_type") @db.VarChar(20)
+  /// The photo prompt this photo of the day answers, null for a spontaneous photo (R8). One live answer per partner:
+  /// the partial unique index instant_photo_couple_id_photo_prompt_id_owner_id_key is written in the migration.
+  photoPromptId String?   @map("photo_prompt_id") @db.Uuid
+  /// Sent more than ten minutes after the prompt was issued (R8).
+  isLate        Boolean   @default(false) @map("is_late")
+  version       Int       @map("version")
+  /// The time the feed shows, set when the photo is sent (R5).
+  createdAt     DateTime  @map("created_at")
+  updatedAt     DateTime  @map("updated_at")
+  /// Set when the author withdraws the photo; its file is deleted then (R6).
+  deletedAt     DateTime? @map("deleted_at")
+
+  // The feed reads newest first by UUID v7 (decision 0025; core.md rule 27: coupleId leads).
+  @@index([coupleId, id])
+  @@map("instant_photo")
+}

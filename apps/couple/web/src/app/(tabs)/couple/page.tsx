@@ -4,6 +4,10 @@ import { redirect } from 'next/navigation';
 import { getServerTranslation } from '@/i18n/server';
 import { SignOutContainer } from '@/modules/authentication';
 import {
+    PUSH_NOTIFICATIONS_NAMESPACE,
+    PushNotificationsContainer,
+} from '@/modules/messaging';
+import {
     loadMyCouple,
     PAIRING_NAMESPACE,
     presentCoupleOverviewPage,
@@ -17,11 +21,12 @@ export async function generateMetadata(): Promise<Metadata> {
 // Read for the signed-in partner on every request, never prerendered at build (decision 0036).
 export const dynamic = 'force-dynamic';
 
-// The "Nous" tab: our couple, then this phone, where signing out lives (decision 0044).
+// The "Nous" tab: our couple, then this phone, its notifications (R11 of messaging) and signing out (decision 0044).
 export default async function CoupleOverviewPage() {
     const page = presentCoupleOverviewPage(await loadMyCouple(), new Date());
     if (page.redirectTo !== null) redirect(page.redirectTo);
     const t = await getServerTranslation(PAIRING_NAMESPACE);
+    const tPush = await getServerTranslation(PUSH_NOTIFICATIONS_NAMESPACE);
     const tSignOut = await getServerTranslation('authentication/sign-out');
     return (
         <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col gap-6 px-5 pt-10 pb-6">
@@ -39,6 +44,10 @@ export default async function CoupleOverviewPage() {
                               ...page.viewModel.togetherTime,
                           })}
                 </p>
+            </Card>
+            <Card className="flex flex-col gap-3 p-5">
+                <h2 className="text-xl font-semibold">{tPush('card.title')}</h2>
+                <PushNotificationsContainer />
             </Card>
             <Card className="mt-auto flex flex-col gap-3 p-5">
                 <h2 className="text-xl font-semibold">

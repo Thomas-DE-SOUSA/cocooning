@@ -9,6 +9,7 @@ export const NoteResponseSchema = z.object({
     isOwner: z.boolean(),
     title: z.string(),
     visibility: z.enum(Object.values(NoteVisibilityEnum)),
+    folderId: z.string().nullable(),
     updatedAt: z.string(),
 });
 

@@ -34,7 +34,7 @@ describe('Feature: R6, a partner renames the note she reads', () => {
 
         await act(async () => result.current.renameNote({ title: 'Courses' }));
 
-        expect(gateway.calls).toEqual([
+        expect(gateway.answers.calls).toEqual([
             {
                 operation: 'renameNote',
                 noteId: NOTE_ID,
@@ -46,7 +46,7 @@ describe('Feature: R6, a partner renames the note she reads', () => {
 
     it('says the renaming runs until the answer arrives', async () => {
         const gateway = new FakeNoteCommandGateway();
-        const release = gateway.holdAnswers();
+        const release = gateway.answers.holdAnswers();
         const { result } = renderRename(gateway);
 
         act(() => result.current.renameNote({ title: 'Courses' }));
@@ -57,7 +57,7 @@ describe('Feature: R6, a partner renames the note she reads', () => {
 
     it('reports a refusal', async () => {
         const gateway = new FakeNoteCommandGateway();
-        gateway.givenOutcome(fail(REFUSAL));
+        gateway.answers.givenOutcome(fail(REFUSAL));
         const { result, events } = renderRename(gateway);
 
         await act(async () => result.current.renameNote({ title: 'Courses' }));

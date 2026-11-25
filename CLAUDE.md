@@ -61,20 +61,20 @@ Cocooning is a pnpm + Turborepo monorepo for a couple's shared life (notes edite
 ```
 cocooning/
 ├── apps/couple/
-│   ├── api/                        # * NestJS API, composition root (env, health, session guard, E2E harness), context modules (authentication, pairing, notes, agenda), operating commands (create-account, record-together-periods)
+│   ├── api/                        # * NestJS API, composition root (env, health, session guard, E2E harness), context modules (authentication, pairing, notes, agenda, messaging with the outbox relay and Web Push), operating commands (create-account, record-together-periods)
 │   └── web/                        # * Next.js 16 PWA on port 3200: root layout, French i18n, Serwist, proxy.ts, sign-in screen and sign-out (module authentication), pairing screen (module pairing), then Web Push
 ├── packages/
 │   ├── couple/                     # contexts: pairing, then authentication, notes, agenda, messaging
 │   │   ├── server-business-logic/  # * Domain + Application layers (DDD)
-│   │   ├── client-business-logic/  # * Frontend business logic, framework-free (ApiError, Translator, authentication: sign-in form, gateway port, use case; pairing: gateway port, four use cases, join form; testing fakes)
-│   │   ├── client-infrastructure/  # * Frontend adapters: HTTP config of the couple, session forwarding, authentication and pairing gateways and modules, then Yjs, push
+│   │   ├── client-business-logic/  # * Frontend business logic, framework-free (ApiError, Translator, authentication: sign-in form, gateway port, use case; pairing: gateway port, four use cases, join form; notes: two gateway ports (notes, spaces and folders), fourteen use cases, note title and folder name forms; agenda; messaging: five gateway ports, eleven use cases, flash message form; testing fakes)
+│   │   ├── client-infrastructure/  # * Frontend adapters: HTTP config of the couple, session forwarding, authentication, pairing, notes, agenda and messaging gateways and modules
 │   │   ├── prisma/                 # * Prisma 7 schema, PrismaService, unit of work, soft delete, locks
 │   │   ├── shared-kernel/          # * Business enums, limits, api and web routers, MissingExecutionContextException
 │   │   ├── contract/               # * Zod contracts: error response, pagination, one subpath per context
 │   │   ├── e2e-shared/             # * Test harness: Postgres 17 container, Jest global setup, fixtures
 │   ├── shared-kernel/              # * DDD primitives, ports, exceptions, test fakes
 │   ├── server-infrastructure/      # * NestJS plumbing (filter, Zod pipes), pino, clock, ids, disk storage, in-process events
-│   ├── client-infrastructure/      # * Domain-agnostic frontend adapters: the single HTTP client, FakeFetch (testing)
+│   ├── client-infrastructure/      # * Domain-agnostic frontend adapters: the single HTTP client (JSON or FormData body, JSON or bytes response), FakeFetch (testing)
 │   ├── design-system/              # * Tailwind 4 tokens, Button, Calendar, Drawer, Field, Input, Label, Skeleton, Spinner, Switch, Textarea, Toaster, cn (read from src, no build)
 ├── config/                         # ts, eslint, prettier, jest configs (@cocooning/*), one CLAUDE.md each
 ├── infrastructure/                 # * Dockerfiles (nest, next) and the production docker compose (Oracle VM, Tailscale)

@@ -28,6 +28,7 @@ describe('Feature: open one note', () => {
                 isOwner: false,
                 title: 'Courses',
                 visibility: NoteVisibilityEnum.SHARED,
+                folderId: null,
                 updatedAt: ctx.dateTimeProvider.now(),
             });
         });

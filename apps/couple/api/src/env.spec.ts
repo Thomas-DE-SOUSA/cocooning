@@ -40,10 +40,22 @@ describe('Feature: validate the API environment at startup', () => {
             { LOG_LEVEL: 'verbose' },
             { LOG_PRETTY: 'maybe' },
             { DB_TX_TIMEOUT_MS: '-1' },
+            { FILE_STORAGE_DIRECTORY: '  ' },
             { AUTH_JWT_SECRET: 'shorter-than-thirty-two-chars' },
             { AUTH_JWT_SECRET: 'change-me-with-openssl-rand-base64-48' },
             { PAIRING_INVITATION_CODE_TTL_HOURS: '0' },
             { PAIRING_INVITATION_CODE_TTL_HOURS: '1.5' },
+            { OUTBOX_RELAY_ENABLED: 'maybe' },
+            {
+                WEB_PUSH_VAPID_PUBLIC_KEY:
+                    'change-me-with-npx-web-push-generate-vapid-keys',
+            },
+            {
+                WEB_PUSH_VAPID_PRIVATE_KEY:
+                    'change-me-with-npx-web-push-generate-vapid-keys',
+            },
+            { WEB_PUSH_VAPID_SUBJECT: 'https://cocooning.<tailnet>.ts.net' },
+            { WEB_PUSH_VAPID_SUBJECT: 'http://cocooning.example.com' },
         ])('refuses %p', (override) => {
             const env = { ...readEnvExample(), ...override };
             expect(environmentSchema.safeParse(env).success).toBe(false);

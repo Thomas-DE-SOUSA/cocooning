@@ -4,9 +4,18 @@ import withSerwistInit from '@serwist/next';
 import type { NextConfig } from 'next';
 import { PHASE_PRODUCTION_BUILD } from 'next/constants';
 
+// R3: a photo of 10 MB (INSTANT_PHOTO_MAX_BYTES) plus the multipart envelope of its server action. Next refuses an action
+// body over 1 MB by default, and the proxy (src/proxy.ts) cuts a request body at 10 MB: both limits are raised. The
+// value never differs between environments, hence a constant rather than a variable (core.md rule 8).
+const INSTANT_PHOTO_REQUEST_BODY_LIMIT = '11mb';
+
 const nextConfig: NextConfig = {
     transpilePackages: ['@cocooning/design-system'],
     agentRules: false,
+    experimental: {
+        serverActions: { bodySizeLimit: INSTANT_PHOTO_REQUEST_BODY_LIMIT },
+        proxyClientMaxBodySize: INSTANT_PHOTO_REQUEST_BODY_LIMIT,
+    },
 };
 
 function withServiceWorker(config: NextConfig): NextConfig {

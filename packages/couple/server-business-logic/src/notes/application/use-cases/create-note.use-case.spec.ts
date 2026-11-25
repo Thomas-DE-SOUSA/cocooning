@@ -1,9 +1,13 @@
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
-import { NoteVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    NoteSpaceEnum,
+    NoteVisibilityEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import { NoteCreatedEvent } from '../../domain/events/note-created.event';
 import { NoteId } from '../../domain/value-objects/note-id.vo';
 import {
     AS_A,
+    AS_B,
     COUPLE_ID,
     NOW,
     NotesTestContext,
@@ -21,7 +25,11 @@ describe('Feature: create a note', () => {
     afterEach(() => NoteId.resetForTests());
 
     const create = (title: string) =>
-        ctx.createNoteUseCase().execute(AS_A, { title });
+        ctx.createNoteUseCase().execute(AS_A, {
+            title,
+            space: NoteSpaceEnum.SHARED,
+            folderId: null,
+        });
 
     describe('Scenario: R1, R2, a partner creates a note', () => {
         it('returns the note, shared and owned by its creator', async () => {
@@ -31,6 +39,7 @@ describe('Feature: create a note', () => {
                 isOwner: true,
                 title: 'Courses',
                 visibility: NoteVisibilityEnum.SHARED,
+                folderId: null,
                 updatedAt: NOW,
             });
         });
@@ -44,6 +53,7 @@ describe('Feature: create a note', () => {
                     ownerId: PARTNER_A,
                     title: 'Courses',
                     visibility: NoteVisibilityEnum.SHARED,
+                    folderId: null,
                     version: 1,
                     metadata: {
                         createdAt: NOW.toISOString(),
@@ -94,6 +104,41 @@ describe('Feature: create a note', () => {
             expect(ctx.logger.entries.map(({ level }) => level)).toEqual([
                 'warn',
             ]);
+        });
+    });
+
+    describe('Scenario: R11, R13, a note created in a folder of « Privé »', () => {
+        it('is private and in that folder, and notifies nobody (R9)', async () => {
+            const folder = ctx.givenPrivateFolderOf(AS_A, 'Cadeaux');
+            const view = await ctx.createNoteUseCase().execute(AS_A, {
+                title: 'Montre',
+                space: NoteSpaceEnum.PRIVATE,
+                folderId: folder.id.getValue(),
+            });
+            expect(view).toMatchObject({
+                visibility: NoteVisibilityEnum.PRIVATE,
+                folderId: folder.id.getValue(),
+            });
+            expect(ctx.eventPublisher.published[0]?.data).toEqual({
+                ownerId: PARTNER_A,
+                visibility: NoteVisibilityEnum.PRIVATE,
+            });
+        });
+    });
+
+    describe('Scenario: R14, in a folder the partner does not see', () => {
+        it('answers not found and stores nothing', async () => {
+            const folder = ctx.givenPrivateFolderOf(AS_B, 'Surprise');
+            await expect(
+                ctx.createNoteUseCase().execute(AS_A, {
+                    title: 'Montre',
+                    space: NoteSpaceEnum.PRIVATE,
+                    folderId: folder.id.getValue(),
+                }),
+            ).rejects.toMatchObject({
+                code: NoteExceptionCodeEnum.FOLDER_NOT_FOUND,
+            });
+            expect(ctx.noteRepository.storedSnapshots).toEqual([]);
         });
     });
 });

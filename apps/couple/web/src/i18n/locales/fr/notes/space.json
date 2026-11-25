@@ -1,0 +1,152 @@
+{
+    "title": "Notes",
+    "back": {
+        "home": "Notes"
+    },
+    "spaces": {
+        "SHARED": {
+            "name": "Partagé",
+            "subtitle": "Vu par vous deux"
+        },
+        "PRIVATE": {
+            "name": "Privé",
+            "subtitle": "Rien que pour toi"
+        }
+    },
+    "sections": {
+        "folders": "Dossiers",
+        "notes": "Notes"
+    },
+    "empty": "Rien ici pour l'instant. Touche « + » pour créer une note ou un dossier.",
+    "folder": {
+        "folderCount_one": "{{count}} dossier",
+        "folderCount_other": "{{count}} dossiers",
+        "noteCount_one": "{{count}} note",
+        "noteCount_other": "{{count}} notes",
+        "empty": "Vide",
+        "actions": "Actions sur « {{name}} »"
+    },
+    "note": {
+        "mine": "Ma note",
+        "partner": "Note de mon âme sœur",
+        "updatedAt": "Modifiée le {{updatedAt}}",
+        "actions": "Actions sur « {{title}} »"
+    },
+    "add": {
+        "label": "Nouvelle note ou nouveau dossier",
+        "note": "Nouvelle note",
+        "folder": "Nouveau dossier"
+    },
+    "newNote": {
+        "title": "Nouvelle note",
+        "in": "Dans « {{place}} »",
+        "submit": "Créer la note",
+        "creating": "Création en cours"
+    },
+    "newFolder": {
+        "title": "Nouveau dossier",
+        "in": "Dans « {{place}} »",
+        "submit": "Créer le dossier",
+        "creating": "Création en cours"
+    },
+    "folderSheet": {
+        "rename": "Renommer",
+        "move": "Déplacer",
+        "delete": "Supprimer le dossier"
+    },
+    "renameFolder": {
+        "title": "Renommer « {{name}} »",
+        "description": "Ses notes et ses dossiers restent dedans.",
+        "submit": "Renommer",
+        "renaming": "Renommage en cours"
+    },
+    "deletion": {
+        "title": "Supprimer « {{name}} » ?",
+        "empty": "Ce dossier est vide.",
+        "notes_one": "Sa note",
+        "notes_other": "Ses {{count}} notes",
+        "folders_one": "son dossier",
+        "folders_other": "ses {{count}} dossiers",
+        "foldersAlone_one": "Son dossier",
+        "foldersAlone_other": "Ses {{count}} dossiers",
+        "both": "{{notes}} et {{folders}}",
+        "movesUp_one": "{{content}} remonte dans « {{place}} ». Aucune note n'est supprimée.",
+        "movesUp_other": "{{content}} remontent dans « {{place}} ». Aucune note n'est supprimée.",
+        "confirm": "Supprimer le dossier",
+        "deleting": "Suppression en cours",
+        "keep": "Garder"
+    },
+    "noteSheet": {
+        "move": "Déplacer",
+        "delete": "Supprimer la note",
+        "partnerHint": "Seule ton âme sœur peut supprimer sa note ou la ranger dans son « Privé »."
+    },
+    "noteDeletion": {
+        "title": "Supprimer « {{title}} » ?",
+        "description": "Elle disparaîtra pour vous deux.",
+        "confirm": "Supprimer pour nous deux",
+        "deleting": "Suppression en cours",
+        "keep": "Garder"
+    },
+    "move": {
+        "title": "Déplacer « {{name}} »",
+        "noteHint": "Choisis l'espace, puis le dossier.",
+        "folderHint": "Choisis le dossier : un dossier reste dans son espace.",
+        "spaces": "Espace",
+        "noFolder": "Aucun dossier ici.",
+        "here": "Déplacer ici, dans « {{place}} »",
+        "moving": "Déplacement en cours"
+    },
+    "form": {
+        "title": {
+            "label": "Titre",
+            "errors": {
+                "required": "Donne un titre à la note.",
+                "tooLong": "Ce titre est trop long : 120 signes au plus."
+            }
+        },
+        "name": {
+            "label": "Nom",
+            "errors": {
+                "required": "Donne un nom au dossier.",
+                "tooLong": "Ce nom est trop long : 60 signes au plus."
+            }
+        }
+    },
+    "toast": {
+        "createNoteFailed": "Création de la note impossible",
+        "createFolderFailed": "Création du dossier impossible",
+        "renameFolderFailed": "Renommage impossible",
+        "deleteFolderFailed": "Suppression impossible",
+        "moveFailed": "Déplacement impossible",
+        "deleteNoteFailed": "Suppression impossible"
+    },
+    "unavailable": {
+        "title": "Impossible d'afficher ce dossier",
+        "refresh": "Réessayer"
+    },
+    "apiErrors": {
+        "NOTE_NOT_FOUND": "Cette note n'existe plus. La liste est mise à jour.",
+        "NOTE_RESERVED_TO_OWNER": "Seule la propriétaire de la note peut faire ça.",
+        "NOTE_TITLE_INVALID": "Ce titre n'est pas valable : de 1 à 120 signes.",
+        "NOTE_COUPLE_NOT_PAIRED": "Votre couple n'est pas encore formé.",
+        "NOTE_VERSION_CONFLICT": "La note vient de changer. Réessayez.",
+        "NOTE_DATA_CORRUPTED": "Les données de la note sont illisibles.",
+        "FOLDER_NOT_FOUND": "Ce dossier n'existe plus. La liste est mise à jour.",
+        "FOLDER_NAME_INVALID": "Ce nom de dossier n'est pas valable : de 1 à 60 signes.",
+        "FOLDER_SPACE_MISMATCH": "Ce dossier n'est pas dans cet espace.",
+        "FOLDER_MOVE_INVALID": "Un dossier reste dans son espace et ne va pas dans l'un de ses sous-dossiers.",
+        "FOLDER_VERSION_CONFLICT": "Le dossier vient de changer. Réessayez.",
+        "FOLDER_DATA_CORRUPTED": "Les données du dossier sont illisibles.",
+        "AUTHENTICATION_SESSION_MISSING": "Votre session a pris fin. Reconnectez-vous.",
+        "AUTHENTICATION_SESSION_INVALID": "Votre session a pris fin. Reconnectez-vous.",
+        "NETWORK_ERROR": "Cocooning ne répond pas pour le moment. Réessayez dans un instant ; si le problème dure, vérifiez que Tailscale est activé.",
+        "INVALID_RESPONSE": "La réponse du serveur est illisible. Réessayez dans un instant.",
+        "VALIDATION_ERROR": "Les informations envoyées sont invalides.",
+        "UNAUTHORIZED": "Votre session a pris fin. Reconnectez-vous.",
+        "FORBIDDEN": "Cette action ne vous est pas permise.",
+        "NOT_FOUND": "Cette note est introuvable. La liste est mise à jour.",
+        "CONFLICT": "La note vient de changer. Réessayez.",
+        "UNKNOWN": "Une erreur inattendue est survenue. Réessayez dans un instant."
+    }
+}

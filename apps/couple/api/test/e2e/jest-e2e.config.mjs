@@ -10,6 +10,8 @@ export default {
     rootDir: '../..',
     roots: ['<rootDir>/test'],
     testMatch: ['**/*.e2e-spec.ts'],
+    // A file's first hook starts a real Nest app and sends its first queries: on a busy machine it passed 5 s.
+    testTimeout: 15_000,
     transform: {
         '^.+\\.ts$': ['ts-jest', { tsconfig: 'tsconfig.spec.json' }],
     },

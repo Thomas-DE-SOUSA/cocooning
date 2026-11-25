@@ -1,6 +1,6 @@
 # @cocooning/couple-server-business-logic
 
-Couches domaine et application des bounded contexts du couple, en TypeScript pur : agregats, value objects, evenements, exceptions, ports, domain services, use cases et mappers. Un sous-chemin d'export par contexte (`./authentication`, `./pairing`, `./notes`, `./agenda`), pas d'export racine. Les adaptateurs (Prisma, NestJS) vivent dans `apps/couple/api`.
+Couches domaine et application des bounded contexts du couple, en TypeScript pur : agregats, value objects, evenements, exceptions, ports, domain services, use cases et mappers. Un sous-chemin d'export par contexte (`./authentication`, `./pairing`, `./notes`, `./agenda`, `./messaging`), pas d'export racine. Les adaptateurs (Prisma, NestJS) vivent dans `apps/couple/api`.
 
 ## A lire avant de commencer
 
@@ -61,7 +61,8 @@ Selon la tache : `_knowledge/backend/concurrency.md` (version, contraintes uniqu
 
 ## Pieges
 
-- `pairing` et `authentication` sont les seuls contextes sans `coupleId` : `PartnerContext` et les deux recherches de `CoupleRepository` (decision 0029), les deux recherches d'`AccountRepository` et les use cases `execute(command)` (decision 0033). Ne jamais les copier dans un autre contexte. Seule autre recherche sans `coupleId` : `PairedCoupleProvider.findPairedCoupleIdOf` de `notes` et d'`agenda` (un port par contexte), qui trouve ce `coupleId` (decision 0041).
+- `pairing` et `authentication` sont les seuls contextes sans `coupleId` : `PartnerContext` et les deux recherches de `CoupleRepository` (decision 0029), les deux recherches d'`AccountRepository` et les use cases `execute(command)` (decision 0033). Ne jamais les copier dans un autre contexte. Seules autres recherches sans `coupleId` : `PairedCoupleProvider.findPairedCoupleIdOf` de `notes`, d'`agenda` et de `messaging` (un port par contexte), qui trouve ce `coupleId` (decision 0041), `PairedCoupleProvider.findPairedCoupleIds` de `messaging`, lecture entre couples de la tache planifiee de l'invitation photo (R7), et `OutboxEventRepository.claimPending` de `messaging`, l'autre lecture entre couples, celle du relais de l'outbox (R10, decision 0051).
+- `messaging` lit les classes d'evenements de `notes` et d'`agenda` (`EVENT_NAME`, donnees de visibilite) pour ses notifications (`domain/models/push-notification-plan.ts`) : ce sont leur langage publie. Aucun autre import entre contextes.
 - `Uuid.configure` est global au process : un oubli de `resetForTests()` fait lever `UUID_GENERATOR_ALREADY_CONFIGURED` au test suivant.
 - Les fakes ne prouvent pas la base : index uniques et version se reverifient en E2E avec l'adaptateur Prisma.
 - A l'execution, l'API lit `dist/` de ce package et de ses dependances : `pnpm build` a la racine reconstruit dans l'ordre.

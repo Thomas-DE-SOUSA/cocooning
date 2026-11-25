@@ -19,8 +19,7 @@ export type NotesGatewayCall =
           readonly request: RenameNoteRequest;
       }
     | {
-          readonly operation:
-              'getNote' | 'shareNote' | 'makeNotePrivate' | 'deleteNote';
+          readonly operation: 'getNote' | 'deleteNote';
           readonly noteId: string;
       };
 
@@ -30,6 +29,7 @@ export const A_SHARED_NOTE: NoteResponse = {
     isOwner: true,
     title: 'Courses',
     visibility: NoteVisibilityEnum.SHARED,
+    folderId: null,
     updatedAt: '2026-11-23T08:00:00.000Z',
 };
 
@@ -77,24 +77,6 @@ export class FakeNotesGateway extends NotesGateway {
             {
                 ...A_SHARED_NOTE,
                 title: request.title,
-            },
-        );
-    }
-
-    override shareNote(
-        noteId: string,
-    ): Promise<Result<NoteResponse, ApiError>> {
-        return this.respond({ operation: 'shareNote', noteId }, A_SHARED_NOTE);
-    }
-
-    override makeNotePrivate(
-        noteId: string,
-    ): Promise<Result<NoteResponse, ApiError>> {
-        return this.respond(
-            { operation: 'makeNotePrivate', noteId },
-            {
-                ...A_SHARED_NOTE,
-                visibility: NoteVisibilityEnum.PRIVATE,
             },
         );
     }

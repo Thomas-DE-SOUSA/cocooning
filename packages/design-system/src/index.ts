@@ -13,4 +13,5 @@ export * from './ui/swipe-to-delete';
 export * from './ui/switch';
 export * from './ui/textarea';
 export * from './ui/toaster';
+export * from './ui/use-close-on-outside-press';
 export * from './utils/cn';

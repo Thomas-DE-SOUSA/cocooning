@@ -25,6 +25,9 @@ out-tsc/
 .turbo/
 .cache/
 
+# Files stored by the API in development (FILE_STORAGE_DIRECTORY)
+.data/
+
 # Environment variables: only .env.example is versioned
 .env
 .env.*

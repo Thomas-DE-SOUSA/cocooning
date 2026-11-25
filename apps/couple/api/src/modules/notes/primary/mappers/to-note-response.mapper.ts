@@ -12,6 +12,7 @@ export const toNoteResponse = (view: NoteView): NoteResponse => ({
     isOwner: view.isOwner,
     title: view.title,
     visibility: view.visibility,
+    folderId: view.folderId,
     updatedAt: view.updatedAt.toISOString(),
 });
 

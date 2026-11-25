@@ -26,6 +26,10 @@
         "./agenda": {
             "types": "./src/agenda/index.ts",
             "default": "./dist/agenda/index.js"
+        },
+        "./messaging": {
+            "types": "./src/messaging/index.ts",
+            "default": "./dist/messaging/index.js"
         }
     },
     "dependencies": {
