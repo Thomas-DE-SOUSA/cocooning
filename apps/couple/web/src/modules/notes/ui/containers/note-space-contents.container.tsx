@@ -35,6 +35,7 @@ export function NoteSpaceContentsContainer({ screen }: Props) {
                 <SmartFolderPanelContainer
                     folderId={folder.folderId}
                     hasPendingCard={screen.hasPendingCard}
+                    choices={screen.choices}
                 />
             )}
             <NoteSpaceContentsView

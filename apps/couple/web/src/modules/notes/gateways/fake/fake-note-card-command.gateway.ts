@@ -1,4 +1,7 @@
-import type { NoteCardNameForm } from '@cocooning/couple-client-business-logic/notes';
+import type {
+    NoteCardNameForm,
+    NoteCardQueryForm,
+} from '@cocooning/couple-client-business-logic/notes';
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import type { Result } from '@cocooning/shared-kernel/utils';
 import { NoteCardCommandGateway } from '../ports/note-card-command.gateway';
@@ -15,6 +18,28 @@ export class FakeNoteCardCommandGateway extends NoteCardCommandGateway {
         return this.answers.answer({
             operation: 'addNoteCard',
             folderId,
+            form,
+        });
+    }
+
+    override chooseNoteCardCandidate(
+        noteId: string,
+        candidateIndex: number,
+    ): Promise<Result<null, ApiError>> {
+        return this.answers.answer({
+            operation: 'chooseNoteCardCandidate',
+            noteId,
+            candidateIndex,
+        });
+    }
+
+    override refineNoteCard(
+        noteId: string,
+        form: NoteCardQueryForm,
+    ): Promise<Result<null, ApiError>> {
+        return this.answers.answer({
+            operation: 'refineNoteCard',
+            noteId,
             form,
         });
     }

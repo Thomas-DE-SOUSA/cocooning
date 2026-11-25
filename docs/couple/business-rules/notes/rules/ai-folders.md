@@ -24,7 +24,7 @@ Je crée « Lyon » dans « Restaurants » : il est IA lui aussi, garde la fiche
 
 Dans un dossier IA, je tape un nom (« Chez Paul »). L'IA cherche sur Internet avec le sujet du dossier et les noms des dossiers au-dessus. S'il y a un doute, elle me montre au plus trois candidats ; je choisis, ou je précise et elle cherche de nouveau. L'IA ne crée jamais d'élément que je n'ai pas tapé.
 
-- Dans le code : `AddNoteCardUseCase` (une note et sa fiche par nom tapé, rien d'autre), `NoteCard.recordCandidates` (`CARD_CANDIDATE_MAX_COUNT`, statut `CHOOSING`), `ChooseNoteCardCandidateUseCase` et `NoteCard.chooseCandidate` (`NoteCardQuery.ofCandidate`), `RefineNoteCardUseCase` et `NoteCard.refine`. Dans la PWA : la boîte d'ajout en haut d'un dossier IA (`NoteCardAddView`, `useAddNoteCard`, module web `notes`).
+- Dans le code : `AddNoteCardUseCase` (une note et sa fiche par nom tapé, rien d'autre), `NoteCard.recordCandidates` (`CARD_CANDIDATE_MAX_COUNT`, statut `CHOOSING`), `ChooseNoteCardCandidateUseCase` et `NoteCard.chooseCandidate` (`NoteCardQuery.ofCandidate`), `RefineNoteCardUseCase` et `NoteCard.refine`. Dans la PWA : la boîte d'ajout en haut d'un dossier IA (`NoteCardAddView`, `useAddNoteCard`, module web `notes`) ; une fiche en doute montre « Lequel ? » et ses candidats sous la boîte, un toucher choisit, « Aucun de ceux-là » demande une précision et relance la recherche (`NoteCardChoiceView`).
 - Source : décision 0052, [décision 0015](../../../decisions/0015-enrichissement-des-envies.md). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R20. Un élément est une note avec sa fiche

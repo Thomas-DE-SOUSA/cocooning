@@ -1,11 +1,15 @@
 import {
+    A_CHOOSING_NOTE_CARD,
     A_FILLED_NOTE_CARD,
     A_PENDING_NOTE_CARD,
     A_SHARED_NOTE,
     A_SMART_SPACE_CONTENTS,
 } from '@cocooning/couple-client-business-logic/testing';
 import { NoteCardStatusEnum } from '@cocooning/couple-shared-kernel/enums';
-import { toNoteRowItem } from './note-row-item.presenter';
+import {
+    presentNoteCardChoices,
+    toNoteRowItem,
+} from './note-row-item.presenter';
 
 const [FILLED, PENDING] = A_SMART_SPACE_CONTENTS.notes;
 
@@ -40,5 +44,17 @@ describe('Feature: the line of a card in its folder (R20, R21)', () => {
             status: A_PENDING_NOTE_CARD.status,
             summary: null,
         });
+    });
+});
+
+describe('Feature: R19, the cards waiting for a choice', () => {
+    it('gives only the cards in doubt, with their candidates', () => {
+        expect(presentNoteCardChoices(A_SMART_SPACE_CONTENTS.notes)).toEqual([
+            {
+                noteId: A_CHOOSING_NOTE_CARD.noteId,
+                title: 'Café des Arts',
+                candidates: A_CHOOSING_NOTE_CARD.candidates,
+            },
+        ]);
     });
 });

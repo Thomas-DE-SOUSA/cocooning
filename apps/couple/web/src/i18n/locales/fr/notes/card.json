@@ -12,16 +12,32 @@
         "LIMIT_REACHED": "plafond du jour atteint, réessaie demain",
         "nothingFound": "rien trouvé"
     },
+    "choice": {
+        "title": "Lequel, pour « {{name}} » ?",
+        "choosing": "Choix en cours",
+        "none": "Aucun de ceux-là",
+        "search": "Chercher",
+        "searching": "Recherche en cours"
+    },
     "form": {
         "name": {
             "errors": {
                 "required": "Tape un nom.",
                 "tooLong": "Ce nom est trop long : 120 signes au plus."
             }
+        },
+        "query": {
+            "label": "Précise (ville, quartier…)",
+            "errors": {
+                "required": "Précise ce que tu cherches.",
+                "tooLong": "Cette précision est trop longue : 200 signes au plus."
+            }
         }
     },
     "toast": {
-        "ADD": "Ajout impossible"
+        "ADD": "Ajout impossible",
+        "CHOOSE": "Choix impossible",
+        "REFINE": "Nouvelle recherche impossible"
     },
     "apiErrors": {
         "NOTE_NOT_FOUND": "Cette note n'existe plus. La liste est mise à jour.",

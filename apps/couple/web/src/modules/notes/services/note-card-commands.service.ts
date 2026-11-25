@@ -7,9 +7,16 @@ import type {
     ApiError,
     Translator,
 } from '@cocooning/couple-client-business-logic/shared';
-import { FolderParamsRequestSchema } from '@cocooning/couple-contract/notes';
+import {
+    FolderParamsRequestSchema,
+    NoteParamsRequestSchema,
+} from '@cocooning/couple-contract/notes';
 import { fail, ok, type Result } from '@cocooning/shared-kernel/utils';
 import { invalid } from './note-commands.service';
+
+export type NoteCardUseCaseCall = (
+    noteId: string,
+) => Promise<Result<unknown, ApiError>>;
 
 export type AddNoteCardContext = {
     readonly t: Translator;
@@ -34,4 +41,15 @@ export async function addNoteCard(
         form.data,
     );
     return added.success ? ok(null) : added;
+}
+
+// R19 to R22: either partner acts on the card of a note they see; its id comes from the browser and is validated again.
+export async function actOnNoteCard(
+    noteIdInput: unknown,
+    call: NoteCardUseCaseCall,
+): Promise<Result<null, ApiError>> {
+    const params = NoteParamsRequestSchema.safeParse({ noteId: noteIdInput });
+    if (!params.success) return fail(invalid('Invalid note id'));
+    const result = await call(params.data.noteId);
+    return result.success ? ok(null) : result;
 }

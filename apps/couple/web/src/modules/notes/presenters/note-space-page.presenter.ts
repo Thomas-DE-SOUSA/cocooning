@@ -16,7 +16,10 @@ import {
 } from '../view-models/note-space-screen.view-model';
 import { presentCardContext } from './card-context.presenter';
 import { presentNotePlace } from './note-place.presenter';
-import { toNoteRowItem } from './note-row-item.presenter';
+import {
+    presentNoteCardChoices,
+    toNoteRowItem,
+} from './note-row-item.presenter';
 import { presentPlaceLevel } from './place-level.presenter';
 
 // A folder gone (deleted, or in the other's « Privé », R14) or of another space: back to the root of the space.
@@ -42,6 +45,7 @@ const presentContents = (
         hasPendingCard: contents.notes.some(
             (note) => note.card?.status === NoteCardStatusEnum.PENDING,
         ),
+        choices: presentNoteCardChoices(contents.notes),
     },
 });
 

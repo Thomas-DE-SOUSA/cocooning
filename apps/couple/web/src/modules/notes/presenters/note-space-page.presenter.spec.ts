@@ -65,6 +65,7 @@ describe('Feature: the screen of a space or a folder (R10, R14)', () => {
                 ],
                 cardContext: null,
                 hasPendingCard: false,
+                choices: [],
             });
         });
     });

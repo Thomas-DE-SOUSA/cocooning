@@ -1,4 +1,7 @@
-import type { NoteCardNameForm } from '@cocooning/couple-client-business-logic/notes';
+import type {
+    NoteCardNameForm,
+    NoteCardQueryForm,
+} from '@cocooning/couple-client-business-logic/notes';
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import type { Result } from '@cocooning/shared-kernel/utils';
 import { useCallback, useState, useTransition } from 'react';
@@ -41,6 +44,14 @@ export function useNoteCardCommands({ gateway, onDone, onFailed }: Options) {
         addNoteCard: (folderId: string, form: NoteCardNameForm) =>
             run(NoteCardCommandEnum.ADD, () =>
                 gateway.addNoteCard(folderId, form),
+            ),
+        chooseNoteCardCandidate: (noteId: string, candidateIndex: number) =>
+            run(NoteCardCommandEnum.CHOOSE, () =>
+                gateway.chooseNoteCardCandidate(noteId, candidateIndex),
+            ),
+        refineNoteCard: (noteId: string, form: NoteCardQueryForm) =>
+            run(NoteCardCommandEnum.REFINE, () =>
+                gateway.refineNoteCard(noteId, form),
             ),
         pending: isPending ? lastCommand : null,
         isBusy: isPending,

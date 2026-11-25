@@ -1,4 +1,7 @@
-import type { NoteCardNameForm } from '@cocooning/couple-client-business-logic/notes';
+import type {
+    NoteCardNameForm,
+    NoteCardQueryForm,
+} from '@cocooning/couple-client-business-logic/notes';
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import type { Result } from '@cocooning/shared-kernel/utils';
 
@@ -7,5 +10,13 @@ export abstract class NoteCardCommandGateway {
     abstract addNoteCard(
         folderId: string,
         form: NoteCardNameForm,
+    ): Promise<Result<null, ApiError>>;
+    abstract chooseNoteCardCandidate(
+        noteId: string,
+        candidateIndex: number,
+    ): Promise<Result<null, ApiError>>;
+    abstract refineNoteCard(
+        noteId: string,
+        form: NoteCardQueryForm,
     ): Promise<Result<null, ApiError>>;
 }

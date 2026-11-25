@@ -10,6 +10,8 @@ import {
 const REQUIRED_KEYS = [
     'form.name.errors.required',
     'form.name.errors.tooLong',
+    'form.query.errors.required',
+    'form.query.errors.tooLong',
     ...[
         ...NOTE_CARD_SCREEN_ERROR_CODES,
         ...Object.values(ApiErrorCodeEnum),

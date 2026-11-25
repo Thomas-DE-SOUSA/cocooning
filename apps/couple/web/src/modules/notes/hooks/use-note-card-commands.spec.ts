@@ -10,6 +10,7 @@ import { NoteCardCommandEnum } from '../view-models/note-card-command.view-model
 import { useNoteCardCommands } from './use-note-card-commands';
 
 const FOLDER_ID = '01936b2e-7c4a-7000-8000-0000000000e3';
+const NOTE_ID = '01936b2e-7c4a-7000-8000-0000000000f3';
 const NOT_SMART: ApiError = {
     code: ApiErrorCodeEnum.VALIDATION_ERROR,
     message: 'Not smart',
@@ -31,6 +32,33 @@ function renderCommands() {
 }
 
 describe('Feature: the commands on the cards of a smart folder', () => {
+    describe('Scenario: R19, a partner picks a candidate or refines the search', () => {
+        it('chooses a candidate by its position, then refines', async () => {
+            const { result, events, gateway } = renderCommands();
+
+            await act(async () =>
+                result.current.chooseNoteCardCandidate(NOTE_ID, 1),
+            );
+            await act(async () =>
+                result.current.refineNoteCard(NOTE_ID, { query: 'Lyon 1er' }),
+            );
+
+            expect(gateway.answers.calls).toEqual([
+                {
+                    operation: 'chooseNoteCardCandidate',
+                    noteId: NOTE_ID,
+                    candidateIndex: 1,
+                },
+                {
+                    operation: 'refineNoteCard',
+                    noteId: NOTE_ID,
+                    form: { query: 'Lyon 1er' },
+                },
+            ]);
+            expect(events).toEqual(['CHOOSE:done', 'REFINE:done']);
+        });
+    });
+
     describe('Scenario: R19, a partner adds an item by its name', () => {
         it('adds the name to the folder', async () => {
             const { result, events, gateway } = renderCommands();

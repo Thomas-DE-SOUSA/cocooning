@@ -2,6 +2,8 @@ import type {
     NoteCardResponse,
     NoteDetailResponse,
 } from '@cocooning/couple-contract/notes';
+import { NoteCardStatusEnum } from '@cocooning/couple-shared-kernel/enums';
+import type { NoteCardChoice } from '../view-models/note-card-choice.view-model';
 import type {
     NoteCardLine,
     NoteRowItem,
@@ -28,3 +30,13 @@ export const toNoteRowItem = (note: NoteDetailResponse): NoteRowItem => ({
     ...toNoteListItem(note),
     card: note.card === null ? null : presentNoteCardLine(note.card),
 });
+
+// R19: the cards of a place waiting for the couple to choose among their candidates.
+export const presentNoteCardChoices = (
+    notes: readonly NoteDetailResponse[],
+): NoteCardChoice[] =>
+    notes.flatMap(({ title, card }) =>
+        card?.status === NoteCardStatusEnum.CHOOSING
+            ? [{ noteId: card.noteId, title, candidates: card.candidates }]
+            : [],
+    );

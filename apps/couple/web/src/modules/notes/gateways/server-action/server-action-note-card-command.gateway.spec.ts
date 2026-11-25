@@ -3,10 +3,13 @@ import { ok } from '@cocooning/shared-kernel/utils';
 import { ServerActionNoteCardCommandGateway } from './server-action-note-card-command.gateway';
 
 const FOLDER_ID = '01936b2e-7c4a-7000-8000-0000000000e3';
+const NOTE_ID = '01936b2e-7c4a-7000-8000-0000000000f3';
 const rejects = () => Promise.reject(new TypeError('Failed to fetch'));
 
 const REJECTING = new ServerActionNoteCardCommandGateway({
     addNoteCard: rejects,
+    chooseNoteCardCandidate: rejects,
+    refineNoteCard: rejects,
 });
 
 describe('Feature: card commands through the server actions', () => {
@@ -18,19 +21,36 @@ describe('Feature: card commands through the server actions', () => {
         };
         const gateway = new ServerActionNoteCardCommandGateway({
             addNoteCard: record,
+            chooseNoteCardCandidate: record,
+            refineNoteCard: record,
         });
 
         await expect(
             gateway.addNoteCard(FOLDER_ID, { name: 'Chez Paul' }),
         ).resolves.toEqual(ok(null));
 
-        expect(sent).toEqual([[FOLDER_ID, { name: 'Chez Paul' }]]);
+        await gateway.chooseNoteCardCandidate(NOTE_ID, 1);
+        await gateway.refineNoteCard(NOTE_ID, { query: 'Lyon 1er' });
+
+        expect(sent).toEqual([
+            [FOLDER_ID, { name: 'Chez Paul' }],
+            [NOTE_ID, 1],
+            [NOTE_ID, { query: 'Lyon 1er' }],
+        ]);
     });
 
     it.each([
         [
             'addNoteCard',
             () => REJECTING.addNoteCard(FOLDER_ID, { name: 'Chez Paul' }),
+        ],
+        [
+            'chooseNoteCardCandidate',
+            () => REJECTING.chooseNoteCardCandidate(NOTE_ID, 0),
+        ],
+        [
+            'refineNoteCard',
+            () => REJECTING.refineNoteCard(NOTE_ID, { query: 'Lyon' }),
         ],
     ])(
         'gives a network error instead of rejecting for %s',

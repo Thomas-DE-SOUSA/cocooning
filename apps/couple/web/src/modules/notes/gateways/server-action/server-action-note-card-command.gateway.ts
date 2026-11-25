@@ -1,4 +1,7 @@
-import type { NoteCardNameForm } from '@cocooning/couple-client-business-logic/notes';
+import type {
+    NoteCardNameForm,
+    NoteCardQueryForm,
+} from '@cocooning/couple-client-business-logic/notes';
 import {
     type ApiError,
     ApiErrorCodeEnum,
@@ -11,6 +14,14 @@ type Answer = Promise<Result<null, ApiError>>;
 
 export type NoteCardCommandActions = {
     readonly addNoteCard: (folderId: string, form: NoteCardNameForm) => Answer;
+    readonly chooseNoteCardCandidate: (
+        noteId: string,
+        candidateIndex: number,
+    ) => Answer;
+    readonly refineNoteCard: (
+        noteId: string,
+        form: NoteCardQueryForm,
+    ) => Answer;
 };
 
 const UNREACHABLE: ApiError = {
@@ -27,6 +38,23 @@ export class ServerActionNoteCardCommandGateway extends NoteCardCommandGateway {
     override addNoteCard(folderId: string, form: NoteCardNameForm): Answer {
         return runServerAction(
             () => this.actions.addNoteCard(folderId, form),
+            UNREACHABLE,
+        );
+    }
+
+    override chooseNoteCardCandidate(
+        noteId: string,
+        candidateIndex: number,
+    ): Answer {
+        return runServerAction(
+            () => this.actions.chooseNoteCardCandidate(noteId, candidateIndex),
+            UNREACHABLE,
+        );
+    }
+
+    override refineNoteCard(noteId: string, form: NoteCardQueryForm): Answer {
+        return runServerAction(
+            () => this.actions.refineNoteCard(noteId, form),
             UNREACHABLE,
         );
     }
