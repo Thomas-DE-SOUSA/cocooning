@@ -74,6 +74,8 @@ services:
         depends_on:
             migrate:
                 condition: service_completed_successfully
+            searxng:
+                condition: service_started
         healthcheck:
             test:
                 - CMD
@@ -83,6 +85,17 @@ services:
             interval: 30s
             timeout: 5s
             retries: 3
+
+    # Our search engine (decision 0054): no published port, only the api joins it on the network of the compose.
+    # It goes out to public engines with what the couple typed and the names of the folders (R24).
+    searxng:
+        image: searxng/searxng:2026.11.21-c6ee3e9fd
+        restart: unless-stopped
+        environment:
+            SEARXNG_SECRET: ${SEARXNG_SECRET:?set SEARXNG_SECRET in infrastructure/compose/.env}
+            SEARXNG_BASE_URL: http://searxng:8080/
+        volumes:
+            - ./searxng/settings.yml:/etc/searxng/settings.yml:ro
 
     # The web shares the network of the tailscale service: Tailscale serves it
     # in HTTPS on https://cocooning.<tailnet>.ts.net, nothing listens on the VM.

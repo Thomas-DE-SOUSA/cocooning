@@ -1,6 +1,6 @@
 # Notes
 
-Les notes du couple : un titre, une proprietaire, une visibilite (partagee ou privee), un dossier ; le contenu riche, edite a deux en temps reel, est un document Yjs a part. Les dossiers (`Folder`, decision 0052, lot 1 sans IA) rangent les notes dans les deux espaces « Partage » et « Prive » (`NoteSpaceEnum`).
+Les notes du couple : un titre, une proprietaire, une visibilite (partagee ou privee), un dossier ; le contenu riche, edite a deux en temps reel, est un document Yjs a part. Les dossiers (`Folder`, decision 0052) rangent les notes dans les deux espaces « Partage » et « Prive » (`NoteSpaceEnum`) ; un dossier IA (decision 0054) porte un sujet et une fiche type, et chaque note qu'on y ajoute a sa fiche (`NoteCard`).
 
 ## A lire avant de commencer
 
