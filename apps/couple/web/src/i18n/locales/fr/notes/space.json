@@ -24,6 +24,9 @@
         "CLASSIC": "Classique",
         "SMART": "IA"
     },
+    "smart": {
+        "inherited": "Garde la fiche de « {{name}} »"
+    },
     "folder": {
         "folderCount_one": "{{count}} dossier",
         "folderCount_other": "{{count}} dossiers",

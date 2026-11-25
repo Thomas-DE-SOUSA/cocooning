@@ -24,14 +24,14 @@ Je crée « Lyon » dans « Restaurants » : il est IA lui aussi, garde la fiche
 
 Dans un dossier IA, je tape un nom (« Chez Paul »). L'IA cherche sur Internet avec le sujet du dossier et les noms des dossiers au-dessus. S'il y a un doute, elle me montre au plus trois candidats ; je choisis, ou je précise et elle cherche de nouveau. L'IA ne crée jamais d'élément que je n'ai pas tapé.
 
-- Dans le code : `AddNoteCardUseCase` (une note et sa fiche par nom tapé, rien d'autre), `NoteCard.recordCandidates` (`CARD_CANDIDATE_MAX_COUNT`, statut `CHOOSING`), `ChooseNoteCardCandidateUseCase` et `NoteCard.chooseCandidate` (`NoteCardQuery.ofCandidate`), `RefineNoteCardUseCase` et `NoteCard.refine`.
+- Dans le code : `AddNoteCardUseCase` (une note et sa fiche par nom tapé, rien d'autre), `NoteCard.recordCandidates` (`CARD_CANDIDATE_MAX_COUNT`, statut `CHOOSING`), `ChooseNoteCardCandidateUseCase` et `NoteCard.chooseCandidate` (`NoteCardQuery.ofCandidate`), `RefineNoteCardUseCase` et `NoteCard.refine`. Dans la PWA : la boîte d'ajout en haut d'un dossier IA (`NoteCardAddView`, `useAddNoteCard`, module web `notes`).
 - Source : décision 0052, [décision 0015](../../../decisions/0015-enrichissement-des-envies.md). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R20. Un élément est une note avec sa fiche
 
 L'élément ajouté est une note, avec la fiche en haut (une valeur par case) et nos notes libres dessous, que nous écrivons à deux comme dans toute note. La note existe tout de suite, « en recherche » le temps que la fiche se remplisse ; si la recherche échoue, la note reste et je peux réessayer.
 
-- Dans le code : `AddNoteCardUseCase` crée la note dans l'espace du dossier et sa `NoteCard` au statut `PENDING` dans une `UnitOfWork` ; `NoteCard.fail` (`FAILED`), puis `RefreshNoteCardUseCase` ou `RefineNoteCardUseCase` pour réessayer ; `GetNoteUseCase` et `GetNoteSpaceContentsUseCase` rendent la fiche avec la note (`NoteDetailView`).
+- Dans le code : `AddNoteCardUseCase` crée la note dans l'espace du dossier et sa `NoteCard` au statut `PENDING` dans une `UnitOfWork` ; `NoteCard.fail` (`FAILED`), puis `RefreshNoteCardUseCase` ou `RefineNoteCardUseCase` pour réessayer ; `GetNoteUseCase` et `GetNoteSpaceContentsUseCase` rendent la fiche avec la note (`NoteDetailView`). Dans la PWA : chaque ligne d'un dossier IA dit où en est sa fiche (« en recherche… », « Lequel ? », « recherche impossible », ou ses deux premières valeurs, `NoteCardStatusLine`), et l'écran se relit toutes les quelques secondes tant qu'une fiche est en recherche (`usePollWhilePending`).
 - Source : décision 0052. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ## La fiche
@@ -54,7 +54,7 @@ Je corrige une case à la main ; « Mettre à jour » relance la recherche pour 
 
 Le couple fait au plus 30 recherches par jour, tous dossiers confondus. Au-delà, l'app me dit de réessayer demain ; la note est créée quand même.
 
-- Dans le code : `NoteCardEnrichmentService` compte les recherches du couple sur le jour de Paris (`NoteCardSearchCounter`, table `note_card_search`) avant chaque recherche et passe la fiche en `LIMIT_REACHED` au-delà de `NOTE_CARD_DAILY_SEARCH_LIMIT` (`30`, configuration de l'API) ; `AddNoteCardUseCase` crée la note sans compter ; la proposition d'une fiche type (R17) ne compte pas.
+- Dans le code : `NoteCardEnrichmentService` compte les recherches du couple sur le jour de Paris (`NoteCardSearchCounter`, table `note_card_search`) avant chaque recherche et passe la fiche en `LIMIT_REACHED` au-delà de `NOTE_CARD_DAILY_SEARCH_LIMIT` (`30`, configuration de l'API) ; `AddNoteCardUseCase` crée la note sans compter ; la proposition d'une fiche type (R17) ne compte pas. Dans la PWA : la ligne d'une fiche `LIMIT_REACHED` dit « plafond du jour atteint, réessaie demain ».
 - Source : proposition de Claude (décision 0052), pour protéger le quota gratuit de l'IA. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R24. Ce qui part chez l'IA

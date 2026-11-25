@@ -1,7 +1,7 @@
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import type { NoteCardContext } from './note-card-context.view-model';
+import type { NoteRowItem } from './note-card-line.view-model';
 import type { NoteLocation, NotePlace } from './note-place.view-model';
-import type { NoteListItem } from './notes-screen.view-model';
 
 export type FolderListItem = {
     readonly folderId: string;
@@ -31,8 +31,10 @@ export type NotePlaceLevel = ScreenPlace & {
 
 export type NoteSpaceContentsScreen = NotePlaceLevel & {
     readonly step: typeof NoteSpaceStepEnum.CONTENTS;
-    readonly notes: readonly NoteListItem[];
+    readonly notes: readonly NoteRowItem[];
     readonly cardContext: NoteCardContext | null;
+    // R20: a card « en recherche » on screen; the screen reads the place again until it is filled.
+    readonly hasPendingCard: boolean;
 };
 
 export type NoteSpaceScreenViewModel =

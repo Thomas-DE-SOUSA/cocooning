@@ -5,6 +5,7 @@ import {
 import {
     A_SHARED_FOLDER,
     A_SHARED_NOTE,
+    A_SMART_SPACE_CONTENTS,
     A_SPACE_CONTENTS,
 } from '@cocooning/couple-client-business-logic/testing';
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
@@ -63,6 +64,21 @@ describe('Feature: the screen of a space or a folder (R10, R14)', () => {
                     }),
                 ],
                 cardContext: null,
+                hasPendingCard: false,
+            });
+        });
+    });
+
+    describe('Scenario: R18, R20, a smart folder', () => {
+        it('reads its card context and follows a card in search', () => {
+            const page = presentNoteSpacePage(
+                IN_A_FOLDER,
+                ok(A_SMART_SPACE_CONTENTS),
+            );
+
+            expect(page.viewModel).toMatchObject({
+                cardContext: { holderName: 'Restaurants', isInherited: false },
+                hasPendingCard: true,
             });
         });
     });

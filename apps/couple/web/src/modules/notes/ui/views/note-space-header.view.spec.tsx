@@ -1,6 +1,7 @@
 import { NoteSpaceEnum } from '@cocooning/couple-shared-kernel/enums';
 import { render, screen } from '@testing-library/react';
 import { WithI18n } from '@/testing/with-i18n';
+import type { NoteCardContext } from '../../view-models/note-card-context.view-model';
 import type { NotePlace } from '../../view-models/note-place.view-model';
 import { NoteSpaceHeaderView } from './note-space-header.view';
 
@@ -15,12 +16,24 @@ const MAISON: NotePlace = {
     href: '/spaces/SHARED?folderId=f1',
 };
 
-function renderHeader(place: NotePlace, back: NotePlace | null) {
+const RESTAURANTS: NoteCardContext = {
+    subject: 'Les restaurants où nous voulons aller',
+    fields: ['Adresse'],
+    holderName: 'Restaurants',
+    isInherited: false,
+};
+
+function renderHeader(
+    place: NotePlace,
+    back: NotePlace | null,
+    cardContext: NoteCardContext | null = null,
+) {
     render(
         <WithI18n>
             <NoteSpaceHeaderView
                 place={place}
                 back={back}
+                cardContext={cardContext}
             />
         </WithI18n>,
     );
@@ -56,5 +69,27 @@ describe('Feature: the head of a space or a folder', () => {
         expect(
             screen.getByRole('link', { name: 'Maison' }).getAttribute('href'),
         ).toBe('/spaces/SHARED?folderId=f1');
+    });
+
+    it('R17, marks a smart folder with « IA » and its subject', () => {
+        renderHeader(MAISON, SHARED_ROOT, RESTAURANTS);
+
+        expect(
+            screen.getByRole('heading', { name: 'Maison IA' }),
+        ).not.toBeNull();
+        expect(
+            screen.getByText('Les restaurants où nous voulons aller'),
+        ).not.toBeNull();
+    });
+
+    it('R18, names the smart folder whose card a sub-folder keeps', () => {
+        renderHeader(MAISON, SHARED_ROOT, {
+            ...RESTAURANTS,
+            isInherited: true,
+        });
+
+        expect(
+            screen.getByText('Garde la fiche de « Restaurants »'),
+        ).not.toBeNull();
     });
 });

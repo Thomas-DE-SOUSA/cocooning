@@ -4,17 +4,19 @@ import { Card } from '@cocooning/design-system';
 import { FileText } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { NOTE_SPACE_NAMESPACE } from '../../data/note-space-i18n-namespaces';
-import type { NoteListItem } from '../../view-models/notes-screen.view-model';
+import type { NoteRowItem } from '../../view-models/note-card-line.view-model';
+import { NoteCardStatusLine } from './note-card-status-line';
 import { NoteMeta } from './note-meta';
 import { RowActionsButton } from './row-actions-button';
 import { RowLink } from './row-link';
 
 type Props = {
-    readonly note: NoteListItem;
+    readonly note: NoteRowItem;
     readonly onActions: () => void;
 };
 
-// A note of the screen: its title opens its page, whose it is and its last change under it, its « ⋯ » moves or deletes it.
+// A note of the screen: its title opens its page, whose it is and its last change under it, or the line of its card
+// (R20), its « ⋯ » moves or deletes it.
 export function NoteRow({ note, onActions }: Props) {
     const { t } = useTranslation(NOTE_SPACE_NAMESPACE);
     return (
@@ -28,10 +30,14 @@ export function NoteRow({ note, onActions }: Props) {
                 </span>
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                     <RowLink href={note.href}>{note.title}</RowLink>
-                    <NoteMeta
-                        namespace={NOTE_SPACE_NAMESPACE}
-                        note={note}
-                    />
+                    {note.card === null ? (
+                        <NoteMeta
+                            namespace={NOTE_SPACE_NAMESPACE}
+                            note={note}
+                        />
+                    ) : (
+                        <NoteCardStatusLine card={note.card} />
+                    )}
                 </div>
                 <RowActionsButton
                     label={t('note.actions', { title: note.title })}

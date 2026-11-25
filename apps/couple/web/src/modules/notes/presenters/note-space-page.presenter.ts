@@ -6,6 +6,7 @@ import {
     NoteExceptionCodeEnum,
     type NoteSpaceContentsResponse,
 } from '@cocooning/couple-contract/notes';
+import { NoteCardStatusEnum } from '@cocooning/couple-shared-kernel/enums';
 import { WebRouterEnum } from '@cocooning/couple-shared-kernel/routers';
 import type { Result } from '@cocooning/shared-kernel/utils';
 import type { NoteLocation } from '../view-models/note-place.view-model';
@@ -14,8 +15,8 @@ import {
     NoteSpaceStepEnum,
 } from '../view-models/note-space-screen.view-model';
 import { presentCardContext } from './card-context.presenter';
-import { toNoteListItem } from './note-list-item.presenter';
 import { presentNotePlace } from './note-place.presenter';
+import { toNoteRowItem } from './note-row-item.presenter';
 import { presentPlaceLevel } from './place-level.presenter';
 
 // A folder gone (deleted, or in the other's « Privé », R14) or of another space: back to the root of the space.
@@ -36,8 +37,11 @@ const presentContents = (
     viewModel: {
         step: NoteSpaceStepEnum.CONTENTS,
         ...presentPlaceLevel(contents),
-        notes: contents.notes.map(toNoteListItem),
+        notes: contents.notes.map(toNoteRowItem),
         cardContext: presentCardContext(contents),
+        hasPendingCard: contents.notes.some(
+            (note) => note.card?.status === NoteCardStatusEnum.PENDING,
+        ),
     },
 });
 

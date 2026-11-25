@@ -1,0 +1,63 @@
+{
+    "add": {
+        "label": "Ajouter un élément",
+        "placeholder": "Un nom, comme « Chez Paul »",
+        "submit": "Ajouter",
+        "adding": "Ajout en cours"
+    },
+    "line": {
+        "PENDING": "en recherche…",
+        "CHOOSING": "Lequel ?",
+        "FAILED": "recherche impossible",
+        "LIMIT_REACHED": "plafond du jour atteint, réessaie demain",
+        "nothingFound": "rien trouvé"
+    },
+    "form": {
+        "name": {
+            "errors": {
+                "required": "Tape un nom.",
+                "tooLong": "Ce nom est trop long : 120 signes au plus."
+            }
+        }
+    },
+    "toast": {
+        "ADD": "Ajout impossible"
+    },
+    "apiErrors": {
+        "NOTE_NOT_FOUND": "Cette note n'existe plus. La liste est mise à jour.",
+        "NOTE_RESERVED_TO_OWNER": "Seule la propriétaire de la note peut faire ça.",
+        "NOTE_TITLE_INVALID": "Ce titre n'est pas valable : de 1 à 120 signes.",
+        "NOTE_COUPLE_NOT_PAIRED": "Votre couple n'est pas encore formé.",
+        "NOTE_VERSION_CONFLICT": "La note vient de changer. Réessayez.",
+        "NOTE_DATA_CORRUPTED": "Les données de la note sont illisibles.",
+        "FOLDER_NOT_FOUND": "Ce dossier n'existe plus. La liste est mise à jour.",
+        "FOLDER_NAME_INVALID": "Ce nom de dossier n'est pas valable : de 1 à 60 signes.",
+        "FOLDER_SPACE_MISMATCH": "Ce dossier n'est pas dans cet espace.",
+        "FOLDER_MOVE_INVALID": "Un dossier reste dans son espace et ne va pas dans l'un de ses sous-dossiers.",
+        "FOLDER_VERSION_CONFLICT": "Le dossier vient de changer. Réessayez.",
+        "FOLDER_DATA_CORRUPTED": "Les données du dossier sont illisibles.",
+        "FOLDER_NOT_SMART": "Ce n'est pas un dossier IA.",
+        "FOLDER_SUBJECT_INVALID": "Ce sujet n'est pas valable : une phrase de 1 à 280 signes.",
+        "FOLDER_TEMPLATE_INHERITED": "Ce dossier garde la fiche type du dossier IA au-dessus.",
+        "CARD_TEMPLATE_INVALID": "Cette fiche type n'est pas valable : de 1 à 10 cases, chacune de 1 à 40 signes, sans doublon.",
+        "NOTE_CARD_NOT_FOUND": "Cette note n'a pas de fiche.",
+        "NOTE_CARD_STATUS_INVALID": "La fiche ne peut pas faire ça maintenant. Réessayez dans un instant.",
+        "NOTE_CARD_CANDIDATE_INVALID": "Ce choix n'est plus proposé.",
+        "NOTE_CARD_FIELD_INVALID": "Cette case n'est pas valable.",
+        "NOTE_CARD_QUERY_INVALID": "Cette précision n'est pas valable : de 1 à 200 signes.",
+        "NOTE_CARD_VERSION_CONFLICT": "La fiche vient de changer. Réessayez.",
+        "NOTE_CARD_DATA_CORRUPTED": "Les données de la fiche sont illisibles.",
+        "NOTE_CARD_SEARCH_UNAVAILABLE": "La recherche ne répond pas. Réessayez plus tard.",
+        "NOTE_CARD_WRITER_UNAVAILABLE": "L'IA ne répond pas. Réessayez plus tard.",
+        "AUTHENTICATION_SESSION_MISSING": "Votre session a pris fin. Reconnectez-vous.",
+        "AUTHENTICATION_SESSION_INVALID": "Votre session a pris fin. Reconnectez-vous.",
+        "NETWORK_ERROR": "Cocooning ne répond pas pour le moment. Réessayez dans un instant ; si le problème dure, vérifiez que Tailscale est activé.",
+        "INVALID_RESPONSE": "La réponse du serveur est illisible. Réessayez dans un instant.",
+        "VALIDATION_ERROR": "Les informations envoyées sont invalides.",
+        "UNAUTHORIZED": "Votre session a pris fin. Reconnectez-vous.",
+        "FORBIDDEN": "Cette action ne vous est pas permise.",
+        "NOT_FOUND": "Cette note est introuvable. La liste est mise à jour.",
+        "CONFLICT": "La note vient de changer. Réessayez.",
+        "UNKNOWN": "Une erreur inattendue est survenue. Réessayez dans un instant."
+    }
+}

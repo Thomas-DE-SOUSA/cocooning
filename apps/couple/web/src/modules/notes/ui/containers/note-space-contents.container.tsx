@@ -10,10 +10,12 @@ import {
 import { NewItemMenuView } from '../views/new-item-menu.view';
 import { NoteSpaceContentsView } from '../views/note-space-contents.view';
 import { NoteSheetDrawerContainer } from './note-sheet-drawer.container';
+import { SmartFolderPanelContainer } from './smart-folder-panel.container';
 
 type Props = { readonly screen: NoteSpaceContentsScreen };
 
-// What a place holds, the « + » that creates in it, and the sheet of every command (decision 0053).
+// What a place holds, the add box of a smart folder (R19), the « + » that creates in it, and the sheet of every command
+// (decision 0053).
 export function NoteSpaceContentsContainer({ screen }: Props) {
     const { menuRef, ...menu } = useNewItemMenu();
     const sheet = useNoteSheet();
@@ -26,8 +28,15 @@ export function NoteSpaceContentsContainer({ screen }: Props) {
         menu.close();
         sheet.open(target);
     };
+    const { folder } = screen.place;
     return (
         <>
+            {screen.cardContext === null || folder === null ? null : (
+                <SmartFolderPanelContainer
+                    folderId={folder.folderId}
+                    hasPendingCard={screen.hasPendingCard}
+                />
+            )}
             <NoteSpaceContentsView
                 folders={screen.folders}
                 notes={screen.notes}
