@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { createRef } from 'react';
 import { WithI18n } from '@/testing/with-i18n';
 import {
     FeedDayKindEnum,
@@ -60,6 +61,7 @@ function renderFeed(
                 {...older}
                 onLoadOlder={() => events.push('older')}
                 onSelectEntry={(entry) => events.push(entry.id)}
+                latestRef={createRef()}
             />
         </WithI18n>,
     );
@@ -67,14 +69,14 @@ function renderFeed(
 }
 
 describe('Feature: the feed of the messages screen (R5)', () => {
-    it('heads each Paris day, today then the date', () => {
-        renderFeed([TODAY, EARLIER]);
+    it('heads each Paris day, the date then today', () => {
+        renderFeed([EARLIER, TODAY]);
 
         expect(
             screen
                 .getAllByRole('heading')
                 .map((heading) => heading.textContent),
-        ).toEqual(["Aujourd'hui", 'Vendredi 20 novembre']);
+        ).toEqual(['Vendredi 20 novembre', "Aujourd'hui"]);
     });
 
     it('shows each item with its Paris time, and a photo of the day sent late', () => {
@@ -121,6 +123,20 @@ describe('Feature: the feed of the messages screen (R5)', () => {
         );
 
         expect(events).toEqual(['older']);
+    });
+
+    it('puts the older messages above the oldest day', () => {
+        renderFeed([TODAY], { hasOlder: true, isLoadingOlder: false });
+
+        const older = screen.getByRole('button', {
+            name: 'Voir les plus anciens',
+        });
+        const heading = screen.getByRole('heading', { name: "Aujourd'hui" });
+
+        expect(
+            older.compareDocumentPosition(heading) &
+                Node.DOCUMENT_POSITION_FOLLOWING,
+        ).toBeTruthy();
     });
 
     it('says when the feed is still empty', () => {

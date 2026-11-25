@@ -67,7 +67,7 @@ describe('Feature: the feed of the couple (R5)', () => {
         });
     });
 
-    describe('Scenario: the items grouped by Paris day, newest first', () => {
+    describe('Scenario: the items grouped by Paris day, oldest first like a chat', () => {
         const days = presentMessageFeedDays(
             [
                 aWord('w1', '2026-11-24T17:00:00.000Z', true),
@@ -79,17 +79,8 @@ describe('Feature: the feed of the couple (R5)', () => {
             TODAY,
         );
 
-        it('opens with today, then yesterday, then the date, with the year of another year', () => {
+        it('ends with today, after the dates and yesterday, with the year of another year', () => {
             expect(days.map(({ day, heading }) => [day, heading])).toEqual([
-                ['2026-11-24', { kind: FeedDayKindEnum.TODAY }],
-                ['2026-11-23', { kind: FeedDayKindEnum.YESTERDAY }],
-                [
-                    '2026-11-20',
-                    {
-                        kind: FeedDayKindEnum.DATE,
-                        label: 'Vendredi 20 novembre',
-                    },
-                ],
                 [
                     '2025-12-31',
                     {
@@ -97,13 +88,24 @@ describe('Feature: the feed of the couple (R5)', () => {
                         label: 'Mercredi 31 décembre 2025',
                     },
                 ],
+                [
+                    '2026-11-20',
+                    {
+                        kind: FeedDayKindEnum.DATE,
+                        label: 'Vendredi 20 novembre',
+                    },
+                ],
+                ['2026-11-23', { kind: FeedDayKindEnum.YESTERDAY }],
+                ['2026-11-24', { kind: FeedDayKindEnum.TODAY }],
             ]);
         });
 
-        it('counts a word sent at 00:30 in Paris on its Paris day, in the order received', () => {
-            expect(days[0]?.entries.map(({ id, time }) => [id, time])).toEqual([
-                ['w1', '18:00'],
+        it('counts a word sent at 00:30 in Paris on its Paris day, the oldest first', () => {
+            expect(
+                days.at(-1)?.entries.map(({ id, time }) => [id, time]),
+            ).toEqual([
                 ['w2', '00:30'],
+                ['w1', '18:00'],
             ]);
         });
 
@@ -111,7 +113,7 @@ describe('Feature: the feed of the couple (R5)', () => {
             const word = aWord('w1', '2026-11-24T17:00:00.000Z', true);
 
             expect(
-                presentMessageFeedDays([word, word], TODAY)[0]?.entries,
+                presentMessageFeedDays([word, word], TODAY).at(-1)?.entries,
             ).toHaveLength(1);
         });
 

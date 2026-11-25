@@ -47,13 +47,13 @@ const withoutRepeats = (items: readonly MessageFeedItemResponse[]) =>
         (item, index) => items.findIndex(({ id }) => id === item.id) === index,
     );
 
-// R5: newest first, grouped by Paris day; the items arrive newest first, page after page.
+// R5: oldest first like a chat, grouped by Paris day; the items arrive newest first, page after page.
 export function presentMessageFeedDays(
     items: readonly MessageFeedItemResponse[],
     today: string,
 ): MessageFeedDay[] {
     const days: MessageFeedDay[] = [];
-    for (const item of withoutRepeats(items)) {
+    for (const item of withoutRepeats(items).reverse()) {
         const day = presentParisDay(new Date(item.sentAt));
         const last = days.at(-1);
         if (last?.day === day) {

@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Spinner } from '@cocooning/design-system';
+import type { RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MESSAGING_NAMESPACE } from '../../data/messaging-i18n-namespaces';
 import {
@@ -17,6 +18,7 @@ type Props = {
     readonly isLoadingOlder: boolean;
     readonly onLoadOlder: () => void;
     readonly onSelectEntry: (entry: MessageFeedEntry) => void;
+    readonly latestRef: RefObject<HTMLDivElement | null>;
 };
 
 const HEADING_KEYS = {
@@ -24,8 +26,8 @@ const HEADING_KEYS = {
     [FeedDayKindEnum.YESTERDAY]: 'feed.yesterday',
 } as const;
 
-// R5: the feed, newest first and grouped by Paris day; older pages on demand.
-export function MessageFeedView(props: Props) {
+// R5: the feed, oldest first like a chat and grouped by Paris day; older pages on demand, at the top.
+export function MessageFeedView({ latestRef, ...props }: Props) {
     const { t } = useTranslation(MESSAGING_NAMESPACE);
     const headingOf = (heading: FeedDayHeading) =>
         heading.kind === FeedDayKindEnum.DATE
@@ -43,6 +45,21 @@ export function MessageFeedView(props: Props) {
             aria-label={t('feed.label')}
             className="flex flex-col gap-4"
         >
+            {props.hasOlder ? (
+                <Button
+                    variant="ghost"
+                    className="self-center"
+                    disabled={props.isLoadingOlder}
+                    aria-busy={props.isLoadingOlder}
+                    onClick={props.onLoadOlder}
+                >
+                    {props.isLoadingOlder ? (
+                        <Spinner aria-label={t('feed.loadingOlder')} />
+                    ) : (
+                        t('feed.older')
+                    )}
+                </Button>
+            ) : null}
             {props.days.map((day) => (
                 <section
                     key={day.day}
@@ -62,21 +79,10 @@ export function MessageFeedView(props: Props) {
                     </ul>
                 </section>
             ))}
-            {props.hasOlder ? (
-                <Button
-                    variant="ghost"
-                    className="self-center"
-                    disabled={props.isLoadingOlder}
-                    aria-busy={props.isLoadingOlder}
-                    onClick={props.onLoadOlder}
-                >
-                    {props.isLoadingOlder ? (
-                        <Spinner aria-label={t('feed.loadingOlder')} />
-                    ) : (
-                        t('feed.older')
-                    )}
-                </Button>
-            ) : null}
+            <div
+                ref={latestRef}
+                aria-hidden
+            />
         </section>
     );
 }

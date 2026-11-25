@@ -22,7 +22,7 @@ J'écris un mot ou je touche un mot prêt ; les espaces autour ne comptent pas, 
 
 Je prends la photo avec l'appareil de mon téléphone, je la vois en aperçu, puis je l'envoie ou je la reprends. Elle est en JPEG, PNG, WebP ou HEIC, de 10 Mo au plus.
 
-- Dans le code : `InstantPhotoContent.create` lit le format dans les premiers octets (`detectInstantPhotoContentType`), jamais dans le type déclaré, et borne le poids à `INSTANT_PHOTO_MAX_BYTES` ; multer s'arrête à la même borne. Refus `INSTANT_PHOTO_CONTENT_INVALID`. Côté PWA, l'écran « Messages » ouvre l'appareil par un champ fichier (`capture="environment"`), montre l'aperçu, et ne refuse avant l'envoi qu'un fichier vide ou plus lourd que `INSTANT_PHOTO_MAX_BYTES` (`presentInstantPhotoRefusalKey`, revérifié par la server action) ; jamais le type déclaré, qu'un iPhone peut donner en `image/heif` ou pas du tout. `createInstantPhotoFormSchema`, qui vérifie aussi le type, n'est pas utilisé par l'écran. L'API reste seule juge des octets.
+- Dans le code : `InstantPhotoContent.create` lit le format dans les premiers octets (`detectInstantPhotoContentType`), jamais dans le type déclaré, et borne le poids à `INSTANT_PHOTO_MAX_BYTES` ; multer s'arrête à la même borne. Refus `INSTANT_PHOTO_CONTENT_INVALID`. Côté PWA, l'écran « Messages » ouvre l'appareil par un champ fichier (`capture="environment"`), montre l'aperçu, et ne refuse avant l'envoi qu'un fichier vide ou plus lourd que `INSTANT_PHOTO_MAX_BYTES` (`presentInstantPhotoRefusalKey`, revérifié par la server action) ; jamais le type déclaré, qu'un iPhone peut donner en `image/heif` ou pas du tout. L'API reste seule juge des octets.
 - Source : décision 0050 ; les formats et le poids, proposés par Claude, sont à confirmer par le propriétaire.
 
 ### R4. Les messages demandent un couple formé
@@ -34,12 +34,12 @@ Tant que nous ne sommes pas en couple dans l'app, je n'ai pas de messages.
 
 ## Le fil
 
-### R5. Le fil garde tout, du plus récent au plus ancien
+### R5. Le fil garde tout, dans l'ordre d'une messagerie
 
-Nos mots et nos photos restent dans un fil à deux, que nous revoyons quand nous voulons. Chacun porte son heure ; les miens sont à droite, ceux de l'autre à gauche.
+Nos mots et nos photos restent dans un fil à deux, que nous revoyons quand nous voulons. Comme dans une messagerie, le plus ancien est en haut et le plus récent en bas, juste au-dessus de la zone de saisie, où le fil s'ouvre. Chacun porte son heure ; les miens sont à droite, ceux de l'autre à gauche.
 
-- Dans le code : `MessageFeedService.readPage` et `ListMessageFeedUseCase`, lecture par curseur ([décision 0025](../../decisions/0025-pagination.md)) ; chaque élément porte `sentAt` et `ownerId`. Côté PWA, `presentMessageFeedDays` groupe le fil par jour de Paris (« Aujourd'hui », « Hier », puis la date) avec l'heure de Paris de chaque élément ; « Voir les plus anciens » lit la page suivante.
-- Source : décision 0050. Validée par : Thomas De Sousa, 2026-11-24.
+- Dans le code : `MessageFeedService.readPage` et `ListMessageFeedUseCase`, lecture par curseur ([décision 0025](../../decisions/0025-pagination.md)) ; chaque élément porte `sentAt` et `ownerId`. Côté PWA, `presentMessageFeedDays` groupe le fil par jour de Paris (« Aujourd'hui », « Hier », puis la date) avec l'heure de Paris de chaque élément ; du plus ancien au plus récent, et l'écran descend au plus récent (`useScrollToLatest`) ; « Voir les plus anciens », en haut du fil, lit la page suivante.
+- Source : décision 0050 ; l'ordre d'une messagerie est choisi par le propriétaire (« Ordre de chat, puis merge (Recommandé) », 2026-11-25). Validée par : Thomas De Sousa, 2026-11-24 et 2026-11-25.
 
 ### R6. Seul l'auteur retire ce qu'il a envoyé
 

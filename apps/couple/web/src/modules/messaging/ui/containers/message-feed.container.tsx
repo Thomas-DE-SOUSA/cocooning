@@ -3,7 +3,7 @@
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import type { MessageFeedPageResponse } from '@cocooning/couple-contract/messaging';
 import { Drawer, toast } from '@cocooning/design-system';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { describeApiResultError } from '@/shared/application/api-result/describe-api-result-error';
 import { MESSAGING_NAMESPACE } from '../../data/messaging-i18n-namespaces';
@@ -11,6 +11,7 @@ import { messageCommandGateway, olderMessagesGateway } from '../../gateways';
 import { useMessageCommands } from '../../hooks/use-message-commands';
 import { useMessageFeedback } from '../../hooks/use-message-feedback';
 import { useOlderMessages } from '../../hooks/use-older-messages';
+import { useScrollToLatest } from '../../hooks/use-scroll-to-latest';
 import { useWithdrawSheet } from '../../hooks/use-withdraw-sheet';
 import { presentMessageFeedDays } from '../../presenters/message-feed.presenter';
 import { MessageCommandEnum } from '../../view-models/message-command.view-model';
@@ -53,6 +54,8 @@ export function MessageFeedContainer({ firstPage, today }: Props) {
             presentMessageFeedDays([...firstPage.items, ...older.items], today),
         [firstPage.items, older.items, today],
     );
+    const latestRef = useRef<HTMLDivElement | null>(null);
+    useScrollToLatest(latestRef, days.at(-1)?.entries.at(-1)?.id ?? null);
     return (
         <>
             <MessageFeedView
@@ -61,6 +64,7 @@ export function MessageFeedContainer({ firstPage, today }: Props) {
                 isLoadingOlder={older.isLoading}
                 onLoadOlder={older.loadOlder}
                 onSelectEntry={sheet.open}
+                latestRef={latestRef}
             />
             <Drawer
                 open={sheet.isOpen}
