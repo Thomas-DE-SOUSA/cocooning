@@ -5,6 +5,7 @@ use_default_settings:
     # A few general engines: a blocked one is skipped, the others answer. Brave is left out: through this image its
     # results are redirect links, which the page reader cannot open.
     keep_only:
+      - yahoo
       - google
       - bing
       - duckduckgo
@@ -31,7 +32,12 @@ search:
 
 # The engines kept, turned on; google is not in the defaults of this image: declared here. A weight ranks the
 # results of an engine: bing reads a name such as « Chez Paul » as a word, so its results come after.
+# From the address of the VM, google, duckduckgo and qwant answer « access denied » or a CAPTCHA: yahoo carries
+# the search there (tried on 2026-11-25: the site of the restaurant and its TripAdvisor page come first).
 engines:
+  - name: yahoo
+    disabled: false
+    weight: 2
   - name: google
     engine: google
     shortcut: go
