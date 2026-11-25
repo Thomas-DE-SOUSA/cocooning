@@ -27,6 +27,13 @@ export function NoteSpaceContentsContainer({ screen }: Props) {
             <NoteSpaceContentsView
                 folders={screen.folders}
                 notes={screen.notes}
+                onFolderActions={(folder) =>
+                    sheet.open({
+                        kind: NoteSheetKindEnum.FOLDER,
+                        folder,
+                        place: screen.place,
+                    })
+                }
             />
             <NewItemMenuView
                 menuRef={menuRef}

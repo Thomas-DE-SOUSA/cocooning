@@ -38,7 +38,7 @@ Dans un espace ou dans un dossier, je crée une note ou un dossier. Un dossier a
 
 Nous créons, renommons, déplaçons et supprimons tous les deux un dossier de « Partagé ». Un dossier de mon « Privé » n'existe que pour moi, comme une note privée (R4).
 
-- Dans le code : `CreateFolderUseCase`, `RenameFolderUseCase`, `MoveFolderUseCase`, `DeleteFolderUseCase`, sans contrôle de propriétaire ; `FolderPreconditionService.loadVisibleFolder` refuse `FOLDER_NOT_FOUND`. Dans la PWA, un dossier disparu ou privé de l'autre renvoie à la racine de l'espace (`presentNoteSpacePage`).
+- Dans le code : `CreateFolderUseCase`, `RenameFolderUseCase`, `MoveFolderUseCase`, `DeleteFolderUseCase`, sans contrôle de propriétaire ; `FolderPreconditionService.loadVisibleFolder` refuse `FOLDER_NOT_FOUND`. Dans la PWA, un dossier disparu ou privé de l'autre renvoie à la racine de l'espace (`presentNoteSpacePage`) ; le « ⋯ » d'un dossier le renomme ou le supprime, sans contrôle de propriétaire (`FolderSheetContainer`).
 - Source : décision 0052. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R15. Un dossier reste dans son espace
@@ -52,7 +52,7 @@ Je déplace un dossier dans un autre dossier du même espace. Un dossier ne pass
 
 Je supprime un dossier : ses notes et ses sous-dossiers remontent dans le dossier du dessus. Aucune note ne disparaît avec un dossier, puisque seule sa propriétaire supprime une note (R7).
 
-- Dans le code : `DeleteFolderUseCase`, `Folder.delete` (suppression douce), `FolderRepository.moveContentUp` : une requête pour les sous-dossiers, une pour les notes, dans la même transaction.
+- Dans le code : `DeleteFolderUseCase`, `Folder.delete` (suppression douce), `FolderRepository.moveContentUp` : une requête pour les sous-dossiers, une pour les notes, dans la même transaction. Dans la PWA, la confirmation dit ce qui remonte et où (`presentFolderDeletion`, `FolderDeletionSheetView`).
 - Source : proposition de Claude (décision 0052). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ## Cas et exceptions

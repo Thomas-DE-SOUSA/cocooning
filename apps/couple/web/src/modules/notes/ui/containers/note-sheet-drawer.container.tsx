@@ -5,6 +5,7 @@ import {
     NoteSheetKindEnum,
     type NoteSheetTarget,
 } from '../../view-models/note-sheet.view-model';
+import { FolderSheetContainer } from './folder-sheet.container';
 import { NewFolderSheetContainer } from './new-folder-sheet.container';
 import { NewNoteSheetContainer } from './new-note-sheet.container';
 
@@ -22,6 +23,15 @@ function NoteSheetContent({
     readonly target: NoteSheetTarget;
     readonly onClose: () => void;
 }) {
+    if (target.kind === NoteSheetKindEnum.FOLDER) {
+        return (
+            <FolderSheetContainer
+                folder={target.folder}
+                place={target.place}
+                onClose={onClose}
+            />
+        );
+    }
     if (target.kind === NoteSheetKindEnum.NEW_NOTE) {
         return (
             <NewNoteSheetContainer

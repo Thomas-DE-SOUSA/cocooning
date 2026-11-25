@@ -8,11 +8,15 @@ import { runServerAction } from '@/shared/application/server-action/run-server-a
 import type { NoteLocation } from '../../view-models/note-place.view-model';
 import { FolderCommandGateway } from '../ports/folder-command.gateway';
 
+type Answer = Promise<Result<null, ApiError>>;
+
 export type FolderCommandActions = {
     readonly createFolder: (
         form: FolderNameForm,
         destination: NoteLocation,
-    ) => Promise<Result<null, ApiError>>;
+    ) => Answer;
+    readonly renameFolder: (folderId: string, form: FolderNameForm) => Answer;
+    readonly deleteFolder: (folderId: string) => Answer;
 };
 
 const UNREACHABLE: ApiError = {
@@ -29,9 +33,23 @@ export class ServerActionFolderCommandGateway extends FolderCommandGateway {
     override createFolder(
         form: FolderNameForm,
         destination: NoteLocation,
-    ): Promise<Result<null, ApiError>> {
+    ): Answer {
         return runServerAction(
             () => this.actions.createFolder(form, destination),
+            UNREACHABLE,
+        );
+    }
+
+    override renameFolder(folderId: string, form: FolderNameForm): Answer {
+        return runServerAction(
+            () => this.actions.renameFolder(folderId, form),
+            UNREACHABLE,
+        );
+    }
+
+    override deleteFolder(folderId: string): Answer {
+        return runServerAction(
+            () => this.actions.deleteFolder(folderId),
             UNREACHABLE,
         );
     }

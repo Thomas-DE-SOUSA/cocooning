@@ -9,4 +9,9 @@ export abstract class FolderCommandGateway {
         form: FolderNameForm,
         destination: NoteLocation,
     ): Promise<Result<null, ApiError>>;
+    abstract renameFolder(
+        folderId: string,
+        form: FolderNameForm,
+    ): Promise<Result<null, ApiError>>;
+    abstract deleteFolder(folderId: string): Promise<Result<null, ApiError>>;
 }

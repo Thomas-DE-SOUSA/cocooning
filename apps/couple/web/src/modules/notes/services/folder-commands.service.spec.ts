@@ -1,6 +1,7 @@
 import {
     CreateFolderUseCase,
     type FolderNameForm,
+    RenameFolderUseCase,
 } from '@cocooning/couple-client-business-logic/notes';
 import {
     type ApiError,
@@ -10,7 +11,11 @@ import { FakeNoteFoldersGateway } from '@cocooning/couple-client-business-logic/
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
 import { NoteSpaceEnum } from '@cocooning/couple-shared-kernel/enums';
 import { fail, ok } from '@cocooning/shared-kernel/utils';
-import { createFolder } from './folder-commands.service';
+import {
+    actOnFolder,
+    createFolder,
+    renameFolder,
+} from './folder-commands.service';
 
 const IN_A_FOLDER = {
     space: NoteSpaceEnum.SHARED,
@@ -74,6 +79,68 @@ describe('Feature: folder commands sent by the server actions', () => {
             gateway.givenRefusal(refusal);
 
             expect(await create({ name: 'Maison' })).toEqual(fail(refusal));
+        });
+    });
+
+    describe('Scenario: R14, a partner renames a folder', () => {
+        const rename = (folderId: unknown, input: unknown) =>
+            renameFolder(folderId, input, {
+                t: (key) => key,
+                renameFolder: new RenameFolderUseCase(gateway),
+            });
+
+        it('sends the folder id and the trimmed name once', async () => {
+            expect(
+                await rename(IN_A_FOLDER.folderId, { name: ' Travaux ' }),
+            ).toEqual(ok(null));
+            expect(gateway.calls).toEqual([
+                {
+                    operation: 'renameFolder',
+                    folderId: IN_A_FOLDER.folderId,
+                    request: { name: 'Travaux' },
+                },
+            ]);
+        });
+
+        it.each([
+            ['an empty name', IN_A_FOLDER.folderId, { name: '' }],
+            ['an id that is not a folder id', '../couple', { name: 'Travaux' }],
+        ])(
+            'refuses %s without calling the API',
+            async (_label, folderId, input) => {
+                const result = await rename(folderId, input);
+                expect(result.success === false && result.error.code).toBe(
+                    ApiErrorCodeEnum.VALIDATION_ERROR,
+                );
+                expect(gateway.calls).toEqual([]);
+            },
+        );
+    });
+
+    describe('Scenario: R16, a partner acts on a folder by its id', () => {
+        it('sends the folder id to the action and drops the answer', async () => {
+            const sent: string[] = [];
+            const result = await actOnFolder(
+                IN_A_FOLDER.folderId,
+                (folderId) => {
+                    sent.push(folderId);
+                    return Promise.resolve(ok({ deleted: true }));
+                },
+            );
+            expect(result).toEqual(ok(null));
+            expect(sent).toEqual([IN_A_FOLDER.folderId]);
+        });
+
+        it('refuses an id that is not a folder id without calling the API', async () => {
+            const sent: string[] = [];
+            const result = await actOnFolder('maison', (folderId) => {
+                sent.push(folderId);
+                return Promise.resolve(ok(null));
+            });
+            expect(result.success === false && result.error.code).toBe(
+                ApiErrorCodeEnum.VALIDATION_ERROR,
+            );
+            expect(sent).toEqual([]);
         });
     });
 });

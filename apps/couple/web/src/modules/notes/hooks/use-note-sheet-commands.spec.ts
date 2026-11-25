@@ -68,6 +68,34 @@ describe('Feature: the commands of the sheets of the notes', () => {
         });
     });
 
+    describe('Scenario: R14, R16, a partner acts on a folder', () => {
+        it('renames the folder, then deletes it', async () => {
+            const { result, events, folders } = renderCommands();
+
+            await act(async () =>
+                result.current.renameFolder(IN_A_FOLDER.folderId, {
+                    name: 'Travaux',
+                }),
+            );
+            await act(async () =>
+                result.current.deleteFolder(IN_A_FOLDER.folderId),
+            );
+
+            expect(folders.answers.calls).toEqual([
+                {
+                    operation: 'renameFolder',
+                    folderId: IN_A_FOLDER.folderId,
+                    form: { name: 'Travaux' },
+                },
+                { operation: 'deleteFolder', folderId: IN_A_FOLDER.folderId },
+            ]);
+            expect(events).toEqual([
+                'RENAME_FOLDER:done',
+                'DELETE_FOLDER:done',
+            ]);
+        });
+    });
+
     describe('Scenario: a command is running', () => {
         it('tells which one until the answer arrives', async () => {
             const { result, folders } = renderCommands();

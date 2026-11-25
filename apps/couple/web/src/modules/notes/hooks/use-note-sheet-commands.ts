@@ -5,8 +5,7 @@ import type {
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import type { Result } from '@cocooning/shared-kernel/utils';
 import { useCallback, useState, useTransition } from 'react';
-import type { FolderCommandGateway } from '../gateways/ports/folder-command.gateway';
-import type { NoteCommandGateway } from '../gateways/ports/note-command.gateway';
+import type { NoteSheetGateways } from '../gateways/ports/note-sheet.gateways';
 import type { NoteLocation } from '../view-models/note-place.view-model';
 import {
     type NoteSheetCommand,
@@ -14,10 +13,7 @@ import {
 } from '../view-models/note-sheet-command.view-model';
 
 type Options = {
-    readonly gateways: {
-        readonly notes: NoteCommandGateway;
-        readonly folders: FolderCommandGateway;
-    };
+    readonly gateways: NoteSheetGateways;
     readonly onDone: (command: NoteSheetCommand) => void;
     readonly onFailed: (command: NoteSheetCommand, error: ApiError) => void;
 };
@@ -54,6 +50,14 @@ export function useNoteSheetCommands({ gateways, onDone, onFailed }: Options) {
         createFolder: (form: FolderNameForm, destination: NoteLocation) =>
             run(NoteSheetCommandEnum.CREATE_FOLDER, () =>
                 folders.createFolder(form, destination),
+            ),
+        renameFolder: (folderId: string, form: FolderNameForm) =>
+            run(NoteSheetCommandEnum.RENAME_FOLDER, () =>
+                folders.renameFolder(folderId, form),
+            ),
+        deleteFolder: (folderId: string) =>
+            run(NoteSheetCommandEnum.DELETE_FOLDER, () =>
+                folders.deleteFolder(folderId),
             ),
         pending: isPending ? lastCommand : null,
         isBusy: isPending,

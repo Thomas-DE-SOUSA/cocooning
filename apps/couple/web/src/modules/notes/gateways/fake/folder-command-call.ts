@@ -1,8 +1,15 @@
 import type { FolderNameForm } from '@cocooning/couple-client-business-logic/notes';
 import type { NoteLocation } from '../../view-models/note-place.view-model';
 
-export type FolderCommandCall = {
-    readonly operation: 'createFolder';
-    readonly form: FolderNameForm;
-    readonly destination: NoteLocation;
-};
+export type FolderCommandCall =
+    | {
+          readonly operation: 'createFolder';
+          readonly form: FolderNameForm;
+          readonly destination: NoteLocation;
+      }
+    | {
+          readonly operation: 'renameFolder';
+          readonly folderId: string;
+          readonly form: FolderNameForm;
+      }
+    | { readonly operation: 'deleteFolder'; readonly folderId: string };

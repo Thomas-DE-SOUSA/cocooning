@@ -19,4 +19,19 @@ export class FakeFolderCommandGateway extends FolderCommandGateway {
             destination,
         });
     }
+
+    override renameFolder(
+        folderId: string,
+        form: FolderNameForm,
+    ): Promise<Result<null, ApiError>> {
+        return this.answers.answer({
+            operation: 'renameFolder',
+            folderId,
+            form,
+        });
+    }
+
+    override deleteFolder(folderId: string): Promise<Result<null, ApiError>> {
+        return this.answers.answer({ operation: 'deleteFolder', folderId });
+    }
 }

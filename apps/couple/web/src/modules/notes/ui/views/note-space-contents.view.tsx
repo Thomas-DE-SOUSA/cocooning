@@ -11,10 +11,15 @@ import { NoteSpaceSection } from '../components/note-space-section';
 type Props = {
     readonly folders: readonly FolderListItem[];
     readonly notes: readonly NoteListItem[];
+    readonly onFolderActions: (folder: FolderListItem) => void;
 };
 
 // R13: the folders of the place first, then its notes.
-export function NoteSpaceContentsView({ folders, notes }: Props) {
+export function NoteSpaceContentsView({
+    folders,
+    notes,
+    onFolderActions,
+}: Props) {
     const { t } = useTranslation(NOTE_SPACE_NAMESPACE);
     if (folders.length === 0 && notes.length === 0) {
         return (
@@ -31,6 +36,7 @@ export function NoteSpaceContentsView({ folders, notes }: Props) {
                         <FolderRow
                             key={folder.folderId}
                             folder={folder}
+                            onActions={() => onFolderActions(folder)}
                         />
                     ))}
                 </NoteSpaceSection>

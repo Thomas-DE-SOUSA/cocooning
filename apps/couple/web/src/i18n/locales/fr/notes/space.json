@@ -23,7 +23,8 @@
         "folderCount_other": "{{count}} dossiers",
         "noteCount_one": "{{count}} note",
         "noteCount_other": "{{count}} notes",
-        "empty": "Vide"
+        "empty": "Vide",
+        "actions": "Actions sur « {{name}} »"
     },
     "note": {
         "mine": "Ma note",
@@ -47,6 +48,32 @@
         "submit": "Créer le dossier",
         "creating": "Création en cours"
     },
+    "folderSheet": {
+        "rename": "Renommer",
+        "delete": "Supprimer le dossier"
+    },
+    "renameFolder": {
+        "title": "Renommer « {{name}} »",
+        "description": "Ses notes et ses dossiers restent dedans.",
+        "submit": "Renommer",
+        "renaming": "Renommage en cours"
+    },
+    "deletion": {
+        "title": "Supprimer « {{name}} » ?",
+        "empty": "Ce dossier est vide.",
+        "notes_one": "Sa note",
+        "notes_other": "Ses {{count}} notes",
+        "folders_one": "son dossier",
+        "folders_other": "ses {{count}} dossiers",
+        "foldersAlone_one": "Son dossier",
+        "foldersAlone_other": "Ses {{count}} dossiers",
+        "both": "{{notes}} et {{folders}}",
+        "movesUp_one": "{{content}} remonte dans « {{place}} ». Aucune note n'est supprimée.",
+        "movesUp_other": "{{content}} remontent dans « {{place}} ». Aucune note n'est supprimée.",
+        "confirm": "Supprimer le dossier",
+        "deleting": "Suppression en cours",
+        "keep": "Garder"
+    },
     "form": {
         "title": {
             "label": "Titre",
@@ -65,7 +92,9 @@
     },
     "toast": {
         "createNoteFailed": "Création de la note impossible",
-        "createFolderFailed": "Création du dossier impossible"
+        "createFolderFailed": "Création du dossier impossible",
+        "renameFolderFailed": "Renommage impossible",
+        "deleteFolderFailed": "Suppression impossible"
     },
     "unavailable": {
         "title": "Impossible d'afficher ce dossier",

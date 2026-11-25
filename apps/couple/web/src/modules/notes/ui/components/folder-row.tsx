@@ -6,12 +6,16 @@ import { useTranslation } from 'react-i18next';
 import { NOTE_SPACE_NAMESPACE } from '../../data/note-space-i18n-namespaces';
 import { presentFolderContents } from '../../presenters/place-labels.presenter';
 import type { FolderListItem } from '../../view-models/note-space-screen.view-model';
+import { RowActionsButton } from './row-actions-button';
 import { RowLink } from './row-link';
 
-type Props = { readonly folder: FolderListItem };
+type Props = {
+    readonly folder: FolderListItem;
+    readonly onActions: () => void;
+};
 
-// A folder of the screen: its name opens it, its counts tell what it holds (R13).
-export function FolderRow({ folder }: Props) {
+// A folder of the screen: its name opens it, its counts tell what it holds (R13), its « ⋯ » acts on it (R14).
+export function FolderRow({ folder, onActions }: Props) {
     const { t } = useTranslation(NOTE_SPACE_NAMESPACE);
     return (
         <li>
@@ -28,6 +32,10 @@ export function FolderRow({ folder }: Props) {
                         {presentFolderContents(folder, t)}
                     </p>
                 </div>
+                <RowActionsButton
+                    label={t('folder.actions', { name: folder.name })}
+                    onClick={onActions}
+                />
             </Card>
         </li>
     );

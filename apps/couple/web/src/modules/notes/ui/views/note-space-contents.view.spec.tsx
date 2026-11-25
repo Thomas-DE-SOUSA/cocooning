@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { ComponentProps } from 'react';
 import { WithI18n } from '@/testing/with-i18n';
 import type { FolderListItem } from '../../view-models/note-space-screen.view-model';
@@ -24,15 +24,18 @@ const COURSES: NoteListItem = {
 function renderContents(
     props: Partial<ComponentProps<typeof NoteSpaceContentsView>>,
 ) {
+    const taps: string[] = [];
     render(
         <WithI18n>
             <NoteSpaceContentsView
                 folders={[]}
                 notes={[]}
+                onFolderActions={(folder) => taps.push(`folder:${folder.name}`)}
                 {...props}
             />
         </WithI18n>,
     );
+    return { taps };
 }
 
 const sectionOf = (title: string) =>
@@ -54,6 +57,15 @@ describe('Feature: what a space or a folder holds (R13)', () => {
         expect(
             sectionOf('Dossiers').getByText('1 dossier · 4 notes'),
         ).not.toBeNull();
+    });
+
+    it('R14, opens the actions of a folder from its « ⋯ »', () => {
+        const { taps } = renderContents({ folders: [MAISON] });
+
+        fireEvent.click(
+            screen.getByRole('button', { name: 'Actions sur « Maison »' }),
+        );
+        expect(taps).toEqual(['folder:Maison']);
     });
 
     it('opens a note from its title and tells whose it is', () => {
