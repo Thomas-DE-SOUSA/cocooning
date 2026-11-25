@@ -1,5 +1,6 @@
 import type {
     CreateNoteRequest,
+    NoteDetailResponse,
     NotePageResponse,
     NoteResponse,
     RenameNoteRequest,
@@ -13,7 +14,9 @@ export abstract class NotesGateway {
     abstract listNotes(
         query: OffsetPaginationQuery,
     ): Promise<Result<NotePageResponse, ApiError>>;
-    abstract getNote(noteId: string): Promise<Result<NoteResponse, ApiError>>;
+    abstract getNote(
+        noteId: string,
+    ): Promise<Result<NoteDetailResponse, ApiError>>;
     abstract createNote(
         request: CreateNoteRequest,
     ): Promise<Result<NoteResponse, ApiError>>;

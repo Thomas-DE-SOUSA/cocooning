@@ -33,7 +33,10 @@ describe('Feature: the page of a note reads the note and its place', () => {
 
     it('R11, reads the place of a shared note in « Partagé »', async () => {
         expect(await read()).toEqual(
-            ok({ note: A_SHARED_NOTE, place: A_SPACE_CONTENTS }),
+            ok({
+                note: { ...A_SHARED_NOTE, card: null },
+                place: A_SPACE_CONTENTS,
+            }),
         );
         expect(folders.calls).toEqual([
             {
