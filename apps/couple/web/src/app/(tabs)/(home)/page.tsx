@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getServerTranslation } from '@/i18n/server';
 import {
-    loadNotes,
+    loadNotesHome,
     NOTES_NAMESPACE,
     NotesContainer,
     presentNotesPage,
@@ -17,11 +17,11 @@ export async function generateMetadata(): Promise<Metadata> {
 // Read for the signed-in partner on every request, never prerendered at build (decision 0036).
 export const dynamic = 'force-dynamic';
 
-// The home page is the list of the notes of a formed couple (decision 0039).
+// The home of the notes: the two spaces, then the notes changed last (decision 0053).
 export default async function HomePage() {
     const destination = resolveHomeDestination(await loadMyCouple());
     if (destination !== null) redirect(destination);
-    const page = presentNotesPage(await loadNotes());
+    const page = presentNotesPage(await loadNotesHome());
     if (page.redirectTo !== null) redirect(page.redirectTo);
     const t = await getServerTranslation(NOTES_NAMESPACE);
     return (

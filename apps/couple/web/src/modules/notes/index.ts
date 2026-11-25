@@ -8,5 +8,5 @@ export * from './presenters/notes-page.presenter';
 export * from './services/load-note.service';
 export * from './services/load-note-space-contents.service';
 export * from './services/note-collaboration-url.service';
-export * from './services/load-notes.service';
+export * from './services/load-notes-home.service';
 export * from './ui';

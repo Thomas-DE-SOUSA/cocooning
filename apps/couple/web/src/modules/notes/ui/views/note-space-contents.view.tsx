@@ -6,7 +6,7 @@ import type { FolderListItem } from '../../view-models/note-space-screen.view-mo
 import type { NoteListItem } from '../../view-models/notes-screen.view-model';
 import { FolderRow } from '../components/folder-row';
 import { NoteRow } from '../components/note-row';
-import { NoteSpaceSection } from '../components/note-space-section';
+import { NotesSection } from '../components/notes-section';
 
 type Props = {
     readonly folders: readonly FolderListItem[];
@@ -33,7 +33,7 @@ export function NoteSpaceContentsView({
     return (
         <>
             {folders.length === 0 ? null : (
-                <NoteSpaceSection title={t('sections.folders')}>
+                <NotesSection title={t('sections.folders')}>
                     {folders.map((folder) => (
                         <FolderRow
                             key={folder.folderId}
@@ -41,10 +41,10 @@ export function NoteSpaceContentsView({
                             onActions={() => onFolderActions(folder)}
                         />
                     ))}
-                </NoteSpaceSection>
+                </NotesSection>
             )}
             {notes.length === 0 ? null : (
-                <NoteSpaceSection title={t('sections.notes')}>
+                <NotesSection title={t('sections.notes')}>
                     {notes.map((note) => (
                         <NoteRow
                             key={note.noteId}
@@ -52,7 +52,7 @@ export function NoteSpaceContentsView({
                             onActions={() => onNoteActions(note)}
                         />
                     ))}
-                </NoteSpaceSection>
+                </NotesSection>
             )}
         </>
     );
