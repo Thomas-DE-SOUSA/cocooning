@@ -28,7 +28,9 @@ const TEST_ENVIRONMENT = {
     WEB_PUSH_VAPID_PUBLIC_KEY: TEST_VAPID_PUBLIC_KEY,
     WEB_PUSH_VAPID_PRIVATE_KEY: TEST_VAPID_PRIVATE_KEY,
     WEB_PUSH_VAPID_SUBJECT: 'https://cocooning.test',
-    // The specs replace the AI by a fake NoteCardWriter: no key, no call to Gemini.
+    // The specs replace the search engine, the page reader and the AI by fakes: no network, no key.
+    WEB_SEARCH_SEARXNG_URL: 'http://searxng.test',
+    WEB_SEARCH_TIMEOUT_MS: '1000',
     NOTE_CARD_GEMINI_API_KEY: '',
     NOTE_CARD_GEMINI_MODEL: 'gemini-e2e-never-called',
 } as const;

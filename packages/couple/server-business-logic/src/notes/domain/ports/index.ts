@@ -5,3 +5,5 @@ export * from './note-collaboration.provider';
 export * from './note-content.repository';
 export * from './note.repository';
 export * from './paired-couple.provider';
+export * from './web-page.reader';
+export * from './web-search.provider';

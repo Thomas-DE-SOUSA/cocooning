@@ -4,6 +4,7 @@ export * from './folder-path-item';
 export * from './folder-template-request';
 export * from './folder.aggregate';
 export * from './folder.aggregate.type';
+export * from './note-card-writing';
 export * from './note-card.aggregate';
 export * from './note-card.aggregate.type';
 export * from './note-space';

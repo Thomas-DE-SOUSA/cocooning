@@ -5,13 +5,18 @@ import {
     truncateAllTables,
 } from '@cocooning/couple-e2e-shared/fixtures';
 import { PrismaService } from '@cocooning/couple-prisma/nest';
-import { NoteCardWriter } from '@cocooning/couple-server-business-logic/notes';
+import {
+    NoteCardWriter,
+    WebPageReader,
+    WebSearchProvider,
+} from '@cocooning/couple-server-business-logic/notes';
 import { ApiRouterEnum } from '@cocooning/couple-shared-kernel/routers';
 import { DateTimeProvider } from '@cocooning/shared-kernel/ports';
 import { DeterministicDateTimeProvider } from '@cocooning/shared-kernel/testing';
 import { closeTestApp, createTestApp } from '../shared/app/create-test-app';
 import { TestClient, type TestResponse } from '../shared/app/test-client';
 import { FakeNoteCardWriter } from './fake-note-card-writer';
+import { FakeWebPageReader, FakeWebSearchProvider } from './fake-web-search';
 import {
     COUPLES,
     noteOf,
@@ -25,10 +30,12 @@ const MILLISECONDS_PER_MINUTE = 60_000;
 const withNote = (route: string, noteId: string): string =>
     route.replace(':noteId', noteId);
 
-// The real AppModule on a clock the spec moves, the AI replaced by a fake; reset() seeds the accounts and the two formed couples.
+// The real AppModule on a clock the spec moves, the search engine, the pages and the AI replaced by fakes; reset() seeds the accounts and the two formed couples.
 export class NotesTestApp {
     readonly clock = new DeterministicDateTimeProvider(NOW);
     readonly writer = new FakeNoteCardWriter();
+    readonly search = new FakeWebSearchProvider();
+    readonly pages = new FakeWebPageReader();
     private app: INestApplication | null = null;
     private client: TestClient | null = null;
 
@@ -46,6 +53,8 @@ export class NotesTestApp {
             overrides: [
                 { provide: DateTimeProvider, useValue: this.clock },
                 { provide: NoteCardWriter, useValue: this.writer },
+                { provide: WebSearchProvider, useValue: this.search },
+                { provide: WebPageReader, useValue: this.pages },
             ],
         });
         this.app = app;
@@ -59,6 +68,8 @@ export class NotesTestApp {
     async reset(): Promise<void> {
         this.clock.setNow(NOW);
         this.writer.reset();
+        this.search.reset();
+        this.pages.reset();
         await truncateAllTables(this.prisma);
         await Promise.all([
             ...PARTNERS.map((userId) =>

@@ -4,6 +4,10 @@ import type {
     FolderTemplateProposal,
     FolderTemplateRequest,
 } from '../../../domain/models/folder-template-request';
+import type {
+    NoteCardWriting,
+    NoteCardWritingRequest,
+} from '../../../domain/models/note-card-writing';
 import { NoteCardWriter } from '../../../domain/ports/note-card.writer';
 
 export const PROPOSED_TEMPLATE: FolderTemplateProposal = {
@@ -21,6 +25,20 @@ const unavailable = (): NoteException =>
 export class FakeNoteCardWriter extends NoteCardWriter {
     private proposal: FolderTemplateProposal | null = PROPOSED_TEMPLATE;
     private requests: ReadonlyArray<FolderTemplateRequest> = [];
+    private writing: NoteCardWriting | null = null;
+    private writings: ReadonlyArray<NoteCardWritingRequest> = [];
+
+    get cardRequests(): ReadonlyArray<NoteCardWritingRequest> {
+        return this.writings;
+    }
+
+    willWrite(writing: NoteCardWriting): void {
+        this.writing = writing;
+    }
+
+    willFailToWrite(): void {
+        this.writing = null;
+    }
 
     get templateRequests(): ReadonlyArray<FolderTemplateRequest> {
         return this.requests;
@@ -40,5 +58,14 @@ export class FakeNoteCardWriter extends NoteCardWriter {
         this.requests = [...this.requests, request];
         if (this.proposal === null) return Promise.reject(unavailable());
         return Promise.resolve(this.proposal);
+    }
+
+    // Unavailable until the test chose an answer.
+    override writeCard(
+        request: NoteCardWritingRequest,
+    ): Promise<NoteCardWriting> {
+        this.writings = [...this.writings, request];
+        if (this.writing === null) return Promise.reject(unavailable());
+        return Promise.resolve(this.writing);
     }
 }

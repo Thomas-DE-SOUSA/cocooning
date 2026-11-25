@@ -2,8 +2,15 @@ import { Injectable } from '@nestjs/common';
 import {
     type FolderTemplateProposal,
     type FolderTemplateRequest,
+    type NoteCardWriting,
+    type NoteCardWritingRequest,
     NoteCardWriter,
 } from '@cocooning/couple-server-business-logic/notes';
+import { toNoteCardWriting } from './card-writing.answer';
+import {
+    CardWritingAnswerSchema,
+    cardWritingPrompt,
+} from './card-writing.prompt';
 import {
     FolderTemplateAnswerSchema,
     folderTemplatePrompt,
@@ -25,5 +32,15 @@ export class GeminiNoteCardWriter extends NoteCardWriter {
             FolderTemplateAnswerSchema,
         );
         return { subject: answer.subject, fieldNames: answer.fields };
+    }
+
+    override async writeCard(
+        request: NoteCardWritingRequest,
+    ): Promise<NoteCardWriting> {
+        const answer = await this.client.answer(
+            cardWritingPrompt(request),
+            CardWritingAnswerSchema,
+        );
+        return toNoteCardWriting(answer, request);
     }
 }

@@ -12,8 +12,10 @@ import {
     NoteHocuspocus,
 } from './secondary/collaboration';
 import {
+    fetchWebPageReaderProvider,
     geminiNoteCardWriterProvider,
     PairedCouplePrismaProvider,
+    searxngWebSearchProvider,
 } from './secondary/providers';
 import {
     FolderPrismaRepository,
@@ -21,6 +23,12 @@ import {
     NoteContentPrismaRepository,
     NotePrismaRepository,
 } from './secondary/repositories';
+
+const technicalAdapters = [
+    geminiNoteCardWriterProvider,
+    searxngWebSearchProvider,
+    fetchWebPageReaderProvider,
+];
 
 const adapters = [
     { provide: NoteRepository, useClass: NotePrismaRepository },
@@ -35,11 +43,11 @@ const adapters = [
 ];
 
 @Module({
-    providers: [NoteHocuspocus, ...adapters, geminiNoteCardWriterProvider],
+    providers: [NoteHocuspocus, ...adapters, ...technicalAdapters],
     exports: [
         NoteHocuspocus,
         ...adapters.map(({ provide }) => provide),
-        geminiNoteCardWriterProvider.provide,
+        ...technicalAdapters.map(({ provide }) => provide),
     ],
 })
 export class NotesSecondaryModule {}

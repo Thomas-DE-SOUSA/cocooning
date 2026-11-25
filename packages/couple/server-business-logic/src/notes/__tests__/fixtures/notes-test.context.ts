@@ -59,6 +59,8 @@ import {
 } from '../secondary/adapters/fake-note-card.writer';
 import { FakeNoteCollaborationProvider } from '../secondary/adapters/fake-note-collaboration.provider';
 import { FakePairedCoupleProvider } from '../secondary/adapters/fake-paired-couple.provider';
+import { FakeWebPageReader } from '../secondary/adapters/fake-web-page.reader';
+import { FakeWebSearchProvider } from '../secondary/adapters/fake-web-search.provider';
 import { NoteCardInMemoryRepository } from '../secondary/adapters/note-card-in-memory.repository';
 import { NoteContentInMemoryRepository } from '../secondary/adapters/note-content-in-memory.repository';
 import { FolderInMemoryRepository } from '../secondary/adapters/folder-in-memory.repository';
@@ -102,6 +104,8 @@ export class NotesTestContext {
     readonly pairedCoupleProvider = new FakePairedCoupleProvider();
     readonly noteCollaborationProvider = new FakeNoteCollaborationProvider();
     readonly noteCardWriter = new FakeNoteCardWriter();
+    readonly webSearchProvider = new FakeWebSearchProvider();
+    readonly webPageReader = new FakeWebPageReader();
     readonly eventPublisher = new FakeEventPublisherAdapter();
     readonly logger = new FakeLoggerAdapter();
     private readonly eventPublishingService = new EventPublishingService(
