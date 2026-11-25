@@ -13,10 +13,10 @@ Je crée une note : elle est à notre couple, et j'en suis la propriétaire.
 
 ### R2. Une note est partagée à sa création
 
-Ma nouvelle note est tout de suite visible et modifiable par mon âme sœur ; je peux la rendre privée ensuite.
+Ma nouvelle note est tout de suite visible et modifiable par mon âme sœur ; je peux la rendre privée ensuite. Avec les dossiers, une note créée dans « Privé » est privée dès sa création (R11 des [règles des dossiers](rules/folders.md)).
 
-- Dans le code : `Note.create`, visibilité `SHARED`.
-- Source : décision 0039. Validée par : Thomas De Sousa, 2026-11-23.
+- Dans le code : `Note.create`, visibilité `SHARED` ; la création dans « Privé » est à venir (lot 1 des dossiers).
+- Source : décision 0039, [décision 0052](../../decisions/notes/0052-dossiers-et-dossiers-ia.md) (proposée). Validée par : Thomas De Sousa, 2026-11-23.
 
 ### R3. Les notes demandent un couple formé
 
@@ -90,5 +90,6 @@ Je crée une note partagée, ou je partage une note privée : le téléphone de 
 
 ## Voir aussi
 
+- [Règles des dossiers](rules/folders.md) et [des dossiers IA](rules/ai-folders.md)
 - [Glossaire des notes](glossary.md)
 - [Décision 0040](../../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md) : le canal temps réel
