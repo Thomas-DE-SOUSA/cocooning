@@ -1,0 +1,9 @@
+import type { NoteSheetCommand } from '../view-models/note-sheet-command.view-model';
+
+// The title of the toast of a refused command, in the namespace of the space screen.
+export const NOTE_SHEET_FAILURE_KEYS: Readonly<
+    Record<NoteSheetCommand, string>
+> = {
+    CREATE_NOTE: 'toast.createNoteFailed',
+    CREATE_FOLDER: 'toast.createFolderFailed',
+};

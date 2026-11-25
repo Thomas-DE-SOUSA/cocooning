@@ -31,7 +31,7 @@ Le jour où les dossiers arrivent, nos notes partagées sont à la racine de « 
 
 Dans un espace ou dans un dossier, je crée une note ou un dossier. Un dossier a un nom de 1 à 60 signes.
 
-- Dans le code : `CreateFolderUseCase`, `Folder.create`, `FolderName.create`, `FOLDER_NAME_MAX_LENGTH` (`@cocooning/couple-shared-kernel/limits`), `CreateNoteUseCase` ; `FolderPreconditionService.loadDestination` refuse un dossier d'un autre espace (`FOLDER_SPACE_MISMATCH`). Dans la PWA, chaque dossier dit ce qu'il contient (`presentFolderContents`).
+- Dans le code : `CreateFolderUseCase`, `Folder.create`, `FolderName.create`, `FOLDER_NAME_MAX_LENGTH` (`@cocooning/couple-shared-kernel/limits`), `CreateNoteUseCase` ; `FolderPreconditionService.loadDestination` refuse un dossier d'un autre espace (`FOLDER_SPACE_MISMATCH`). Dans la PWA, chaque dossier dit ce qu'il contient (`presentFolderContents`), et le « + » d'un écran crée une note ou un dossier à cet endroit (`NewItemMenuView`, `useNoteSheetCommands`, revalidés par `NoteLocationSchema`).
 - Source : décision 0052 ; la limite de 60 signes est une proposition de Claude, acceptée par « go ». Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R14. Un dossier de « Partagé » est à nous deux

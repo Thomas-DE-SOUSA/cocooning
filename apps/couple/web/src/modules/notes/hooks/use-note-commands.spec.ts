@@ -38,8 +38,12 @@ describe('Feature: note commands from the list', () => {
                 result.current.createNote({ title: 'Courses' }),
             );
 
-            expect(gateway.calls).toEqual([
-                { operation: 'createNote', form: { title: 'Courses' } },
+            expect(gateway.answers.calls).toEqual([
+                {
+                    operation: 'createNote',
+                    form: { title: 'Courses' },
+                    destination: { space: 'SHARED', folderId: null },
+                },
             ]);
             expect(events).toEqual(['CREATE_NOTE:done']);
             expect(result.current.pending).toBeNull();
@@ -57,13 +61,15 @@ describe('Feature: note commands from the list', () => {
 
             await act(async () => result.current[operation](NOTE_ID));
 
-            expect(gateway.calls).toEqual([{ operation, noteId: NOTE_ID }]);
+            expect(gateway.answers.calls).toEqual([
+                { operation, noteId: NOTE_ID },
+            ]);
             expect(events).toEqual([`${command}:done`]);
         });
 
         it('tells which note is running until the answer arrives', async () => {
             const gateway = new FakeNoteCommandGateway();
-            const release = gateway.holdAnswers();
+            const release = gateway.answers.holdAnswers();
             const { result } = renderCommands(gateway);
 
             act(() => result.current.shareNote(NOTE_ID));
@@ -81,7 +87,7 @@ describe('Feature: note commands from the list', () => {
     describe('Scenario: the API refuses the command', () => {
         it('reports the refusal with its command, without a refresh', async () => {
             const gateway = new FakeNoteCommandGateway();
-            gateway.givenOutcome(fail(REFUSAL));
+            gateway.answers.givenOutcome(fail(REFUSAL));
             const { result, events } = renderCommands(gateway);
 
             await act(async () => result.current.deleteNote(NOTE_ID));

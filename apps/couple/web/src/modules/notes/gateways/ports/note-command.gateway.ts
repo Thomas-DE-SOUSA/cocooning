@@ -1,9 +1,13 @@
 import type { NoteTitleForm } from '@cocooning/couple-client-business-logic/notes';
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import type { Result } from '@cocooning/shared-kernel/utils';
+import type { NoteLocation } from '../../view-models/note-place.view-model';
 
 export abstract class NoteCommandGateway {
-    abstract createNote(form: NoteTitleForm): Promise<Result<null, ApiError>>;
+    abstract createNote(
+        form: NoteTitleForm,
+        destination: NoteLocation,
+    ): Promise<Result<null, ApiError>>;
     abstract renameNote(
         noteId: string,
         form: NoteTitleForm,

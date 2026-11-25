@@ -17,7 +17,7 @@
         "folders": "Dossiers",
         "notes": "Notes"
     },
-    "empty": "Rien ici pour l'instant.",
+    "empty": "Rien ici pour l'instant. Touche « + » pour créer une note ou un dossier.",
     "folder": {
         "folderCount_one": "{{count}} dossier",
         "folderCount_other": "{{count}} dossiers",
@@ -29,6 +29,43 @@
         "mine": "Ma note",
         "partner": "Note de mon âme sœur",
         "updatedAt": "Modifiée le {{updatedAt}}"
+    },
+    "add": {
+        "label": "Nouvelle note ou nouveau dossier",
+        "note": "Nouvelle note",
+        "folder": "Nouveau dossier"
+    },
+    "newNote": {
+        "title": "Nouvelle note",
+        "in": "Dans « {{place}} »",
+        "submit": "Créer la note",
+        "creating": "Création en cours"
+    },
+    "newFolder": {
+        "title": "Nouveau dossier",
+        "in": "Dans « {{place}} »",
+        "submit": "Créer le dossier",
+        "creating": "Création en cours"
+    },
+    "form": {
+        "title": {
+            "label": "Titre",
+            "errors": {
+                "required": "Donne un titre à la note.",
+                "tooLong": "Ce titre est trop long : 120 signes au plus."
+            }
+        },
+        "name": {
+            "label": "Nom",
+            "errors": {
+                "required": "Donne un nom au dossier.",
+                "tooLong": "Ce nom est trop long : 60 signes au plus."
+            }
+        }
+    },
+    "toast": {
+        "createNoteFailed": "Création de la note impossible",
+        "createFolderFailed": "Création du dossier impossible"
     },
     "unavailable": {
         "title": "Impossible d'afficher ce dossier",

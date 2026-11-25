@@ -10,8 +10,14 @@ import {
     type ApiError,
     ApiErrorCodeEnum,
 } from '@cocooning/couple-client-business-logic/shared';
+import { NoteSpaceEnum } from '@cocooning/couple-shared-kernel/enums';
 import { fail, ok } from '@cocooning/shared-kernel/utils';
 import { actOnNote, createNote, renameNote } from './note-commands.service';
+
+const PRIVATE_FOLDER = {
+    space: NoteSpaceEnum.PRIVATE,
+    folderId: '01936b2e-7c4a-7000-8000-0000000000e1',
+};
 
 const REFUSAL: ApiError = {
     code: ApiErrorCodeEnum.FORBIDDEN,
@@ -26,34 +32,45 @@ describe('Feature: note commands sent by the server actions', () => {
         gateway = new FakeNotesGateway();
     });
 
-    const create = (input: unknown) =>
-        createNote(input, {
+    const create = (input: unknown, destination: unknown = PRIVATE_FOLDER) =>
+        createNote(input, destination, {
             t: (key) => key,
             createNote: new CreateNoteUseCase(gateway),
         });
 
-    describe('Scenario: R8, a partner creates a note', () => {
-        it('sends the trimmed title once', async () => {
+    describe('Scenario: R8, R13, a partner creates a note where she is', () => {
+        it('sends the trimmed title once, with the space and the folder', async () => {
             expect(await create({ title: '  Courses ' })).toEqual(ok(null));
             expect(gateway.calls).toEqual([
                 {
                     operation: 'createNote',
-                    request: {
-                        title: 'Courses',
-                        space: 'SHARED',
-                        folderId: null,
-                    },
+                    request: { title: 'Courses', ...PRIVATE_FOLDER },
                 },
             ]);
         });
 
-        it('refuses an empty title without calling the API (rule 14)', async () => {
-            const result = await create({ title: '   ' });
-            expect(result.success === false && result.error.code).toBe(
-                ApiErrorCodeEnum.VALIDATION_ERROR,
-            );
-            expect(gateway.calls).toEqual([]);
-        });
+        it.each([
+            ['an empty title', { title: '   ' }, PRIVATE_FOLDER],
+            [
+                'an unknown space',
+                { title: 'Courses' },
+                { space: 'BOTH', folderId: null },
+            ],
+            [
+                'a folder id that is not one',
+                { title: 'Courses' },
+                { space: 'SHARED', folderId: '../couple' },
+            ],
+        ])(
+            'refuses %s without calling the API (rule 14)',
+            async (_label, input, destination) => {
+                const result = await create(input, destination);
+                expect(result.success === false && result.error.code).toBe(
+                    ApiErrorCodeEnum.VALIDATION_ERROR,
+                );
+                expect(gateway.calls).toEqual([]);
+            },
+        );
     });
 
     describe('Scenario: R5, R7, the owner acts on a note', () => {

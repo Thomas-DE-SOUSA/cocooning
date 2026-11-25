@@ -8,6 +8,10 @@ import {
 } from './note-space-i18n-namespaces';
 
 const REQUIRED_KEYS = [
+    'form.title.errors.required',
+    'form.title.errors.tooLong',
+    'form.name.errors.required',
+    'form.name.errors.tooLong',
     ...[
         ...NOTE_SPACE_SCREEN_ERROR_CODES,
         ...Object.values(ApiErrorCodeEnum),
@@ -16,7 +20,7 @@ const REQUIRED_KEYS = [
 
 describe('Feature: messages of the screen of a space (decision 0037)', () => {
     it.each(I18N_CONFIG.supportedLocales)(
-        'has every key of the server errors in %s',
+        'has every key of the forms and of the server errors in %s',
         (locale) => {
             const keys = flattenLocale(
                 RESOURCES[locale][NOTE_SPACE_NAMESPACE],

@@ -1,5 +1,6 @@
 import type { NoteTitleForm } from '@cocooning/couple-client-business-logic/notes';
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
+import { NoteSpaceEnum } from '@cocooning/couple-shared-kernel/enums';
 import type { Result } from '@cocooning/shared-kernel/utils';
 import { useCallback, useState, useTransition } from 'react';
 import type { NoteCommandGateway } from '../gateways/ports/note-command.gateway';
@@ -8,6 +9,13 @@ import {
     NoteCommandEnum,
     type PendingNoteCommand,
 } from '../view-models/note-command.view-model';
+import type { NoteLocation } from '../view-models/note-place.view-model';
+
+// R2: the list of the home creates its notes at the root of « Partagé ».
+const SHARED_ROOT: NoteLocation = {
+    space: NoteSpaceEnum.SHARED,
+    folderId: null,
+};
 
 type Options = {
     readonly gateway: NoteCommandGateway;
@@ -48,7 +56,7 @@ export function useNoteCommands({ gateway, onDone, onFailed }: Options) {
     const createNote = useCallback(
         (form: NoteTitleForm) =>
             run({ command: NoteCommandEnum.CREATE_NOTE, noteId: null }, () =>
-                gateway.createNote(form),
+                gateway.createNote(form, SHARED_ROOT),
             ),
         [run, gateway],
     );

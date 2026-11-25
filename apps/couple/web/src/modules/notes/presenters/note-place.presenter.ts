@@ -3,6 +3,7 @@ import type { NoteSpace } from '@cocooning/couple-shared-kernel/enums';
 import { WebRouterEnum } from '@cocooning/couple-shared-kernel/routers';
 import type {
     FolderRef,
+    NoteLocation,
     NotePlace,
 } from '../view-models/note-place.view-model';
 
@@ -33,3 +34,9 @@ export function presentPathPlaces(
         back: parent === undefined ? root : presentNotePlace(space, parent),
     };
 }
+
+// What a command receives for a place: its space and its folder, null at the root.
+export const presentLocation = (place: NotePlace): NoteLocation => ({
+    space: place.space,
+    folderId: place.folder === null ? null : place.folder.folderId,
+});

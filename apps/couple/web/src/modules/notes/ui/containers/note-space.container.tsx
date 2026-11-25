@@ -9,8 +9,8 @@ import {
     type NoteSpaceScreenViewModel,
     NoteSpaceStepEnum,
 } from '../../view-models/note-space-screen.view-model';
-import { NoteSpaceContentsView } from '../views/note-space-contents.view';
 import { NoteSpaceHeaderView } from '../views/note-space-header.view';
+import { NoteSpaceContentsContainer } from './note-space-contents.container';
 
 export function NoteSpaceContainer({
     viewModel,
@@ -33,10 +33,7 @@ export function NoteSpaceContainer({
                     onRetry={refresh}
                 />
             ) : (
-                <NoteSpaceContentsView
-                    folders={viewModel.folders}
-                    notes={viewModel.notes}
-                />
+                <NoteSpaceContentsContainer screen={viewModel} />
             )}
         </>
     );
