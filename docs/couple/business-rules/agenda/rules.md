@@ -79,7 +79,7 @@ Nous modifions ou supprimons tous les deux n'importe quel événement partagé ;
 
 Je crée un événement partagé, ou je partage un événement privé : le téléphone de l'autre affiche « Ton âme sœur a ajouté un événement », sans le titre. Un événement « rien que pour moi » ne notifie personne.
 
-- Dans le code : le relais de l'outbox du contexte `messaging` lit `agenda_event` ; `pushNotificationsOf` (`messaging/domain/models/push-notification-plan.ts`) fait d'un `CalendarEventCreatedEvent` de visibilité `SHARED` ou d'un `CalendarEventSharedEvent` un `CALENDAR_EVENT_ADDED` pour l'autre partenaire seulement ; un événement créé `PRIVATE` ne notifie personne ([décision 0051](../../decisions/messaging/0051-relais-des-notifications.md)).
+- Dans le code : le relais de l'outbox du contexte `messaging` lit `agenda_event` ; `pushNotificationsOf` (`messaging/domain/models/push-notification-plan.ts`) fait d'un `CalendarEventCreatedEvent` de visibilité `SHARED` ou d'un `CalendarEventSharedEvent` un `CALENDAR_EVENT_ADDED` pour l'autre partenaire seulement ; un événement créé `PRIVATE` ne notifie personne ([décision 0051](../../decisions/messaging/0051-relais-des-notifications.md)). Dans la PWA, le service worker affiche la phrase de `CALENDAR_EVENT_ADDED` (`pushNotificationOf`, `apps/couple/web/src/app/sw-push-notification.ts`) ; un toucher ouvre l'onglet « Agenda ».
 - Source : [décision 0050](../../decisions/messaging/0050-regles-des-messages.md). Validée par : Thomas De Sousa, 2026-11-24.
 
 ## Cas et exceptions

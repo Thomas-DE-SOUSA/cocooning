@@ -1,0 +1,9 @@
+{
+    "notification": {
+        "MESSAGE_RECEIVED": "Ton âme sœur t'a envoyé quelque chose",
+        "PHOTO_PROMPT_ISSUED": "C'est l'heure de la photo",
+        "CALENDAR_EVENT_ADDED": "Ton âme sœur a ajouté un événement",
+        "NOTE_SHARED": "Ton âme sœur a partagé une note avec toi",
+        "generic": "Cocooning a du nouveau"
+    }
+}

@@ -74,7 +74,7 @@ Je donne un titre à ma note ; les espaces autour ne comptent pas, un titre vide
 
 Je crée une note partagée, ou je partage une note privée : le téléphone de l'autre affiche « Ton âme sœur a partagé une note avec toi », sans le titre. Une note privée ne notifie personne.
 
-- Dans le code : le relais de l'outbox du contexte `messaging` lit `note_event` ; `pushNotificationsOf` (`messaging/domain/models/push-notification-plan.ts`) fait d'un `NoteCreatedEvent` de visibilité `SHARED` (toute note créée, R2) ou d'un `NoteSharedEvent` un `NOTE_SHARED` pour l'autre partenaire seulement ; `NoteMadePrivateEvent` ne notifie personne ([décision 0051](../../decisions/messaging/0051-relais-des-notifications.md)).
+- Dans le code : le relais de l'outbox du contexte `messaging` lit `note_event` ; `pushNotificationsOf` (`messaging/domain/models/push-notification-plan.ts`) fait d'un `NoteCreatedEvent` de visibilité `SHARED` (toute note créée, R2) ou d'un `NoteSharedEvent` un `NOTE_SHARED` pour l'autre partenaire seulement ; `NoteMadePrivateEvent` ne notifie personne ([décision 0051](../../decisions/messaging/0051-relais-des-notifications.md)). Dans la PWA, le service worker affiche la phrase de `NOTE_SHARED` (`pushNotificationOf`, `apps/couple/web/src/app/sw-push-notification.ts`) ; un toucher ouvre l'accueil des notes.
 - Source : [décision 0050](../../decisions/messaging/0050-regles-des-messages.md). Validée par : Thomas De Sousa, 2026-11-24.
 
 ## Cas et exceptions
