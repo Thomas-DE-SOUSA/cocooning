@@ -40,7 +40,7 @@ L'élément ajouté est une note, avec la fiche en haut (une valeur par case) et
 
 Une information que l'IA ne trouve pas reste « non trouvé ». La fiche garde ses sources (des liens) et la date de sa recherche.
 
-- Dans le code : `NoteCard.recordResult` (`fieldsFilledWith` : une case absente de la réponse vaut `null`, « non trouvé »), `sources` (`NOTE_CARD_SOURCE_MAX_COUNT` ; `toNoteCardWriting` ne garde que les adresses données à l'IA, dont la page OpenStreetMap du lieu, décision 0055) et `searchedAt`. Dans la PWA : une case sans valeur s'affiche « Non trouvé » en italique ; le pied de la fiche dit « 3 sources · recherchée le 25 nov. » et déplie les liens, ouverts dans un nouvel onglet (`NoteCardView`, `NoteCardSources`).
+- Dans le code : `NoteCard.recordResult` (`fieldsFilledWith` : une case absente de la réponse vaut `null`, « non trouvé »), `sources` (`NOTE_CARD_SOURCE_MAX_COUNT` ; `toNoteCardWriting` ne garde que les adresses données à l'IA, dont la page OpenStreetMap du lieu, décision 0055) et `searchedAt`. Dans la PWA : une case sans valeur s'affiche « Non trouvé » en italique ; le pied de la fiche dit « 3 sources · recherchée le 25 nov. » et déplie les liens, ouverts dans un nouvel onglet ; la page d'un lieu sur OpenStreetMap s'affiche « OpenStreetMap », comme le demande sa licence (`NoteCardView`, `NoteCardSources`, `presentNoteCard`).
 - Source : décision 0052. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R22. Je corrige une case, « Mettre à jour » la respecte

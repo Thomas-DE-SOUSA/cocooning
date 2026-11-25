@@ -15,7 +15,14 @@ const CHEZ_PAUL: NoteCardViewModel = {
         { name: 'Réservation', value: null, isManual: false },
     ],
     choice: null,
-    sources: ['https://example.org/chez-paul', 'https://example.org/avis'],
+    sources: [
+        { url: 'https://example.org/chez-paul', isOpenStreetMap: false },
+        { url: 'https://example.org/avis', isOpenStreetMap: false },
+        {
+            url: 'https://www.openstreetmap.org/node/1',
+            isOpenStreetMap: true,
+        },
+    ],
     searchedOn: '25 nov.',
     canRefresh: true,
 };
@@ -47,13 +54,18 @@ describe('Feature: the card on the page of a note (R20 to R22, R25)', () => {
         expect(screen.getByText('13 rue de Charonne')).not.toBeNull();
         expect(screen.getByText('Non trouvé').className).toContain('italic');
         expect(
-            screen.getByText('2 sources · recherchée le 25 nov.'),
+            screen.getByText('3 sources · recherchée le 25 nov.'),
         ).not.toBeNull();
         const link = screen.getByRole('link', {
             name: 'https://example.org/avis',
         });
         expect(link.getAttribute('target')).toBe('_blank');
         expect(link.getAttribute('rel')).toBe('noopener noreferrer');
+        expect(
+            screen
+                .getByRole('link', { name: 'OpenStreetMap' })
+                .getAttribute('href'),
+        ).toBe('https://www.openstreetmap.org/node/1');
         expect(
             screen.getByRole('heading', { name: 'Nos notes' }),
         ).not.toBeNull();

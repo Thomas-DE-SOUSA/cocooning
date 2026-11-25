@@ -21,10 +21,33 @@ describe('Feature: the card on the page of a note (R20 to R22, R25)', () => {
             status: NoteCardStatusEnum.FILLED,
             fields: FILLED!.card!.fields,
             choice: null,
-            sources: ['https://example.org/chez-paul'],
+            sources: [
+                {
+                    url: 'https://example.org/chez-paul',
+                    isOpenStreetMap: false,
+                },
+            ],
             searchedOn: '25 nov.',
             canRefresh: true,
         });
+    });
+
+    it('decision 0055, names the page of a place on OpenStreetMap', () => {
+        const osm = 'https://www.openstreetmap.org/node/10678978971';
+        const card = {
+            ...FILLED!,
+            card: {
+                ...FILLED!.card!,
+                sources: [osm, 'https://example.org/openstreetmap.org/'],
+            },
+        };
+        expect(presentNoteCard(card, true)?.sources).toEqual([
+            { url: osm, isOpenStreetMap: true },
+            {
+                url: 'https://example.org/openstreetmap.org/',
+                isOpenStreetMap: false,
+            },
+        ]);
     });
 
     it('has no day before the first search, and no update outside a smart folder', () => {
