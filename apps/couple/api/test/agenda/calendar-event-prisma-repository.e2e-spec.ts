@@ -32,6 +32,7 @@ const anEvent = (
     endsOn: null,
     visibility: 'SHARED',
     audience: 'BOTH',
+    labelId: null,
     updatedAt: NOW,
     deletedAt: null,
     ...overrides,

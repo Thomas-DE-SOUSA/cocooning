@@ -2,7 +2,7 @@
 
 Cette page décrit les trois tables PostgreSQL du contexte `agenda` : leurs colonnes, leurs index et leurs contraintes. À lire avant de modifier `packages/couple/prisma/prisma/models/agenda-*.prisma` ou les adaptateurs Prisma de `CalendarEventRepository` et `CalendarLabelRepository`.
 
-Les tables naissent avec la migration `20261124133221_agenda_calendar_event` (`packages/couple/prisma/prisma/migrations/`) ; la colonne `audience` vient de `20261125230000_agenda_calendar_event_audience`, la table `calendar_label` de `20261125230100_agenda_calendar_label`. Les dates techniques sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma ; les jours et les heures d'un événement sont ceux de Paris, sans fuseau ni conversion ([décision 0047](../../decisions/agenda/0047-moments-de-l-agenda-en-heure-de-paris.md)).
+Les tables naissent avec la migration `20261124133221_agenda_calendar_event` (`packages/couple/prisma/prisma/migrations/`) ; la colonne `audience` vient de `20261125230000_agenda_calendar_event_audience`, la table `calendar_label` de `20261125230100_agenda_calendar_label`, la colonne `label_id` de `20261125230200_agenda_calendar_event_label` et son index de `20261125230300_agenda_calendar_event_label_index`, seul dans sa migration pour `CREATE INDEX CONCURRENTLY`. Les dates techniques sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma ; les jours et les heures d'un événement sont ceux de Paris, sans fuseau ni conversion ([décision 0047](../../decisions/agenda/0047-moments-de-l-agenda-en-heure-de-paris.md)).
 
 ## `calendar_event`
 
@@ -20,6 +20,7 @@ L'agrégat `CalendarEvent` (modèle `CalendarEvent`, fichier `agenda-calendar-ev
 | `starts_at`, `ends_at` | `VARCHAR(5)`, nullables | Heures `HH:MM` de Paris ; `starts_at` à `null` : toute la journée (R5) |
 | `visibility` | `VARCHAR(20)` | `SHARED` ou `PRIVATE` (`CalendarEventVisibilityEnum`), relu par `parseEnum()` ; une valeur inconnue répond `CALENDAR_EVENT_DATA_CORRUPTED` |
 | `audience` | `VARCHAR(20)` | Pour qui : `OWNER`, `PARTNER` ou `BOTH` (`CalendarEventAudienceEnum`, R11), relu par `parseEnum()` ; une valeur inconnue répond `CALENDAR_EVENT_DATA_CORRUPTED`. La migration l'a rempli depuis `visibility` (`SHARED` donne `BOTH`, `PRIVATE` donne `OWNER`) avant de le rendre obligatoire |
+| `label_id` | `UUID`, nullable, clé étrangère vers `calendar_label(id)` (`ON DELETE SET NULL`) | L'étiquette qui colore l'événement, `null` sans étiquette (R13) ; remise à `null` quand l'étiquette est supprimée, sans changer `version` (R14) |
 | `version` | `INTEGER` | Verrou optimiste : 1 à la création, incrémenté par le repository |
 | `created_at`, `updated_at` | `TIMESTAMP(3)` | `EntityMetadata` du domaine, fournies par `DateTimeProvider` |
 | `deleted_at` | `TIMESTAMP(3)`, nullable | Suppression douce (R9) : le modèle figure dans `SOFT_DELETABLE_MODELS` |
@@ -28,6 +29,8 @@ L'agrégat `CalendarEvent` (modèle `CalendarEvent`, fichier `agenda-calendar-ev
 |---|---|---|
 | `calendar_event_pkey` | `id` | Clé primaire |
 | `calendar_event_couple_id_starts_on_idx` | `couple_id`, `starts_on` | Les événements d'une plage de jours (`findVisibleOverlapping`) ; `couple_id` en tête (`core.md` règle 27) |
+| `calendar_event_couple_id_label_id_idx` | `couple_id`, `label_id` | Les événements d'une étiquette, à libérer quand elle est supprimée (`clearLabel`, R14) |
+| `calendar_event_label_id_fkey` | `label_id` vers `calendar_label(id)` | Une étiquette existe ; elle n'est jamais effacée (suppression douce), le `SET NULL` ne joue donc pas |
 
 La visibilité se filtre dans le `where` de chaque lecture : `couple_id` du partenaire, puis `visibility = 'SHARED'` ou `owner_id` égal au partenaire (R7). Une plage de `from` à `to` lit `starts_on <= to` et, au choix, `ends_on >= from` ou `ends_on` nul avec `starts_on >= from`.
 

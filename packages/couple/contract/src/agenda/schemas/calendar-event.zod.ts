@@ -17,6 +17,7 @@ export const CalendarEventResponseSchema = z.object({
     endsAt: z.string().nullable(),
     visibility: z.enum(Object.values(CalendarEventVisibilityEnum)),
     audience: z.enum(Object.values(CalendarEventAudienceEnum)),
+    labelId: z.string().nullable(),
     updatedAt: z.string(),
 });
 

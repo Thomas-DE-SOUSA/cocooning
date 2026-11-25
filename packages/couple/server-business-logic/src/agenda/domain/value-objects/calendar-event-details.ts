@@ -12,6 +12,7 @@ export type CalendarEventDetailsInput = {
     readonly startsAt: string | null;
     readonly endsAt: string | null;
     readonly audience: CalendarEventAudience;
+    readonly labelId: string | null;
 };
 
 export type CalendarEventDetails = {
@@ -19,9 +20,11 @@ export type CalendarEventDetails = {
     readonly description: CalendarEventDescription | null;
     readonly moment: CalendarEventMoment;
     readonly audience: CalendarEventAudience;
+    readonly labelId: string | null;
 };
 
-// R2, R5, R6: the same checks at creation and at each edit; the aggregate checks the audience against the visibility (R11).
+// R2, R5, R6: the same checks at creation and at each edit; the aggregate checks the audience against the visibility (R11),
+// the use case that the label is the couple's (R13).
 export const createCalendarEventDetails = (
     input: CalendarEventDetailsInput,
 ): CalendarEventDetails => ({
@@ -34,4 +37,5 @@ export const createCalendarEventDetails = (
         endsAt: input.endsAt,
     }),
     audience: input.audience,
+    labelId: input.labelId,
 });

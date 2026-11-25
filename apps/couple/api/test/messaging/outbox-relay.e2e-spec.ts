@@ -39,6 +39,7 @@ const calendarEvent = (visibility: string) => ({
     startsAt: null,
     endsAt: null,
     audience: 'OWNER',
+    labelId: null,
     visibility,
 });
 

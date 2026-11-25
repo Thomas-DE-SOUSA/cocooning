@@ -9,6 +9,7 @@ import { CalendarEventId } from '../../domain/value-objects/calendar-event-id.vo
 import { AgendaTestContext } from '../../__tests__/fixtures/agenda-test.context';
 import {
     AS_A,
+    AS_STRANGER,
     COUPLE_ID,
     FIRST_ID,
     NOW,
@@ -52,6 +53,7 @@ describe('Feature: create a calendar event', () => {
                 endsAt: null,
                 visibility: SHARED,
                 audience: BOTH,
+                labelId: null,
                 updatedAt: NOW,
             });
         });
@@ -131,6 +133,39 @@ describe('Feature: create a calendar event', () => {
                 expect(ctx.eventPublisher.published).toEqual([]);
             },
         );
+    });
+
+    describe('Scenario: R13, a label on the event', () => {
+        it('creates the event with a label of the couple', async () => {
+            const label = ctx.givenLabelOf(AS_A);
+            const labelId = label.id.getValue();
+            const view = await create(SHARED, { ...WEEKEND, labelId });
+            expect(view.labelId).toBe(labelId);
+            expect(
+                ctx.calendarEventRepository.storedSnapshots[0],
+            ).toMatchObject({ labelId });
+        });
+
+        const refusesWith = async (labelId: string) => {
+            await expect(
+                create(SHARED, { ...WEEKEND, labelId }),
+            ).rejects.toMatchObject({
+                code: AgendaExceptionCodeEnum.CALENDAR_LABEL_NOT_FOUND,
+            });
+            expect(ctx.calendarEventRepository.storedSnapshots).toEqual([]);
+        };
+
+        it('refuses a label of another couple and stores nothing', async () => {
+            await refusesWith(ctx.givenLabelOf(AS_STRANGER).id.getValue());
+        });
+
+        it('refuses a deleted label and stores nothing', async () => {
+            const calendarLabelId = ctx.givenLabelOf(AS_A).id.getValue();
+            await ctx
+                .deleteCalendarLabelUseCase()
+                .execute(AS_A, { calendarLabelId });
+            await refusesWith(calendarLabelId);
+        });
     });
 
     describe('Scenario: R6, the description', () => {

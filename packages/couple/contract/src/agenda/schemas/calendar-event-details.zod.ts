@@ -9,8 +9,8 @@ import { z } from 'zod';
 const DaySchema = z.iso.date();
 const HourSchema = z.iso.time({ precision: -1 });
 
-// The details typed in the event form, sent whole at creation and at each edit (R2, R5, R6, R11).
-// The domain checks that a private event is for its author (R11).
+// The details typed in the event form, sent whole at creation and at each edit (R2, R5, R6, R11, R13).
+// The domain checks that a private event is for its author (R11) and that the label is the couple's (R13).
 export const CalendarEventDetailsSchema = z.object({
     title: z.string().trim().min(1).max(CALENDAR_EVENT_TITLE_MAX_LENGTH),
     description: z
@@ -23,4 +23,5 @@ export const CalendarEventDetailsSchema = z.object({
     startsAt: HourSchema.nullable(),
     endsAt: HourSchema.nullable(),
     audience: z.enum(Object.values(CalendarEventAudienceEnum)),
+    labelId: z.uuid().nullable(),
 });

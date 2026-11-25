@@ -26,6 +26,15 @@ export class CalendarLabelPreconditionService {
         });
     }
 
+    // R13: no label, or a live label of the couple.
+    async ensureLabelUsable(
+        context: ExecutionContext,
+        calendarLabelId: string | null,
+    ): Promise<void> {
+        if (calendarLabelId === null) return;
+        await this.loadCalendarLabel(context, calendarLabelId);
+    }
+
     // R12: at most CALENDAR_LABEL_MAX_COUNT live labels; two creations at the same instant may pass it, a known limit.
     async ensureLabelRoomLeft(context: ExecutionContext): Promise<void> {
         const count = await this.calendarLabelRepository.countLive(

@@ -1,4 +1,5 @@
 import type { CalendarEvent } from '../models/calendar-event.aggregate';
+import type { CalendarLabel } from '../models/calendar-label.aggregate';
 
 // Visibility is filtered by the query, never in memory (core-backend.md rule 12): another partner's private event is not found (R7).
 export abstract class CalendarEventRepository {
@@ -15,4 +16,6 @@ export abstract class CalendarEventRepository {
         from: string,
         to: string,
     ): Promise<ReadonlyArray<CalendarEvent>>;
+    // R14: the events of the label's couple that carry it lose it, in one statement of the open unit of work, versions untouched.
+    abstract clearLabel(label: CalendarLabel): Promise<void>;
 }

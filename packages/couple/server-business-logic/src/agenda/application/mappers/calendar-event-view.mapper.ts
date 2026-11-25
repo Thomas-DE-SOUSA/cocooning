@@ -16,6 +16,7 @@ export type CalendarEventView = {
     readonly endsAt: string | null;
     readonly visibility: CalendarEventVisibility;
     readonly audience: CalendarEventAudience;
+    readonly labelId: string | null;
     readonly updatedAt: Date;
 };
 
@@ -37,6 +38,7 @@ export const toCalendarEventView = (
         endsAt: details.endsAt,
         visibility: details.visibility,
         audience: details.audience,
+        labelId: details.labelId,
         updatedAt: calendarEvent.updatedAt,
     };
 };

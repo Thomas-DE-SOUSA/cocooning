@@ -12,6 +12,7 @@ import {
     FakeEventPublisherAdapter,
     FakeLoggerAdapter,
     FakeUuidV7GeneratorProvider,
+    InMemoryUnitOfWork,
 } from '@cocooning/shared-kernel/testing';
 import { CalendarEvent } from '../../domain/models/calendar-event.aggregate';
 import { CalendarLabel } from '../../domain/models/calendar-label.aggregate';
@@ -36,6 +37,7 @@ export class AgendaTestFakes {
     readonly pairedCoupleProvider = new FakePairedCoupleProvider();
     readonly eventPublisher = new FakeEventPublisherAdapter();
     readonly logger = new FakeLoggerAdapter();
+    readonly unitOfWork = new InMemoryUnitOfWork();
     protected readonly eventPublishingService = new EventPublishingService(
         this.eventPublisher,
         this.logger,

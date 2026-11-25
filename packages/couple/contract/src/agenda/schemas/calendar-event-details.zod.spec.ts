@@ -5,6 +5,7 @@ import {
 import { CreateCalendarEventRequestSchema } from './create-calendar-event.request';
 import { EditCalendarEventRequestSchema } from './edit-calendar-event.request';
 
+const LABEL_ID = '01936b2e-7c4a-7000-8000-0000000000b1';
 const DINNER = {
     title: 'Dîner chez Paul',
     description: null,
@@ -13,6 +14,7 @@ const DINNER = {
     startsAt: '20:00',
     endsAt: null,
     audience: 'BOTH',
+    labelId: null,
     visibility: 'SHARED',
 };
 
@@ -56,6 +58,8 @@ describe.each([
         ['an end hour with seconds', { endsAt: '22:00:00' }],
         ['an unknown audience', { audience: 'FRIENDS' }],
         ['a missing audience', { audience: undefined }],
+        ['a label that is not a UUID', { labelId: 'sport' }],
+        ['a missing label', { labelId: undefined }],
     ])('rejects %s', (_label, change) => {
         expect(schema.safeParse({ ...DINNER, ...change }).success).toBe(false);
     });
@@ -69,6 +73,26 @@ describe.each([
         },
     );
 });
+
+describe.each([
+    ['create', CreateCalendarEventRequestSchema],
+    ['edit', EditCalendarEventRequestSchema],
+])(
+    'Feature: the label sent to %s a calendar event (R13)',
+    (_action, schema) => {
+        it('accepts a label', () => {
+            expect(
+                schema.parse({ ...DINNER, labelId: LABEL_ID }),
+            ).toMatchObject({
+                labelId: LABEL_ID,
+            });
+        });
+
+        it('accepts no label', () => {
+            expect(schema.parse(DINNER)).toMatchObject({ labelId: null });
+        });
+    },
+);
 
 describe('Feature: the visibility chosen at creation (R3)', () => {
     it.each([['SHARED'], ['PRIVATE']])('accepts %s', (visibility) => {

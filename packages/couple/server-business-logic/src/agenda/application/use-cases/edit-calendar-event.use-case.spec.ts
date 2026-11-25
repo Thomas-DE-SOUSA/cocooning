@@ -143,6 +143,37 @@ describe('Feature: edit a calendar event', () => {
         });
     });
 
+    describe('Scenario: R13, the label of the event', () => {
+        it('puts a label of the couple on the event, then takes it off', async () => {
+            const calendarEvent = ctx.givenEventOf(AS_A);
+            const labelId = ctx.givenLabelOf(AS_B).id.getValue();
+            const labelled = await edit(AS_B, calendarEvent, {
+                ...WEEKEND,
+                labelId,
+            });
+            expect(labelled.labelId).toBe(labelId);
+            const unlabelled = await edit(AS_A, calendarEvent);
+            expect(unlabelled.labelId).toBeNull();
+            expect(
+                ctx.calendarEventRepository.storedSnapshots[0],
+            ).toMatchObject({ labelId: null, version: 3 });
+        });
+
+        it('refuses a label of another couple, and changes nothing', async () => {
+            const calendarEvent = ctx.givenEventOf(AS_A);
+            const labelId = ctx.givenLabelOf(AS_STRANGER).id.getValue();
+            await expect(
+                edit(AS_A, calendarEvent, { ...WEEKEND, labelId }),
+            ).rejects.toMatchObject({
+                code: AgendaExceptionCodeEnum.CALENDAR_LABEL_NOT_FOUND,
+            });
+            expect(
+                ctx.calendarEventRepository.storedSnapshots[0],
+            ).toMatchObject({ labelId: null, version: 1 });
+            expect(ctx.eventPublisher.published).toEqual([]);
+        });
+    });
+
     describe('Scenario: R7, an event the partner cannot see', () => {
         it.each([
             ['the private event of the other', AS_B],

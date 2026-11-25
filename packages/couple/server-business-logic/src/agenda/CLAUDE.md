@@ -18,7 +18,8 @@ Architecture :
 - Les use cases recoivent l'`ExecutionContext` complet, construit par l'API avec `AgendaCoupleGuardService` (decision 0041) ; aucun use case ne lit le couple lui-meme.
 - La visibilite se filtre dans la requete (`findVisibleById`, `findVisibleOverlapping`), jamais en memoire apres chargement : l'evenement prive de l'autre repond `CALENDAR_EVENT_NOT_FOUND` comme un evenement inexistant (R7). Modifier et supprimer ne verifient donc pas l'auteur (R9) ; seule la visibilite le verifie (R8).
 - Jours `YYYY-MM-DD` et heures `HH:MM` restent des chaines a l'heure de Paris, jamais des instants (decision 0047) : ils se comparent comme des chaines.
-- `audience` voyage dans les details (`createCalendarEventDetails`) ; l'agregat verifie seul qu'un evenement prive est `OWNER` (`CalendarEventAudienceValidator`), a la creation, a la modification et pour rendre prive.
+- `audience` et `labelId` voyagent dans les details (`createCalendarEventDetails`) ; le use case verifie l'etiquette par `ensureLabelUsable` (R13), sans `if` : `null` passe ; l'agregat verifie seul qu'un evenement prive est `OWNER` (`CalendarEventAudienceValidator`), a la creation, a la modification et pour rendre prive.
+- Supprimer une etiquette passe par une unite de travail : `save` puis `CalendarEventRepository.clearLabel`, qui ne change pas la version des evenements (R14).
 - Une etiquette n'a pas de visibilite : elle se lit par `coupleId` seul (`CalendarLabelRepository`), et `CalendarLabelPreconditionService` repond `CALENDAR_LABEL_NOT_FOUND` a un autre couple ou pour une etiquette supprimee (R13).
 - Le titre, la description, les jours et le nom d'une etiquette appartiennent au couple : jamais dans un evenement ni dans un log (`core.md` regle 33).
 

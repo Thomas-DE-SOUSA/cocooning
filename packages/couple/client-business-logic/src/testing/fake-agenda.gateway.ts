@@ -48,6 +48,7 @@ export const A_SHARED_CALENDAR_EVENT: CalendarEventResponse = {
     endsAt: '23:00',
     visibility: CalendarEventVisibilityEnum.SHARED,
     audience: CalendarEventAudienceEnum.OWNER,
+    labelId: null,
     updatedAt: '2026-11-24T08:00:00.000Z',
 };
 

@@ -53,6 +53,8 @@ Chaque événement porte l'`ExecutionContext` complet ; aucun ne porte le titre,
 | INV-007 | Un événement privé est pour son auteur : `audience` vaut `OWNER` à la création, à la modification et pour être rendu privé (`CALENDAR_EVENT_AUDIENCE_INVALID`, R11) | agrégat (`CalendarEventAudienceValidator.ensureFits`) |
 | INV-008 | Une étiquette a un nom de 1 à `CALENDAR_LABEL_NAME_MAX_LENGTH` signes sans espaces autour (`CALENDAR_LABEL_NAME_INVALID`) et une couleur de `CalendarLabelColorEnum` (R12) | `CalendarLabelName.create`, contrat |
 | INV-009 | Un couple a au plus `CALENDAR_LABEL_MAX_COUNT` étiquettes vivantes (`CALENDAR_LABEL_LIMIT_REACHED`, R12) ; deux créations au même instant peuvent dépasser la borne, sans verrou : limite connue, acceptée | `CalendarLabelPreconditionService.ensureLabelRoomLeft` |
+| INV-010 | L'étiquette d'un événement est `null` ou une étiquette vivante de son couple (`CALENDAR_LABEL_NOT_FOUND`, R13) | `CalendarLabelPreconditionService.ensureLabelUsable`, à la création et à la modification |
+| INV-011 | Une étiquette supprimée ne colore plus aucun événement : ses événements la perdent dans la même transaction (R14) | `DeleteCalendarLabelUseCase`, `CalendarEventRepository.clearLabel` |
 
 ## Décisions liées
 

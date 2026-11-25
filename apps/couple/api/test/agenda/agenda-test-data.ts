@@ -30,6 +30,7 @@ export type CalendarEventBody = {
     readonly startsAt: string | null;
     readonly endsAt: string | null;
     readonly audience: string;
+    readonly labelId: string | null;
     readonly visibility: string;
 };
 
@@ -42,6 +43,7 @@ export const DINNER: CalendarEventBody = {
     startsAt: '20:00',
     endsAt: '23:00',
     audience: 'BOTH',
+    labelId: null,
     visibility: 'SHARED',
 };
 
@@ -61,6 +63,7 @@ export const WEEKEND_DETAILS: Omit<CalendarEventBody, 'visibility'> = {
     startsAt: null,
     endsAt: null,
     audience: 'BOTH',
+    labelId: null,
 };
 export const WEEKEND: CalendarEventBody = {
     ...WEEKEND_DETAILS,

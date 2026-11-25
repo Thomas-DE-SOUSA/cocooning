@@ -8,7 +8,7 @@ import {
 } from '@cocooning/couple-shared-kernel/enums';
 import type { CalendarEventForm } from '../schemas/calendar-event-form.zod';
 
-// R11: until the form asks who the event is for, a private event is for its author and a shared one for both.
+// R11, R13: until the form asks who the event is for and its label, a private event is for its author, a shared one for both, and none has a label.
 export const toEditCalendarEventRequest = (
     form: CalendarEventForm,
 ): EditCalendarEventRequest => ({
@@ -21,6 +21,7 @@ export const toEditCalendarEventRequest = (
     audience: form.isPrivate
         ? CalendarEventAudienceEnum.OWNER
         : CalendarEventAudienceEnum.BOTH,
+    labelId: null,
 });
 
 // R3: shared unless the author ticks "rien que pour moi".

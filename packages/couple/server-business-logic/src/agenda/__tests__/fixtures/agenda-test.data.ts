@@ -32,6 +32,7 @@ export const DINNER: CalendarEventDetailsInput = {
     startsAt: '20:00',
     endsAt: null,
     audience: CalendarEventAudienceEnum.BOTH,
+    labelId: null,
 };
 
 // A weekend: two days, no hour, so all day long.
@@ -43,4 +44,5 @@ export const WEEKEND: CalendarEventDetailsInput = {
     startsAt: null,
     endsAt: null,
     audience: CalendarEventAudienceEnum.BOTH,
+    labelId: null,
 };

@@ -35,6 +35,7 @@ const THE_DINNER_DETAILS = {
     startsAt: '20:00',
     endsAt: null,
     audience: 'OWNER',
+    labelId: null,
 };
 const REFUSAL: ApiError = {
     code: ApiErrorCodeEnum.FORBIDDEN,

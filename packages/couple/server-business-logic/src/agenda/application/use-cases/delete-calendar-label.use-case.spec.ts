@@ -61,6 +61,36 @@ describe('Feature: delete a calendar label (R12, R14)', () => {
         });
     });
 
+    describe('Scenario: R14, the events that carry the label', () => {
+        it('keep living without it, versions untouched, in one unit of work', async () => {
+            const labelId = label.id.getValue();
+            const other = ctx.givenLabelOf(AS_B, 'Soirée');
+            const shared = ctx.givenEventOf(AS_A, { labelId });
+            const secret = ctx.givenPrivateEventOf(AS_B, { labelId });
+            const kept = ctx.givenEventOf(AS_B, {
+                labelId: other.id.getValue(),
+            });
+            await remove(AS_A);
+            const labelOf = (id: string) =>
+                ctx.calendarEventRepository.storedSnapshots.find(
+                    (snapshot) => snapshot.id === id,
+                );
+            expect(labelOf(shared.id.getValue())).toMatchObject({
+                labelId: null,
+                version: 1,
+            });
+            expect(labelOf(secret.id.getValue())).toMatchObject({
+                labelId: null,
+                version: 1,
+            });
+            expect(labelOf(kept.id.getValue())).toMatchObject({
+                labelId: other.id.getValue(),
+            });
+            expect(ctx.unitOfWork.runCount).toBe(1);
+            expect(ctx.calendarEventRepository.persistedEvents).toEqual([]);
+        });
+    });
+
     describe('Scenario: R13, a label of another couple', () => {
         it('answers not found and changes nothing', async () => {
             await expect(remove(AS_STRANGER)).rejects.toMatchObject({

@@ -26,6 +26,7 @@ const DETAILS = {
     startsAt: '20:00',
     endsAt: '23:00',
     audience: CalendarEventAudienceEnum.BOTH,
+    labelId: null,
 };
 
 const aGateway = (token: string | null = 'session-token-1') =>

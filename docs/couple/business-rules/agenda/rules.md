@@ -102,14 +102,14 @@ Nous avons une seule liste d'étiquettes, chacune un nom de 1 à 30 signes et un
 
 Je mets une étiquette, ou aucune, sur un événement ; il prend sa couleur dans la liste du jour et sur les points du mois. Un événement sans étiquette reste neutre.
 
-- Dans le code : `labelId` de `CalendarEvent` ; refus `CALENDAR_LABEL_NOT_FOUND` pour une étiquette d'un autre couple ou supprimée.
+- Dans le code : `labelId` de `CalendarEvent` (dans `createCalendarEventDetails`), `CalendarLabelPreconditionService.ensureLabelUsable` dans `CreateCalendarEventUseCase` et `EditCalendarEventUseCase` ; refus `CALENDAR_LABEL_NOT_FOUND` pour une étiquette d'un autre couple, inconnue ou supprimée.
 - Source : décision 0056. Validée par : Thomas De Sousa, 2026-11-25.
 
 ### R14. Supprimer une étiquette garde ses événements
 
 Je supprime l'étiquette « Sport » : les événements qui la portaient restent, sans étiquette.
 
-- Dans le code : `DeleteCalendarLabelUseCase` retire l'étiquette des événements du couple dans la même transaction.
+- Dans le code : `DeleteCalendarLabelUseCase` retire l'étiquette des événements du couple dans la même transaction, par `CalendarEventRepository.clearLabel`.
 - Source : décision 0056. Validée par : Thomas De Sousa, 2026-11-25.
 
 ## Cas et exceptions

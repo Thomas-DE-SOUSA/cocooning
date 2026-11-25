@@ -37,6 +37,7 @@ export type CalendarEventSnapshot = {
     readonly startsAt: string | null;
     readonly endsAt: string | null;
     readonly audience: CalendarEventAudience;
+    readonly labelId: string | null;
     readonly visibility: CalendarEventVisibility;
     readonly version: number;
     readonly metadata: EntityMetadataSnapshot;

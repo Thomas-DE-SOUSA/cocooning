@@ -69,7 +69,7 @@ describe('Feature: the agenda of the couple from the PWA', () => {
             CalendarEventAudienceEnum.OWNER,
         ],
     ])(
-        'creates an event, private %s, with its visibility and audience (R1, R3, R11)',
+        'creates an event, private %s, with its visibility and audience, without a label (R1, R3, R11, R13)',
         async (isPrivate, visibility, audience) => {
             await new CreateCalendarEventUseCase(gateway).execute({
                 ...FORM,
@@ -78,7 +78,12 @@ describe('Feature: the agenda of the couple from the PWA', () => {
             expect(gateway.calls).toEqual([
                 {
                     operation: 'createCalendarEvent',
-                    request: { ...DETAILS, audience, visibility },
+                    request: {
+                        ...DETAILS,
+                        audience,
+                        labelId: null,
+                        visibility,
+                    },
                 },
             ]);
         },
@@ -98,7 +103,7 @@ describe('Feature: the agenda of the couple from the PWA', () => {
                 {
                     operation: 'editCalendarEvent',
                     calendarEventId: EVENT_ID,
-                    request: { ...DETAILS, audience },
+                    request: { ...DETAILS, audience, labelId: null },
                 },
             ]);
         },

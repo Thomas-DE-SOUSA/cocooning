@@ -4,6 +4,7 @@ import {
     AgendaException,
     CalendarEvent,
     CalendarEventRepository,
+    type CalendarLabel,
 } from '@cocooning/couple-server-business-logic/agenda';
 import { Logger, UnitOfWork } from '@cocooning/shared-kernel/ports';
 import { type CalendarEventRow, toCalendarEventSnapshot } from '../mappers';
@@ -81,6 +82,17 @@ export class CalendarEventPrismaRepository extends CalendarEventRepository {
                 orderBy: DAY_ORDER,
             });
             return rows.map(toCalendarEvent);
+        });
+    }
+
+    // R14: one statement in the open unit of work; label_id only, so the versions of the events do not move.
+    override clearLabel(label: CalendarLabel): Promise<void> {
+        const calendarLabelId = label.id.getValue();
+        return this.load({ calendarLabelId }, async (calendarEvents) => {
+            await calendarEvents.updateMany({
+                where: { coupleId: label.coupleId, labelId: calendarLabelId },
+                data: { labelId: null },
+            });
         });
     }
 

@@ -9,6 +9,7 @@ export type TestCalendarEvent = {
     readonly endsOn: string | null;
     readonly visibility: string;
     readonly audience: string;
+    readonly labelId: string | null;
     readonly updatedAt: Date;
     readonly deletedAt: Date | null;
 };
@@ -33,6 +34,7 @@ export async function createTestCalendarEvents(
                     : dayColumn(calendarEvent.endsOn),
             visibility: calendarEvent.visibility,
             audience: calendarEvent.audience,
+            labelId: calendarEvent.labelId,
             version: 1,
             createdAt: calendarEvent.updatedAt,
             updatedAt: calendarEvent.updatedAt,

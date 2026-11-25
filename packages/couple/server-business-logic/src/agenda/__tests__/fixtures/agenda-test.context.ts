@@ -21,6 +21,7 @@ export class AgendaTestContext extends AgendaTestFakes {
     createCalendarEventUseCase(): CreateCalendarEventUseCase {
         return new CreateCalendarEventUseCase(
             this.calendarEventRepository,
+            this.labelPreconditions,
             this.dateTimeProvider,
             this.eventPublishingService,
         );
@@ -35,7 +36,13 @@ export class AgendaTestContext extends AgendaTestFakes {
     }
 
     editCalendarEventUseCase(): EditCalendarEventUseCase {
-        return new EditCalendarEventUseCase(...this.mutationDependencies());
+        return new EditCalendarEventUseCase(
+            this.calendarEventRepository,
+            this.preconditions,
+            this.labelPreconditions,
+            this.dateTimeProvider,
+            this.eventPublishingService,
+        );
     }
 
     shareCalendarEventUseCase(): ShareCalendarEventUseCase {
@@ -65,7 +72,14 @@ export class AgendaTestContext extends AgendaTestFakes {
     }
 
     deleteCalendarLabelUseCase(): DeleteCalendarLabelUseCase {
-        return new DeleteCalendarLabelUseCase(...this.labelDependencies());
+        return new DeleteCalendarLabelUseCase(
+            this.calendarLabelRepository,
+            this.calendarEventRepository,
+            this.labelPreconditions,
+            this.unitOfWork,
+            this.dateTimeProvider,
+            this.eventPublishingService,
+        );
     }
 
     private labelDependencies() {

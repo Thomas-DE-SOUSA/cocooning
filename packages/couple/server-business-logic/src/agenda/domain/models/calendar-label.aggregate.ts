@@ -77,6 +77,10 @@ export class CalendarLabel extends AggregateRoot {
         return this.props.id;
     }
 
+    get coupleId(): string {
+        return this.props.coupleId;
+    }
+
     get updatedAt(): Date {
         return this.props.metadata.updatedAt;
     }

@@ -22,6 +22,7 @@ export type CalendarEventStateColumns = {
     readonly endsAt: string | null;
     readonly visibility: string;
     readonly audience: string;
+    readonly labelId: string | null;
     readonly updatedAt: Date;
     readonly deletedAt: Date | null;
 };
@@ -67,6 +68,7 @@ export function toCalendarEventSnapshot(
             CalendarEventAudienceEnum,
             'CalendarEventAudience',
         ),
+        labelId: raw.labelId,
         version: raw.version,
         metadata: {
             createdAt: raw.createdAt.toISOString(),
@@ -91,6 +93,7 @@ export function toCalendarEventState(
         endsAt: snapshot.endsAt,
         visibility: snapshot.visibility,
         audience: snapshot.audience,
+        labelId: snapshot.labelId,
         updatedAt: new Date(metadata.updatedAt),
         deletedAt: toInstant(metadata.deletedAt),
     };

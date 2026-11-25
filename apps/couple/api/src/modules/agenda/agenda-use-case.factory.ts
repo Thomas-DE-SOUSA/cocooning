@@ -10,6 +10,7 @@ import {
     DateTimeProvider,
     EventPublisher,
     Logger,
+    UnitOfWork,
 } from '@cocooning/shared-kernel/ports';
 
 export type AgendaDependencies = {
@@ -17,6 +18,7 @@ export type AgendaDependencies = {
     readonly preconditions: CalendarEventPreconditionService;
     readonly labelRepository: CalendarLabelRepository;
     readonly labelPreconditions: CalendarLabelPreconditionService;
+    readonly unitOfWork: UnitOfWork;
     readonly clock: DateTimeProvider;
     readonly publishing: EventPublishingService;
 };
@@ -24,6 +26,7 @@ export type AgendaDependencies = {
 const DEPENDENCIES = [
     CalendarEventRepository,
     CalendarLabelRepository,
+    UnitOfWork,
     DateTimeProvider,
     EventPublisher,
     Logger,
@@ -33,6 +36,7 @@ const DEPENDENCIES = [
 const collect = (
     repository: CalendarEventRepository,
     labelRepository: CalendarLabelRepository,
+    unitOfWork: UnitOfWork,
     clock: DateTimeProvider,
     publisher: EventPublisher,
     logger: Logger,
@@ -45,6 +49,7 @@ const collect = (
         labelPreconditions: new CalendarLabelPreconditionService(
             labelRepository,
         ),
+        unitOfWork,
         clock,
         publishing: new EventPublishingService(publisher, logger),
     };
