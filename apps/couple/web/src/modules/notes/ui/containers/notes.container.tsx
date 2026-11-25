@@ -45,8 +45,6 @@ export function NotesContainer({
                 pending={screen.pending}
                 isBusy={screen.isBusy}
                 deletionAsked={screen.deletionAsked}
-                onShare={screen.shareNote}
-                onMakePrivate={screen.makeNotePrivate}
                 onAskDeletion={screen.askDeletion}
                 onConfirmDeletion={screen.deleteNote}
                 onKeep={screen.keepNote}

@@ -11,7 +11,7 @@ import {
 } from './note-owner-actions';
 import { NoteVisibilityBadge } from './note-visibility-badge';
 
-type Props = Omit<NoteOwnerActionsProps, 'isShared'> & {
+type Props = NoteOwnerActionsProps & {
     readonly note: NoteListItem;
 };
 
@@ -37,12 +37,7 @@ export function NoteItem({ note, ...actions }: Props) {
                     namespace={NOTES_NAMESPACE}
                     note={note}
                 />
-                {note.isOwner ? (
-                    <NoteOwnerActions
-                        isShared={note.isShared}
-                        {...actions}
-                    />
-                ) : null}
+                {note.isOwner ? <NoteOwnerActions {...actions} /> : null}
             </Card>
         </li>
     );

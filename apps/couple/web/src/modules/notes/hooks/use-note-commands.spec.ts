@@ -50,21 +50,17 @@ describe('Feature: note commands from the list', () => {
         });
     });
 
-    describe('Scenario: R5, R7, the owner acts on her note', () => {
-        it.each([
-            ['shareNote', NoteCommandEnum.SHARE_NOTE],
-            ['makeNotePrivate', NoteCommandEnum.MAKE_NOTE_PRIVATE],
-            ['deleteNote', NoteCommandEnum.DELETE_NOTE],
-        ] as const)('sends %s for that note', async (operation, command) => {
+    describe('Scenario: R7, the owner deletes her note', () => {
+        it('sends the deletion of that note', async () => {
             const gateway = new FakeNoteCommandGateway();
             const { result, events } = renderCommands(gateway);
 
-            await act(async () => result.current[operation](NOTE_ID));
+            await act(async () => result.current.deleteNote(NOTE_ID));
 
             expect(gateway.answers.calls).toEqual([
-                { operation, noteId: NOTE_ID },
+                { operation: 'deleteNote', noteId: NOTE_ID },
             ]);
-            expect(events).toEqual([`${command}:done`]);
+            expect(events).toEqual(['DELETE_NOTE:done']);
         });
 
         it('tells which note is running until the answer arrives', async () => {
@@ -72,10 +68,10 @@ describe('Feature: note commands from the list', () => {
             const release = gateway.answers.holdAnswers();
             const { result } = renderCommands(gateway);
 
-            act(() => result.current.shareNote(NOTE_ID));
+            act(() => result.current.deleteNote(NOTE_ID));
 
             expect(result.current.pending).toEqual({
-                command: NoteCommandEnum.SHARE_NOTE,
+                command: NoteCommandEnum.DELETE_NOTE,
                 noteId: NOTE_ID,
             });
             expect(result.current.isBusy).toBe(true);

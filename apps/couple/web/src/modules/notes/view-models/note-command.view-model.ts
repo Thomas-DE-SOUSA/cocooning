@@ -1,7 +1,5 @@
 export const NoteCommandEnum = {
     CREATE_NOTE: 'CREATE_NOTE',
-    SHARE_NOTE: 'SHARE_NOTE',
-    MAKE_NOTE_PRIVATE: 'MAKE_NOTE_PRIVATE',
     DELETE_NOTE: 'DELETE_NOTE',
 } as const;
 

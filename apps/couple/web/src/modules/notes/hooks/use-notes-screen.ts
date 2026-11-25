@@ -19,8 +19,6 @@ import { useNoteTitleForm } from './use-note-title-form';
 
 const FAILURE_TITLE_KEYS: Readonly<Record<NoteCommand, string>> = {
     CREATE_NOTE: 'toast.createFailed',
-    SHARE_NOTE: 'toast.shareFailed',
-    MAKE_NOTE_PRIVATE: 'toast.makePrivateFailed',
     DELETE_NOTE: 'toast.deleteFailed',
 };
 

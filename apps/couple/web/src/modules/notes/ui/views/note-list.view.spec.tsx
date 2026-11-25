@@ -42,8 +42,6 @@ function renderList(
                 pending={null}
                 isBusy={false}
                 deletionAsked={null}
-                onShare={(noteId) => taps.push(`share:${noteId}`)}
-                onMakePrivate={(noteId) => taps.push(`private:${noteId}`)}
                 onAskDeletion={(noteId) => taps.push(`ask:${noteId}`)}
                 onConfirmDeletion={(noteId) => taps.push(`delete:${noteId}`)}
                 onKeep={() => taps.push('keep')}
@@ -78,17 +76,18 @@ describe('Feature: the list of the notes of the couple', () => {
         expect(itemOf('Vacances').queryAllByRole('button')).toEqual([]);
     });
 
-    it('R5, lets the owner make a shared note private and share a private one', async () => {
+    it('R7, offers the deletion of her note to its owner, without sharing it', async () => {
         const { taps, user } = renderList([MY_SHARED_NOTE, MY_PRIVATE_NOTE]);
 
+        expect(screen.queryByRole('button', { name: 'Partager' })).toBeNull();
+        expect(
+            screen.queryByRole('button', { name: 'Rendre privée' }),
+        ).toBeNull();
         await user.click(
-            itemOf('Courses').getByRole('button', { name: 'Rendre privée' }),
-        );
-        await user.click(
-            itemOf('Idées cadeaux').getByRole('button', { name: 'Partager' }),
+            itemOf('Idées cadeaux').getByRole('button', { name: 'Supprimer' }),
         );
 
-        expect(taps).toEqual(['private:note-mine', 'share:note-private']);
+        expect(taps).toEqual(['ask:note-private']);
     });
 
     it('R7, asks once more before deleting for both partners', async () => {
@@ -107,14 +106,15 @@ describe('Feature: the list of the notes of the couple', () => {
     it('spins on the running note only and waits on every button', () => {
         renderList([MY_SHARED_NOTE, MY_PRIVATE_NOTE], {
             pending: {
-                command: NoteCommandEnum.SHARE_NOTE,
+                command: NoteCommandEnum.DELETE_NOTE,
                 noteId: 'note-private',
             },
             isBusy: true,
+            deletionAsked: 'note-private',
         });
 
         expect(
-            itemOf('Idées cadeaux').getByLabelText('Partage en cours'),
+            itemOf('Idées cadeaux').getByLabelText('Suppression en cours'),
         ).toBeTruthy();
         expect(
             screen

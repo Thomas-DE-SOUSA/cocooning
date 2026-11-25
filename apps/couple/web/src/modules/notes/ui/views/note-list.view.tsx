@@ -11,8 +11,6 @@ type Props = {
     readonly pending: PendingNoteCommand | null;
     readonly isBusy: boolean;
     readonly deletionAsked: string | null;
-    readonly onShare: (noteId: string) => void;
-    readonly onMakePrivate: (noteId: string) => void;
     readonly onAskDeletion: (noteId: string) => void;
     readonly onConfirmDeletion: (noteId: string) => void;
     readonly onKeep: () => void;
@@ -38,8 +36,6 @@ export function NoteListView({ notes, pending, ...props }: Props) {
                     }
                     isBusy={props.isBusy}
                     isDeletionAsked={props.deletionAsked === note.noteId}
-                    onShare={() => props.onShare(note.noteId)}
-                    onMakePrivate={() => props.onMakePrivate(note.noteId)}
                     onAskDeletion={() => props.onAskDeletion(note.noteId)}
                     onConfirmDeletion={() =>
                         props.onConfirmDeletion(note.noteId)

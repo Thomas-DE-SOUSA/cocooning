@@ -13,7 +13,7 @@ export type NoteCommandCall =
           readonly form: NoteTitleForm;
       }
     | {
-          readonly operation: 'shareNote' | 'makeNotePrivate' | 'deleteNote';
+          readonly operation: 'deleteNote';
           readonly noteId: string;
       }
     | {

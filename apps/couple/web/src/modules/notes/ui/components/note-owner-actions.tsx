@@ -7,18 +7,15 @@ import { NoteCommandEnum } from '../../view-models/note-command.view-model';
 import { CommandButton } from '@/shared/ui/command-button';
 
 export type NoteOwnerActionsProps = {
-    readonly isShared: boolean;
     readonly pendingCommand: NoteCommand | null;
     readonly isBusy: boolean;
     readonly isDeletionAsked: boolean;
-    readonly onShare: () => void;
-    readonly onMakePrivate: () => void;
     readonly onAskDeletion: () => void;
     readonly onConfirmDeletion: () => void;
     readonly onKeep: () => void;
 };
 
-// R5, R7: only the owner sees these; a deletion asks once more, since it removes the note for both partners.
+// R7: only the owner sees these; a deletion asks once more, since it removes the note for both partners.
 export function NoteOwnerActions(props: NoteOwnerActionsProps) {
     const { t } = useTranslation(NOTES_NAMESPACE);
     const isRunning = (command: NoteCommand) =>
@@ -47,25 +44,6 @@ export function NoteOwnerActions(props: NoteOwnerActionsProps) {
     }
     return (
         <div className="flex flex-wrap gap-2">
-            {props.isShared ? (
-                <CommandButton
-                    variant="outline"
-                    label={t('note.makePrivate')}
-                    pendingLabel={t('note.makingPrivate')}
-                    isPending={isRunning(NoteCommandEnum.MAKE_NOTE_PRIVATE)}
-                    isBusy={props.isBusy}
-                    onClick={props.onMakePrivate}
-                />
-            ) : (
-                <CommandButton
-                    variant="outline"
-                    label={t('note.share')}
-                    pendingLabel={t('note.sharing')}
-                    isPending={isRunning(NoteCommandEnum.SHARE_NOTE)}
-                    isBusy={props.isBusy}
-                    onClick={props.onShare}
-                />
-            )}
             <CommandButton
                 variant="ghost"
                 label={t('note.delete')}

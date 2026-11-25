@@ -10,8 +10,6 @@ const rejects = () => Promise.reject(new TypeError('Failed to fetch'));
 const REJECTING = new ServerActionNoteCommandGateway({
     createNote: rejects,
     renameNote: rejects,
-    shareNote: rejects,
-    makeNotePrivate: rejects,
     deleteNote: rejects,
     moveNote: rejects,
 });
@@ -26,8 +24,6 @@ describe('Feature: note commands through the server actions', () => {
         const gateway = new ServerActionNoteCommandGateway({
             createNote: record,
             renameNote: record,
-            shareNote: record,
-            makeNotePrivate: record,
             deleteNote: record,
             moveNote: record,
         });
@@ -36,16 +32,12 @@ describe('Feature: note commands through the server actions', () => {
             gateway.createNote({ title: 'Courses' }, PRIVATE_ROOT),
         ).resolves.toEqual(ok(null));
         await gateway.renameNote(NOTE_ID, { title: 'Courses' });
-        await gateway.shareNote(NOTE_ID);
-        await gateway.makeNotePrivate(NOTE_ID);
         await gateway.deleteNote(NOTE_ID);
         await gateway.moveNote(NOTE_ID, PRIVATE_ROOT);
 
         expect(sent).toEqual([
             [{ title: 'Courses' }, PRIVATE_ROOT],
             [NOTE_ID, { title: 'Courses' }],
-            [NOTE_ID],
-            [NOTE_ID],
             [NOTE_ID],
             [NOTE_ID, PRIVATE_ROOT],
         ]);
@@ -57,8 +49,6 @@ describe('Feature: note commands through the server actions', () => {
             () => REJECTING.createNote({ title: 'Courses' }, PRIVATE_ROOT),
         ],
         ['renameNote', () => REJECTING.renameNote(NOTE_ID, { title: 'C' })],
-        ['shareNote', () => REJECTING.shareNote(NOTE_ID)],
-        ['makeNotePrivate', () => REJECTING.makeNotePrivate(NOTE_ID)],
         ['deleteNote', () => REJECTING.deleteNote(NOTE_ID)],
         ['moveNote', () => REJECTING.moveNote(NOTE_ID, PRIVATE_ROOT)],
     ])(

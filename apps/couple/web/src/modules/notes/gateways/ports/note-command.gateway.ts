@@ -12,8 +12,6 @@ export abstract class NoteCommandGateway {
         noteId: string,
         form: NoteTitleForm,
     ): Promise<Result<null, ApiError>>;
-    abstract shareNote(noteId: string): Promise<Result<null, ApiError>>;
-    abstract makeNotePrivate(noteId: string): Promise<Result<null, ApiError>>;
     abstract deleteNote(noteId: string): Promise<Result<null, ApiError>>;
     abstract moveNote(
         noteId: string,

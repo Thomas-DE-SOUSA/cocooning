@@ -27,14 +27,6 @@ export class FakeNoteCommandGateway extends NoteCommandGateway {
         return this.answers.answer({ operation: 'renameNote', noteId, form });
     }
 
-    override shareNote(noteId: string): Promise<Result<null, ApiError>> {
-        return this.answers.answer({ operation: 'shareNote', noteId });
-    }
-
-    override makeNotePrivate(noteId: string): Promise<Result<null, ApiError>> {
-        return this.answers.answer({ operation: 'makeNotePrivate', noteId });
-    }
-
     override deleteNote(noteId: string): Promise<Result<null, ApiError>> {
         return this.answers.answer({ operation: 'deleteNote', noteId });
     }

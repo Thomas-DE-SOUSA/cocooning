@@ -46,13 +46,6 @@ export function useNoteCommands({ gateway, onDone, onFailed }: Options) {
         },
         [onDone, onFailed],
     );
-    const onNote = useCallback(
-        (command: NoteCommand, noteId: string) =>
-            run({ command, noteId }, () =>
-                sendOnNote(gateway, command, noteId),
-            ),
-        [run, gateway],
-    );
     const createNote = useCallback(
         (form: NoteTitleForm) =>
             run({ command: NoteCommandEnum.CREATE_NOTE, noteId: null }, () =>
@@ -63,26 +56,11 @@ export function useNoteCommands({ gateway, onDone, onFailed }: Options) {
     // One command at a time: every button waits while isBusy, only the pending one spins.
     return {
         createNote,
-        shareNote: (noteId: string) =>
-            onNote(NoteCommandEnum.SHARE_NOTE, noteId),
-        makeNotePrivate: (noteId: string) =>
-            onNote(NoteCommandEnum.MAKE_NOTE_PRIVATE, noteId),
         deleteNote: (noteId: string) =>
-            onNote(NoteCommandEnum.DELETE_NOTE, noteId),
+            run({ command: NoteCommandEnum.DELETE_NOTE, noteId }, () =>
+                gateway.deleteNote(noteId),
+            ),
         pending: isPending ? lastCommand : null,
         isBusy: isPending,
     };
-}
-
-function sendOnNote(
-    gateway: NoteCommandGateway,
-    command: NoteCommand,
-    noteId: string,
-): Promise<Result<null, ApiError>> {
-    if (command === NoteCommandEnum.SHARE_NOTE)
-        return gateway.shareNote(noteId);
-    if (command === NoteCommandEnum.MAKE_NOTE_PRIVATE) {
-        return gateway.makeNotePrivate(noteId);
-    }
-    return gateway.deleteNote(noteId);
 }

@@ -7,10 +7,6 @@
         "shared": "Partagée",
         "private": "Privée",
         "updatedAt": "Modifiée le {{updatedAt}}",
-        "share": "Partager",
-        "sharing": "Partage en cours",
-        "makePrivate": "Rendre privée",
-        "makingPrivate": "Passage en privé en cours",
         "delete": "Supprimer",
         "confirmDelete": "Supprimer pour nous deux",
         "deleting": "Suppression en cours",
@@ -35,8 +31,6 @@
     },
     "toast": {
         "createFailed": "Création impossible",
-        "shareFailed": "Partage impossible",
-        "makePrivateFailed": "Passage en privé impossible",
         "deleteFailed": "Suppression impossible"
     },
     "apiErrors": {
