@@ -51,6 +51,27 @@ export const EXCEPTION_STATUSES: ExceptionStatusTable = {
     [NoteExceptionCodeEnum.FOLDER_MOVE_INVALID]:
         HttpStatus.UNPROCESSABLE_ENTITY,
     [NoteExceptionCodeEnum.FOLDER_VERSION_CONFLICT]: HttpStatus.CONFLICT,
+    [NoteExceptionCodeEnum.FOLDER_NOT_SMART]: HttpStatus.UNPROCESSABLE_ENTITY,
+    [NoteExceptionCodeEnum.FOLDER_SUBJECT_INVALID]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
+    [NoteExceptionCodeEnum.FOLDER_TEMPLATE_INHERITED]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
+    [NoteExceptionCodeEnum.CARD_TEMPLATE_INVALID]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
+    [NoteExceptionCodeEnum.NOTE_CARD_NOT_FOUND]: HttpStatus.NOT_FOUND,
+    [NoteExceptionCodeEnum.NOTE_CARD_STATUS_INVALID]: HttpStatus.CONFLICT,
+    [NoteExceptionCodeEnum.NOTE_CARD_CANDIDATE_INVALID]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
+    [NoteExceptionCodeEnum.NOTE_CARD_FIELD_INVALID]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
+    [NoteExceptionCodeEnum.NOTE_CARD_QUERY_INVALID]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
+    [NoteExceptionCodeEnum.NOTE_CARD_VERSION_CONFLICT]: HttpStatus.CONFLICT,
+    // core.md rule 26: the search engine or the AI failed; the body says no more than the code.
+    [NoteExceptionCodeEnum.NOTE_CARD_SEARCH_UNAVAILABLE]:
+        HttpStatus.SERVICE_UNAVAILABLE,
+    [NoteExceptionCodeEnum.NOTE_CARD_WRITER_UNAVAILABLE]:
+        HttpStatus.SERVICE_UNAVAILABLE,
     [AgendaExceptionCodeEnum.CALENDAR_EVENT_NOT_FOUND]: HttpStatus.NOT_FOUND,
     [AgendaExceptionCodeEnum.CALENDAR_EVENT_COUPLE_NOT_PAIRED]:
         HttpStatus.NOT_FOUND,
