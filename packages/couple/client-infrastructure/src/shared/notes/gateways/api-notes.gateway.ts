@@ -91,26 +91,6 @@ export class ApiNotesGateway extends NotesGateway {
         );
     }
 
-    override shareNote(
-        noteId: string,
-    ): Promise<Result<NoteResponse, ApiError>> {
-        return this.note(
-            HttpMethodEnum.POST,
-            this.endpoints.share(noteId),
-            NO_BODY,
-        );
-    }
-
-    override makeNotePrivate(
-        noteId: string,
-    ): Promise<Result<NoteResponse, ApiError>> {
-        return this.note(
-            HttpMethodEnum.POST,
-            this.endpoints.makePrivate(noteId),
-            NO_BODY,
-        );
-    }
-
     // R7: the API answers 204 without a body.
     override async deleteNote(noteId: string): Promise<Result<null, ApiError>> {
         const result = await this.request(

@@ -1,6 +1,6 @@
 # Règles des notes
 
-Ce que le couple veut que l'app impose aux notes. À lire avant de toucher au contexte `notes`, à l'éditeur ou à la liste des notes.
+Ce que le couple veut que l'app impose aux notes. À lire avant de toucher au contexte `notes`, à l'éditeur ou aux écrans des notes.
 
 ## À la création
 

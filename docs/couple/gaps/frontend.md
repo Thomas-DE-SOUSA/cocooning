@@ -24,7 +24,7 @@
 
 - Type : test manquant
 - Constaté le : 2026-11-23, revue des étapes 2 et 3
-- Où : `apps/couple/web/src/app/(tabs)/(home)/page.tsx`, `apps/couple/web/src/app/(tabs)/couple/page.tsx`, `apps/couple/web/src/app/(tabs)/main-navigation.tsx`, `apps/couple/web/src/app/pairing/page.tsx`, `apps/couple/web/src/modules/*/ui/containers/`, `apps/couple/web/src/modules/pairing/hooks/use-pairing-screen.ts`, `apps/couple/web/src/modules/notes/hooks/use-notes-screen.ts`, `apps/couple/web/src/app/notes/[noteId]/page.tsx`, `apps/couple/web/src/modules/notes/hooks/use-note-page-screen.ts`
+- Où : `apps/couple/web/src/app/(tabs)/(home)/page.tsx`, `apps/couple/web/src/app/(tabs)/spaces/[space]/page.tsx`, `apps/couple/web/src/app/(tabs)/couple/page.tsx`, `apps/couple/web/src/app/(tabs)/main-navigation.tsx`, `apps/couple/web/src/app/pairing/page.tsx`, `apps/couple/web/src/modules/*/ui/containers/`, `apps/couple/web/src/modules/pairing/hooks/use-pairing-screen.ts`, `apps/couple/web/src/modules/notes/hooks/use-note-sheet-feedback.ts` (et les hooks de composition des feuilles qui l'appellent : `use-folder-sheet.ts`, `use-note-actions-sheet.ts`, `use-move-sheet.ts`), `apps/couple/web/src/app/notes/[noteId]/page.tsx`, `apps/couple/web/src/modules/notes/hooks/use-note-page-screen.ts`
 - Constat : une route qui monte un container importe la server action et `serverEnv`, que t3-env refuse sous jsdom ; `use-pairing-screen` appelle `useRouter` de `next/navigation`, sans routeur dans un test. Les décisions qu'ils portent sont sorties dans des fonctions testées (`presentPairingPage`, `resolveHomeDestination`, `resolveCommandFailureFollowUp`, `closeSignOutSession`, `isSecureCookie`), mais le câblage lui-même (choix de la vue, clés des toasts, redirection) n'est vérifié qu'à la main.
 - Règle concernée : `core-backend.md` règle 20 pour l'esprit (E2E des points d'entrée) ; aucune règle front écrite
 - Statut : ouvert
@@ -45,7 +45,7 @@
 - Où : `apps/couple/web/src/modules/notes/services/load-notes.service.ts`
 - Constat : l'accueil lit la première page de `GET /notes` avec `pageSize` à `MAX_PAGE_SIZE` (100) et n'offre aucune page suivante. Au-delà de 100 notes visibles, les plus anciennes n'apparaissent plus dans la PWA ; elles restent dans la base et dans l'API.
 - Règle concernée : [décision 0025](../decisions/0025-pagination.md)
-- Statut : ouvert
+- Statut : clos le 2026-11-25 (branche `feat/notes-folders-screen`) : l'accueil n'est plus la liste des notes ([décision 0053](../decisions/frontend/0053-ecran-des-espaces-et-des-dossiers.md)) ; il lit les cinq notes modifiées en dernier, et chaque note se trouve dans son espace ou son dossier, dont `GET /note-spaces/:space/contents` rend tout le contenu.
 
 ### 006. L'adaptateur Hocuspocus de la PWA vit dans le module web `notes`
 

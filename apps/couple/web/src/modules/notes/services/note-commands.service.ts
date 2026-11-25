@@ -10,8 +10,8 @@ import {
     type Translator,
 } from '@cocooning/couple-client-business-logic/shared';
 import { NoteParamsRequestSchema } from '@cocooning/couple-contract/notes';
-import { NoteSpaceEnum } from '@cocooning/couple-shared-kernel/enums';
 import { fail, ok, type Result } from '@cocooning/shared-kernel/utils';
+import { NoteLocationSchema } from './note-location.zod';
 
 export type CreateNoteContext = {
     readonly t: Translator;
@@ -27,23 +27,24 @@ export type NoteUseCaseCall = (
     noteId: string,
 ) => Promise<Result<unknown, ApiError>>;
 
-const invalid = (message: string): ApiError => ({
+export const invalid = (message: string): ApiError => ({
     code: ApiErrorCodeEnum.VALIDATION_ERROR,
     message,
     backendCode: null,
 });
 
-// core-frontend.md rule 14: a server action is a public endpoint, its input is validated again here. R2: at the root of « Partagé » until the screen offers the folders.
+// core-frontend.md rule 14: a server action is a public endpoint, its input is validated again here. R11, R13: the note
+// goes where the partner created it.
 export async function createNote(
     input: unknown,
+    destinationInput: unknown,
     context: CreateNoteContext,
 ): Promise<Result<null, ApiError>> {
     const form = createNoteTitleFormSchema(context.t).safeParse(input);
     if (!form.success) return fail(invalid('Invalid note title form'));
-    const note = await context.createNote.execute(form.data, {
-        space: NoteSpaceEnum.SHARED,
-        folderId: null,
-    });
+    const destination = NoteLocationSchema.safeParse(destinationInput);
+    if (!destination.success) return fail(invalid('Invalid note place'));
+    const note = await context.createNote.execute(form.data, destination.data);
     return note.success ? ok(null) : note;
 }
 

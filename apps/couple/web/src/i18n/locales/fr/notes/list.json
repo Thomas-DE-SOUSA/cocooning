@@ -1,43 +1,30 @@
 {
     "title": "Notes",
-    "empty": "Pas encore de note. Créez la première, par exemple « Courses ».",
-    "note": {
-        "mine": "Ma note",
-        "partner": "Note de mon âme sœur",
-        "shared": "Partagée",
-        "private": "Privée",
-        "updatedAt": "Modifiée le {{updatedAt}}",
-        "share": "Partager",
-        "sharing": "Partage en cours",
-        "makePrivate": "Rendre privée",
-        "makingPrivate": "Passage en privé en cours",
-        "delete": "Supprimer",
-        "confirmDelete": "Supprimer pour nous deux",
-        "deleting": "Suppression en cours",
-        "keep": "Garder"
+    "spaces": {
+        "SHARED": {
+            "name": "Partagé",
+            "subtitle": "Vu par vous deux"
+        },
+        "PRIVATE": {
+            "name": "Privé",
+            "subtitle": "Rien que pour toi"
+        },
+        "contents": "{{folders}}, {{notes}}",
+        "folderCount_one": "{{count}} dossier",
+        "folderCount_other": "{{count}} dossiers",
+        "noteCount_one": "{{count}} note",
+        "noteCount_other": "{{count}} notes"
     },
-    "create": {
-        "submit": "Créer la note",
-        "creating": "Création en cours"
+    "recent": {
+        "title": "Modifiées récemment",
+        "empty": "Pas encore de note. Ouvre « Partagé » pour créer la première, par exemple « Courses »."
+    },
+    "note": {
+        "updatedAt": "Modifiée le {{updatedAt}}"
     },
     "unavailable": {
         "title": "Impossible d'afficher vos notes",
         "refresh": "Réessayer"
-    },
-    "form": {
-        "title": {
-            "label": "Titre de la nouvelle note",
-            "errors": {
-                "required": "Donnez un titre à la note.",
-                "tooLong": "Ce titre est trop long."
-            }
-        }
-    },
-    "toast": {
-        "createFailed": "Création impossible",
-        "shareFailed": "Partage impossible",
-        "makePrivateFailed": "Passage en privé impossible",
-        "deleteFailed": "Suppression impossible"
     },
     "apiErrors": {
         "NOTE_NOT_FOUND": "Cette note n'existe plus. La liste est mise à jour.",

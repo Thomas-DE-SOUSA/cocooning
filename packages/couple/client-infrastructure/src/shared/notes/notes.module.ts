@@ -7,12 +7,10 @@ import {
     GetNoteUseCase,
     ListNoteSpacesUseCase,
     ListNotesUseCase,
-    MakeNotePrivateUseCase,
     MoveFolderUseCase,
     MoveNoteUseCase,
     RenameFolderUseCase,
     RenameNoteUseCase,
-    ShareNoteUseCase,
 } from '@cocooning/couple-client-business-logic/notes';
 import { createCoupleHttpConfig } from '../couple-http-config';
 import type { SessionTokenProvider } from '../session/session-headers';
@@ -26,8 +24,6 @@ export type NotesModule = {
     readonly getNote: GetNoteUseCase;
     readonly createNote: CreateNoteUseCase;
     readonly renameNote: RenameNoteUseCase;
-    readonly shareNote: ShareNoteUseCase;
-    readonly makeNotePrivate: MakeNotePrivateUseCase;
     readonly deleteNote: DeleteNoteUseCase;
     readonly listNoteSpaces: ListNoteSpacesUseCase;
     readonly getNoteSpaceContents: GetNoteSpaceContentsUseCase;
@@ -60,8 +56,6 @@ export function createNotesModule(
         getNote: new GetNoteUseCase(notes),
         createNote: new CreateNoteUseCase(notes),
         renameNote: new RenameNoteUseCase(notes),
-        shareNote: new ShareNoteUseCase(notes),
-        makeNotePrivate: new MakeNotePrivateUseCase(notes),
         deleteNote: new DeleteNoteUseCase(notes),
         listNoteSpaces: new ListNoteSpacesUseCase(folders),
         getNoteSpaceContents: new GetNoteSpaceContentsUseCase(folders),

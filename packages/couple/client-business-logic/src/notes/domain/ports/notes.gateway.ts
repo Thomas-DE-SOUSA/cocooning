@@ -21,9 +21,5 @@ export abstract class NotesGateway {
         noteId: string,
         request: RenameNoteRequest,
     ): Promise<Result<NoteResponse, ApiError>>;
-    abstract shareNote(noteId: string): Promise<Result<NoteResponse, ApiError>>;
-    abstract makeNotePrivate(
-        noteId: string,
-    ): Promise<Result<NoteResponse, ApiError>>;
     abstract deleteNote(noteId: string): Promise<Result<null, ApiError>>;
 }

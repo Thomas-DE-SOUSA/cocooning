@@ -1,5 +1,14 @@
 {
-    "back": "Notes",
+    "title": "Notes",
+    "actions": "Actions sur la note",
+    "spaces": {
+        "SHARED": {
+            "name": "Partagé"
+        },
+        "PRIVATE": {
+            "name": "Privé"
+        }
+    },
     "note": {
         "mine": "Ma note",
         "partner": "Note de mon âme sœur",
