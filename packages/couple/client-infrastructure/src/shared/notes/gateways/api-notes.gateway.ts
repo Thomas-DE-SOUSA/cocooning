@@ -12,6 +12,8 @@ import {
 import {
     type CreateNoteRequest,
     CreateNoteRequestSchema,
+    type NoteDetailResponse,
+    NoteDetailResponseSchema,
     type NotePageResponse,
     NotePageResponseSchema,
     type NoteResponse,
@@ -83,12 +85,16 @@ export class ApiNotesGateway extends NotesGateway {
         );
     }
 
-    override getNote(noteId: string): Promise<Result<NoteResponse, ApiError>> {
-        return this.note(
+    // R20: the note with its card, null outside a smart folder.
+    override async getNote(
+        noteId: string,
+    ): Promise<Result<NoteDetailResponse, ApiError>> {
+        const result = await this.request(
             HttpMethodEnum.GET,
             this.endpoints.note(noteId),
             NO_BODY,
         );
+        return parseResponse(result, NoteDetailResponseSchema, this.httpConfig);
     }
 
     // R7: the API answers 204 without a body.

@@ -6,6 +6,8 @@ import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import {
     type FolderResponse,
     FolderResponseSchema,
+    type FolderTemplateProposalResponse,
+    FolderTemplateProposalResponseSchema,
     type NoteResponse,
     NoteResponseSchema,
     type NoteSpaceContentsResponse,
@@ -31,3 +33,6 @@ export const asFolder: ResponseParser<FolderResponse> = (r, c) =>
     parseResponse(r, FolderResponseSchema, c);
 export const asNote: ResponseParser<NoteResponse> = (r, c) =>
     parseResponse(r, NoteResponseSchema, c);
+export const asTemplateProposal: ResponseParser<
+    FolderTemplateProposalResponse
+> = (r, c) => parseResponse(r, FolderTemplateProposalResponseSchema, c);

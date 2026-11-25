@@ -1,11 +1,14 @@
 import type {
     CreateFolderRequest,
+    EditFolderTemplateRequest,
     FolderResponse,
+    FolderTemplateProposalResponse,
     MoveFolderRequest,
     MoveNoteRequest,
     NoteResponse,
     NoteSpaceContentsResponse,
     NoteSpacesResponse,
+    ProposeFolderTemplateRequest,
     RenameFolderRequest,
 } from '@cocooning/couple-contract/notes';
 import type { NoteSpace } from '@cocooning/couple-shared-kernel/enums';
@@ -21,6 +24,13 @@ export abstract class NoteFoldersGateway {
     ): Promise<Result<NoteSpaceContentsResponse, ApiError>>;
     abstract createFolder(
         request: CreateFolderRequest,
+    ): Promise<Result<FolderResponse, ApiError>>;
+    abstract proposeFolderTemplate(
+        request: ProposeFolderTemplateRequest,
+    ): Promise<Result<FolderTemplateProposalResponse, ApiError>>;
+    abstract editFolderTemplate(
+        folderId: string,
+        request: EditFolderTemplateRequest,
     ): Promise<Result<FolderResponse, ApiError>>;
     abstract renameFolder(
         folderId: string,
