@@ -36,6 +36,7 @@ const TEST_ENVIRONMENT = {
     PLACE_DIRECTORY_USER_AGENT: 'Cocooning/e2e',
     NOTE_CARD_GEMINI_API_KEY: '',
     NOTE_CARD_GEMINI_MODEL: 'gemini-e2e-never-called',
+    NOTE_CARD_GEMINI_FALLBACK_MODEL: 'gemini-e2e-fallback-never-called',
     NOTE_CARD_DAILY_SEARCH_LIMIT: '30',
     // The specs drive the background task with NoteCardEnrichmentScheduler.tick(), never a timer.
     NOTE_CARD_ENRICHMENT_ENABLED: 'false',

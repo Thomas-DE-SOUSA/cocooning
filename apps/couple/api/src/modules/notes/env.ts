@@ -13,6 +13,8 @@ export const notesEnvSchema = z.object({
     PLACE_DIRECTORY_USER_AGENT: z.string().trim().min(1),
     NOTE_CARD_GEMINI_API_KEY: z.string().trim(),
     NOTE_CARD_GEMINI_MODEL: z.string().trim().min(1),
+    // Called once when the first model answers 429 or 503, frequent on the free tier.
+    NOTE_CARD_GEMINI_FALLBACK_MODEL: z.string().trim().min(1),
     // R23: the searches a couple makes per day of Paris, all folders together.
     NOTE_CARD_DAILY_SEARCH_LIMIT: z.coerce.number().int().positive(),
     // The background task that fills the cards (decision 0054): off in the E2E tests, which call tick() themselves.

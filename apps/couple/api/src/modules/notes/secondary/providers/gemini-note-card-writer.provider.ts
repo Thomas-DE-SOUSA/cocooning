@@ -21,6 +21,10 @@ export const geminiNoteCardWriterProvider: FactoryProvider<NoteCardWriter> = {
                     model: config.getOrThrow('NOTE_CARD_GEMINI_MODEL', {
                         infer: true,
                     }),
+                    fallbackModel: config.getOrThrow(
+                        'NOTE_CARD_GEMINI_FALLBACK_MODEL',
+                        { infer: true },
+                    ),
                 },
                 logger,
             ),

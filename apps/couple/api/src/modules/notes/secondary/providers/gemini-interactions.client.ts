@@ -12,7 +12,16 @@ export const GEMINI_REQUEST_TIMEOUT_MS = 30_000;
 export type GeminiSettings = {
     readonly apiKey: string;
     readonly model: string;
+    readonly fallbackModel: string;
 };
+
+// The free tier answers 429 or 503 when a model is crowded: the call goes once to the fallback model.
+const BUSY_STATUS_CODES: ReadonlyArray<number> = [429, 503];
+
+type Attempt =
+    | { readonly kind: 'ANSWERED'; readonly body: unknown }
+    | { readonly kind: 'BUSY' }
+    | { readonly kind: 'REFUSED' };
 
 // What one call sends: instructions, the data as JSON text, and the JSON schema the answer must follow.
 export type GeminiPrompt = {
@@ -59,6 +68,16 @@ export class GeminiInteractionsClient {
     }
 
     private async send(prompt: GeminiPrompt): Promise<unknown> {
+        const first = await this.post(prompt, this.settings.model);
+        if (first.kind === 'ANSWERED') return first.body;
+        if (first.kind === 'BUSY') {
+            const second = await this.post(prompt, this.settings.fallbackModel);
+            if (second.kind === 'ANSWERED') return second.body;
+        }
+        throw unavailable();
+    }
+
+    private async post(prompt: GeminiPrompt, model: string): Promise<Attempt> {
         try {
             const response = await this.fetchFunction(GEMINI_INTERACTIONS_URL, {
                 method: 'POST',
@@ -66,26 +85,32 @@ export class GeminiInteractionsClient {
                     'content-type': 'application/json',
                     'x-goog-api-key': this.settings.apiKey,
                 },
-                body: JSON.stringify(this.requestBody(prompt)),
+                body: JSON.stringify(this.requestBody(prompt, model)),
                 signal: AbortSignal.timeout(GEMINI_REQUEST_TIMEOUT_MS),
             });
-            if (response.ok) return await response.json();
+            if (response.ok)
+                return { kind: 'ANSWERED', body: await response.json() };
             this.logger.warn('Gemini request refused', {
                 operation: prompt.operation,
+                model,
                 statusCode: response.status,
             });
+            return BUSY_STATUS_CODES.includes(response.status)
+                ? { kind: 'BUSY' }
+                : { kind: 'REFUSED' };
         } catch (error) {
             this.logger.warn('Gemini request failed', {
                 operation: prompt.operation,
+                model,
                 errorName: error instanceof Error ? error.name : 'unknown',
             });
+            return { kind: 'REFUSED' };
         }
-        throw unavailable();
     }
 
-    private requestBody(prompt: GeminiPrompt) {
+    private requestBody(prompt: GeminiPrompt, model: string) {
         return {
-            model: this.settings.model,
+            model,
             system_instruction: prompt.systemInstruction,
             input: prompt.input,
             response_format: {
