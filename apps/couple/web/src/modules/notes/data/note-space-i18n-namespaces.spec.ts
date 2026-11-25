@@ -12,6 +12,12 @@ const REQUIRED_KEYS = [
     'form.title.errors.tooLong',
     'form.name.errors.required',
     'form.name.errors.tooLong',
+    'form.subject.errors.required',
+    'form.subject.errors.tooLong',
+    'form.fields.errors.required',
+    'form.fields.errors.tooMany',
+    'form.fields.errors.tooLong',
+    'form.fields.errors.duplicate',
     ...[
         ...NOTE_SPACE_SCREEN_ERROR_CODES,
         ...Object.values(ApiErrorCodeEnum),

@@ -5,6 +5,7 @@ import frSignOut from './locales/fr/authentication/sign-out.json';
 import frGeneric from './locales/fr/generic.json';
 import frMessagingMessages from './locales/fr/messaging/messages.json';
 import frMessagingPush from './locales/fr/messaging/push.json';
+import frNotesCard from './locales/fr/notes/card.json';
 import frNotesList from './locales/fr/notes/list.json';
 import frNotesNote from './locales/fr/notes/note.json';
 import frNotesSpace from './locales/fr/notes/space.json';
@@ -19,6 +20,7 @@ export const RESOURCES = {
         'notes/list': frNotesList,
         'notes/note': frNotesNote,
         'notes/space': frNotesSpace,
+        'notes/card': frNotesCard,
         'agenda/calendar': frAgendaCalendar,
         'messaging/messages': frMessagingMessages,
         'messaging/push': frMessagingPush,

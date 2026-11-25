@@ -1,8 +1,9 @@
+import { NoteCardStatusEnum } from '@cocooning/couple-shared-kernel/enums';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { ComponentProps } from 'react';
 import { WithI18n } from '@/testing/with-i18n';
 import type { FolderListItem } from '../../view-models/note-space-screen.view-model';
-import type { NoteListItem } from '../../view-models/notes-screen.view-model';
+import type { NoteRowItem } from '../../view-models/note-card-line.view-model';
 import { NoteSpaceContentsView } from './note-space-contents.view';
 
 const MAISON: FolderListItem = {
@@ -11,14 +12,17 @@ const MAISON: FolderListItem = {
     href: '/spaces/SHARED?folderId=f1',
     folderCount: 1,
     noteCount: 4,
+    isSmart: false,
+    template: null,
 };
-const COURSES: NoteListItem = {
+const COURSES: NoteRowItem = {
     noteId: 'n1',
     href: '/notes/n1',
     title: 'Courses',
     isShared: true,
     isOwner: false,
     updatedAt: '23 nov. 2026, 17:05',
+    card: null,
 };
 
 function renderContents(
@@ -60,6 +64,14 @@ describe('Feature: what a space or a folder holds (R13)', () => {
         ).not.toBeNull();
     });
 
+    it('R17, marks a smart folder with « IA »', () => {
+        renderContents({
+            folders: [MAISON, { ...MAISON, folderId: 'f2', isSmart: true }],
+        });
+
+        expect(sectionOf('Dossiers').getAllByText('IA')).toHaveLength(1);
+    });
+
     it('R14, opens the actions of a folder from its « ⋯ »', () => {
         const { taps } = renderContents({ folders: [MAISON] });
 
@@ -90,6 +102,30 @@ describe('Feature: what a space or a folder holds (R13)', () => {
             ),
         ).not.toBeNull();
         expect(screen.queryByRole('heading', { name: 'Dossiers' })).toBeNull();
+    });
+
+    it.each([
+        [
+            NoteCardStatusEnum.FILLED,
+            'Bistrot · 25 à 35 €',
+            'Bistrot · 25 à 35 €',
+        ],
+        [NoteCardStatusEnum.FILLED, null, 'rien trouvé'],
+        [NoteCardStatusEnum.PENDING, null, 'en recherche…'],
+        [NoteCardStatusEnum.CHOOSING, null, 'Lequel ?'],
+        [NoteCardStatusEnum.FAILED, null, 'recherche impossible'],
+        [
+            NoteCardStatusEnum.LIMIT_REACHED,
+            null,
+            'plafond du jour atteint, réessaie demain',
+        ],
+    ])('R20, tells of a card %s under its name', (status, summary, line) => {
+        renderContents({
+            notes: [{ ...COURSES, card: { status, summary } }],
+        });
+
+        expect(screen.getByText(line)).not.toBeNull();
+        expect(screen.queryByText(/Note de mon âme sœur/)).toBeNull();
     });
 
     it('says when the place is empty', () => {

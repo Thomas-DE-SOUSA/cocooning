@@ -1,6 +1,6 @@
 'use client';
 
-import { Move, Pencil, Trash2 } from 'lucide-react';
+import { Move, Pencil, Sparkles, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { NOTE_SPACE_NAMESPACE } from '../../data/note-space-i18n-namespaces';
 import { presentFolderContents } from '../../presenters/place-labels.presenter';
@@ -11,14 +11,18 @@ import { SheetHeading } from '../components/sheet-heading';
 type Props = {
     readonly folder: FolderListItem;
     readonly onRename: () => void;
+    // R17: « Modifier la fiche » of a smart folder, null on a classic one.
+    readonly onEditTemplate: (() => void) | null;
     readonly onMove: () => void;
     readonly onAskDeletion: () => void;
 };
 
-// R14: both partners rename, move and delete a folder they see; the deletion asks once more (R16).
+// R14: both partners rename, move and delete a folder they see; the deletion asks once more (R16). Both correct the card
+// template of a smart folder (R17).
 export function FolderActionsSheetView({
     folder,
     onRename,
+    onEditTemplate,
     onMove,
     onAskDeletion,
 }: Props) {
@@ -36,6 +40,14 @@ export function FolderActionsSheetView({
                     isDestructive={false}
                     onClick={onRename}
                 />
+                {onEditTemplate === null ? null : (
+                    <SheetAction
+                        icon={Sparkles}
+                        label={t('folderSheet.editTemplate')}
+                        isDestructive={false}
+                        onClick={onEditTemplate}
+                    />
+                )}
                 <SheetAction
                     icon={Move}
                     label={t('folderSheet.move')}

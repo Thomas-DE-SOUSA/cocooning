@@ -18,6 +18,15 @@
         "notes": "Notes"
     },
     "empty": "Rien ici pour l'instant. Touche « + » pour créer une note ou un dossier.",
+    "smartBadge": "IA",
+    "folderKind": {
+        "label": "Genre de dossier",
+        "CLASSIC": "Classique",
+        "SMART": "IA"
+    },
+    "smart": {
+        "inherited": "Garde la fiche de « {{name}} »"
+    },
     "folder": {
         "folderCount_one": "{{count}} dossier",
         "folderCount_other": "{{count}} dossiers",
@@ -47,18 +56,35 @@
         "title": "Nouveau dossier",
         "in": "Dans « {{place}} »",
         "submit": "Créer le dossier",
-        "creating": "Création en cours"
+        "creating": "Création en cours",
+        "inherits": "Dans « {{place}} ». Garde la fiche de « {{holder}} »."
+    },
+    "template": {
+        "propose": "Proposer avec l'IA",
+        "proposing": "Proposition en cours",
+        "subjectHint": "Proposé par l'IA d'après le nom. Corrige-le si besoin.",
+        "fields": "Fiche type",
+        "newField": "Nouvelle case",
+        "addField": "Ajouter une case",
+        "removeField": "Retirer « {{name}} »"
     },
     "folderSheet": {
         "rename": "Renommer",
         "move": "Déplacer",
-        "delete": "Supprimer le dossier"
+        "delete": "Supprimer le dossier",
+        "editTemplate": "Modifier la fiche"
     },
     "renameFolder": {
         "title": "Renommer « {{name}} »",
         "description": "Ses notes et ses dossiers restent dedans.",
         "submit": "Renommer",
         "renaming": "Renommage en cours"
+    },
+    "editTemplate": {
+        "title": "Fiche de « {{name}} »",
+        "description": "Vous la corrigez tous les deux ; les fiches du dossier suivent.",
+        "submit": "Enregistrer la fiche",
+        "saving": "Enregistrement en cours"
     },
     "deletion": {
         "title": "Supprimer « {{name}} » ?",
@@ -111,6 +137,21 @@
                 "required": "Donne un nom au dossier.",
                 "tooLong": "Ce nom est trop long : 60 signes au plus."
             }
+        },
+        "subject": {
+            "label": "Sujet",
+            "errors": {
+                "required": "Dis en une phrase de quoi parle ce dossier.",
+                "tooLong": "Ce sujet est trop long : 280 signes au plus."
+            }
+        },
+        "fields": {
+            "errors": {
+                "required": "Ajoute au moins une case.",
+                "tooMany": "Une fiche a 10 cases au plus.",
+                "tooLong": "Une case a 40 signes au plus.",
+                "duplicate": "Deux cases portent le même nom."
+            }
         }
     },
     "toast": {
@@ -119,7 +160,9 @@
         "renameFolderFailed": "Renommage impossible",
         "deleteFolderFailed": "Suppression impossible",
         "moveFailed": "Déplacement impossible",
-        "deleteNoteFailed": "Suppression impossible"
+        "deleteNoteFailed": "Suppression impossible",
+        "proposeFailed": "L'IA ne répond pas, réessaie ou remplis toi-même",
+        "editTemplateFailed": "Modification de la fiche impossible"
     },
     "unavailable": {
         "title": "Impossible d'afficher ce dossier",

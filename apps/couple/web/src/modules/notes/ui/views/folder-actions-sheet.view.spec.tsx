@@ -10,6 +10,8 @@ const MAISON: FolderListItem = {
     href: '/spaces/SHARED?folderId=f1',
     folderCount: 1,
     noteCount: 4,
+    isSmart: false,
+    template: null,
 };
 
 describe('Feature: the actions on a folder (R14)', () => {
@@ -22,6 +24,7 @@ describe('Feature: the actions on a folder (R14)', () => {
                         <FolderActionsSheetView
                             folder={MAISON}
                             onRename={() => events.push('rename')}
+                            onEditTemplate={null}
                             onMove={() => events.push('move')}
                             onAskDeletion={() => events.push('delete')}
                         />
@@ -38,5 +41,29 @@ describe('Feature: the actions on a folder (R14)', () => {
             screen.getByRole('button', { name: 'Supprimer le dossier' }),
         );
         expect(events).toEqual(['rename', 'move', 'delete']);
+    });
+
+    it('R17, offers « Modifier la fiche » on a smart folder', () => {
+        const events: string[] = [];
+        render(
+            <WithI18n>
+                <Drawer open>
+                    <DrawerContent>
+                        <FolderActionsSheetView
+                            folder={{ ...MAISON, isSmart: true }}
+                            onRename={() => events.push('rename')}
+                            onEditTemplate={() => events.push('template')}
+                            onMove={() => events.push('move')}
+                            onAskDeletion={() => events.push('delete')}
+                        />
+                    </DrawerContent>
+                </Drawer>
+            </WithI18n>,
+        );
+
+        fireEvent.click(
+            screen.getByRole('button', { name: 'Modifier la fiche' }),
+        );
+        expect(events).toEqual(['template']);
     });
 });

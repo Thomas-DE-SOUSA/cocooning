@@ -28,6 +28,8 @@ const MAISON: FolderListItem = {
     href: '/spaces/SHARED?folderId=f1',
     folderCount: 1,
     noteCount: 4,
+    isSmart: false,
+    template: null,
 };
 const ROOT_LEVEL: NotePlaceLevel = {
     place: SHARED_ROOT,

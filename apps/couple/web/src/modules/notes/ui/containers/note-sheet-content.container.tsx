@@ -9,6 +9,7 @@ import { MovePickerContainer } from './move-picker.container';
 import { NewFolderSheetContainer } from './new-folder-sheet.container';
 import { NewNoteSheetContainer } from './new-note-sheet.container';
 import { NoteSheetContainer } from './note-sheet.container';
+import { SmartSubFolderSheetContainer } from './smart-sub-folder-sheet.container';
 
 type Props = {
     readonly target: NoteSheetTarget;
@@ -52,6 +53,15 @@ export function NoteSheetContentContainer({ target, onClose, onOpen }: Props) {
         return (
             <NewNoteSheetContainer
                 place={target.place}
+                onClose={onClose}
+            />
+        );
+    }
+    if (target.inheritedFrom !== null) {
+        return (
+            <SmartSubFolderSheetContainer
+                place={target.place}
+                holderName={target.inheritedFrom}
                 onClose={onClose}
             />
         );

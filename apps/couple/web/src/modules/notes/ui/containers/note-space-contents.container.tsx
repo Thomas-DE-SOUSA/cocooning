@@ -3,14 +3,19 @@
 import { useNewItemMenu } from '../../hooks/use-new-item-menu';
 import { useNoteSheet } from '../../hooks/use-note-sheet';
 import type { NoteSpaceContentsScreen } from '../../view-models/note-space-screen.view-model';
-import { NoteSheetKindEnum } from '../../view-models/note-sheet.view-model';
+import {
+    NoteSheetKindEnum,
+    type NoteSheetTarget,
+} from '../../view-models/note-sheet.view-model';
 import { NewItemMenuView } from '../views/new-item-menu.view';
 import { NoteSpaceContentsView } from '../views/note-space-contents.view';
 import { NoteSheetDrawerContainer } from './note-sheet-drawer.container';
+import { SmartFolderPanelContainer } from './smart-folder-panel.container';
 
 type Props = { readonly screen: NoteSpaceContentsScreen };
 
-// What a place holds, the « + » that creates in it, and the sheet of every command (decision 0053).
+// What a place holds, the add box of a smart folder (R19), the « + » that creates in it, and the sheet of every command
+// (decision 0053).
 export function NoteSpaceContentsContainer({ screen }: Props) {
     const { menuRef, ...menu } = useNewItemMenu();
     const sheet = useNoteSheet();
@@ -19,16 +24,20 @@ export function NoteSpaceContentsContainer({ screen }: Props) {
         back: screen.back,
         folders: screen.folders,
     };
-    const create = (
-        kind:
-            | typeof NoteSheetKindEnum.NEW_NOTE
-            | typeof NoteSheetKindEnum.NEW_FOLDER,
-    ) => {
+    const create = (target: NoteSheetTarget) => {
         menu.close();
-        sheet.open({ kind, place: screen.place });
+        sheet.open(target);
     };
+    const { folder } = screen.place;
     return (
         <>
+            {screen.cardContext === null || folder === null ? null : (
+                <SmartFolderPanelContainer
+                    folderId={folder.folderId}
+                    hasPendingCard={screen.hasPendingCard}
+                    choices={screen.choices}
+                />
+            )}
             <NoteSpaceContentsView
                 folders={screen.folders}
                 notes={screen.notes}
@@ -53,8 +62,19 @@ export function NoteSpaceContentsContainer({ screen }: Props) {
                 isOpen={menu.isOpen}
                 onToggle={menu.toggle}
                 onClose={menu.close}
-                onNewNote={() => create(NoteSheetKindEnum.NEW_NOTE)}
-                onNewFolder={() => create(NoteSheetKindEnum.NEW_FOLDER)}
+                onNewNote={() =>
+                    create({
+                        kind: NoteSheetKindEnum.NEW_NOTE,
+                        place: screen.place,
+                    })
+                }
+                onNewFolder={() =>
+                    create({
+                        kind: NoteSheetKindEnum.NEW_FOLDER,
+                        place: screen.place,
+                        inheritedFrom: screen.cardContext?.holderName ?? null,
+                    })
+                }
             />
             <NoteSheetDrawerContainer
                 target={sheet.target}

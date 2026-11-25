@@ -97,6 +97,26 @@ describe('Feature: the commands of the sheets of the notes', () => {
         });
     });
 
+    describe('Scenario: R17, a partner corrects the card template of a smart folder', () => {
+        it('sends the subject and the fields to the folder', async () => {
+            const { result, events, folders } = renderCommands();
+            const form = { subject: 'Nos restos', fields: ['Prix'] };
+
+            await act(async () =>
+                result.current.editFolderTemplate(IN_A_FOLDER.folderId, form),
+            );
+
+            expect(folders.answers.calls).toEqual([
+                {
+                    operation: 'editFolderTemplate',
+                    folderId: IN_A_FOLDER.folderId,
+                    form,
+                },
+            ]);
+            expect(events).toEqual(['EDIT_FOLDER_TEMPLATE:done']);
+        });
+    });
+
     describe('Scenario: R11, R15, a partner moves a note or a folder', () => {
         it('moves the folder under another, then the note into a space', async () => {
             const { result, events, notes, folders } = renderCommands();

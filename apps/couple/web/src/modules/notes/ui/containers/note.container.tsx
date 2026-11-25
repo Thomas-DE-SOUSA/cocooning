@@ -7,19 +7,23 @@ import { useNotePageScreen } from '../../hooks/use-note-page-screen';
 import { useNoteSheet } from '../../hooks/use-note-sheet';
 import type { NotePlaceLevel } from '../../view-models/note-space-screen.view-model';
 import { NoteSheetKindEnum } from '../../view-models/note-sheet.view-model';
+import type { NoteCardViewModel } from '../../view-models/note-card.view-model';
 import type { NoteListItem } from '../../view-models/notes-screen.view-model';
 import { NoteEditorView } from '../views/note-editor.view';
 import { NotePageView } from '../views/note-page.view';
+import { NoteCardContainer } from './note-card.container';
 import { NoteSheetDrawerContainer } from './note-sheet-drawer.container';
 
 type Props = {
     readonly note: NoteListItem;
     readonly level: NotePlaceLevel;
+    readonly card: NoteCardViewModel | null;
     readonly collaborationUrl: string;
 };
 
-// The « ⋯ » of the page opens the same sheet as a row of its folder; once deleted, the note leaves for that folder.
-export function NoteContainer({ note, level, collaborationUrl }: Props) {
+// The « ⋯ » of the page opens the same sheet as a row of its folder; once deleted, the note leaves for that folder. A
+// note of a smart folder shows its card above the editor (R20).
+export function NoteContainer({ note, level, card, collaborationUrl }: Props) {
     const documentGateway = useMemo(
         () => new HocuspocusNoteDocumentGateway(collaborationUrl),
         [collaborationUrl],
@@ -46,6 +50,7 @@ export function NoteContainer({ note, level, collaborationUrl }: Props) {
                     })
                 }
             />
+            {card === null ? null : <NoteCardContainer card={card} />}
             <NoteEditorView editor={screen.editor} />
             <NoteSheetDrawerContainer
                 target={sheet.target}

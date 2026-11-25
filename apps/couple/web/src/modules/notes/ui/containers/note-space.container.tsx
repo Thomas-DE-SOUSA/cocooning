@@ -24,6 +24,11 @@ export function NoteSpaceContainer({
             <NoteSpaceHeaderView
                 place={viewModel.place}
                 back={viewModel.back}
+                cardContext={
+                    viewModel.step === NoteSpaceStepEnum.CONTENTS
+                        ? viewModel.cardContext
+                        : null
+                }
             />
             {viewModel.step === NoteSpaceStepEnum.UNAVAILABLE ? (
                 <UnavailableNotice

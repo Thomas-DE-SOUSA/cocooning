@@ -5,6 +5,7 @@ import {
 import {
     A_SHARED_FOLDER,
     A_SHARED_NOTE,
+    A_SMART_SPACE_CONTENTS,
     A_SPACE_CONTENTS,
 } from '@cocooning/couple-client-business-logic/testing';
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
@@ -18,12 +19,13 @@ const aRefusal = (
     backendCode: string | null = null,
 ): ApiError => ({ code, message: 'Refused', backendCode });
 
+const A_NOTE = { ...A_SHARED_NOTE, card: null };
 const VACANCES = { folderId: A_SHARED_FOLDER.folderId, name: 'Vacances' };
 
 describe('Feature: the page of one note (decision 0036)', () => {
     it('shows the note with its link, owner and visibility', () => {
         const page = presentNotePage(
-            ok({ note: A_SHARED_NOTE, place: A_SPACE_CONTENTS }),
+            ok({ note: A_NOTE, place: A_SPACE_CONTENTS }),
         );
         expect(page.viewModel).toMatchObject({
             step: NotePageStepEnum.NOTE,
@@ -37,9 +39,26 @@ describe('Feature: the page of one note (decision 0036)', () => {
         });
     });
 
+    it('R20, R25, shows the card of a note in a smart folder, with « Mettre à jour »', () => {
+        const [filled] = A_SMART_SPACE_CONTENTS.notes;
+        const page = presentNotePage(
+            ok({ note: filled!, place: A_SMART_SPACE_CONTENTS }),
+        );
+        expect(page.viewModel).toMatchObject({
+            card: { noteId: filled!.noteId, canRefresh: true },
+        });
+    });
+
+    it('has no card for a note outside a smart folder', () => {
+        const page = presentNotePage(
+            ok({ note: A_NOTE, place: A_SPACE_CONTENTS }),
+        );
+        expect(page.viewModel).toMatchObject({ card: null });
+    });
+
     it('goes back to the root of the space of a note at the root', () => {
         const page = presentNotePage(
-            ok({ note: A_SHARED_NOTE, place: A_SPACE_CONTENTS }),
+            ok({ note: A_NOTE, place: A_SPACE_CONTENTS }),
         );
         expect(page.viewModel).toMatchObject({
             level: {
@@ -52,7 +71,7 @@ describe('Feature: the page of one note (decision 0036)', () => {
     it('goes back to the folder of a note, the first level of its move picker', () => {
         const page = presentNotePage(
             ok({
-                note: { ...A_SHARED_NOTE, folderId: VACANCES.folderId },
+                note: { ...A_NOTE, folderId: VACANCES.folderId },
                 place: { ...A_SPACE_CONTENTS, path: [VACANCES], folders: [] },
             }),
         );
