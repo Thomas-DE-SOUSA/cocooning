@@ -10,6 +10,7 @@ import {
     type Translator,
 } from '@cocooning/couple-client-business-logic/shared';
 import { NoteParamsRequestSchema } from '@cocooning/couple-contract/notes';
+import { NoteSpaceEnum } from '@cocooning/couple-shared-kernel/enums';
 import { fail, ok, type Result } from '@cocooning/shared-kernel/utils';
 
 export type CreateNoteContext = {
@@ -32,14 +33,17 @@ const invalid = (message: string): ApiError => ({
     backendCode: null,
 });
 
-// core-frontend.md rule 14: a server action is a public endpoint, its input is validated again here.
+// core-frontend.md rule 14: a server action is a public endpoint, its input is validated again here. R2: at the root of « Partagé » until the screen offers the folders.
 export async function createNote(
     input: unknown,
     context: CreateNoteContext,
 ): Promise<Result<null, ApiError>> {
     const form = createNoteTitleFormSchema(context.t).safeParse(input);
     if (!form.success) return fail(invalid('Invalid note title form'));
-    const note = await context.createNote.execute(form.data);
+    const note = await context.createNote.execute(form.data, {
+        space: NoteSpaceEnum.SHARED,
+        folderId: null,
+    });
     return note.success ? ok(null) : note;
 }
 
