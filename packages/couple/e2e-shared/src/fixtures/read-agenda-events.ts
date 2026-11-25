@@ -1,13 +1,13 @@
 import type { PrismaService } from '@cocooning/couple-prisma/nest';
 import type { OutboxEventRow } from './read-pairing-events';
 
-// The outbox of a calendar event in write order, as the relay will read it.
+// The outbox of a calendar event or a calendar label in write order, as the relay will read it.
 export function readAgendaEvents(
     prisma: PrismaService,
-    calendarEventId: string,
+    aggregateId: string,
 ): Promise<OutboxEventRow[]> {
     return prisma.includingDeleted.agendaEvent.findMany({
-        where: { aggregateId: calendarEventId },
+        where: { aggregateId },
         orderBy: { version: 'asc' },
         select: {
             eventName: true,

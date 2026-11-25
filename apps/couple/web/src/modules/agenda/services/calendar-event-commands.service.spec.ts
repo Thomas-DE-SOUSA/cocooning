@@ -34,6 +34,8 @@ const THE_DINNER_DETAILS = {
     endsOn: null,
     startsAt: '20:00',
     endsAt: null,
+    audience: 'OWNER',
+    labelId: null,
 };
 const REFUSAL: ApiError = {
     code: ApiErrorCodeEnum.FORBIDDEN,
@@ -84,7 +86,7 @@ describe('Feature: calendar event commands sent by the server actions', () => {
     });
 
     describe('Scenario: R9, a partner edits an event', () => {
-        it('sends the details without the visibility (R8)', async () => {
+        it('sends the details without the visibility, the private event for its author (R8, R11)', async () => {
             expect(await edit(EVENT_ID, A_DINNER_INPUT)).toEqual(ok(null));
             expect(gateway.calls).toEqual([
                 {

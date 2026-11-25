@@ -3,6 +3,7 @@ import { CalendarEventVisibilityEnum } from '@cocooning/couple-shared-kernel/enu
 import type { DomainEvent } from '@cocooning/shared-kernel/domain';
 import { AgendaException } from '../../../domain/exceptions/agenda.exception';
 import { CalendarEvent } from '../../../domain/models/calendar-event.aggregate';
+import type { CalendarLabel } from '../../../domain/models/calendar-label.aggregate';
 import type { CalendarEventSnapshot } from '../../../domain/models/calendar-event.aggregate.type';
 import { CalendarEventRepository } from '../../../domain/ports/calendar-event.repository';
 
@@ -81,6 +82,22 @@ export class CalendarEventInMemoryRepository extends CalendarEventRepository {
                 .sort(byDayOrder)
                 .map((snapshot) => this.rebuild(snapshot)),
         );
+    }
+
+    override clearLabel(label: CalendarLabel): Promise<void> {
+        const labelId = label.id.getValue();
+        const cleared = this.storedSnapshots
+            .filter(
+                (snapshot) =>
+                    snapshot.coupleId === label.coupleId &&
+                    snapshot.labelId === labelId,
+            )
+            .map((snapshot): [string, CalendarEventSnapshot] => [
+                snapshot.id,
+                { ...snapshot, labelId: null },
+            ]);
+        this.snapshots = new Map([...this.snapshots, ...cleared]);
+        return Promise.resolve();
     }
 
     private write(calendarEvent: CalendarEvent): void {

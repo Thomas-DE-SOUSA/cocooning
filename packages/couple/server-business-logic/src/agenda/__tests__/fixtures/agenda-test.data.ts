@@ -1,3 +1,4 @@
+import { CalendarEventAudienceEnum } from '@cocooning/couple-shared-kernel/enums';
 import type { ExecutionContext } from '@cocooning/shared-kernel/domain';
 import type { CalendarEventDetailsInput } from '../../domain/value-objects/calendar-event-details';
 
@@ -30,6 +31,8 @@ export const DINNER: CalendarEventDetailsInput = {
     endsOn: null,
     startsAt: '20:00',
     endsAt: null,
+    audience: CalendarEventAudienceEnum.BOTH,
+    labelId: null,
 };
 
 // A weekend: two days, no hour, so all day long.
@@ -40,4 +43,6 @@ export const WEEKEND: CalendarEventDetailsInput = {
     endsOn: '2026-12-13',
     startsAt: null,
     endsAt: null,
+    audience: CalendarEventAudienceEnum.BOTH,
+    labelId: null,
 };

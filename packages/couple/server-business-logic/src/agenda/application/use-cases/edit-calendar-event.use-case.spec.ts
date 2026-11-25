@@ -1,5 +1,8 @@
 import { AgendaExceptionCodeEnum } from '@cocooning/couple-contract/agenda';
-import { CalendarEventVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    CalendarEventAudienceEnum,
+    CalendarEventVisibilityEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import type { ExecutionContext } from '@cocooning/shared-kernel/domain';
 import { CalendarEventEditedEvent } from '../../domain/events/calendar-event-edited.event';
 import type { CalendarEvent } from '../../domain/models/calendar-event.aggregate';
@@ -92,14 +95,82 @@ describe('Feature: edit a calendar event', () => {
         });
     });
 
-    describe('Scenario: R9, the author edits their private event', () => {
-        it('edits it and keeps it private', async () => {
+    describe('Scenario: R9, R11, the author edits their private event', () => {
+        it('edits it and keeps it private, for its author', async () => {
             const calendarEvent = ctx.givenPrivateEventOf(AS_A);
-            const view = await edit(AS_A, calendarEvent);
+            const view = await edit(AS_A, calendarEvent, {
+                ...WEEKEND,
+                audience: CalendarEventAudienceEnum.OWNER,
+            });
             expect(view).toMatchObject({
                 title: WEEKEND.title,
                 visibility: CalendarEventVisibilityEnum.PRIVATE,
+                audience: CalendarEventAudienceEnum.OWNER,
             });
+        });
+
+        it.each([
+            [CalendarEventAudienceEnum.PARTNER],
+            [CalendarEventAudienceEnum.BOTH],
+        ])('refuses the audience %s and changes nothing', async (audience) => {
+            const calendarEvent = ctx.givenPrivateEventOf(AS_A);
+            await expect(
+                edit(AS_A, calendarEvent, { ...WEEKEND, audience }),
+            ).rejects.toMatchObject({
+                code: AgendaExceptionCodeEnum.CALENDAR_EVENT_AUDIENCE_INVALID,
+            });
+            expect(
+                ctx.calendarEventRepository.storedSnapshots[0],
+            ).toMatchObject({
+                audience: CalendarEventAudienceEnum.OWNER,
+                version: 1,
+            });
+            expect(ctx.eventPublisher.published).toEqual([]);
+        });
+    });
+
+    describe('Scenario: R11, a partner says a shared event is for one of them', () => {
+        it('keeps it shared, for the chosen partner', async () => {
+            const calendarEvent = ctx.givenEventOf(AS_A);
+            const view = await edit(AS_B, calendarEvent, {
+                ...WEEKEND,
+                audience: CalendarEventAudienceEnum.PARTNER,
+            });
+            expect(view).toMatchObject({
+                visibility: CalendarEventVisibilityEnum.SHARED,
+                audience: CalendarEventAudienceEnum.PARTNER,
+            });
+        });
+    });
+
+    describe('Scenario: R13, the label of the event', () => {
+        it('puts a label of the couple on the event, then takes it off', async () => {
+            const calendarEvent = ctx.givenEventOf(AS_A);
+            const labelId = ctx.givenLabelOf(AS_B).id.getValue();
+            const labelled = await edit(AS_B, calendarEvent, {
+                ...WEEKEND,
+                labelId,
+            });
+            expect(labelled.labelId).toBe(labelId);
+            const unlabelled = await edit(AS_A, calendarEvent);
+            expect(unlabelled.labelId).toBeNull();
+            expect(
+                ctx.calendarEventRepository.storedSnapshots[0],
+            ).toMatchObject({ labelId: null, version: 3 });
+        });
+
+        it('refuses a label of another couple, and changes nothing', async () => {
+            const calendarEvent = ctx.givenEventOf(AS_A);
+            const labelId = ctx.givenLabelOf(AS_STRANGER).id.getValue();
+            await expect(
+                edit(AS_A, calendarEvent, { ...WEEKEND, labelId }),
+            ).rejects.toMatchObject({
+                code: AgendaExceptionCodeEnum.CALENDAR_LABEL_NOT_FOUND,
+            });
+            expect(
+                ctx.calendarEventRepository.storedSnapshots[0],
+            ).toMatchObject({ labelId: null, version: 1 });
+            expect(ctx.eventPublisher.published).toEqual([]);
         });
     });
 

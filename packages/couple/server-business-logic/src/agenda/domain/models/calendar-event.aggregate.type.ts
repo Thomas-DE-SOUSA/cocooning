@@ -1,4 +1,7 @@
-import type { CalendarEventVisibility } from '@cocooning/couple-shared-kernel/enums';
+import type {
+    CalendarEventAudience,
+    CalendarEventVisibility,
+} from '@cocooning/couple-shared-kernel/enums';
 import type {
     EntityMetadata,
     EntityMetadataSnapshot,
@@ -33,6 +36,8 @@ export type CalendarEventSnapshot = {
     readonly endsOn: string | null;
     readonly startsAt: string | null;
     readonly endsAt: string | null;
+    readonly audience: CalendarEventAudience;
+    readonly labelId: string | null;
     readonly visibility: CalendarEventVisibility;
     readonly version: number;
     readonly metadata: EntityMetadataSnapshot;

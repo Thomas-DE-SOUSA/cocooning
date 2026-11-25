@@ -55,7 +55,7 @@ export async function actOnCalendarEvent(
     return result.success ? ok(null) : result;
 }
 
-// R9: the edit sends the details; isPrivate is validated with the form but never sent, the visibility has its own commands (R8).
+// R9: the edit sends the details; isPrivate only sets the audience (R11), the visibility has its own commands (R8).
 export async function editCalendarEvent(
     calendarEventIdInput: unknown,
     input: unknown,

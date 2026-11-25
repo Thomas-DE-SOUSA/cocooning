@@ -88,28 +88,28 @@ Je crée un événement partagé, ou je partage un événement privé : le tél�
 
 À la création ou en le modifiant, je dis si l'événement est pour moi, pour toi ou pour nous deux. Chez l'autre, « pour moi » s'affiche « Toi » et inversement. Un événement « rien que pour moi » est forcément pour moi.
 
-- Dans le code : `CalendarEventAudienceEnum` (`OWNER`, `PARTNER`, `BOTH`, relatif à l'auteur), `CalendarEvent.create` et `edit` ; refus `CALENDAR_EVENT_AUDIENCE_INVALID` pour un événement privé qui n'est pas pour son auteur. La PWA traduit en « Moi », « Toi », « Nous deux » selon qui regarde.
+- Dans le code : `CalendarEventAudienceEnum` (`OWNER`, `PARTNER`, `BOTH`, relatif à l'auteur), `CalendarEvent.create`, `edit` et `makePrivate`, `CalendarEventAudienceValidator.ensureFits` ; refus `CALENDAR_EVENT_AUDIENCE_INVALID` pour un événement privé qui n'est pas pour son auteur, y compris pour rendre privé un événement partagé ; partager garde l'audience. La PWA traduit en « Moi », « Toi », « Nous deux » selon qui regarde.
 - Source : [décision 0056](../../decisions/agenda/0056-pour-qui-et-etiquettes.md). Validée par : Thomas De Sousa, 2026-11-25.
 
 ### R12. Les étiquettes sont communes au couple
 
 Nous avons une seule liste d'étiquettes, chacune un nom de 1 à 30 signes et une couleur parmi huit. Nous les créons, renommons, recolorons et supprimons tous les deux, 20 au plus.
 
-- Dans le code : agrégat `CalendarLabel`, `CalendarLabelName`, `CalendarLabelColorEnum` ; refus `CALENDAR_LABEL_LIMIT_REACHED` au-delà de 20.
+- Dans le code : agrégat `CalendarLabel`, `CalendarLabelName`, `CalendarLabelColorEnum`, `ListCalendarLabelsUseCase`, `CreateCalendarLabelUseCase`, `EditCalendarLabelUseCase`, `DeleteCalendarLabelUseCase` ; refus `CALENDAR_LABEL_LIMIT_REACHED` au-delà de `CALENDAR_LABEL_MAX_COUNT` (`CalendarLabelPreconditionService.ensureLabelRoomLeft`), sans verrou : deux créations au même instant peuvent dépasser la borne.
 - Source : décision 0056. Validée par : Thomas De Sousa, 2026-11-25.
 
 ### R13. Une étiquette colore un événement
 
 Je mets une étiquette, ou aucune, sur un événement ; il prend sa couleur dans la liste du jour et sur les points du mois. Un événement sans étiquette reste neutre.
 
-- Dans le code : `labelId` de `CalendarEvent` ; refus `CALENDAR_LABEL_NOT_FOUND` pour une étiquette d'un autre couple ou supprimée.
+- Dans le code : `labelId` de `CalendarEvent` (dans `createCalendarEventDetails`), `CalendarLabelPreconditionService.ensureLabelUsable` dans `CreateCalendarEventUseCase` et `EditCalendarEventUseCase` ; refus `CALENDAR_LABEL_NOT_FOUND` pour une étiquette d'un autre couple, inconnue ou supprimée.
 - Source : décision 0056. Validée par : Thomas De Sousa, 2026-11-25.
 
 ### R14. Supprimer une étiquette garde ses événements
 
 Je supprime l'étiquette « Sport » : les événements qui la portaient restent, sans étiquette.
 
-- Dans le code : `DeleteCalendarLabelUseCase` retire l'étiquette des événements du couple dans la même transaction.
+- Dans le code : `DeleteCalendarLabelUseCase` retire l'étiquette des événements du couple dans la même transaction, par `CalendarEventRepository.clearLabel`.
 - Source : décision 0056. Validée par : Thomas De Sousa, 2026-11-25.
 
 ## Cas et exceptions
@@ -125,6 +125,7 @@ Je supprime l'étiquette « Sport » : les événements qui la portaient restent
 | Événement « rien que pour moi » qui n'est pas pour son auteur | Refusé, `422` `CALENDAR_EVENT_AUDIENCE_INVALID` (R11) |
 | Étiquette inconnue, supprimée ou d'un autre couple | Refusée, `404` `CALENDAR_LABEL_NOT_FOUND` (R13) |
 | 21e étiquette, nom vide ou trop long | Refusé, `409` `CALENDAR_LABEL_LIMIT_REACHED` ou `422` `CALENDAR_LABEL_NAME_INVALID` (R12) |
+| Deux écritures de la même étiquette en même temps | Refusée, `409` `CALENDAR_LABEL_VERSION_CONFLICT` |
 | Dernier jour avant le premier, heure de fin avant l'heure de début le même jour, heure de fin sans heure de début | Refusé, `422` `CALENDAR_EVENT_MOMENT_INVALID` (R5) |
 
 ## Voir aussi

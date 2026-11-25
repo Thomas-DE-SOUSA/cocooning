@@ -1,12 +1,15 @@
+import { AgendaExceptionCodeEnum } from '@cocooning/couple-contract/agenda';
 import { readAgendaEvents } from '@cocooning/couple-e2e-shared/fixtures';
 import { CalendarEventEditedEvent } from '@cocooning/couple-server-business-logic/agenda';
 import { AgendaTestApp } from './agenda-test-app';
 import {
     COUPLE_ID,
     DINNER,
+    PRIVATE_DINNER,
     NOW,
     PARTNER_A,
     PARTNER_B,
+    refusal,
     STRANGER,
     WEEKEND,
     WEEKEND_DETAILS,
@@ -63,16 +66,54 @@ describe('Feature: a partner edits a calendar event (R9)', () => {
             ['the other partner on a private event', PARTNER_B],
             ['another couple', STRANGER],
         ])('answers 404 to %s', async (_label, userId) => {
-            const calendarEventId = await agenda.createdId(PARTNER_A, {
-                ...DINNER,
-                visibility: 'PRIVATE',
-            });
+            const calendarEventId = await agenda.createdId(
+                PARTNER_A,
+                PRIVATE_DINNER,
+            );
             const response = await agenda.edit(
                 userId,
                 calendarEventId,
                 WEEKEND_DETAILS,
             );
             expect(response.status).toBe(404);
+        });
+    });
+
+    describe('Scenario: R11, who a private event is for', () => {
+        it('keeps it for its author', async () => {
+            const calendarEventId = await agenda.createdId(
+                PARTNER_A,
+                PRIVATE_DINNER,
+            );
+            const response = await agenda.edit(PARTNER_A, calendarEventId, {
+                ...WEEKEND_DETAILS,
+                audience: 'OWNER',
+            });
+            expect(response.body).toMatchObject({
+                visibility: 'PRIVATE',
+                audience: 'OWNER',
+            });
+        });
+
+        it('refuses with 422 another audience, and changes nothing', async () => {
+            const calendarEventId = await agenda.createdId(
+                PARTNER_A,
+                PRIVATE_DINNER,
+            );
+            const response = await agenda.edit(PARTNER_A, calendarEventId, {
+                ...WEEKEND_DETAILS,
+                audience: 'BOTH',
+            });
+            expect(response).toEqual(
+                refusal(
+                    422,
+                    AgendaExceptionCodeEnum.CALENDAR_EVENT_AUDIENCE_INVALID,
+                    'A private calendar event is for its author only',
+                ),
+            );
+            expect(
+                (await agenda.get(PARTNER_A, calendarEventId)).body,
+            ).toMatchObject({ title: DINNER.title, audience: 'OWNER' });
         });
     });
 

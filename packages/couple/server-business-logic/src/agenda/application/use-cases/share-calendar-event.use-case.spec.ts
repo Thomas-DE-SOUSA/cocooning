@@ -1,5 +1,8 @@
 import { AgendaExceptionCodeEnum } from '@cocooning/couple-contract/agenda';
-import { CalendarEventVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    CalendarEventAudienceEnum,
+    CalendarEventVisibilityEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import type { ExecutionContext } from '@cocooning/shared-kernel/domain';
 import { CalendarEventSharedEvent } from '../../domain/events/calendar-event-shared.event';
 import { CalendarEventId } from '../../domain/value-objects/calendar-event-id.vo';
@@ -24,16 +27,20 @@ describe('Feature: share a calendar event', () => {
     const run = (context: ExecutionContext, calendarEventId: string) =>
         ctx.shareCalendarEventUseCase().execute(context, { calendarEventId });
 
-    describe('Scenario: R8, the author shares a private event', () => {
-        it('changes the visibility and records one event', async () => {
+    describe('Scenario: R8, R11, the author shares a private event', () => {
+        it('changes the visibility, keeps the audience and records one event', async () => {
             const calendarEvent = ctx.givenPrivateEventOf(AS_A);
             ctx.advanceHours(1);
             const view = await run(AS_A, calendarEvent.id.getValue());
-            expect(view.visibility).toBe(CalendarEventVisibilityEnum.SHARED);
+            expect(view).toMatchObject({
+                visibility: CalendarEventVisibilityEnum.SHARED,
+                audience: CalendarEventAudienceEnum.OWNER,
+            });
             expect(
                 ctx.calendarEventRepository.storedSnapshots[0],
             ).toMatchObject({
                 visibility: CalendarEventVisibilityEnum.SHARED,
+                audience: CalendarEventAudienceEnum.OWNER,
                 version: 2,
                 metadata: { updatedAt: CHANGED_AT.toISOString() },
             });

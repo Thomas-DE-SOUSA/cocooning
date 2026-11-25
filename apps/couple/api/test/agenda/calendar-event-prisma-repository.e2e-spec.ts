@@ -31,6 +31,8 @@ const anEvent = (
     startsOn: '2026-12-05',
     endsOn: null,
     visibility: 'SHARED',
+    audience: 'BOTH',
+    labelId: null,
     updatedAt: NOW,
     deletedAt: null,
     ...overrides,
@@ -46,6 +48,7 @@ const TRIP_OF_B = anEvent('b1', {
 const PRIVATE_OF_A = anEvent('a2', {
     title: 'Surprise',
     visibility: 'PRIVATE',
+    audience: 'OWNER',
 });
 const DELETED_OF_A = anEvent('a3', { title: 'Annulé', deletedAt: NOW });
 const OF_ANOTHER_COUPLE = anEvent('c1', {
@@ -54,6 +57,7 @@ const OF_ANOTHER_COUPLE = anEvent('c1', {
     title: 'Autre couple',
 });
 const CORRUPTED = anEvent('e1', { title: 'Abîmé', visibility: 'PUBLIC' });
+const UNKNOWN_AUDIENCE = anEvent('e2', { title: 'Abîmé', audience: 'FRIENDS' });
 
 describe('Feature: the Prisma adapter of CalendarEventRepository', () => {
     let app: INestApplication;
@@ -116,7 +120,7 @@ describe('Feature: the Prisma adapter of CalendarEventRepository', () => {
     it('refuses a stale version with CALENDAR_EVENT_VERSION_CONFLICT', async () => {
         const first = await visible(PARTNER_A, SHARED_OF_A.calendarEventId);
         const second = await visible(PARTNER_B, SHARED_OF_A.calendarEventId);
-        first.makePrivate(PARTNER_A, NOW);
+        first.share(PARTNER_A, NOW);
         second.delete(PARTNER_B, NOW);
         await repository.save(first);
         await expect(repository.save(second)).rejects.toMatchObject({
@@ -124,16 +128,22 @@ describe('Feature: the Prisma adapter of CalendarEventRepository', () => {
         });
     });
 
-    it('answers CALENDAR_EVENT_DATA_CORRUPTED on an unknown visibility', async () => {
-        await createTestCalendarEvents(app.get(PrismaService), [CORRUPTED]);
-        await expect(
-            repository.findVisibleById(
-                COUPLE_ID,
-                PARTNER_A,
-                CORRUPTED.calendarEventId,
-            ),
-        ).rejects.toMatchObject({
-            code: AgendaExceptionCodeEnum.CALENDAR_EVENT_DATA_CORRUPTED,
-        });
-    });
+    it.each([
+        ['an unknown visibility', CORRUPTED],
+        ['an unknown audience', UNKNOWN_AUDIENCE],
+    ])(
+        'answers CALENDAR_EVENT_DATA_CORRUPTED on %s',
+        async (_label, corrupted) => {
+            await createTestCalendarEvents(app.get(PrismaService), [corrupted]);
+            await expect(
+                repository.findVisibleById(
+                    COUPLE_ID,
+                    PARTNER_A,
+                    corrupted.calendarEventId,
+                ),
+            ).rejects.toMatchObject({
+                code: AgendaExceptionCodeEnum.CALENDAR_EVENT_DATA_CORRUPTED,
+            });
+        },
+    );
 });

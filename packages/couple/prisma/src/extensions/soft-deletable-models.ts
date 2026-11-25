@@ -5,6 +5,7 @@ export const SOFT_DELETABLE_MODELS: ReadonlySet<Prisma.ModelName> =
     new Set<Prisma.ModelName>([
         'Account',
         'CalendarEvent',
+        'CalendarLabel',
         'Couple',
         'FlashMessage',
         'Folder',

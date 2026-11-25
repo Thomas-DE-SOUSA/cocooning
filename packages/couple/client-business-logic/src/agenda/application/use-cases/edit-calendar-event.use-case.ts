@@ -1,6 +1,6 @@
 import type { CalendarEventResponse } from '@cocooning/couple-contract/agenda';
 import { toEditCalendarEventRequest } from '../mappers/calendar-event-request.mapper';
-import type { CalendarEventDetailsForm } from '../schemas/calendar-event-form.zod';
+import type { CalendarEventForm } from '../schemas/calendar-event-form.zod';
 import type { Result } from '@cocooning/shared-kernel/utils';
 import type { ApiError } from '../../../shared/api-error';
 import type { AgendaGateway } from '../../domain/ports/agenda.gateway';
@@ -11,7 +11,7 @@ export class EditCalendarEventUseCase {
 
     execute(
         calendarEventId: string,
-        form: CalendarEventDetailsForm,
+        form: CalendarEventForm,
     ): Promise<Result<CalendarEventResponse, ApiError>> {
         return this.agendaGateway.editCalendarEvent(
             calendarEventId,

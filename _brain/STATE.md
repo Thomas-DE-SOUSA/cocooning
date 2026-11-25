@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-25 (lot 2 en production avec note des clients ; vocaux du couple analysés, D54 : agenda « pour qui » en premier).
+> Mis à jour : 2026-11-25 22:35 (vocaux analysés, D54 ; décision 0056 mergée ; lot serveur de l'agenda « pour qui » et étiquettes en cours).
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -16,7 +16,7 @@
 
 ## Prochaine étape
 
-0. **Vocaux du couple (D54, 2026-11-25)** : agenda « pour qui » (D52) + couleurs ou étiquettes perso en premier, maquette sur la planche avant le code ; puis onglet Listes (courses, tâches, wishlist ; « qui a coché »), puis onglet Dates (cartes, filtres, photo `og:image`), journée IA plus tard.
+0. **Vocaux du couple (D54, 2026-11-25)** : agenda « pour qui » + étiquettes de couleur en premier (D52 décidée, décision 0056, règles R11 à R14, PR #38 mergée ; maquette `Agenda-pour-qui` validée). Lot serveur en cours chez un sous-agent sur `feat/agenda-audience-labels-server` (5 commits : enums, contrat, audience, étiquettes, étiquette sur l'événement ; restent Prisma, API, E2E) ; à relire avant PR, puis client, écran, release. Ensuite onglet Listes, puis Dates.
 1. **Essai sur les deux téléphones** de la release PR #9 (2026-11-24) : « Aujourd'hui » change le jour sans faire défiler (choix du propriétaire, PR #8 annule #5) ; feuille de l'agenda, titre visible au-dessus du clavier, défilement qui ne la replie plus (poignée seule) ; glissement vers la gauche (à moitié : bouton « Supprimer » ; au-delà de 60 % : suppression au lâcher, décision 0049). Si le titre reste caché : faire suivre à la feuille la hauteur de `visualViewport`.
 2. **Autres retours du couple**, une petite PR chacun : sélecteurs natifs, place du « + », points de couleur, événement privé invisible chez l'autre, barre d'onglets, compteur « Nous » (2 969 jours attendus le 2026-11-24), écriture à deux dans une note, bandes système blanches du Samsung.
 3. **Messages** (décisions 0050, 0051) : A à E mergées (#13 à #18) ; le fil est dans l'ordre d'une messagerie (choix du propriétaire, 2026-11-25), le schéma photo inutilisé est retiré. Release après F (choix du propriétaire) : générer une paire VAPID pour la VM avec son accord (sinon l'API ne démarre pas). F ouverte : service worker (phrase par genre depuis `fr/messaging/push.json`, toucher → bon écran), carte « Notifications sur ce téléphone » dans « Nous » (port `PhonePushGateway`). À vérifier sur iPhone : abonnement après la lecture de la clé publique (sinon charger la clé à l'ouverture de la carte). À vérifier sur téléphone : clavier iOS sur le composeur, appareil photo, HEIC sur Samsung, photo de 10 Mo. À faire à part : agenda/notes 500 au lieu de 409 ; sauvegarde nocturne sans les photos ; R3 à confirmer.

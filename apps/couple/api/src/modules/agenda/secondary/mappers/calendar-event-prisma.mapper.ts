@@ -4,7 +4,10 @@ import {
     AgendaException,
     type CalendarEventSnapshot,
 } from '@cocooning/couple-server-business-logic/agenda';
-import { CalendarEventVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    CalendarEventAudienceEnum,
+    CalendarEventVisibilityEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import { parseEnum } from '@cocooning/shared-kernel/utils';
 import { fromDayColumn, toDayColumn } from './calendar-day-column';
 
@@ -18,21 +21,23 @@ export type CalendarEventStateColumns = {
     readonly startsAt: string | null;
     readonly endsAt: string | null;
     readonly visibility: string;
+    readonly audience: string;
+    readonly labelId: string | null;
     readonly updatedAt: Date;
     readonly deletedAt: Date | null;
 };
 
-const toVisibility = (raw: string) => {
+const toEnumValue = <TEnum extends Record<string, string>>(
+    raw: string,
+    enumObject: TEnum,
+    label: string,
+): TEnum[keyof TEnum] => {
     try {
-        return parseEnum(
-            raw,
-            CalendarEventVisibilityEnum,
-            'CalendarEventVisibility',
-        );
+        return parseEnum(raw, enumObject, label);
     } catch {
         throw new AgendaException({
             code: AgendaExceptionCodeEnum.CALENDAR_EVENT_DATA_CORRUPTED,
-            message: 'Unknown calendar event visibility',
+            message: `Unknown ${label}`,
         });
     }
 };
@@ -53,7 +58,17 @@ export function toCalendarEventSnapshot(
         endsOn: raw.endsOn === null ? null : fromDayColumn(raw.endsOn),
         startsAt: raw.startsAt,
         endsAt: raw.endsAt,
-        visibility: toVisibility(raw.visibility),
+        visibility: toEnumValue(
+            raw.visibility,
+            CalendarEventVisibilityEnum,
+            'CalendarEventVisibility',
+        ),
+        audience: toEnumValue(
+            raw.audience,
+            CalendarEventAudienceEnum,
+            'CalendarEventAudience',
+        ),
+        labelId: raw.labelId,
         version: raw.version,
         metadata: {
             createdAt: raw.createdAt.toISOString(),
@@ -77,6 +92,8 @@ export function toCalendarEventState(
         startsAt: snapshot.startsAt,
         endsAt: snapshot.endsAt,
         visibility: snapshot.visibility,
+        audience: snapshot.audience,
+        labelId: snapshot.labelId,
         updatedAt: new Date(metadata.updatedAt),
         deletedAt: toInstant(metadata.deletedAt),
     };

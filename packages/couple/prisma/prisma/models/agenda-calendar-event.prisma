@@ -15,12 +15,20 @@ model CalendarEvent {
   startsAt    String?   @map("starts_at") @db.VarChar(5)
   endsAt      String?   @map("ends_at") @db.VarChar(5)
   visibility  String    @db.VarChar(20)
+  /// Who the event is for, relative to its author: OWNER, PARTNER or BOTH (R11); OWNER when private.
+  audience    String    @db.VarChar(20)
+  /// The label that colours the event, or null (R13); a deleted label is taken off its events (R14).
+  labelId     String?   @map("label_id") @db.Uuid
   version     Int       @map("version")
   createdAt   DateTime  @map("created_at")
   updatedAt   DateTime  @map("updated_at")
   deletedAt   DateTime? @map("deleted_at")
 
+  label CalendarLabel? @relation(fields: [labelId], references: [id], onDelete: SetNull)
+
   // The events of a range of days (core.md rule 27: coupleId leads).
   @@index([coupleId, startsOn])
+  // The events of a label, to take it off when it is deleted (R14).
+  @@index([coupleId, labelId])
   @@map("calendar_event")
 }

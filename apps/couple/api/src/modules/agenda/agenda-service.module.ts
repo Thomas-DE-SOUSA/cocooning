@@ -11,11 +11,12 @@ import {
     ShareCalendarEventUseCase,
 } from '@cocooning/couple-server-business-logic/agenda';
 import { AgendaSecondaryModule } from './agenda-secondary.module';
+import { LABEL_USE_CASES } from './agenda-label-use-cases';
 import { agendaUseCase } from './agenda-use-case.factory';
 
 const mutation = <T>(
     token: new (
-        ...args: ConstructorParameters<typeof EditCalendarEventUseCase>
+        ...args: ConstructorParameters<typeof ShareCalendarEventUseCase>
     ) => T,
 ) =>
     agendaUseCase(
@@ -27,7 +28,12 @@ const useCases = [
     agendaUseCase(
         CreateCalendarEventUseCase,
         (d) =>
-            new CreateCalendarEventUseCase(d.repository, d.clock, d.publishing),
+            new CreateCalendarEventUseCase(
+                d.repository,
+                d.labelPreconditions,
+                d.clock,
+                d.publishing,
+            ),
     ),
     agendaUseCase(
         ListCalendarEventsUseCase,
@@ -37,10 +43,21 @@ const useCases = [
         GetCalendarEventUseCase,
         (d) => new GetCalendarEventUseCase(d.preconditions),
     ),
-    mutation(EditCalendarEventUseCase),
+    agendaUseCase(
+        EditCalendarEventUseCase,
+        (d) =>
+            new EditCalendarEventUseCase(
+                d.repository,
+                d.preconditions,
+                d.labelPreconditions,
+                d.clock,
+                d.publishing,
+            ),
+    ),
     mutation(ShareCalendarEventUseCase),
     mutation(MakeCalendarEventPrivateUseCase),
     mutation(DeleteCalendarEventUseCase),
+    ...LABEL_USE_CASES,
 ];
 
 // Decision 0006: the guard service reading pairing is a provider, injected where the couple of a request is needed.
