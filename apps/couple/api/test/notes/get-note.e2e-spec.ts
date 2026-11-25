@@ -34,6 +34,7 @@ describe('Feature: a partner opens a note (R4)', () => {
                 visibility: 'SHARED',
                 folderId: null,
                 updatedAt: NOW.toISOString(),
+                card: null,
             },
         });
     });

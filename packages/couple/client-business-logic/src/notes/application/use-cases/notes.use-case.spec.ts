@@ -38,7 +38,7 @@ describe('Feature: the notes of the couple from the PWA', () => {
     it('opens one note (R4)', async () => {
         await expect(
             new GetNoteUseCase(gateway).execute(NOTE_ID),
-        ).resolves.toEqual(ok(A_SHARED_NOTE));
+        ).resolves.toEqual(ok({ ...A_SHARED_NOTE, card: null }));
         expect(gateway.calls).toEqual([
             { operation: 'getNote', noteId: NOTE_ID },
         ]);

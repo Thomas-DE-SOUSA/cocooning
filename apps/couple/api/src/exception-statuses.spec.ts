@@ -26,6 +26,7 @@ const INTERNAL_CODES: readonly string[] = [
     PairingExceptionCodeEnum.PAIRING_COUPLE_DATA_CORRUPTED,
     NoteExceptionCodeEnum.NOTE_DATA_CORRUPTED,
     NoteExceptionCodeEnum.FOLDER_DATA_CORRUPTED,
+    NoteExceptionCodeEnum.NOTE_CARD_DATA_CORRUPTED,
     AgendaExceptionCodeEnum.CALENDAR_EVENT_DATA_CORRUPTED,
     MessagingExceptionCodeEnum.INSTANT_PHOTO_DATA_CORRUPTED,
     PersistenceExceptionCodeEnum.PERSISTENCE_NOT_INITIALIZED,

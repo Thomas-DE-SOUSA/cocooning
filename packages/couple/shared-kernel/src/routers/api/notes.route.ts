@@ -19,4 +19,13 @@ export const NotesRouteEnum = {
     FOLDER_RENAME: '/note-folders/:folderId',
     FOLDER_DELETE: '/note-folders/:folderId',
     FOLDER_MOVE: '/note-folders/:folderId/move',
+    // R17: the subject and the card template the AI proposes for a new smart folder, then their correction.
+    FOLDER_TEMPLATE_PROPOSE: '/note-folders/template-proposals',
+    FOLDER_TEMPLATE_EDIT: '/note-folders/:folderId/template',
+    // R19 to R22: a note added by its name to a smart folder, then the actions on its card.
+    NOTE_CARD_ADD: '/note-folders/:folderId/cards',
+    NOTE_CARD_CANDIDATE_CHOOSE: '/notes/:noteId/card/choose',
+    NOTE_CARD_REFINE: '/notes/:noteId/card/refine',
+    NOTE_CARD_REFRESH: '/notes/:noteId/card/refresh',
+    NOTE_CARD_FIELD_CORRECT: '/notes/:noteId/card/fields',
 } as const satisfies RouteGroup;

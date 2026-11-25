@@ -1,5 +1,6 @@
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
 import {
+    FolderKindEnum,
     type NoteSpace,
     NoteSpaceEnum,
 } from '@cocooning/couple-shared-kernel/enums';
@@ -32,17 +33,25 @@ describe('Feature: create a folder (R13, R14)', () => {
         space: NoteSpace = NoteSpaceEnum.SHARED,
         parentFolderId: string | null = null,
     ) =>
-        ctx
-            .createFolderUseCase()
-            .execute(context, { space, parentFolderId, name });
+        ctx.createFolderUseCase().execute(context, {
+            space,
+            parentFolderId,
+            name,
+            kind: FolderKindEnum.CLASSIC,
+            subject: null,
+            cardTemplate: null,
+        });
 
     describe('Scenario: R13, a partner creates a folder at the root of « Partagé »', () => {
         it('returns the folder, its name trimmed', async () => {
             await expect(create(AS_A, ' Restaurants ')).resolves.toEqual({
                 folderId: FIRST_ID,
                 space: NoteSpaceEnum.SHARED,
+                kind: FolderKindEnum.CLASSIC,
                 parentFolderId: null,
                 name: 'Restaurants',
+                subject: null,
+                cardTemplate: null,
                 updatedAt: NOW,
             });
         });
@@ -55,8 +64,11 @@ describe('Feature: create a folder (R13, R14)', () => {
                     coupleId: COUPLE_ID,
                     ownerId: PARTNER_A,
                     space: NoteSpaceEnum.SHARED,
+                    kind: FolderKindEnum.CLASSIC,
                     parentFolderId: null,
                     name: 'Restaurants',
+                    subject: null,
+                    cardTemplate: null,
                     version: 1,
                     metadata: {
                         createdAt: NOW.toISOString(),
@@ -73,6 +85,7 @@ describe('Feature: create a folder (R13, R14)', () => {
                 data: {
                     ownerId: PARTNER_A,
                     space: NoteSpaceEnum.SHARED,
+                    kind: FolderKindEnum.CLASSIC,
                     parentFolderId: null,
                 },
                 occurredAt: NOW,

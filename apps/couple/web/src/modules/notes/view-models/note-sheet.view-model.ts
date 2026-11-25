@@ -18,10 +18,14 @@ export const NoteSheetKindEnum = {
 // note of a level, or the move picker, which starts from that level.
 export type NoteSheetTarget =
     | {
-          readonly kind:
-              | typeof NoteSheetKindEnum.NEW_NOTE
-              | typeof NoteSheetKindEnum.NEW_FOLDER;
+          readonly kind: typeof NoteSheetKindEnum.NEW_NOTE;
           readonly place: NotePlace;
+      }
+    | {
+          readonly kind: typeof NoteSheetKindEnum.NEW_FOLDER;
+          readonly place: NotePlace;
+          // R18: the smart folder whose card template a folder created here keeps, null outside a smart tree.
+          readonly inheritedFrom: string | null;
       }
     | {
           readonly kind: typeof NoteSheetKindEnum.FOLDER;
@@ -44,6 +48,7 @@ export type NoteSheetTarget =
 export const FolderSheetStepEnum = {
     ACTIONS: 'ACTIONS',
     RENAME: 'RENAME',
+    EDIT_TEMPLATE: 'EDIT_TEMPLATE',
     DELETE: 'DELETE',
 } as const;
 

@@ -20,6 +20,9 @@ describe('Feature: the requests on folders (R10 to R16)', () => {
                 space: 'SHARED',
                 parentFolderId: null,
                 name: 'Restaurants',
+                kind: 'CLASSIC',
+                subject: null,
+                cardTemplate: null,
             });
         });
 

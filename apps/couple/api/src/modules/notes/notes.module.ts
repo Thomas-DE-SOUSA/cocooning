@@ -3,11 +3,16 @@ import { AuthenticationServiceModule } from '../authentication';
 import { NotesServiceModule } from './notes-service.module';
 import { NoteCollaborationServer } from './primary/collaboration';
 import { NoteCoupleGuard } from './primary/couple';
+import { NoteCardEnrichmentScheduler } from './primary/scheduler';
 import {
+    AddNoteCardController,
+    ChooseNoteCardCandidateController,
+    CorrectNoteCardFieldController,
     CreateFolderController,
     CreateNoteController,
     DeleteFolderController,
     DeleteNoteController,
+    EditFolderTemplateController,
     GetNoteController,
     GetNoteSpaceContentsController,
     ListNoteSpacesController,
@@ -15,6 +20,9 @@ import {
     MakeNotePrivateController,
     MoveFolderController,
     MoveNoteController,
+    ProposeFolderTemplateController,
+    RefineNoteCardController,
+    RefreshNoteCardController,
     RenameFolderController,
     RenameNoteController,
     ShareNoteController,
@@ -37,7 +45,18 @@ import {
         RenameFolderController,
         MoveFolderController,
         DeleteFolderController,
+        ProposeFolderTemplateController,
+        EditFolderTemplateController,
+        AddNoteCardController,
+        ChooseNoteCardCandidateController,
+        RefineNoteCardController,
+        RefreshNoteCardController,
+        CorrectNoteCardFieldController,
     ],
-    providers: [NoteCoupleGuard, NoteCollaborationServer],
+    providers: [
+        NoteCoupleGuard,
+        NoteCollaborationServer,
+        NoteCardEnrichmentScheduler,
+    ],
 })
 export class NotesModule {}

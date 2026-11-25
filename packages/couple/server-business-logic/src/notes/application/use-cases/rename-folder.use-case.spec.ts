@@ -1,5 +1,8 @@
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
-import { NoteSpaceEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    FolderKindEnum,
+    NoteSpaceEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import { FolderRenamedEvent } from '../../domain/events/folder-renamed.event';
 import { Folder } from '../../domain/models/folder.aggregate';
 import { FolderName } from '../../domain/value-objects/folder-name.vo';
@@ -37,8 +40,11 @@ describe('Feature: rename a folder (R13, R14)', () => {
             ).resolves.toEqual({
                 folderId: folder.id.getValue(),
                 space: NoteSpaceEnum.SHARED,
+                kind: FolderKindEnum.CLASSIC,
                 parentFolderId: null,
                 name: 'Bonnes tables',
+                subject: null,
+                cardTemplate: null,
                 updatedAt: RENAMED_AT,
             });
             expect(ctx.folderRepository.storedSnapshots[0]).toMatchObject({

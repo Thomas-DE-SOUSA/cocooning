@@ -22,6 +22,7 @@ export function NotePageContainer({ viewModel, collaborationUrl }: Props) {
         <NoteContainer
             note={viewModel.note}
             level={viewModel.level}
+            card={viewModel.card}
             collaborationUrl={collaborationUrl}
         />
     );

@@ -30,6 +30,7 @@ describe('Feature: open one note', () => {
                 visibility: NoteVisibilityEnum.SHARED,
                 folderId: null,
                 updatedAt: ctx.dateTimeProvider.now(),
+                card: null,
             });
         });
 

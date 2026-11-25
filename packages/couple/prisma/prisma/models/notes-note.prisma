@@ -16,6 +16,7 @@ model Note {
   deletedAt    DateTime? @map("deleted_at")
 
   folder Folder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  cards  NoteCard[]
 
   // The list of a couple, most recently changed first (core.md rule 27: coupleId leads).
   @@index([coupleId, updatedAt(sort: Desc)])

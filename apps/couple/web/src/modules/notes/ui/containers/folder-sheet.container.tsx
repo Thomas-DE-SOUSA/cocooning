@@ -19,6 +19,7 @@ import {
 import { FolderActionsSheetView } from '../views/folder-actions-sheet.view';
 import { FolderDeletionSheetView } from '../views/folder-deletion-sheet.view';
 import { FolderNameSheetView } from '../views/folder-name-sheet.view';
+import { FolderTemplateSheetContainer } from './folder-template-sheet.container';
 
 type Props = {
     readonly folder: FolderListItem;
@@ -57,6 +58,18 @@ export function FolderSheetContainer({
             />
         );
     }
+    if (
+        sheet.step === FolderSheetStepEnum.EDIT_TEMPLATE &&
+        folder.template !== null
+    ) {
+        return (
+            <FolderTemplateSheetContainer
+                folder={folder}
+                template={folder.template}
+                onClose={onClose}
+            />
+        );
+    }
     if (sheet.step === FolderSheetStepEnum.DELETE) {
         return (
             <FolderDeletionSheetView
@@ -73,6 +86,9 @@ export function FolderSheetContainer({
         <FolderActionsSheetView
             folder={folder}
             onRename={sheet.showRename}
+            onEditTemplate={
+                folder.template === null ? null : sheet.showEditTemplate
+            }
             onMove={() =>
                 onOpen({
                     kind: NoteSheetKindEnum.MOVE,

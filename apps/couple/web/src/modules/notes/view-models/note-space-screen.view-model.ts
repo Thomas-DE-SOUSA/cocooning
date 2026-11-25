@@ -1,6 +1,14 @@
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
+import type { NoteCardChoice } from './note-card-choice.view-model';
+import type { NoteCardContext } from './note-card-context.view-model';
+import type { NoteRowItem } from './note-card-line.view-model';
 import type { NoteLocation, NotePlace } from './note-place.view-model';
-import type { NoteListItem } from './notes-screen.view-model';
+
+// R17, R18: the subject and the fields a smart folder reads, its own or those of the smart folder above it.
+export type FolderTemplate = {
+    readonly subject: string;
+    readonly fields: readonly string[];
+};
 
 export type FolderListItem = {
     readonly folderId: string;
@@ -8,6 +16,9 @@ export type FolderListItem = {
     readonly href: string;
     readonly folderCount: number;
     readonly noteCount: number;
+    // R17: a smart folder completes what is added to it, with the « IA » badge.
+    readonly isSmart: boolean;
+    readonly template: FolderTemplate | null;
 };
 
 export const NoteSpaceStepEnum = {
@@ -28,7 +39,12 @@ export type NotePlaceLevel = ScreenPlace & {
 
 export type NoteSpaceContentsScreen = NotePlaceLevel & {
     readonly step: typeof NoteSpaceStepEnum.CONTENTS;
-    readonly notes: readonly NoteListItem[];
+    readonly notes: readonly NoteRowItem[];
+    readonly cardContext: NoteCardContext | null;
+    // R20: a card « en recherche » on screen; the screen reads the place again until it is filled.
+    readonly hasPendingCard: boolean;
+    // R19: the cards of the place in doubt, shown with their candidates above the rows.
+    readonly choices: readonly NoteCardChoice[];
 };
 
 export type NoteSpaceScreenViewModel =

@@ -8,13 +8,15 @@ import { presentFolderContents } from '../../presenters/place-labels.presenter';
 import type { FolderListItem } from '../../view-models/note-space-screen.view-model';
 import { RowActionsButton } from './row-actions-button';
 import { RowLink } from './row-link';
+import { SmartBadge } from './smart-badge';
 
 type Props = {
     readonly folder: FolderListItem;
     readonly onActions: () => void;
 };
 
-// A folder of the screen: its name opens it, its counts tell what it holds (R13), its « ⋯ » acts on it (R14).
+// A folder of the screen: its name opens it, « IA » marks a smart one (R17), its counts tell what it holds (R13), its
+// « ⋯ » acts on it (R14).
 export function FolderRow({ folder, onActions }: Props) {
     const { t } = useTranslation(NOTE_SPACE_NAMESPACE);
     return (
@@ -27,7 +29,12 @@ export function FolderRow({ folder, onActions }: Props) {
                     />
                 </span>
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <RowLink href={folder.href}>{folder.name}</RowLink>
+                    <div className="flex items-center gap-2">
+                        <RowLink href={folder.href}>{folder.name}</RowLink>
+                        {folder.isSmart ? (
+                            <SmartBadge label={t('smartBadge')} />
+                        ) : null}
+                    </div>
                     <p className="text-sm text-muted-foreground">
                         {presentFolderContents(folder, t)}
                     </p>

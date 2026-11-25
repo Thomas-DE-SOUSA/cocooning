@@ -26,6 +26,7 @@ export async function writeFolder(
                 coupleId: snapshot.coupleId,
                 ownerId: snapshot.ownerId,
                 space: snapshot.space,
+                kind: snapshot.kind,
                 createdAt: new Date(snapshot.metadata.createdAt),
                 version: FIRST_VERSION,
                 ...toFolderState(snapshot),

@@ -7,6 +7,8 @@ import { NoteException } from '@cocooning/couple-server-business-logic/notes';
 const CONFLICT_CONSTRAINTS: ReadonlySet<string> = new Set([
     'note_event_aggregate_id_version_key',
     'folder_pkey',
+    'note_card_pkey',
+    'note_card_couple_id_note_id_key',
 ]);
 
 export function toVersionConflict(

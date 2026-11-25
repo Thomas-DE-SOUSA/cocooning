@@ -1,5 +1,6 @@
 import type {
     CreateNoteRequest,
+    NoteDetailResponse,
     NotePageResponse,
     NoteResponse,
     RenameNoteRequest,
@@ -55,8 +56,13 @@ export class FakeNotesGateway extends NotesGateway {
         return this.respond({ operation: 'listNotes', query }, A_NOTE_PAGE);
     }
 
-    override getNote(noteId: string): Promise<Result<NoteResponse, ApiError>> {
-        return this.respond({ operation: 'getNote', noteId }, A_SHARED_NOTE);
+    override getNote(
+        noteId: string,
+    ): Promise<Result<NoteDetailResponse, ApiError>> {
+        return this.respond(
+            { operation: 'getNote', noteId },
+            { ...A_SHARED_NOTE, card: null },
+        );
     }
 
     override createNote(

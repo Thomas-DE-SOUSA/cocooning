@@ -7,7 +7,10 @@ import {
     THE_NOTE_SPACES,
 } from '@cocooning/couple-client-business-logic/testing';
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
-import { NoteSpaceEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    FolderKindEnum,
+    NoteSpaceEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import { fail, ok } from '@cocooning/shared-kernel/utils';
 import { createCoupleHttpConfig } from '../../couple-http-config';
 import { resolveNoteFoldersEndpoints } from '../endpoints/note-folders.endpoints';
@@ -88,6 +91,9 @@ describe('Feature: the PWA reaches the spaces and folders of the notes through t
                     space: NoteSpaceEnum.SHARED,
                     parentFolderId: null,
                     name: ' Vacances ',
+                    kind: FolderKindEnum.CLASSIC,
+                    subject: null,
+                    cardTemplate: null,
                 }),
             ).resolves.toEqual(ok(A_SHARED_FOLDER));
             expect(fakeFetch.calls).toEqual([
@@ -99,6 +105,9 @@ describe('Feature: the PWA reaches the spaces and folders of the notes through t
                         space: 'SHARED',
                         parentFolderId: null,
                         name: 'Vacances',
+                        kind: 'CLASSIC',
+                        subject: null,
+                        cardTemplate: null,
                     }),
                 },
             ]);
@@ -236,6 +245,9 @@ describe('Feature: the PWA reaches the spaces and folders of the notes through t
                         space: NoteSpaceEnum.SHARED,
                         parentFolderId: null,
                         name: '',
+                        kind: FolderKindEnum.CLASSIC,
+                        subject: null,
+                        cardTemplate: null,
                     }),
             ],
         ])('refuses %s without calling the API', async (_label, call) => {

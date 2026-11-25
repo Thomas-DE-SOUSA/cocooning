@@ -1,7 +1,11 @@
 import type { FactoryProvider, Type } from '@nestjs/common';
 import {
+    CardContextService,
     FolderPreconditionService,
     FolderRepository,
+    NoteCardPreconditionService,
+    NoteCardRepository,
+    NoteCardWriter,
     NoteCollaborationProvider,
     NoteContentRepository,
     NotePreconditionService,
@@ -20,8 +24,12 @@ export type NotesDependencies = {
     readonly repository: NoteRepository;
     readonly folders: FolderRepository;
     readonly contents: NoteContentRepository;
+    readonly cards: NoteCardRepository;
+    readonly cardPreconditions: NoteCardPreconditionService;
     readonly preconditions: NotePreconditionService;
     readonly folderPreconditions: FolderPreconditionService;
+    readonly cardContexts: CardContextService;
+    readonly writer: NoteCardWriter;
     readonly collaboration: NoteCollaborationProvider;
     readonly revocation: NoteRevocationService;
     readonly unitOfWork: UnitOfWork;
@@ -33,7 +41,9 @@ const DEPENDENCIES = [
     NoteRepository,
     FolderRepository,
     NoteContentRepository,
+    NoteCardRepository,
     NoteCollaborationProvider,
+    NoteCardWriter,
     UnitOfWork,
     DateTimeProvider,
     EventPublisher,
@@ -45,7 +55,9 @@ const collect = (
     repository: NoteRepository,
     folders: FolderRepository,
     contents: NoteContentRepository,
+    cards: NoteCardRepository,
     collaboration: NoteCollaborationProvider,
+    writer: NoteCardWriter,
     unitOfWork: UnitOfWork,
     clock: DateTimeProvider,
     publisher: EventPublisher,
@@ -56,8 +68,12 @@ const collect = (
         repository,
         folders,
         contents,
+        cards,
+        cardPreconditions: new NoteCardPreconditionService(cards),
         preconditions: new NotePreconditionService(repository),
         folderPreconditions: new FolderPreconditionService(folders),
+        cardContexts: new CardContextService(folders),
+        writer,
         collaboration,
         revocation: new NoteRevocationService(collaboration),
         unitOfWork,

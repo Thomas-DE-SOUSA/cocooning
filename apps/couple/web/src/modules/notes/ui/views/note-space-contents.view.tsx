@@ -3,16 +3,16 @@
 import { useTranslation } from 'react-i18next';
 import { NOTE_SPACE_NAMESPACE } from '../../data/note-space-i18n-namespaces';
 import type { FolderListItem } from '../../view-models/note-space-screen.view-model';
-import type { NoteListItem } from '../../view-models/notes-screen.view-model';
+import type { NoteRowItem } from '../../view-models/note-card-line.view-model';
 import { FolderRow } from '../components/folder-row';
 import { NoteRow } from '../components/note-row';
 import { NotesSection } from '../components/notes-section';
 
 type Props = {
     readonly folders: readonly FolderListItem[];
-    readonly notes: readonly NoteListItem[];
+    readonly notes: readonly NoteRowItem[];
     readonly onFolderActions: (folder: FolderListItem) => void;
-    readonly onNoteActions: (note: NoteListItem) => void;
+    readonly onNoteActions: (note: NoteRowItem) => void;
 };
 
 // R13: the folders of the place first, then its notes.
