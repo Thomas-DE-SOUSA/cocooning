@@ -1,3 +1,4 @@
+export * from './folder.repository';
 export * from './note-collaboration.provider';
 export * from './note-content.repository';
 export * from './note.repository';

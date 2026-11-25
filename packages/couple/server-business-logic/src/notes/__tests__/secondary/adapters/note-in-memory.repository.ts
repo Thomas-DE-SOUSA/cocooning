@@ -1,14 +1,24 @@
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
-import { NoteVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    type NoteSpace,
+    NoteVisibilityEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import type {
     DomainEvent,
     OffsetPage,
     OffsetPaginationParams,
 } from '@cocooning/shared-kernel/domain';
 import { NoteException } from '../../../domain/exceptions/note.exception';
+import type { Folder } from '../../../domain/models/folder.aggregate';
 import { Note } from '../../../domain/models/note.aggregate';
 import type { NoteSnapshot } from '../../../domain/models/note.aggregate.type';
+import {
+    type NoteSpaceCounts,
+    spaceOfVisibility,
+    visibilityOfSpace,
+} from '../../../domain/models/note-space';
 import { NoteRepository } from '../../../domain/ports/note.repository';
+import { countBy } from './count-by';
 
 const FIRST_VERSION = 1;
 
@@ -54,9 +64,9 @@ export class NoteInMemoryRepository extends NoteRepository {
         userId: string,
         noteId: string,
     ): Promise<Note | null> {
-        const found = this.storedSnapshots
-            .filter(isVisibleTo(coupleId, userId))
-            .find(({ id }) => id === noteId);
+        const found = this.visible(coupleId, userId).find(
+            ({ id }) => id === noteId,
+        );
         return Promise.resolve(
             found === undefined ? null : this.rebuild(found),
         );
@@ -67,9 +77,7 @@ export class NoteInMemoryRepository extends NoteRepository {
         userId: string,
         { page, pageSize }: OffsetPaginationParams,
     ): Promise<OffsetPage<Note>> {
-        const visible = this.storedSnapshots
-            .filter(isVisibleTo(coupleId, userId))
-            .sort(byMostRecentChange);
+        const visible = this.visible(coupleId, userId).sort(byMostRecentChange);
         const start = (page - 1) * pageSize;
         return Promise.resolve({
             items: visible
@@ -79,6 +87,84 @@ export class NoteInMemoryRepository extends NoteRepository {
             page,
             pageSize,
         });
+    }
+
+    override findVisibleIn(
+        coupleId: string,
+        userId: string,
+        space: NoteSpace,
+        folderId: string | null,
+    ): Promise<ReadonlyArray<Note>> {
+        const visibility = visibilityOfSpace(space);
+        return Promise.resolve(
+            this.visible(coupleId, userId)
+                .filter(
+                    (snapshot) =>
+                        snapshot.visibility === visibility &&
+                        snapshot.folderId === folderId,
+                )
+                .sort(byMostRecentChange)
+                .map((snapshot) => this.rebuild(snapshot)),
+        );
+    }
+
+    override countVisibleByFolder(
+        coupleId: string,
+        userId: string,
+        folders: ReadonlyArray<Folder>,
+    ): Promise<ReadonlyMap<string, number>> {
+        const folderIds = folders.map((folder) => folder.id.getValue());
+        const folderIdsOfNotes = this.visible(coupleId, userId).flatMap(
+            ({ folderId }) =>
+                folderId !== null && folderIds.includes(folderId)
+                    ? [folderId]
+                    : [],
+        );
+        return Promise.resolve(countBy(folderIdsOfNotes));
+    }
+
+    override countVisibleBySpace(
+        coupleId: string,
+        userId: string,
+    ): Promise<NoteSpaceCounts> {
+        const counts = countBy(
+            this.visible(coupleId, userId).map(({ visibility }) =>
+                spaceOfVisibility(visibility),
+            ),
+        );
+        return Promise.resolve({
+            SHARED: counts.get('SHARED') ?? 0,
+            PRIVATE: counts.get('PRIVATE') ?? 0,
+        });
+    }
+
+    // R16, as the bulk statement of the adapter: the live notes of the folder move up, their version raised.
+    moveUpFrom(folder: Folder): void {
+        const folderId = folder.id.getValue();
+        const parentFolderId =
+            folder.parentFolderId === null
+                ? null
+                : folder.parentFolderId.getValue();
+        const moved = this.storedSnapshots
+            .filter(
+                (snapshot) =>
+                    snapshot.coupleId === folder.coupleId &&
+                    snapshot.metadata.deletedAt === null &&
+                    snapshot.folderId === folderId,
+            )
+            .map((snapshot): [string, NoteSnapshot] => [
+                snapshot.id,
+                {
+                    ...snapshot,
+                    folderId: parentFolderId,
+                    version: snapshot.version + 1,
+                },
+            ]);
+        this.snapshots = new Map([...this.snapshots, ...moved]);
+    }
+
+    private visible(coupleId: string, userId: string): NoteSnapshot[] {
+        return this.storedSnapshots.filter(isVisibleTo(coupleId, userId));
     }
 
     private write(note: Note): void {

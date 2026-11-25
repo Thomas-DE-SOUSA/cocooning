@@ -45,12 +45,15 @@ describe('Feature: the notes of the couple from the PWA', () => {
         ]);
     });
 
-    it('creates a note with its title (R1, R2)', async () => {
+    it('creates a note with its title at the root of « Partagé » (R1, R2)', async () => {
         await expect(
             new CreateNoteUseCase(gateway).execute({ title: 'Courses' }),
         ).resolves.toEqual(ok(A_SHARED_NOTE));
         expect(gateway.calls).toEqual([
-            { operation: 'createNote', request: { title: 'Courses' } },
+            {
+                operation: 'createNote',
+                request: { title: 'Courses', space: 'SHARED', folderId: null },
+            },
         ]);
     });
 

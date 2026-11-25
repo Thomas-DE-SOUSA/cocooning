@@ -8,6 +8,7 @@ export type NoteView = {
     readonly isOwner: boolean;
     readonly title: string;
     readonly visibility: NoteVisibility;
+    readonly folderId: string | null;
     readonly updatedAt: Date;
 };
 
@@ -18,6 +19,7 @@ export const toNoteView = (note: Note, readerId: string): NoteView => ({
     isOwner: note.ownerId === readerId,
     title: note.title.value,
     visibility: note.visibility,
+    folderId: note.folderId === null ? null : note.folderId.getValue(),
     updatedAt: note.updatedAt,
 });
 

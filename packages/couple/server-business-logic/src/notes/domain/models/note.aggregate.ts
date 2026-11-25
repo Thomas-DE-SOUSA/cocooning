@@ -1,4 +1,5 @@
 import {
+    type NoteSpace,
     type NoteVisibility,
     NoteVisibilityEnum,
 } from '@cocooning/couple-shared-kernel/enums';
@@ -7,16 +8,21 @@ import { NoteCreatedEvent } from '../events/note-created.event';
 import { NoteDeletedEvent } from '../events/note-deleted.event';
 import { NoteMadePrivateEvent } from '../events/note-made-private.event';
 import type { NoteEventParams } from '../events/note-event-params';
+import { NoteMovedEvent } from '../events/note-moved.event';
 import { NoteRenamedEvent } from '../events/note-renamed.event';
 import { NoteSharedEvent } from '../events/note-shared.event';
+import { FolderPlacementValidator } from '../services/folder-placement.validator';
 import { NoteAccessValidator } from '../services/note-access.validator';
+import { FolderId } from '../value-objects/folder-id.vo';
 import { NoteId } from '../value-objects/note-id.vo';
 import { NoteTitle } from '../value-objects/note-title.vo';
+import type { FolderPlace } from './folder.aggregate.type';
 import type {
     CreateNoteInput,
     NoteProps,
     NoteSnapshot,
 } from './note.aggregate.type';
+import { visibilityOfSpace } from './note-space';
 
 const INITIAL_VERSION = 1;
 
@@ -25,14 +31,17 @@ export class Note extends AggregateRoot {
         super();
     }
 
-    // R1, R2: the creator owns the note, shared from the start.
+    // R1, R2, R11: the creator owns the note, which takes the visibility of its space.
     static create(input: CreateNoteInput, now: Date): Note {
+        FolderPlacementValidator.ensureInSpace(input.folder, input.space);
+        const visibility = visibilityOfSpace(input.space);
         const note = new Note({
             id: NoteId.generate(),
             coupleId: input.coupleId,
             ownerId: input.ownerId,
             title: input.title,
-            visibility: NoteVisibilityEnum.SHARED,
+            visibility,
+            folderId: input.folder === null ? null : input.folder.id,
             version: INITIAL_VERSION,
             metadata: EntityMetadata.create(now),
         });
@@ -40,7 +49,7 @@ export class Note extends AggregateRoot {
             new NoteCreatedEvent(
                 note.eventParams(input.ownerId, now, {
                     ownerId: input.ownerId,
-                    visibility: NoteVisibilityEnum.SHARED,
+                    visibility,
                 }),
             ),
         );
@@ -54,6 +63,10 @@ export class Note extends AggregateRoot {
             ownerId: snapshot.ownerId,
             title: NoteTitle.from(snapshot.title),
             visibility: snapshot.visibility,
+            folderId:
+                snapshot.folderId === null
+                    ? null
+                    : FolderId.from(snapshot.folderId),
             version: snapshot.version,
             metadata: EntityMetadata.fromSnapshot(snapshot.metadata),
         });
@@ -71,15 +84,31 @@ export class Note extends AggregateRoot {
     // R5: only the owner changes the visibility.
     share(userId: string, now: Date): void {
         this.changeVisibility(userId, NoteVisibilityEnum.SHARED, now);
-        this.addDomainEvent(
-            new NoteSharedEvent(this.eventParams(userId, now, null)),
-        );
     }
 
     makePrivate(userId: string, now: Date): void {
         this.changeVisibility(userId, NoteVisibilityEnum.PRIVATE, now);
+    }
+
+    // R11: within its space by whoever sees it; to the other space by its owner only, as with R5.
+    moveTo(
+        userId: string,
+        space: NoteSpace,
+        folder: FolderPlace | null,
+        now: Date,
+    ): void {
+        FolderPlacementValidator.ensureInSpace(folder, space);
+        const visibility = visibilityOfSpace(space);
+        if (visibility !== this.props.visibility)
+            this.changeVisibility(userId, visibility, now);
+        this.props.folderId = folder === null ? null : folder.id;
+        this.props.metadata = this.props.metadata.recordUpdate(now);
         this.addDomainEvent(
-            new NoteMadePrivateEvent(this.eventParams(userId, now, null)),
+            new NoteMovedEvent(
+                this.eventParams(userId, now, {
+                    folderId: this.folderIdValue(),
+                }),
+            ),
         );
     }
 
@@ -108,6 +137,10 @@ export class Note extends AggregateRoot {
         return this.props.visibility;
     }
 
+    get folderId(): FolderId | null {
+        return this.props.folderId;
+    }
+
     get updatedAt(): Date {
         return this.props.metadata.updatedAt;
     }
@@ -119,6 +152,7 @@ export class Note extends AggregateRoot {
             ownerId: this.props.ownerId,
             title: this.props.title.value,
             visibility: this.props.visibility,
+            folderId: this.folderIdValue(),
             version: this.props.version,
             metadata: this.props.metadata.toSnapshot(),
         };
@@ -130,8 +164,21 @@ export class Note extends AggregateRoot {
         now: Date,
     ): void {
         NoteAccessValidator.ensureOwner(this.props.ownerId, userId);
+        // R11: a folder belongs to one space, so a note that changes space goes to the root of the other.
+        if (visibility !== this.props.visibility) this.props.folderId = null;
         this.props.visibility = visibility;
         this.props.metadata = this.props.metadata.recordUpdate(now);
+        const params = this.eventParams(userId, now, null);
+        this.addDomainEvent(
+            visibility === NoteVisibilityEnum.SHARED
+                ? new NoteSharedEvent(params)
+                : new NoteMadePrivateEvent(params),
+        );
+    }
+
+    private folderIdValue(): string | null {
+        const folder = this.props.folderId;
+        return folder === null ? null : folder.getValue();
     }
 
     private eventParams<TData>(

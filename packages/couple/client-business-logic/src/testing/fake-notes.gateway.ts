@@ -30,6 +30,7 @@ export const A_SHARED_NOTE: NoteResponse = {
     isOwner: true,
     title: 'Courses',
     visibility: NoteVisibilityEnum.SHARED,
+    folderId: null,
     updatedAt: '2026-11-23T08:00:00.000Z',
 };
 

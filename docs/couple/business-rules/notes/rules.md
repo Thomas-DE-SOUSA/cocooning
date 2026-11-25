@@ -15,7 +15,7 @@ Je crée une note : elle est à notre couple, et j'en suis la propriétaire.
 
 Ma nouvelle note est tout de suite visible et modifiable par mon âme sœur ; je peux la rendre privée ensuite. Avec les dossiers, une note créée dans « Privé » est privée dès sa création (R11 des [règles des dossiers](rules/folders.md)).
 
-- Dans le code : `Note.create`, visibilité `SHARED` ; la création dans « Privé » est à venir (lot 1 des dossiers).
+- Dans le code : `Note.create`, visibilité de l'espace (`visibilityOfSpace`) ; `CreateNoteRequestSchema` crée à la racine de « Partagé » sans espace ni dossier, `CreateNoteUseCase` dans l'espace et le dossier demandés.
 - Source : décision 0039, [décision 0052](../../decisions/notes/0052-dossiers-et-dossiers-ia.md). Validée par : Thomas De Sousa, 2026-11-23 et 2026-11-25.
 
 ### R3. Les notes demandent un couple formé

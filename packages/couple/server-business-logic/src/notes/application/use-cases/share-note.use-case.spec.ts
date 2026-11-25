@@ -1,5 +1,8 @@
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
-import { NoteVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    NoteSpaceEnum,
+    NoteVisibilityEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import { NoteSharedEvent } from '../../domain/events/note-shared.event';
 import { NoteId } from '../../domain/value-objects/note-id.vo';
 import {
@@ -63,6 +66,33 @@ describe('Feature: share a note', () => {
             await expect(run(AS_B, note.id.getValue())).rejects.toMatchObject({
                 code: NoteExceptionCodeEnum.NOTE_NOT_FOUND,
             });
+        });
+    });
+
+    describe('Scenario: R11, a note filed in a folder changes space', () => {
+        it('goes to the root of its new space, the folder staying in the old one', async () => {
+            const folder = ctx.givenFolderOf(
+                AS_A,
+                'Rangement',
+                null,
+                NoteSpaceEnum.PRIVATE,
+            );
+            const note = ctx.givenNoteOf(AS_A, 'Courses', folder);
+            const view = await ctx
+                .shareNoteUseCase()
+                .execute(AS_A, { noteId: note.id.getValue() });
+            expect(view.folderId).toBeNull();
+        });
+    });
+
+    describe('Scenario: R11, a shared note filed in a folder is shared again', () => {
+        it('stays in its folder, its space unchanged', async () => {
+            const folder = ctx.givenFolderOf(AS_A, 'Maison');
+            const note = ctx.givenNoteOf(AS_A, 'Courses', folder);
+            const view = await ctx
+                .shareNoteUseCase()
+                .execute(AS_A, { noteId: note.id.getValue() });
+            expect(view.folderId).toBe(folder.id.getValue());
         });
     });
 });

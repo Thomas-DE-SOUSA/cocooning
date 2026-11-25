@@ -5,6 +5,7 @@ import {
     NoteRenamedEvent,
     NoteTitle,
 } from '@cocooning/couple-server-business-logic/notes';
+import { NoteSpaceEnum } from '@cocooning/couple-shared-kernel/enums';
 import {
     COUPLE_ID,
     NOW,
@@ -29,6 +30,8 @@ describe('Feature: the Prisma adapter of NoteRepository, writes', () => {
                     coupleId: COUPLE_ID,
                     ownerId: PARTNER_A,
                     title: NoteTitle.create('Restaurants'),
+                    space: NoteSpaceEnum.SHARED,
+                    folder: null,
                 },
                 NOW,
             );
