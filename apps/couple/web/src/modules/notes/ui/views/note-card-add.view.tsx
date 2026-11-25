@@ -22,6 +22,7 @@ type Props = {
 
 const NAME_ID = 'note-card-name';
 const NAME_ERROR_ID = 'note-card-name-error';
+const NAME_HINT_ID = 'note-card-name-hint';
 
 // R19: the couple types a name in a smart folder; the AI completes its card.
 export function NoteCardAddView({ form, isPending, onSubmit }: Props) {
@@ -52,7 +53,7 @@ export function NoteCardAddView({ form, isPending, onSubmit }: Props) {
                         placeholder={t('add.placeholder')}
                         className="border-0 bg-transparent px-1 shadow-none focus-visible:ring-0"
                         aria-invalid={Boolean(errors.name)}
-                        aria-describedby={NAME_ERROR_ID}
+                        aria-describedby={`${NAME_HINT_ID} ${NAME_ERROR_ID}`}
                         {...form.register('name')}
                     />
                     <Button
@@ -67,6 +68,12 @@ export function NoteCardAddView({ form, isPending, onSubmit }: Props) {
                         )}
                     </Button>
                 </div>
+                <p
+                    id={NAME_HINT_ID}
+                    className="text-sm text-muted-foreground"
+                >
+                    {t('add.hint')}
+                </p>
                 <FieldError id={NAME_ERROR_ID}>
                     {errors.name?.message}
                 </FieldError>

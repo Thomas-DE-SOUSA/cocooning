@@ -1,8 +1,9 @@
 {
     "add": {
         "label": "Ajouter un élément",
-        "placeholder": "Un nom, comme « Chez Paul »",
-        "submit": "Ajouter",
+        "placeholder": "Nom d'un élément à ajouter (ex. : Chez Paul)",
+        "hint": "Un seul nom à la fois : l'IA cherche ses informations et remplit la fiche.",
+        "submit": "Ajouter au dossier",
         "adding": "Ajout en cours"
     },
     "line": {
