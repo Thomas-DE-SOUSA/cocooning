@@ -62,7 +62,7 @@ Le couple fait au plus 30 recherches par jour, tous dossiers confondus. Au-delà
 Notre moteur de recherche, sur notre serveur, interroge des moteurs publics avec ce que je tape et le contexte du dossier. Partent chez l'IA le sujet du dossier, les noms des dossiers au-dessus, les cases de la fiche type, ce que je tape et les textes trouvés. Jamais nos notes libres.
 
 - Dans le code : à venir (lot 2).
-- Source : décision 0052, [décision 0054](../../../decisions/notes/0054-recherche-des-fiches-searxng-et-gemini.md) (proposée). Validée par : à compléter.
+- Source : décision 0052, [décision 0054](../../../decisions/notes/0054-recherche-des-fiches-searxng-et-gemini.md) . Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R25. Une fiche déplacée garde ses valeurs
 

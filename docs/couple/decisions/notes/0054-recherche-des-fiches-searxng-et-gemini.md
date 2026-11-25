@@ -1,10 +1,10 @@
 ---
 nature: technique
-status: proposée
+status: acceptée
 date: 2026-11-25
 deciders: [Thomas De Sousa]
-validated-by: à compléter
-validated-on:
+validated-by: Thomas De Sousa, 2026-11-25
+validated-on: 2026-11-25
 supersedes:
 superseded-by:
 premortem:
@@ -14,7 +14,7 @@ premortem:
 
 ## Contexte
 
-La [décision 0052](0052-dossiers-et-dossiers-ia.md) prévoyait Gemini dans son offre gratuite, avec sa recherche Google. L'essai de la clé du propriétaire, le 2026-11-25, l'a démenti : la clé marche, les modèles Gemini 3 répondent gratuitement, mais la recherche Google est refusée en gratuit (réponse `429`, quota nul) et Gemini 2.5, le seul qui l'incluait, est fermé aux nouveaux comptes. Sans recherche, l'IA répondrait de mémoire et inventerait (R21). Le propriétaire veut rester gratuit : « A », soit notre propre moteur de recherche et Gemini gratuit (2026-11-25).
+La [décision 0052](0052-dossiers-et-dossiers-ia.md) prévoyait Gemini dans son offre gratuite, avec sa recherche Google. L'essai de la clé du propriétaire, le 2026-11-25, l'a démenti : la clé marche, les modèles Gemini 3 répondent gratuitement, mais la recherche Google est refusée en gratuit (réponse `429`, quota nul) et Gemini 2.5, le seul qui l'incluait, est fermé aux nouveaux comptes. Sans recherche, l'IA répondrait de mémoire et inventerait (R21). Le propriétaire veut rester gratuit : « A », soit notre propre moteur de recherche et Gemini gratuit (2026-11-25), puis accepte cette décision (« go », 2026-11-25).
 
 ## Décision
 
