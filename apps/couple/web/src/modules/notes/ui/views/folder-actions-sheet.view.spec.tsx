@@ -13,7 +13,7 @@ const MAISON: FolderListItem = {
 };
 
 describe('Feature: the actions on a folder (R14)', () => {
-    it('is named after the folder and offers to rename or delete it', () => {
+    it('is named after the folder and offers to rename, move or delete it', () => {
         const events: string[] = [];
         render(
             <WithI18n>
@@ -22,6 +22,7 @@ describe('Feature: the actions on a folder (R14)', () => {
                         <FolderActionsSheetView
                             folder={MAISON}
                             onRename={() => events.push('rename')}
+                            onMove={() => events.push('move')}
                             onAskDeletion={() => events.push('delete')}
                         />
                     </DrawerContent>
@@ -32,9 +33,10 @@ describe('Feature: the actions on a folder (R14)', () => {
         expect(screen.getByRole('dialog', { name: 'Maison' })).not.toBeNull();
         expect(screen.getByText('1 dossier · 4 notes')).not.toBeNull();
         fireEvent.click(screen.getByRole('button', { name: 'Renommer' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Déplacer' }));
         fireEvent.click(
             screen.getByRole('button', { name: 'Supprimer le dossier' }),
         );
-        expect(events).toEqual(['rename', 'delete']);
+        expect(events).toEqual(['rename', 'move', 'delete']);
     });
 });

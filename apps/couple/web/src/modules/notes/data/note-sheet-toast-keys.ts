@@ -8,4 +8,7 @@ export const NOTE_SHEET_FAILURE_KEYS: Readonly<
     CREATE_FOLDER: 'toast.createFolderFailed',
     RENAME_FOLDER: 'toast.renameFolderFailed',
     DELETE_FOLDER: 'toast.deleteFolderFailed',
+    MOVE_FOLDER: 'toast.moveFailed',
+    MOVE_NOTE: 'toast.moveFailed',
+    DELETE_NOTE: 'toast.deleteNoteFailed',
 };

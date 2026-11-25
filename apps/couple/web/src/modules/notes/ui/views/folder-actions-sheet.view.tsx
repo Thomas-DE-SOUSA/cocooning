@@ -1,6 +1,6 @@
 'use client';
 
-import { Pencil, Trash2 } from 'lucide-react';
+import { Move, Pencil, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { NOTE_SPACE_NAMESPACE } from '../../data/note-space-i18n-namespaces';
 import { presentFolderContents } from '../../presenters/place-labels.presenter';
@@ -11,13 +11,15 @@ import { SheetHeading } from '../components/sheet-heading';
 type Props = {
     readonly folder: FolderListItem;
     readonly onRename: () => void;
+    readonly onMove: () => void;
     readonly onAskDeletion: () => void;
 };
 
-// R14: both partners rename and delete a folder they see; the deletion asks once more (R16).
+// R14: both partners rename, move and delete a folder they see; the deletion asks once more (R16).
 export function FolderActionsSheetView({
     folder,
     onRename,
+    onMove,
     onAskDeletion,
 }: Props) {
     const { t } = useTranslation(NOTE_SPACE_NAMESPACE);
@@ -33,6 +35,12 @@ export function FolderActionsSheetView({
                     label={t('folderSheet.rename')}
                     isDestructive={false}
                     onClick={onRename}
+                />
+                <SheetAction
+                    icon={Move}
+                    label={t('folderSheet.move')}
+                    isDestructive={false}
+                    onClick={onMove}
                 />
                 <SheetAction
                     icon={Trash2}

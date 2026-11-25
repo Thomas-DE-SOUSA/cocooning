@@ -15,4 +15,9 @@ export type NoteCommandCall =
     | {
           readonly operation: 'shareNote' | 'makeNotePrivate' | 'deleteNote';
           readonly noteId: string;
+      }
+    | {
+          readonly operation: 'moveNote';
+          readonly noteId: string;
+          readonly destination: NoteLocation;
       };

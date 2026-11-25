@@ -59,6 +59,18 @@ export function useNoteSheetCommands({ gateways, onDone, onFailed }: Options) {
             run(NoteSheetCommandEnum.DELETE_FOLDER, () =>
                 folders.deleteFolder(folderId),
             ),
+        moveFolder: (folderId: string, parentFolderId: string | null) =>
+            run(NoteSheetCommandEnum.MOVE_FOLDER, () =>
+                folders.moveFolder(folderId, parentFolderId),
+            ),
+        moveNote: (noteId: string, destination: NoteLocation) =>
+            run(NoteSheetCommandEnum.MOVE_NOTE, () =>
+                notes.moveNote(noteId, destination),
+            ),
+        deleteNote: (noteId: string) =>
+            run(NoteSheetCommandEnum.DELETE_NOTE, () =>
+                notes.deleteNote(noteId),
+            ),
         pending: isPending ? lastCommand : null,
         isBusy: isPending,
     };

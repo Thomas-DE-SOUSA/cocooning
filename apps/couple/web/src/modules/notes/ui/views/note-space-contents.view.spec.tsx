@@ -31,6 +31,7 @@ function renderContents(
                 folders={[]}
                 notes={[]}
                 onFolderActions={(folder) => taps.push(`folder:${folder.name}`)}
+                onNoteActions={(note) => taps.push(`note:${note.title}`)}
                 {...props}
             />
         </WithI18n>,
@@ -66,6 +67,15 @@ describe('Feature: what a space or a folder holds (R13)', () => {
             screen.getByRole('button', { name: 'Actions sur « Maison »' }),
         );
         expect(taps).toEqual(['folder:Maison']);
+    });
+
+    it('opens the actions of a note from its « ⋯ »', () => {
+        const { taps } = renderContents({ notes: [COURSES] });
+
+        fireEvent.click(
+            screen.getByRole('button', { name: 'Actions sur « Courses »' }),
+        );
+        expect(taps).toEqual(['note:Courses']);
     });
 
     it('opens a note from its title and tells whose it is', () => {

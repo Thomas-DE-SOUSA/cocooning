@@ -14,6 +14,11 @@ type Props = { readonly screen: NoteSpaceContentsScreen };
 export function NoteSpaceContentsContainer({ screen }: Props) {
     const { menuRef, ...menu } = useNewItemMenu();
     const sheet = useNoteSheet();
+    const level = {
+        place: screen.place,
+        back: screen.back,
+        folders: screen.folders,
+    };
     const create = (
         kind:
             | typeof NoteSheetKindEnum.NEW_NOTE
@@ -31,8 +36,11 @@ export function NoteSpaceContentsContainer({ screen }: Props) {
                     sheet.open({
                         kind: NoteSheetKindEnum.FOLDER,
                         folder,
-                        place: screen.place,
+                        level,
                     })
+                }
+                onNoteActions={(note) =>
+                    sheet.open({ kind: NoteSheetKindEnum.NOTE, note, level })
                 }
             />
             <NewItemMenuView
@@ -48,6 +56,7 @@ export function NoteSpaceContentsContainer({ screen }: Props) {
                 isOpen={sheet.isOpen}
                 opening={sheet.opening}
                 onClose={sheet.close}
+                onOpen={sheet.open}
             />
         </>
     );

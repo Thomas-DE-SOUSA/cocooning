@@ -21,9 +21,13 @@ type ScreenPlace = {
     readonly back: NotePlace | null;
 };
 
-export type NoteSpaceContentsScreen = ScreenPlace & {
-    readonly step: typeof NoteSpaceStepEnum.CONTENTS;
+// A place with the way back and its folders: a level of the screen, or of the move picker.
+export type NotePlaceLevel = ScreenPlace & {
     readonly folders: readonly FolderListItem[];
+};
+
+export type NoteSpaceContentsScreen = NotePlaceLevel & {
+    readonly step: typeof NoteSpaceStepEnum.CONTENTS;
     readonly notes: readonly NoteListItem[];
 };
 

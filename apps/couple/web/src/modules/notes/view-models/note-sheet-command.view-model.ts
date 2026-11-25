@@ -3,6 +3,9 @@ export const NoteSheetCommandEnum = {
     CREATE_FOLDER: 'CREATE_FOLDER',
     RENAME_FOLDER: 'RENAME_FOLDER',
     DELETE_FOLDER: 'DELETE_FOLDER',
+    MOVE_FOLDER: 'MOVE_FOLDER',
+    MOVE_NOTE: 'MOVE_NOTE',
+    DELETE_NOTE: 'DELETE_NOTE',
 } as const;
 
 export type NoteSheetCommand =

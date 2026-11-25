@@ -29,7 +29,8 @@
     "note": {
         "mine": "Ma note",
         "partner": "Note de mon âme sœur",
-        "updatedAt": "Modifiée le {{updatedAt}}"
+        "updatedAt": "Modifiée le {{updatedAt}}",
+        "actions": "Actions sur « {{title}} »"
     },
     "add": {
         "label": "Nouvelle note ou nouveau dossier",
@@ -50,6 +51,7 @@
     },
     "folderSheet": {
         "rename": "Renommer",
+        "move": "Déplacer",
         "delete": "Supprimer le dossier"
     },
     "renameFolder": {
@@ -74,6 +76,27 @@
         "deleting": "Suppression en cours",
         "keep": "Garder"
     },
+    "noteSheet": {
+        "move": "Déplacer",
+        "delete": "Supprimer la note",
+        "partnerHint": "Seule ton âme sœur peut supprimer sa note ou la ranger dans son « Privé »."
+    },
+    "noteDeletion": {
+        "title": "Supprimer « {{title}} » ?",
+        "description": "Elle disparaîtra pour vous deux.",
+        "confirm": "Supprimer pour nous deux",
+        "deleting": "Suppression en cours",
+        "keep": "Garder"
+    },
+    "move": {
+        "title": "Déplacer « {{name}} »",
+        "noteHint": "Choisis l'espace, puis le dossier.",
+        "folderHint": "Choisis le dossier : un dossier reste dans son espace.",
+        "spaces": "Espace",
+        "noFolder": "Aucun dossier ici.",
+        "here": "Déplacer ici, dans « {{place}} »",
+        "moving": "Déplacement en cours"
+    },
     "form": {
         "title": {
             "label": "Titre",
@@ -94,7 +117,9 @@
         "createNoteFailed": "Création de la note impossible",
         "createFolderFailed": "Création du dossier impossible",
         "renameFolderFailed": "Renommage impossible",
-        "deleteFolderFailed": "Suppression impossible"
+        "deleteFolderFailed": "Suppression impossible",
+        "moveFailed": "Déplacement impossible",
+        "deleteNoteFailed": "Suppression impossible"
     },
     "unavailable": {
         "title": "Impossible d'afficher ce dossier",

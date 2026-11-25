@@ -14,7 +14,8 @@ import {
     NoteSpaceStepEnum,
 } from '../view-models/note-space-screen.view-model';
 import { toNoteListItem } from './note-list-item.presenter';
-import { presentNotePlace, presentPathPlaces } from './note-place.presenter';
+import { presentNotePlace } from './note-place.presenter';
+import { presentPlaceLevel } from './place-level.presenter';
 
 // A folder gone (deleted, or in the other's « Privé », R14) or of another space: back to the root of the space.
 const BACK_TO_THE_ROOT: readonly ApiError['code'][] = [
@@ -27,24 +28,16 @@ const redirectTo = (route: string): NoteSpacePage => ({
     viewModel: null,
 });
 
-function presentContents(contents: NoteSpaceContentsResponse): NoteSpacePage {
-    const { space } = contents;
-    return {
-        redirectTo: null,
-        viewModel: {
-            step: NoteSpaceStepEnum.CONTENTS,
-            ...presentPathPlaces(space, contents.path),
-            folders: contents.folders.map((folder) => ({
-                folderId: folder.folderId,
-                name: folder.name,
-                href: presentNotePlace(space, folder).href,
-                folderCount: folder.folderCount,
-                noteCount: folder.noteCount,
-            })),
-            notes: contents.notes.map(toNoteListItem),
-        },
-    };
-}
+const presentContents = (
+    contents: NoteSpaceContentsResponse,
+): NoteSpacePage => ({
+    redirectTo: null,
+    viewModel: {
+        step: NoteSpaceStepEnum.CONTENTS,
+        ...presentPlaceLevel(contents),
+        notes: contents.notes.map(toNoteListItem),
+    },
+});
 
 // Decision 0036: a refused session goes back to sign-in; without a formed couple there are no notes (R3).
 export function presentNoteSpacePage(

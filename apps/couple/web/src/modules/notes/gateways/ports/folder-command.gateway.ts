@@ -14,4 +14,8 @@ export abstract class FolderCommandGateway {
         form: FolderNameForm,
     ): Promise<Result<null, ApiError>>;
     abstract deleteFolder(folderId: string): Promise<Result<null, ApiError>>;
+    abstract moveFolder(
+        folderId: string,
+        parentFolderId: string | null,
+    ): Promise<Result<null, ApiError>>;
 }

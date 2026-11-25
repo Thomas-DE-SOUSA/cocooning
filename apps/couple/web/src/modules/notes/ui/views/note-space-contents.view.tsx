@@ -12,6 +12,7 @@ type Props = {
     readonly folders: readonly FolderListItem[];
     readonly notes: readonly NoteListItem[];
     readonly onFolderActions: (folder: FolderListItem) => void;
+    readonly onNoteActions: (note: NoteListItem) => void;
 };
 
 // R13: the folders of the place first, then its notes.
@@ -19,6 +20,7 @@ export function NoteSpaceContentsView({
     folders,
     notes,
     onFolderActions,
+    onNoteActions,
 }: Props) {
     const { t } = useTranslation(NOTE_SPACE_NAMESPACE);
     if (folders.length === 0 && notes.length === 0) {
@@ -47,6 +49,7 @@ export function NoteSpaceContentsView({
                         <NoteRow
                             key={note.noteId}
                             note={note}
+                            onActions={() => onNoteActions(note)}
                         />
                     ))}
                 </NoteSpaceSection>

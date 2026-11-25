@@ -12,4 +12,9 @@ export type FolderCommandCall =
           readonly folderId: string;
           readonly form: FolderNameForm;
       }
-    | { readonly operation: 'deleteFolder'; readonly folderId: string };
+    | { readonly operation: 'deleteFolder'; readonly folderId: string }
+    | {
+          readonly operation: 'moveFolder';
+          readonly folderId: string;
+          readonly parentFolderId: string | null;
+      };

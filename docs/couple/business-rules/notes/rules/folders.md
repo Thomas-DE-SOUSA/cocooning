@@ -15,7 +15,7 @@ J'ouvre les notes : je vois « Partagé », que nous voyons tous les deux, et «
 
 Une note rangée dans « Partagé » est partagée, une note rangée dans « Privé » est privée. Je déplace ma note de l'un à l'autre : elle est partagée ou devient privée, comme avec R5. Je ne peux pas ranger la note de l'autre dans mon « Privé ».
 
-- Dans le code : `visibilityOfSpace`, `Note.create`, `Note.moveTo` et `MoveNoteUseCase` ; changer d'espace passe par le changement de visibilité de `Note.share` et `Note.makePrivate` (`NOTE_RESERVED_TO_OWNER`) et ramène la note à la racine de son nouvel espace ; `NoteRevocationService` déconnecte l'autre éditeur d'une note passée dans « Privé ».
+- Dans le code : `visibilityOfSpace`, `Note.create`, `Note.moveTo` et `MoveNoteUseCase` ; changer d'espace passe par le changement de visibilité de `Note.share` et `Note.makePrivate` (`NOTE_RESERVED_TO_OWNER`) et ramène la note à la racine de son nouvel espace ; `NoteRevocationService` déconnecte l'autre éditeur d'une note passée dans « Privé ». Dans la PWA, le sélecteur de déplacement n'offre « Privé » qu'à la propriétaire de la note (`presentMovedNote`, `MovePickerView`).
 - Source : décision 0052. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R12. Les notes d'avant les dossiers sont à la racine de leur espace
@@ -45,7 +45,7 @@ Nous créons, renommons, déplaçons et supprimons tous les deux un dossier de �
 
 Je déplace un dossier dans un autre dossier du même espace. Un dossier ne passe pas de « Partagé » à « Privé » ni l'inverse : il contiendrait les notes de l'autre. Je déplace les notes une à une (R11).
 
-- Dans le code : `Folder.moveTo`, `FolderPlacementValidator.ensureMovable` (`FOLDER_MOVE_INVALID`), sur le chemin du dossier cible lu en une requête (`FolderRepository.findPath`).
+- Dans le code : `Folder.moveTo`, `FolderPlacementValidator.ensureMovable` (`FOLDER_MOVE_INVALID`), sur le chemin du dossier cible lu en une requête (`FolderRepository.findPath`). Dans la PWA, le sélecteur ne propose à un dossier que son espace et ne le montre pas en lui-même (`presentMovedFolder`, `presentPickerFolders`).
 - Source : proposition de Claude (décision 0052). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R16. Supprimer un dossier fait remonter son contenu

@@ -38,4 +38,15 @@ export class FakeNoteCommandGateway extends NoteCommandGateway {
     override deleteNote(noteId: string): Promise<Result<null, ApiError>> {
         return this.answers.answer({ operation: 'deleteNote', noteId });
     }
+
+    override moveNote(
+        noteId: string,
+        destination: NoteLocation,
+    ): Promise<Result<null, ApiError>> {
+        return this.answers.answer({
+            operation: 'moveNote',
+            noteId,
+            destination,
+        });
+    }
 }

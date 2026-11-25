@@ -1,52 +1,16 @@
 'use client';
 
 import { Drawer, DrawerContent } from '@cocooning/design-system';
-import {
-    NoteSheetKindEnum,
-    type NoteSheetTarget,
-} from '../../view-models/note-sheet.view-model';
-import { FolderSheetContainer } from './folder-sheet.container';
-import { NewFolderSheetContainer } from './new-folder-sheet.container';
-import { NewNoteSheetContainer } from './new-note-sheet.container';
+import type { NoteSheetTarget } from '../../view-models/note-sheet.view-model';
+import { NoteSheetContentContainer } from './note-sheet-content.container';
 
 type Props = {
     readonly target: NoteSheetTarget | null;
     readonly isOpen: boolean;
     readonly opening: number;
     readonly onClose: () => void;
+    readonly onOpen: (target: NoteSheetTarget) => void;
 };
-
-function NoteSheetContent({
-    target,
-    onClose,
-}: {
-    readonly target: NoteSheetTarget;
-    readonly onClose: () => void;
-}) {
-    if (target.kind === NoteSheetKindEnum.FOLDER) {
-        return (
-            <FolderSheetContainer
-                folder={target.folder}
-                place={target.place}
-                onClose={onClose}
-            />
-        );
-    }
-    if (target.kind === NoteSheetKindEnum.NEW_NOTE) {
-        return (
-            <NewNoteSheetContainer
-                place={target.place}
-                onClose={onClose}
-            />
-        );
-    }
-    return (
-        <NewFolderSheetContainer
-            place={target.place}
-            onClose={onClose}
-        />
-    );
-}
 
 // One bottom sheet for the notes: it keeps its target while it slides down, and each opening starts afresh.
 export function NoteSheetDrawerContainer({
@@ -54,6 +18,7 @@ export function NoteSheetDrawerContainer({
     isOpen,
     opening,
     onClose,
+    onOpen,
 }: Props) {
     return (
         <Drawer
@@ -64,10 +29,11 @@ export function NoteSheetDrawerContainer({
         >
             <DrawerContent>
                 {target === null ? null : (
-                    <NoteSheetContent
+                    <NoteSheetContentContainer
                         key={opening}
                         target={target}
                         onClose={onClose}
+                        onOpen={onOpen}
                     />
                 )}
             </DrawerContent>

@@ -11,6 +11,7 @@ import { FakeNoteCommandGateway } from '../gateways/fake/fake-note-command.gatew
 import { NoteSheetCommandEnum } from '../view-models/note-sheet-command.view-model';
 import { useNoteSheetCommands } from './use-note-sheet-commands';
 
+const NOTE_ID = '01936b2e-7c4a-7000-8000-0000000000d1';
 const IN_A_FOLDER = {
     space: NoteSpaceEnum.PRIVATE,
     folderId: '01936b2e-7c4a-7000-8000-0000000000e1',
@@ -93,6 +94,48 @@ describe('Feature: the commands of the sheets of the notes', () => {
                 'RENAME_FOLDER:done',
                 'DELETE_FOLDER:done',
             ]);
+        });
+    });
+
+    describe('Scenario: R11, R15, a partner moves a note or a folder', () => {
+        it('moves the folder under another, then the note into a space', async () => {
+            const { result, events, notes, folders } = renderCommands();
+
+            await act(async () =>
+                result.current.moveFolder(IN_A_FOLDER.folderId, null),
+            );
+            await act(async () =>
+                result.current.moveNote(NOTE_ID, IN_A_FOLDER),
+            );
+
+            expect(folders.answers.calls).toEqual([
+                {
+                    operation: 'moveFolder',
+                    folderId: IN_A_FOLDER.folderId,
+                    parentFolderId: null,
+                },
+            ]);
+            expect(notes.answers.calls).toEqual([
+                {
+                    operation: 'moveNote',
+                    noteId: NOTE_ID,
+                    destination: IN_A_FOLDER,
+                },
+            ]);
+            expect(events).toEqual(['MOVE_FOLDER:done', 'MOVE_NOTE:done']);
+        });
+    });
+
+    describe('Scenario: R7, the owner deletes her note', () => {
+        it('sends the deletion of the note', async () => {
+            const { result, events, notes } = renderCommands();
+
+            await act(async () => result.current.deleteNote(NOTE_ID));
+
+            expect(notes.answers.calls).toEqual([
+                { operation: 'deleteNote', noteId: NOTE_ID },
+            ]);
+            expect(events).toEqual(['DELETE_NOTE:done']);
         });
     });
 

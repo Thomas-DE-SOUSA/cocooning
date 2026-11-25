@@ -34,4 +34,15 @@ export class FakeFolderCommandGateway extends FolderCommandGateway {
     override deleteFolder(folderId: string): Promise<Result<null, ApiError>> {
         return this.answers.answer({ operation: 'deleteFolder', folderId });
     }
+
+    override moveFolder(
+        folderId: string,
+        parentFolderId: string | null,
+    ): Promise<Result<null, ApiError>> {
+        return this.answers.answer({
+            operation: 'moveFolder',
+            folderId,
+            parentFolderId,
+        });
+    }
 }

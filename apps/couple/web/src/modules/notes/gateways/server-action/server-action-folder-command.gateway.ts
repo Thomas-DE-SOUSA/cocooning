@@ -17,6 +17,10 @@ export type FolderCommandActions = {
     ) => Answer;
     readonly renameFolder: (folderId: string, form: FolderNameForm) => Answer;
     readonly deleteFolder: (folderId: string) => Answer;
+    readonly moveFolder: (
+        folderId: string,
+        parentFolderId: string | null,
+    ) => Answer;
 };
 
 const UNREACHABLE: ApiError = {
@@ -50,6 +54,16 @@ export class ServerActionFolderCommandGateway extends FolderCommandGateway {
     override deleteFolder(folderId: string): Answer {
         return runServerAction(
             () => this.actions.deleteFolder(folderId),
+            UNREACHABLE,
+        );
+    }
+
+    override moveFolder(
+        folderId: string,
+        parentFolderId: string | null,
+    ): Answer {
+        return runServerAction(
+            () => this.actions.moveFolder(folderId, parentFolderId),
             UNREACHABLE,
         );
     }

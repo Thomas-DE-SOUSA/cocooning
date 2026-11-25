@@ -11,6 +11,7 @@ const REJECTING = new ServerActionFolderCommandGateway({
     createFolder: rejects,
     renameFolder: rejects,
     deleteFolder: rejects,
+    moveFolder: rejects,
 });
 
 describe('Feature: folder commands through the server actions', () => {
@@ -24,6 +25,7 @@ describe('Feature: folder commands through the server actions', () => {
             createFolder: record,
             renameFolder: record,
             deleteFolder: record,
+            moveFolder: record,
         });
 
         await expect(
@@ -31,11 +33,13 @@ describe('Feature: folder commands through the server actions', () => {
         ).resolves.toEqual(ok(null));
         await gateway.renameFolder(FOLDER_ID, { name: 'Travaux' });
         await gateway.deleteFolder(FOLDER_ID);
+        await gateway.moveFolder(FOLDER_ID, null);
 
         expect(sent).toEqual([
             [{ name: 'Maison' }, SHARED_ROOT],
             [FOLDER_ID, { name: 'Travaux' }],
             [FOLDER_ID],
+            [FOLDER_ID, null],
         ]);
     });
 
@@ -49,6 +53,7 @@ describe('Feature: folder commands through the server actions', () => {
             () => REJECTING.renameFolder(FOLDER_ID, { name: 'M' }),
         ],
         ['deleteFolder', () => REJECTING.deleteFolder(FOLDER_ID)],
+        ['moveFolder', () => REJECTING.moveFolder(FOLDER_ID, null)],
     ])(
         'gives a network error instead of rejecting for %s',
         async (_label, send) => {

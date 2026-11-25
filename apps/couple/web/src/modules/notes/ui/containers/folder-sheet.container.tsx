@@ -4,23 +4,37 @@ import { useTranslation } from 'react-i18next';
 import { NOTE_SPACE_NAMESPACE } from '../../data/note-space-i18n-namespaces';
 import { noteSheetGateways } from '../../gateways';
 import { useFolderSheet } from '../../hooks/use-folder-sheet';
+import { presentMovedFolder } from '../../presenters/moved-item.presenter';
 import { presentPlaceName } from '../../presenters/place-labels.presenter';
-import type { NotePlace } from '../../view-models/note-place.view-model';
-import type { FolderListItem } from '../../view-models/note-space-screen.view-model';
+import type {
+    FolderListItem,
+    NotePlaceLevel,
+} from '../../view-models/note-space-screen.view-model';
 import { NoteSheetCommandEnum } from '../../view-models/note-sheet-command.view-model';
-import { FolderSheetStepEnum } from '../../view-models/note-sheet.view-model';
+import {
+    FolderSheetStepEnum,
+    NoteSheetKindEnum,
+    type NoteSheetTarget,
+} from '../../view-models/note-sheet.view-model';
 import { FolderActionsSheetView } from '../views/folder-actions-sheet.view';
 import { FolderDeletionSheetView } from '../views/folder-deletion-sheet.view';
 import { FolderNameSheetView } from '../views/folder-name-sheet.view';
 
 type Props = {
     readonly folder: FolderListItem;
-    readonly place: NotePlace;
+    readonly level: NotePlaceLevel;
     readonly onClose: () => void;
+    readonly onOpen: (target: NoteSheetTarget) => void;
 };
 
-// The sheet of a folder of the screen; place is where the folder is, where its content moves up (R16).
-export function FolderSheetContainer({ folder, place, onClose }: Props) {
+// The sheet of a folder of a level: its content moves up into the place of that level (R16); « Déplacer » turns it into
+// the move picker, starting from that level.
+export function FolderSheetContainer({
+    folder,
+    level,
+    onClose,
+    onOpen,
+}: Props) {
     const { t } = useTranslation(NOTE_SPACE_NAMESPACE);
     const sheet = useFolderSheet({
         gateways: noteSheetGateways,
@@ -47,7 +61,7 @@ export function FolderSheetContainer({ folder, place, onClose }: Props) {
         return (
             <FolderDeletionSheetView
                 folder={folder}
-                placeName={presentPlaceName(place, t)}
+                placeName={presentPlaceName(level.place, t)}
                 isPending={sheet.pending === NoteSheetCommandEnum.DELETE_FOLDER}
                 isBusy={sheet.isBusy}
                 onConfirm={sheet.deleteFolder}
@@ -59,6 +73,13 @@ export function FolderSheetContainer({ folder, place, onClose }: Props) {
         <FolderActionsSheetView
             folder={folder}
             onRename={sheet.showRename}
+            onMove={() =>
+                onOpen({
+                    kind: NoteSheetKindEnum.MOVE,
+                    item: presentMovedFolder(folder, level.place),
+                    level,
+                })
+            }
             onAskDeletion={sheet.askDeletion}
         />
     );

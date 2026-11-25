@@ -22,6 +22,10 @@ export type NoteCommandActions = {
     readonly shareNote: NoteAction;
     readonly makeNotePrivate: NoteAction;
     readonly deleteNote: NoteAction;
+    readonly moveNote: (
+        noteId: string,
+        destination: NoteLocation,
+    ) => Promise<Result<null, ApiError>>;
 };
 
 const UNREACHABLE: ApiError = {
@@ -72,6 +76,16 @@ export class ServerActionNoteCommandGateway extends NoteCommandGateway {
     override deleteNote(noteId: string): Promise<Result<null, ApiError>> {
         return runServerAction(
             () => this.actions.deleteNote(noteId),
+            UNREACHABLE,
+        );
+    }
+
+    override moveNote(
+        noteId: string,
+        destination: NoteLocation,
+    ): Promise<Result<null, ApiError>> {
+        return runServerAction(
+            () => this.actions.moveNote(noteId, destination),
             UNREACHABLE,
         );
     }
