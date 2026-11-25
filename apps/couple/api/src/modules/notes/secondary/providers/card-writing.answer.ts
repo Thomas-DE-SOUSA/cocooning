@@ -21,6 +21,7 @@ const givenUrlsOf = (request: NoteCardWritingRequest): ReadonlySet<string> =>
     new Set([
         ...request.results.map(({ url }) => url),
         ...request.pages.map(({ url }) => url),
+        ...(request.place === null ? [] : [request.place.url]),
     ]);
 
 export const toNoteCardWriting = (

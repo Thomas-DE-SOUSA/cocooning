@@ -62,6 +62,7 @@ import {
 } from '../secondary/adapters/fake-note-card.writer';
 import { FakeNoteCollaborationProvider } from '../secondary/adapters/fake-note-collaboration.provider';
 import { FakePairedCoupleProvider } from '../secondary/adapters/fake-paired-couple.provider';
+import { FakePlaceDirectory } from '../secondary/adapters/fake-place.directory';
 import { FakeWebPageReader } from '../secondary/adapters/fake-web-page.reader';
 import { FakeWebSearchProvider } from '../secondary/adapters/fake-web-search.provider';
 import { NoteCardSearchInMemoryCounter } from '../secondary/adapters/note-card-search-in-memory.counter';
@@ -112,6 +113,7 @@ export class NotesTestContext {
     readonly noteCardWriter = new FakeNoteCardWriter();
     readonly webSearchProvider = new FakeWebSearchProvider();
     readonly webPageReader = new FakeWebPageReader();
+    readonly placeDirectory = new FakePlaceDirectory();
     readonly searchCounter = new NoteCardSearchInMemoryCounter();
     readonly eventPublisher = new FakeEventPublisherAdapter();
     readonly logger = new FakeLoggerAdapter();
@@ -295,6 +297,7 @@ export class NotesTestContext {
                 {
                     webSearchProvider: this.webSearchProvider,
                     webPageReader: this.webPageReader,
+                    placeDirectory: this.placeDirectory,
                     noteCardWriter: this.noteCardWriter,
                 },
                 DAILY_SEARCH_LIMIT,

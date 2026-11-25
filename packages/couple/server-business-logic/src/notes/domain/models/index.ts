@@ -11,4 +11,5 @@ export * from './note-card.aggregate.type';
 export * from './note-space';
 export * from './note.aggregate';
 export * from './note.aggregate.type';
+export * from './place';
 export * from './smart-folder-settings';

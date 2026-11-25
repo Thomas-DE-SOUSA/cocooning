@@ -74,7 +74,7 @@ describe('Feature: « Modifier la fiche » of a smart folder (R17, R22)', () => 
             screen.getByRole('button', { name: 'Retirer « Prix »' }),
         );
         await user.type(
-            screen.getByLabelText('Nouvelle case'),
+            screen.getByLabelText('Ajouter une information (ex. : Terrasse)'),
             'Horaires{Enter}',
         );
         await user.click(save());

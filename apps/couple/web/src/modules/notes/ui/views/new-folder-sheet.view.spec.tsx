@@ -97,13 +97,21 @@ describe('Feature: « Nouveau dossier », classic or smart (R13, R17)', () => {
         await user.type(screen.getByLabelText('Nom'), 'Restaurants');
         await user.type(screen.getByLabelText('Sujet'), 'Nos restos');
         await user.type(
-            screen.getByLabelText('Nouvelle case'),
+            screen.getByLabelText('Ajouter une information (ex. : Terrasse)'),
             'Adresse{Enter}',
         );
-        await user.type(screen.getByLabelText('Nouvelle case'), 'adresse');
+        await user.type(
+            screen.getByLabelText('Ajouter une information (ex. : Terrasse)'),
+            'adresse',
+        );
         expect(screen.getByText('duplicate')).not.toBeNull();
-        await user.clear(screen.getByLabelText('Nouvelle case'));
-        await user.type(screen.getByLabelText('Nouvelle case'), 'Prix');
+        await user.clear(
+            screen.getByLabelText('Ajouter une information (ex. : Terrasse)'),
+        );
+        await user.type(
+            screen.getByLabelText('Ajouter une information (ex. : Terrasse)'),
+            'Prix',
+        );
         await user.click(
             screen.getByRole('button', { name: 'Ajouter une case' }),
         );

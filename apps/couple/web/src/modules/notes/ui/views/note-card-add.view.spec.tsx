@@ -60,10 +60,24 @@ describe('Feature: R19, the couple adds an item to a smart folder by its name', 
 
         await user.click(screen.getByLabelText('Ajouter un élément'));
         await user.paste(name);
-        await user.click(screen.getByRole('button', { name: 'Ajouter' }));
+        await user.click(
+            screen.getByRole('button', { name: 'Ajouter au dossier' }),
+        );
 
         expect(await screen.findByText(message)).not.toBeNull();
         expect(submitted).toEqual([]);
+    });
+
+    it('says that the field adds one item, completed by the AI', () => {
+        renderAdd();
+
+        const field = screen.getByLabelText('Ajouter un élément');
+        const hint = document.getElementById(
+            field.getAttribute('aria-describedby')?.split(' ')[0] ?? '',
+        );
+        expect(hint?.textContent).toBe(
+            "Un seul nom à la fois : l'IA cherche ses informations et remplit la fiche.",
+        );
     });
 
     it('spins while the item is added', () => {

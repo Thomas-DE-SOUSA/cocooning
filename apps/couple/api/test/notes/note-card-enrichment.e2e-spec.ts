@@ -14,6 +14,16 @@ const RESULT = {
     url: 'https://chez-paul.example/',
     snippet: '11 rue Mercière',
 };
+const PLACE = {
+    name: 'Chez Paul',
+    address: '11 Rue Mercière, 69002 Lyon',
+    kind: 'restaurant',
+    cuisine: 'regional',
+    openingHours: 'Tu-Sa 12:00-14:00',
+    phone: null,
+    website: null,
+    url: 'https://www.openstreetmap.org/node/1',
+};
 // Winter: midnight in Paris is 23:00 UTC the day before (R23).
 const PARIS_MIDNIGHT = new Date('2026-11-22T23:00:00.000Z');
 
@@ -82,6 +92,23 @@ describe('Feature: the background task fills the cards (R19 to R24, decision 005
                 eventName: NoteCardSearchedEvent.EVENT_NAME,
                 userId: PARTNER_B,
                 eventData: { noteId, status: 'FILLED' },
+            });
+        });
+
+        it('asks OpenStreetMap the same words and gives its place to the AI first (decision 0055)', async () => {
+            const { noteId } = await addedCard();
+            notes.places.willFind(PLACE);
+            notes.writer.willWrite({
+                kind: 'VALUES',
+                values: { Adresse: PLACE.address, Prix: null },
+                sourceUrls: [PLACE.url],
+            });
+            await notes.enrichCards();
+            expect(notes.places.queries).toEqual(['Chez Paul Restaurants']);
+            expect(notes.writer.cardRequests[0]?.place).toEqual(PLACE);
+            expect(await cardOfNote(noteId)).toMatchObject({
+                status: 'FILLED',
+                sources: [PLACE.url],
             });
         });
 

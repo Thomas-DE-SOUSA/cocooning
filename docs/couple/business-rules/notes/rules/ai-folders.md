@@ -40,7 +40,7 @@ L'élément ajouté est une note, avec la fiche en haut (une valeur par case) et
 
 Une information que l'IA ne trouve pas reste « non trouvé ». La fiche garde ses sources (des liens) et la date de sa recherche.
 
-- Dans le code : `NoteCard.recordResult` (`fieldsFilledWith` : une case absente de la réponse vaut `null`, « non trouvé »), `sources` (`NOTE_CARD_SOURCE_MAX_COUNT`) et `searchedAt`. Dans la PWA : une case sans valeur s'affiche « Non trouvé » en italique ; le pied de la fiche dit « 3 sources · recherchée le 25 nov. » et déplie les liens, ouverts dans un nouvel onglet (`NoteCardView`, `NoteCardSources`).
+- Dans le code : `NoteCard.recordResult` (`fieldsFilledWith` : une case absente de la réponse vaut `null`, « non trouvé »), `sources` (`NOTE_CARD_SOURCE_MAX_COUNT` ; `toNoteCardWriting` ne garde que les adresses données à l'IA, dont la page OpenStreetMap du lieu, décision 0055) et `searchedAt`. Dans la PWA : une case sans valeur s'affiche « Non trouvé » en italique ; le pied de la fiche dit « 3 sources · recherchée le 25 nov. » et déplie les liens, ouverts dans un nouvel onglet ; la page d'un lieu sur OpenStreetMap s'affiche « OpenStreetMap », comme le demande sa licence (`NoteCardView`, `NoteCardSources`, `presentNoteCard`).
 - Source : décision 0052. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R22. Je corrige une case, « Mettre à jour » la respecte
@@ -59,10 +59,10 @@ Le couple fait au plus 30 recherches par jour, tous dossiers confondus. Au-delà
 
 ### R24. Ce qui part chez l'IA
 
-Notre moteur de recherche, sur notre serveur, interroge des moteurs publics avec ce que je tape et le contexte du dossier. Partent chez l'IA le sujet du dossier, les noms des dossiers au-dessus, les cases de la fiche type, ce que je tape et les textes trouvés. Jamais nos notes libres.
+Notre moteur de recherche, sur notre serveur, interroge des moteurs publics avec ce que je tape et le contexte du dossier ; la carte libre OpenStreetMap reçoit les mêmes mots pour trouver un lieu. Partent chez l'IA le sujet du dossier, les noms des dossiers au-dessus, les cases de la fiche type, ce que je tape et les textes trouvés. Jamais nos notes libres.
 
-- Dans le code : `searchQueryOf` (ce que je tape et les noms des dossiers depuis le dossier IA, vers SearXNG), `noteCardWritingRequestOf` (`NoteCardWritingRequest` : sujet, noms des dossiers, cases à chercher, ce que je tape, résultats et textes des pages), `folderTemplateRequestOf` pour R17 ; le contenu Yjs d'une note n'est jamais lu par ces chemins.
-- Source : décision 0052, [décision 0054](../../../decisions/notes/0054-recherche-des-fiches-searxng-et-gemini.md). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
+- Dans le code : `searchQueryOf` (ce que je tape et les noms des dossiers depuis le dossier IA, vers SearXNG et, en même temps, vers OpenStreetMap par `PlaceDirectory.findPlace`, adaptateur `NominatimPlaceDirectory`), `noteCardWritingRequestOf` (`NoteCardWritingRequest` : sujet, noms des dossiers, cases à chercher, ce que je tape, le lieu d'OpenStreetMap s'il y en a un, résultats et textes des pages), `folderTemplateRequestOf` pour R17 ; le lieu passe en tête des textes donnés à l'IA (`placeTextOf`), avec sa page sur openstreetmap.org comme source possible ; le contenu Yjs d'une note n'est jamais lu par ces chemins.
+- Source : décision 0052, [décision 0054](../../../decisions/notes/0054-recherche-des-fiches-searxng-et-gemini.md), [décision 0055](../../../decisions/notes/0055-fiches-completees-par-openstreetmap.md). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R25. Une fiche déplacée garde ses valeurs
 

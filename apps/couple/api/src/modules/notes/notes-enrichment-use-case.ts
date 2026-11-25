@@ -9,6 +9,7 @@ import {
     NoteCardSearchCounter,
     NoteCardWriter,
     NoteRepository,
+    PlaceDirectory,
     WebPageReader,
     WebSearchProvider,
 } from '@cocooning/couple-server-business-logic/notes';
@@ -20,7 +21,7 @@ import {
 } from '@cocooning/shared-kernel/ports';
 import type { Environment } from '../../env';
 
-// A few cards per pass: each one waits for a search, three pages and the AI (decision 0054).
+// A few cards per pass: each one waits for a search and OpenStreetMap, three pages and the AI (decisions 0054, 0055).
 export const NOTE_CARD_ENRICHMENT_BATCH_SIZE = 3;
 
 type Dependencies = [
@@ -30,6 +31,7 @@ type Dependencies = [
     NoteCardSearchCounter,
     WebSearchProvider,
     WebPageReader,
+    PlaceDirectory,
     NoteCardWriter,
     DateTimeProvider,
     EventPublisher,
@@ -48,6 +50,7 @@ export const enrichPendingNoteCardsUseCase: FactoryProvider<EnrichPendingNoteCar
             NoteCardSearchCounter,
             WebSearchProvider,
             WebPageReader,
+            PlaceDirectory,
             NoteCardWriter,
             DateTimeProvider,
             EventPublisher,
@@ -62,6 +65,7 @@ export const enrichPendingNoteCardsUseCase: FactoryProvider<EnrichPendingNoteCar
                 counter,
                 webSearchProvider,
                 webPageReader,
+                placeDirectory,
                 noteCardWriter,
                 clock,
                 publisher,
@@ -77,7 +81,12 @@ export const enrichPendingNoteCardsUseCase: FactoryProvider<EnrichPendingNoteCar
                     notes,
                     new CardContextService(folders),
                     counter,
-                    { webSearchProvider, webPageReader, noteCardWriter },
+                    {
+                        webSearchProvider,
+                        webPageReader,
+                        placeDirectory,
+                        noteCardWriter,
+                    },
                     config.getOrThrow('NOTE_CARD_DAILY_SEARCH_LIMIT', {
                         infer: true,
                     }),
