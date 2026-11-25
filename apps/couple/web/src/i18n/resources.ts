@@ -4,6 +4,7 @@ import frSignIn from './locales/fr/authentication/sign-in.json';
 import frSignOut from './locales/fr/authentication/sign-out.json';
 import frGeneric from './locales/fr/generic.json';
 import frMessagingMessages from './locales/fr/messaging/messages.json';
+import frMessagingPush from './locales/fr/messaging/push.json';
 import frNotesList from './locales/fr/notes/list.json';
 import frNotesNote from './locales/fr/notes/note.json';
 import frNotesSpace from './locales/fr/notes/space.json';
@@ -20,6 +21,7 @@ export const RESOURCES = {
         'notes/space': frNotesSpace,
         'agenda/calendar': frAgendaCalendar,
         'messaging/messages': frMessagingMessages,
+        'messaging/push': frMessagingPush,
     },
 } as const satisfies Record<Locale, Record<string, object>>;
 

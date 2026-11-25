@@ -2,7 +2,13 @@ import { WebRouterEnum } from '@cocooning/couple-shared-kernel/routers';
 import { defaultCache, PAGES_CACHE_NAME } from '@serwist/next/worker';
 import type { PrecacheEntry, SerwistGlobalConfig } from 'serwist';
 import { NetworkOnly, Serwist } from 'serwist';
+import { openAppAt } from './sw-notification-click';
 import { isInstantPhotoRequest, isPageRequest } from './sw-page-request';
+import {
+    notificationUrlOf,
+    PUSH_NOTIFICATION_ICON,
+    pushNotificationOf,
+} from './sw-push-notification';
 
 declare global {
     interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -46,6 +52,26 @@ const serwist = new Serwist({
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         Promise.all(EARLIER_PAGE_CACHES.map((name) => caches.delete(name))),
+    );
+});
+
+// R10: the payload names the kind alone; the notification never shows a text, a title or a photo (core.md rule 33).
+self.addEventListener('push', (event) => {
+    const notification = pushNotificationOf(event.data?.text() ?? null);
+    event.waitUntil(
+        self.registration.showNotification(notification.title, {
+            body: notification.body,
+            icon: PUSH_NOTIFICATION_ICON,
+            tag: notification.tag,
+            data: { url: notification.url },
+        }),
+    );
+});
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    event.waitUntil(
+        openAppAt(self.clients, notificationUrlOf(event.notification.data)),
     );
 });
 

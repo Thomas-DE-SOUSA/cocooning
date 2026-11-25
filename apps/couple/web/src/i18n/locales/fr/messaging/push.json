@@ -1,0 +1,41 @@
+{
+    "notification": {
+        "MESSAGE_RECEIVED": "Ton âme sœur t'a envoyé quelque chose",
+        "PHOTO_PROMPT_ISSUED": "C'est l'heure de la photo",
+        "CALENDAR_EVENT_ADDED": "Ton âme sœur a ajouté un événement",
+        "NOTE_SHARED": "Ton âme sœur a partagé une note avec toi",
+        "generic": "Cocooning a du nouveau"
+    },
+    "card": {
+        "title": "Notifications sur ce téléphone",
+        "checking": "Lecture des réglages du téléphone",
+        "UNSUPPORTED": "Installe Cocooning sur l'écran d'accueil pour recevoir les notifications.",
+        "BLOCKED": "Les notifications sont bloquées dans les réglages du téléphone.",
+        "OFF": "Les notifications sont désactivées sur ce téléphone.",
+        "ON": "Les notifications sont activées sur ce téléphone.",
+        "turnOn": "Activer les notifications",
+        "turningOn": "Activation en cours",
+        "turnOff": "Désactiver",
+        "turningOff": "Désactivation en cours"
+    },
+    "toast": {
+        "failed": "Les notifications n'ont pas changé",
+        "phoneRefused": "Le téléphone a refusé l'abonnement. Réessaie dans un instant."
+    },
+    "apiErrors": {
+        "PUSH_SUBSCRIPTION_NOT_FOUND": "Ce téléphone n'est plus abonné.",
+        "PUSH_SUBSCRIPTION_INVALID": "L'abonnement de ce téléphone n'est pas accepté.",
+        "PUSH_SUBSCRIPTION_VERSION_CONFLICT": "L'abonnement vient de changer. Réessaie.",
+        "MESSAGING_COUPLE_NOT_PAIRED": "Votre couple n'est pas encore formé.",
+        "AUTHENTICATION_SESSION_MISSING": "Votre session a pris fin. Reconnectez-vous.",
+        "AUTHENTICATION_SESSION_INVALID": "Votre session a pris fin. Reconnectez-vous.",
+        "NETWORK_ERROR": "Cocooning ne répond pas pour le moment. Réessayez dans un instant ; si le problème dure, vérifiez que Tailscale est activé.",
+        "INVALID_RESPONSE": "La réponse du serveur est illisible. Réessayez dans un instant.",
+        "VALIDATION_ERROR": "L'abonnement de ce téléphone n'est pas accepté.",
+        "UNAUTHORIZED": "Votre session a pris fin. Reconnectez-vous.",
+        "FORBIDDEN": "Cette action ne vous est pas permise.",
+        "NOT_FOUND": "Ce téléphone n'est plus abonné.",
+        "CONFLICT": "L'abonnement vient de changer. Réessaie.",
+        "UNKNOWN": "Une erreur inattendue est survenue. Réessayez dans un instant."
+    }
+}
