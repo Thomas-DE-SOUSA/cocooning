@@ -10,10 +10,14 @@ import {
 import {
     type CreateFolderRequest,
     CreateFolderRequestSchema,
+    type EditFolderTemplateRequest,
+    EditFolderTemplateRequestSchema,
     type MoveFolderRequest,
     MoveFolderRequestSchema,
     type MoveNoteRequest,
     MoveNoteRequestSchema,
+    type ProposeFolderTemplateRequest,
+    ProposeFolderTemplateRequestSchema,
     type RenameFolderRequest,
     RenameFolderRequestSchema,
 } from '@cocooning/couple-contract/notes';
@@ -26,6 +30,7 @@ import {
     asNote,
     asNoteSpaces,
     asSpaceContents,
+    asTemplateProposal,
 } from './note-folders.responses';
 import { NotesRequest } from './notes-request';
 
@@ -34,7 +39,7 @@ const OUTSIDE_CONTRACT: ApiError = {
     message: 'Folder request does not match its contract',
     backendCode: null,
 };
-const { GET, POST, PATCH, DELETE } = HttpMethodEnum;
+const { GET, POST, PUT, PATCH, DELETE } = HttpMethodEnum;
 
 export class ApiNoteFoldersGateway extends NoteFoldersGateway {
     private readonly request: NotesRequest;
@@ -79,6 +84,21 @@ export class ApiNoteFoldersGateway extends NoteFoldersGateway {
             valid,
             asFolder,
         );
+    }
+
+    override proposeFolderTemplate(request: ProposeFolderTemplateRequest) {
+        const valid = ProposeFolderTemplateRequestSchema.safeParse(request);
+        const url = this.endpoints.templateProposals;
+        return this.request.sendValid(POST, url, valid, asTemplateProposal);
+    }
+
+    override editFolderTemplate(
+        folderId: string,
+        request: EditFolderTemplateRequest,
+    ) {
+        const valid = EditFolderTemplateRequestSchema.safeParse(request);
+        const url = this.endpoints.folderTemplate(folderId);
+        return this.request.sendValid(PUT, url, valid, asFolder);
     }
 
     override renameFolder(folderId: string, request: RenameFolderRequest) {

@@ -8,6 +8,8 @@ export type NoteFoldersEndpoints = {
     readonly folders: string;
     readonly folder: (folderId: string) => string;
     readonly moveFolder: (folderId: string) => string;
+    readonly templateProposals: string;
+    readonly folderTemplate: (folderId: string) => string;
     readonly moveNote: (noteId: string) => string;
 };
 
@@ -24,6 +26,9 @@ export function resolveNoteFoldersEndpoints(
         folder: (folderId) => route(ApiRouterEnum.FOLDER_RENAME, { folderId }),
         moveFolder: (folderId) =>
             route(ApiRouterEnum.FOLDER_MOVE, { folderId }),
+        templateProposals: route(ApiRouterEnum.FOLDER_TEMPLATE_PROPOSE),
+        folderTemplate: (folderId) =>
+            route(ApiRouterEnum.FOLDER_TEMPLATE_EDIT, { folderId }),
         moveNote: (noteId) => route(ApiRouterEnum.NOTE_MOVE, { noteId }),
     };
 }

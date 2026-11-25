@@ -1,11 +1,14 @@
 import type {
     CreateFolderRequest,
+    EditFolderTemplateRequest,
     FolderResponse,
+    FolderTemplateProposalResponse,
     MoveFolderRequest,
     MoveNoteRequest,
     NoteResponse,
     NoteSpaceContentsResponse,
     NoteSpacesResponse,
+    ProposeFolderTemplateRequest,
     RenameFolderRequest,
 } from '@cocooning/couple-contract/notes';
 import type { NoteSpace } from '@cocooning/couple-shared-kernel/enums';
@@ -14,7 +17,9 @@ import { NoteFoldersGateway } from '../notes/domain/ports/note-folders.gateway';
 import type { ApiError } from '../shared/api-error';
 import { A_SHARED_NOTE } from './fake-notes.gateway';
 import {
+    A_PROPOSED_TEMPLATE,
     A_SHARED_FOLDER,
+    A_SMART_FOLDER,
     A_SPACE_CONTENTS,
     THE_NOTE_SPACES,
 } from './note-folders-fixtures';
@@ -36,6 +41,11 @@ export type NoteFoldersGatewayCall =
           readonly operation: 'createFolder';
           readonly request: CreateFolderRequest;
       }
+    | {
+          readonly operation: 'proposeFolderTemplate';
+          readonly request: ProposeFolderTemplateRequest;
+      }
+    | FolderCall<'editFolderTemplate', EditFolderTemplateRequest>
     | FolderCall<'renameFolder', RenameFolderRequest>
     | FolderCall<'moveFolder', MoveFolderRequest>
     | { readonly operation: 'deleteFolder'; readonly folderId: string }
@@ -74,6 +84,25 @@ export class FakeNoteFoldersGateway extends NoteFoldersGateway {
         return this.respond(
             { operation: 'createFolder', request },
             { ...A_SHARED_FOLDER, ...request },
+        );
+    }
+
+    override proposeFolderTemplate(
+        request: ProposeFolderTemplateRequest,
+    ): Promise<Result<FolderTemplateProposalResponse, ApiError>> {
+        return this.respond(
+            { operation: 'proposeFolderTemplate', request },
+            A_PROPOSED_TEMPLATE,
+        );
+    }
+
+    override editFolderTemplate(
+        folderId: string,
+        request: EditFolderTemplateRequest,
+    ): Promise<Result<FolderResponse, ApiError>> {
+        return this.respond(
+            { operation: 'editFolderTemplate', folderId, request },
+            { ...A_SMART_FOLDER, folderId, ...request },
         );
     }
 

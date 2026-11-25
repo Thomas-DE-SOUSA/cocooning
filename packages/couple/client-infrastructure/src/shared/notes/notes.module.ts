@@ -3,12 +3,14 @@ import {
     CreateNoteUseCase,
     DeleteFolderUseCase,
     DeleteNoteUseCase,
+    EditFolderTemplateUseCase,
     GetNoteSpaceContentsUseCase,
     GetNoteUseCase,
     ListNoteSpacesUseCase,
     ListNotesUseCase,
     MoveFolderUseCase,
     MoveNoteUseCase,
+    ProposeFolderTemplateUseCase,
     RenameFolderUseCase,
     RenameNoteUseCase,
 } from '@cocooning/couple-client-business-logic/notes';
@@ -28,6 +30,8 @@ export type NotesModule = {
     readonly listNoteSpaces: ListNoteSpacesUseCase;
     readonly getNoteSpaceContents: GetNoteSpaceContentsUseCase;
     readonly createFolder: CreateFolderUseCase;
+    readonly proposeFolderTemplate: ProposeFolderTemplateUseCase;
+    readonly editFolderTemplate: EditFolderTemplateUseCase;
     readonly renameFolder: RenameFolderUseCase;
     readonly moveFolder: MoveFolderUseCase;
     readonly deleteFolder: DeleteFolderUseCase;
@@ -60,6 +64,8 @@ export function createNotesModule(
         listNoteSpaces: new ListNoteSpacesUseCase(folders),
         getNoteSpaceContents: new GetNoteSpaceContentsUseCase(folders),
         createFolder: new CreateFolderUseCase(folders),
+        proposeFolderTemplate: new ProposeFolderTemplateUseCase(folders),
+        editFolderTemplate: new EditFolderTemplateUseCase(folders),
         renameFolder: new RenameFolderUseCase(folders),
         moveFolder: new MoveFolderUseCase(folders),
         deleteFolder: new DeleteFolderUseCase(folders),
