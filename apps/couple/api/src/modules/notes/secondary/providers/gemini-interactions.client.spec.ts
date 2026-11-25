@@ -49,7 +49,11 @@ describe('Feature: one call to the Gemini Interactions API (decision 0054)', () 
 
     const clientWith = (fetchFunction: FetchFunction, apiKey = 'test-key') =>
         new GeminiInteractionsClient(
-            { apiKey, model: 'gemini-test' },
+            {
+                apiKey,
+                model: 'gemini-test',
+                fallbackModel: 'gemini-fallback',
+            },
             logger,
             fetchFunction,
         );
@@ -108,20 +112,61 @@ describe('Feature: one call to the Gemini Interactions API (decision 0054)', () 
             ]);
         });
 
-        it('logs the status of a refused request, never its body', async () => {
+        it('logs the status of a refused request, never its body, and does not try the fallback', async () => {
             const fetch = fakeFetch(() =>
-                jsonResponse(429, { error: { message: 'quota of test-key' } }),
+                jsonResponse(400, { error: { message: 'bad key test-key' } }),
             );
             await expect(
                 clientWith(fetch.fetchFunction).answer(PROMPT, AnswerSchema),
             ).rejects.toMatchObject(unavailable);
+            expect(fetch.sent).toHaveLength(1);
             expect(logger.entries).toEqual([
                 {
                     level: 'warn',
                     message: 'Gemini request refused',
-                    context: { operation: 'proposeTemplate', statusCode: 429 },
+                    context: {
+                        operation: 'proposeTemplate',
+                        model: 'gemini-test',
+                        statusCode: 400,
+                    },
                 },
             ]);
+        });
+
+        it.each([429, 503])(
+            'asks the fallback model once when the first answers %s',
+            async (busyStatus) => {
+                const answers = [
+                    jsonResponse(busyStatus, {}),
+                    jsonResponse(
+                        200,
+                        interactionAnswering('{"subject":"Restos"}'),
+                    ),
+                ];
+                const fetch = fakeFetch(
+                    () => answers.shift() ?? jsonResponse(500, {}),
+                );
+                await expect(
+                    clientWith(fetch.fetchFunction).answer(
+                        PROMPT,
+                        AnswerSchema,
+                    ),
+                ).resolves.toEqual({ subject: 'Restos' });
+                const models = fetch.sent.map(
+                    ({ init }) =>
+                        (JSON.parse(init.body as string) as { model: string })
+                            .model,
+                );
+                expect(models).toEqual(['gemini-test', 'gemini-fallback']);
+            },
+        );
+
+        it('gives up when the fallback model is crowded too', async () => {
+            const fetch = fakeFetch(() => jsonResponse(503, {}));
+            await expect(
+                clientWith(fetch.fetchFunction).answer(PROMPT, AnswerSchema),
+            ).rejects.toMatchObject(unavailable);
+            expect(fetch.sent).toHaveLength(2);
         });
 
         it('logs the kind of a network failure', async () => {
@@ -132,6 +177,7 @@ describe('Feature: one call to the Gemini Interactions API (decision 0054)', () 
             ).rejects.toMatchObject(unavailable);
             expect(logger.entries[0]?.context).toEqual({
                 operation: 'proposeTemplate',
+                model: 'gemini-test',
                 errorName: 'TypeError',
             });
         });

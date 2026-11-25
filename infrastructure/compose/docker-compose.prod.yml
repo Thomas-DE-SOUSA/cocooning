@@ -68,6 +68,7 @@ services:
             # The free Gemini of the smart folders (decision 0054): it proposes templates and writes the cards.
             NOTE_CARD_GEMINI_API_KEY: ${NOTE_CARD_GEMINI_API_KEY:?set NOTE_CARD_GEMINI_API_KEY in infrastructure/compose/.env}
             NOTE_CARD_GEMINI_MODEL: gemini-3.5-flash-lite
+            NOTE_CARD_GEMINI_FALLBACK_MODEL: gemini-3.5-flash
             # The background task that fills the cards, inside the API process, and the daily limit of R23.
             NOTE_CARD_DAILY_SEARCH_LIMIT: 30
             NOTE_CARD_ENRICHMENT_ENABLED: 'true'
