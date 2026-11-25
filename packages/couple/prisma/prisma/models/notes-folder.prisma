@@ -6,10 +6,16 @@ model Folder {
   ownerId        String    @map("owner_id") @db.Uuid
   /// NoteSpaceEnum of the couple shared kernel: SHARED or PRIVATE, fixed at creation (R15).
   space          String    @db.VarChar(20)
+  /// FolderKindEnum of the couple shared kernel: CLASSIC or SMART (R17); smart inside a smart folder (R18).
+  kind           String    @db.VarChar(20)
   /// Null at the root of the space; a parent always has the same space (R15).
   parentFolderId String?   @map("parent_folder_id") @db.Uuid
   /// FOLDER_NAME_MAX_LENGTH of the couple shared kernel (R13).
   name           String    @db.VarChar(60)
+  /// FOLDER_SUBJECT_MAX_LENGTH (R17); set only on the folder at the top of a smart tree, null elsewhere (R18).
+  subject        String?   @db.VarChar(280)
+  /// The card template (R17): a JSON array of 1 to 10 field names, set with the subject, null elsewhere.
+  cardTemplate   Json?     @map("card_template") @db.JsonB
   version        Int       @map("version")
   createdAt      DateTime  @map("created_at")
   updatedAt      DateTime  @map("updated_at")

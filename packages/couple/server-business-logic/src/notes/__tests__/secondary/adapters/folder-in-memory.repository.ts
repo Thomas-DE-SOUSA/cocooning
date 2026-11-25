@@ -95,6 +95,17 @@ export class FolderInMemoryRepository extends FolderRepository {
         return Promise.resolve(this.pathTo(coupleId, folderId));
     }
 
+    override findLineage(
+        coupleId: string,
+        folderId: string | null,
+    ): Promise<ReadonlyArray<Folder>> {
+        return Promise.resolve(
+            this.pathTo(coupleId, folderId).map(({ folderId: id }) =>
+                this.rebuild(this.snapshots.get(id) as FolderSnapshot),
+            ),
+        );
+    }
+
     override countVisibleChildren(
         coupleId: string,
         userId: string,

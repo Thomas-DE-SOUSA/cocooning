@@ -63,6 +63,9 @@ describe('Feature: the spaces and folders of the notes from the PWA', () => {
             space: NoteSpaceEnum.PRIVATE,
             parentFolderId: PARENT_ID,
             name: 'Cadeaux',
+            kind: 'CLASSIC',
+            subject: null,
+            cardTemplate: null,
         };
         expect(created).toEqual(ok({ ...A_SHARED_FOLDER, ...request }));
         expect(gateway.calls).toEqual([{ operation: 'createFolder', request }]);

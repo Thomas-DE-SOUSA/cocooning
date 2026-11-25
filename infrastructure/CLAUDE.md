@@ -1,6 +1,6 @@
 # infrastructure
 
-Images Docker et pile de production de Cocooning (decision plateforme 0015). `docker/nest/Dockerfile` : cibles `runner` (API) et `runner-init` (migrations Prisma). `docker/next/Dockerfile` : la PWA. `compose/docker-compose.prod.yml` : `postgres`, `migrate`, `api`, `web`, `tailscale`, lance sur la VM depuis la racine du depot.
+Images Docker et pile de production de Cocooning (decision plateforme 0015). `docker/nest/Dockerfile` : cibles `runner` (API) et `runner-init` (migrations Prisma). `docker/next/Dockerfile` : la PWA. `compose/docker-compose.prod.yml` : `postgres`, `migrate`, `api`, `searxng`, `web`, `tailscale`, lance sur la VM depuis la racine du depot. `compose/searxng/settings.yml` : reglages de SearXNG, moteur de recherche des dossiers IA (decision 0054).
 
 ## Consignes de code
 
@@ -8,7 +8,7 @@ Images Docker et pile de production de Cocooning (decision plateforme 0015). `do
 - `turbo prune <app> --docker` puis `pnpm install --frozen-lockfile --ignore-scripts` : les scripts d'installation restent bloques comme en local (`allowBuilds`).
 - `NODE_VERSION` suit `engines.node` du `package.json` racine, `TURBO_VERSION` le catalogue `tooling` : les monter ensemble.
 - Une variable ajoutee a l'API ou a la PWA : dans le bloc `environment` de `api` ou de `web` du compose, et dans `compose/.env.example` si c'est un secret (`${VAR:?...}` dans le compose). Meme commit que le `.env.example` et le `env.ts` (API) ou `src/env/server.ts` (PWA) de l'app.
-- Images epinglees : `postgres:17-alpine` (meme majeure que `packages/couple/e2e-shared`), `tailscale/tailscale:v<version>`.
+- Images epinglees : `postgres:17-alpine` (meme majeure que `packages/couple/e2e-shared`), `tailscale/tailscale:v<version>`, `searxng/searxng:<date>-<commit>` (meme tag dans `docs/guides/local-setup.md`).
 
 ## Pieges
 
@@ -18,6 +18,8 @@ Images Docker et pile de production de Cocooning (decision plateforme 0015). `do
 - `compose/.env` porte les secrets de production : il reste sur la VM, ignore par git (`.env`).
 - Les photos (decision 0027) vivent dans le volume `files`, monte sur `/data/files` de l'`api` (`FILE_STORAGE_DIRECTORY`). L'image `runner` cree ce dossier au nom de `node` : un volume nomme neuf en reprend le proprietaire, sinon l'API (`USER node`) ne peut pas ecrire.
 - `migrate` est un service a usage unique : `restart: 'no'`, et `api` attend `service_completed_successfully`.
+- `searxng` n'a pas de port publie : seule l'`api` le joint, sur `http://searxng:8080` (`WEB_SEARCH_SEARXNG_URL`). Son secret `SEARXNG_SECRET` vient de `compose/.env` ; `settings.yml` garde `search.formats` avec `json` (lu par l'API) et `server.limiter: false` (l'API est son seul client). Dans cette image, `google` n'est pas dans les reglages par defaut (declare en entier) et `brave` rend des liens de redirection illisibles (ecarte). Les moteurs publics bloquent parfois une IP : un moteur bloque est saute, les autres repondent.
+- `NOTE_CARD_GEMINI_API_KEY` (`compose/.env`) : cle de l'offre gratuite de Gemini, ajoutee par le proprietaire lui-meme ; sans elle, `docker compose` refuse de demarrer.
 - `WEB_PUSH_VAPID_*` (`compose/.env`) : la paire VAPID se genere une fois (`npx web-push generate-vapid-keys`) et ne change plus ; une nouvelle paire rend muets tous les telephones abonnes. L'API a besoin d'une sortie vers Internet pour joindre les services de notification (Apple, Google, Mozilla).
 
 ## Commandes

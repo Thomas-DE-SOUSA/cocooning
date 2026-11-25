@@ -1,0 +1,33 @@
+/// The card of a note of a smart folder (decision 0054, R20): one per note, filled in the background by the API.
+/// No deletedAt: the card goes with its note, and every read passes through the visible note (R4).
+model NoteCard {
+  id          String    @id @db.Uuid
+  coupleId    String    @map("couple_id") @db.Uuid
+  noteId      String    @map("note_id") @db.Uuid
+  /// NoteCardStatusEnum of the couple shared kernel: PENDING, CHOOSING, FILLED, FAILED or LIMIT_REACHED.
+  status      String    @db.VarChar(20)
+  /// NOTE_CARD_QUERY_MAX_LENGTH: what the couple typed (R19), sent to the search engine and the AI (R24).
+  query       String    @db.VarChar(200)
+  /// The fields of the card, in template order: a JSON array of name, value (null for « non trouvé ») and isManual.
+  fields      Json      @db.JsonB
+  /// R19: at most three candidates, a JSON array of label and detail; empty outside CHOOSING.
+  candidates  Json      @db.JsonB
+  /// R21: at most ten links the AI used, a JSON array of strings.
+  sources     Json      @db.JsonB
+  searchedAt  DateTime? @map("searched_at")
+  /// The partner who asked for the last search: the background task acts in their name.
+  requestedBy String    @map("requested_by") @db.Uuid
+  /// When the background task reserved the card (decision 0054); reset by every save, offered again after a lease.
+  claimedAt   DateTime? @map("claimed_at")
+  version     Int       @map("version")
+  createdAt   DateTime  @map("created_at")
+  updatedAt   DateTime  @map("updated_at")
+
+  note Note @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  // One card per note, coupleId leading (core.md rule 27); it also serves the foreign key, a note is never deleted for real.
+  @@unique([coupleId, noteId])
+  // The reservation of the background task reads across couples, like the outbox relay (decision 0051).
+  @@index([status, claimedAt])
+  @@map("note_card")
+}

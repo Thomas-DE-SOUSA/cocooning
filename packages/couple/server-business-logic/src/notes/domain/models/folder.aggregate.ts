@@ -1,11 +1,16 @@
-import type { NoteSpace } from '@cocooning/couple-shared-kernel/enums';
+import type {
+    FolderKind,
+    NoteSpace,
+} from '@cocooning/couple-shared-kernel/enums';
 import { AggregateRoot, EntityMetadata } from '@cocooning/shared-kernel/domain';
 import { FolderCreatedEvent } from '../events/folder-created.event';
 import { FolderDeletedEvent } from '../events/folder-deleted.event';
 import type { FolderEventParams } from '../events/folder-event-params';
 import { FolderMovedEvent } from '../events/folder-moved.event';
 import { FolderRenamedEvent } from '../events/folder-renamed.event';
+import { FolderTemplateEditedEvent } from '../events/folder-template-edited.event';
 import { FolderPlacementValidator } from '../services/folder-placement.validator';
+import { SmartFolderValidator } from '../services/smart-folder.validator';
 import { FolderId } from '../value-objects/folder-id.vo';
 import { FolderName } from '../value-objects/folder-name.vo';
 import type {
@@ -15,6 +20,11 @@ import type {
     FolderSnapshot,
 } from './folder.aggregate.type';
 import type { FolderPathItem } from './folder-path-item';
+import {
+    type SmartFolderSettings,
+    smartFolderSettingsFrom,
+    smartFolderSettingsSnapshotOf,
+} from './smart-folder-settings';
 
 const INITIAL_VERSION = 1;
 
@@ -24,17 +34,23 @@ export class Folder extends AggregateRoot {
         super();
     }
 
-    // R13: in a space or in one of its folders.
+    // R13: in a space or in one of its folders. R17, R18: classic or smart, smart inside a smart folder.
     static create(input: CreateFolderInput, now: Date): Folder {
         FolderPlacementValidator.ensureInSpace(input.parent, input.space);
-        const parentFolderId = input.parent === null ? null : input.parent.id;
+        const kind = SmartFolderValidator.kindOf(
+            input.kind,
+            input.parent,
+            input.settings,
+        );
         const folder = new Folder({
             id: FolderId.generate(),
             coupleId: input.coupleId,
             ownerId: input.ownerId,
             space: input.space,
-            parentFolderId,
+            kind,
+            parentFolderId: input.parent === null ? null : input.parent.id,
             name: input.name,
+            settings: input.settings,
             version: INITIAL_VERSION,
             metadata: EntityMetadata.create(now),
         });
@@ -43,6 +59,7 @@ export class Folder extends AggregateRoot {
                 folder.eventParams(input.ownerId, now, {
                     ownerId: input.ownerId,
                     space: input.space,
+                    kind,
                     parentFolderId: folder.parentFolderIdValue(),
                 }),
             ),
@@ -56,11 +73,13 @@ export class Folder extends AggregateRoot {
             coupleId: snapshot.coupleId,
             ownerId: snapshot.ownerId,
             space: snapshot.space,
+            kind: snapshot.kind,
             parentFolderId:
                 snapshot.parentFolderId === null
                     ? null
                     : FolderId.from(snapshot.parentFolderId),
             name: FolderName.from(snapshot.name),
+            settings: smartFolderSettingsFrom(snapshot),
             version: snapshot.version,
             metadata: EntityMetadata.fromSnapshot(snapshot.metadata),
         });
@@ -71,6 +90,20 @@ export class Folder extends AggregateRoot {
         this.props.metadata = this.props.metadata.recordUpdate(now);
         this.addDomainEvent(
             new FolderRenamedEvent(this.eventParams(userId, now, null)),
+        );
+    }
+
+    // R17, R18: the top of a smart tree only; both partners edit it in « Partagé » (R14).
+    editTemplate(
+        userId: string,
+        settings: SmartFolderSettings,
+        now: Date,
+    ): void {
+        SmartFolderValidator.ensureHoldsTemplate(this.props.settings);
+        this.props.settings = settings;
+        this.props.metadata = this.props.metadata.recordUpdate(now);
+        this.addDomainEvent(
+            new FolderTemplateEditedEvent(this.eventParams(userId, now, null)),
         );
     }
 
@@ -118,6 +151,14 @@ export class Folder extends AggregateRoot {
         return this.props.space;
     }
 
+    get kind(): FolderKind {
+        return this.props.kind;
+    }
+
+    get settings(): SmartFolderSettings | null {
+        return this.props.settings;
+    }
+
     get parentFolderId(): FolderId | null {
         return this.props.parentFolderId;
     }
@@ -136,8 +177,10 @@ export class Folder extends AggregateRoot {
             coupleId: this.props.coupleId,
             ownerId: this.props.ownerId,
             space: this.props.space,
+            kind: this.props.kind,
             parentFolderId: this.parentFolderIdValue(),
             name: this.props.name.value,
+            ...smartFolderSettingsSnapshotOf(this.props.settings),
             version: this.props.version,
             metadata: this.props.metadata.toSnapshot(),
         };

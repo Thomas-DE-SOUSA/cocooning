@@ -3,14 +3,20 @@ import type {
     NoteSpaceContentsResponse,
     NoteSpacesResponse,
 } from '@cocooning/couple-contract/notes';
-import { NoteSpaceEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    FolderKindEnum,
+    NoteSpaceEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import { A_SHARED_NOTE } from './fake-notes.gateway';
 
 export const A_SHARED_FOLDER: FolderResponse = {
     folderId: '01936b2e-7c4a-7000-8000-0000000000e1',
     space: NoteSpaceEnum.SHARED,
+    kind: FolderKindEnum.CLASSIC,
     parentFolderId: null,
     name: 'Vacances',
+    subject: null,
+    cardTemplate: null,
     updatedAt: '2026-11-25T08:00:00.000Z',
 };
 
@@ -26,6 +32,7 @@ export const THE_NOTE_SPACES: NoteSpacesResponse = {
 export const A_SPACE_CONTENTS: NoteSpaceContentsResponse = {
     space: NoteSpaceEnum.SHARED,
     path: [],
+    cardContext: null,
     folders: [{ ...A_SHARED_FOLDER, folderCount: 0, noteCount: 2 }],
-    notes: [A_SHARED_NOTE],
+    notes: [{ ...A_SHARED_NOTE, card: null }],
 };

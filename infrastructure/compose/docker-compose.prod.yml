@@ -57,6 +57,16 @@ services:
             WEB_PUSH_VAPID_PUBLIC_KEY: ${WEB_PUSH_VAPID_PUBLIC_KEY:?set WEB_PUSH_VAPID_PUBLIC_KEY in infrastructure/compose/.env}
             WEB_PUSH_VAPID_PRIVATE_KEY: ${WEB_PUSH_VAPID_PRIVATE_KEY:?set WEB_PUSH_VAPID_PRIVATE_KEY in infrastructure/compose/.env}
             WEB_PUSH_VAPID_SUBJECT: ${WEB_PUSH_VAPID_SUBJECT:?set WEB_PUSH_VAPID_SUBJECT in infrastructure/compose/.env}
+            # The search engine of the smart folders (decision 0054), on the internal network of the compose.
+            WEB_SEARCH_SEARXNG_URL: http://searxng:8080
+            WEB_SEARCH_TIMEOUT_MS: 8000
+            # The free Gemini of the smart folders (decision 0054): it proposes templates and writes the cards.
+            NOTE_CARD_GEMINI_API_KEY: ${NOTE_CARD_GEMINI_API_KEY:?set NOTE_CARD_GEMINI_API_KEY in infrastructure/compose/.env}
+            NOTE_CARD_GEMINI_MODEL: gemini-3.5-flash-lite
+            # The background task that fills the cards, inside the API process, and the daily limit of R23.
+            NOTE_CARD_DAILY_SEARCH_LIMIT: 30
+            NOTE_CARD_ENRICHMENT_ENABLED: 'true'
+            NOTE_CARD_ENRICHMENT_INTERVAL_MS: 10000
             # The instant photos (decision 0027), kept in the files volume.
             FILE_STORAGE_DIRECTORY: /data/files
         volumes:
@@ -64,6 +74,8 @@ services:
         depends_on:
             migrate:
                 condition: service_completed_successfully
+            searxng:
+                condition: service_started
         healthcheck:
             test:
                 - CMD
@@ -73,6 +85,17 @@ services:
             interval: 30s
             timeout: 5s
             retries: 3
+
+    # Our search engine (decision 0054): no published port, only the api joins it on the network of the compose.
+    # It goes out to public engines with what the couple typed and the names of the folders (R24).
+    searxng:
+        image: searxng/searxng:2026.11.21-c6ee3e9fd
+        restart: unless-stopped
+        environment:
+            SEARXNG_SECRET: ${SEARXNG_SECRET:?set SEARXNG_SECRET in infrastructure/compose/.env}
+            SEARXNG_BASE_URL: http://searxng:8080/
+        volumes:
+            - ./searxng/settings.yml:/etc/searxng/settings.yml:ro
 
     # The web shares the network of the tailscale service: Tailscale serves it
     # in HTTPS on https://cocooning.<tailnet>.ts.net, nothing listens on the VM.

@@ -1,8 +1,8 @@
 # Tables des notes
 
-Cette page décrit les trois tables PostgreSQL du contexte `notes` : leurs colonnes, leurs index et leurs contraintes. À lire avant de modifier `packages/couple/prisma/prisma/models/notes-*.prisma` ou l'adaptateur Prisma de `NoteRepository`.
+Cette page décrit les tables PostgreSQL du contexte `notes` : leurs colonnes, leurs index et leurs contraintes. À lire avant de modifier `packages/couple/prisma/prisma/models/notes-*.prisma` ou l'adaptateur Prisma de `NoteRepository`.
 
-Les tables naissent avec la migration `20261123194115_notes_note` ; `content_state` arrive avec `notes_content_state`, la table `folder` et la colonne `note.folder_id` avec `20261125100000_notes_folders`, l'index `note_couple_id_folder_id_idx` avec `20261125100100_notes_note_folder_index`, construit en `CONCURRENTLY` sur la table remplie (`packages/couple/prisma/prisma/migrations/`). Les dates sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma.
+Les tables naissent avec la migration `20261123194115_notes_note` ; `content_state` arrive avec `notes_content_state`, la table `folder` et la colonne `note.folder_id` avec `20261125100000_notes_folders`, ses colonnes `kind`, `subject` et `card_template` avec `20261125200000_notes_smart_folders`, l'index `note_couple_id_folder_id_idx` avec `20261125100100_notes_note_folder_index`, construit en `CONCURRENTLY` sur la table remplie (`packages/couple/prisma/prisma/migrations/`). Les dates sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma.
 
 ## `note`
 
@@ -40,8 +40,11 @@ L'agrégat `Folder` (modèle `Folder`, fichier `notes-folder.prisma`, [décision
 | `couple_id` | `UUID` | Couple du dossier (`core.md` règle 27) |
 | `owner_id` | `UUID` | Partenaire qui a créé le dossier ; un dossier de « Privé » n'existe que pour lui (R14) |
 | `space` | `VARCHAR(20)` | `SHARED` ou `PRIVATE` (`NoteSpaceEnum`), fixé à la création (R15), relu par `parseEnum()` ; une valeur inconnue répond `FOLDER_DATA_CORRUPTED` |
+| `kind` | `VARCHAR(20)` | `CLASSIC` ou `SMART` (`FolderKindEnum`, R17), fixé à la création, relu par `parseEnum()` ; une valeur inconnue répond `FOLDER_DATA_CORRUPTED`. Les dossiers d'avant le lot 2 sont `CLASSIC` (migration `20261125200000_notes_smart_folders`) |
 | `parent_folder_id` | `UUID`, nullable, clé étrangère vers `folder` (`ON DELETE SET NULL`) | Dossier parent, du même espace ; `null` à la racine de l'espace |
 | `name` | `VARCHAR(60)` | Nom, `FOLDER_NAME_MAX_LENGTH` (R13) |
+| `subject` | `VARCHAR(280)`, nullable | Sujet d'un dossier IA en haut de son arbre (R17), `null` ailleurs (R18) |
+| `card_template` | `JSONB`, nullable | Fiche type : tableau de noms de cases, posé avec le sujet ; un autre contenu répond `FOLDER_DATA_CORRUPTED` |
 | `version` | `INTEGER` | Verrou optimiste : 1 à la création, incrémenté par le repository et par la remontée de R16 |
 | `created_at`, `updated_at` | `TIMESTAMP(3)` | `EntityMetadata` du domaine |
 | `deleted_at` | `TIMESTAMP(3)`, nullable | Suppression douce (R16) : le modèle figure dans `SOFT_DELETABLE_MODELS` |
@@ -52,7 +55,51 @@ L'agrégat `Folder` (modèle `Folder`, fichier `notes-folder.prisma`, [décision
 | `folder_couple_id_parent_folder_id_idx` | `couple_id`, `parent_folder_id` | Les dossiers d'un dossier ou d'une racine (`findVisibleChildren`, `countVisibleChildren`), ceux qui remontent à la suppression du parent (R16), la clé étrangère |
 | `folder_parent_folder_id_fkey` | `parent_folder_id` vers `folder.id` | Le parent existe |
 
-La visibilité se filtre dans le `where` de chaque lecture : `couple_id` du partenaire, puis `space = 'SHARED'` ou `owner_id` égal au partenaire (R14). Le chemin d'un dossier (`findPath`) se lit en une requête récursive (`WITH RECURSIVE ... CYCLE`), filtrée par `couple_id` et `deleted_at` à chaque niveau.
+La visibilité se filtre dans le `where` de chaque lecture : `couple_id` du partenaire, puis `space = 'SHARED'` ou `owner_id` égal au partenaire (R14). Le chemin d'un dossier (`findPath`) se lit en une requête récursive (`WITH RECURSIVE ... CYCLE`), filtrée par `couple_id` et `deleted_at` à chaque niveau ; sa lignée (`findLineage`, R18), par ce chemin puis une lecture des dossiers par leurs identifiants.
+
+## `note_card`
+
+L'agrégat `NoteCard` (modèle `NoteCard`, fichier `notes-note-card.prisma`, migration `20261125210000_notes_note_card`, [décision 0054](../../decisions/notes/0054-recherche-des-fiches-searxng-et-gemini.md)). Pas de `deleted_at` : la fiche suit sa note, et toute lecture passe par la note visible (R4).
+
+| Colonne | Type | Rôle |
+|---|---|---|
+| `id` | `UUID`, clé primaire | Identifiant de la fiche (`NoteCardId.generate()`, UUID v7) |
+| `couple_id` | `UUID` | Couple de la fiche (`core.md` règle 27) |
+| `note_id` | `UUID`, clé étrangère vers `note` (`ON DELETE CASCADE`) | La note de la fiche |
+| `status` | `VARCHAR(20)` | `NoteCardStatusEnum`, relu par `parseEnum()` ; une valeur inconnue répond `NOTE_CARD_DATA_CORRUPTED` |
+| `query` | `VARCHAR(200)` | Ce que le couple a tapé, `NOTE_CARD_QUERY_MAX_LENGTH` (R19) |
+| `fields` | `JSONB` | Les cases, dans l'ordre de la fiche type : `name`, `value` (`null` : « non trouvé »), `isManual` (R21, R22) |
+| `candidates` | `JSONB` | Au plus trois candidats (`label`, `detail`), vide hors de `CHOOSING` (R19) |
+| `sources` | `JSONB` | Au plus dix liens (R21) |
+| `searched_at` | `TIMESTAMP(3)`, nullable | Date de la dernière recherche aboutie (R21) |
+| `requested_by` | `UUID` | Partenaire qui a demandé la dernière recherche ; la tâche de fond agit en son nom |
+| `claimed_at` | `TIMESTAMP(3)`, nullable | Réservation par la tâche de fond (migration `20261125220000_notes_note_card_search`) ; remise à `null` par chaque sauvegarde, reprise après `NOTE_CARD_CLAIM_LEASE_MS` (cinq minutes) |
+| `version` | `INTEGER` | Verrou optimiste |
+| `created_at`, `updated_at` | `TIMESTAMP(3)` | `EntityMetadata` du domaine |
+
+| Index ou contrainte | Colonnes | Pourquoi |
+|---|---|---|
+| `note_card_pkey` | `id` | Clé primaire ; traduite en `NOTE_CARD_VERSION_CONFLICT` sur une sauvegarde périmée |
+| `note_card_couple_id_note_id_key` | `couple_id`, `note_id`, unique | Une fiche par note ; sert aussi la clé étrangère (une note n'est jamais supprimée pour de vrai) |
+| `note_card_note_id_fkey` | `note_id` vers `note.id` | La note existe |
+| `note_card_status_claimed_at_idx` | `status`, `claimed_at` | La réservation de la tâche de fond, entre couples comme le relais de l'outbox (décision 0051) : un `UPDATE ... WHERE id IN (SELECT ... FOR UPDATE SKIP LOCKED)` dans une transaction courte, jamais pendant les recherches |
+
+Une écriture de plusieurs fiches (`saveAll`, R22) se fait en un `createMany` et une seule requête `UPDATE ... FROM unnest(...)` filtrée par couple et version ; les fiches d'un arbre (`findInTree`) se lisent par une requête récursive sur `folder` jointe à `note`, `deleted_at` écrit à chaque niveau.
+
+## `note_card_search`
+
+Une ligne par recherche d'une fiche (modèle `NoteCardSearch`, fichier `notes-note-card-search.prisma`), sans suppression : le plafond de R23 compte les lignes d'un couple depuis minuit à Paris, calculé en UTC dans la requête (`NoteCardSearchPrismaCounter`).
+
+| Colonne | Type | Rôle |
+|---|---|---|
+| `id` | `UUID`, clé primaire | Identifiant technique (`uuid(7)` de Prisma) |
+| `couple_id` | `UUID` | Couple de la recherche |
+| `note_card_id` | `UUID` | Fiche cherchée, sans clé étrangère : le compte survit à la fiche |
+| `searched_at` | `TIMESTAMP(3)` | Instant de la recherche, en UTC |
+
+| Index ou contrainte | Colonnes | Pourquoi |
+|---|---|---|
+| `note_card_search_couple_id_searched_at_idx` | `couple_id`, `searched_at` | Le compte du jour d'un couple |
 
 ## `note_event`
 

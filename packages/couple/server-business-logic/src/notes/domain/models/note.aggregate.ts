@@ -125,6 +125,10 @@ export class Note extends AggregateRoot {
         return this.props.id;
     }
 
+    get coupleId(): string {
+        return this.props.coupleId;
+    }
+
     get ownerId(): string {
         return this.props.ownerId;
     }

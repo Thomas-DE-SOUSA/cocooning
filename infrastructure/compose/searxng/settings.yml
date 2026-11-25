@@ -1,0 +1,47 @@
+# SearXNG of the smart folders (decision 0054): reached by the API only, on the internal network of the compose.
+# Its defaults stay, these lines change them. The secret comes from SEARXNG_SECRET, never from this file.
+use_default_settings:
+  engines:
+    # A few general engines: a blocked one is skipped, the others answer. Brave is left out: through this image its
+    # results are redirect links, which the page reader cannot open.
+    keep_only:
+      - google
+      - bing
+      - duckduckgo
+      - qwant
+
+general:
+  instance_name: cocooning
+
+server:
+  # Overridden by the SEARXNG_SECRET environment variable.
+  secret_key: set-by-the-environment
+  # The API is the only client: no rate limiter, no bot detection, no image proxy.
+  limiter: false
+  image_proxy: false
+  public_instance: false
+
+search:
+  safe_search: 0
+  default_lang: fr
+  # json is what the API reads (SearxngWebSearchProvider).
+  formats:
+    - html
+    - json
+
+# The engines kept, turned on; google is not in the defaults of this image: declared here. A weight ranks the
+# results of an engine: bing reads a name such as « Chez Paul » as a word, so its results come after.
+engines:
+  - name: google
+    engine: google
+    shortcut: go
+    categories: [general, web]
+    disabled: false
+    weight: 2
+  - name: bing
+    disabled: false
+    weight: 0.3
+  - name: duckduckgo
+    disabled: false
+  - name: qwant
+    disabled: false

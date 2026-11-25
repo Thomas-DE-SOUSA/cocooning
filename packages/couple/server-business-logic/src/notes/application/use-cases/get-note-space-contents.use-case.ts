@@ -1,7 +1,9 @@
 import type { NoteSpace } from '@cocooning/couple-shared-kernel/enums';
 import type { ExecutionContext } from '@cocooning/shared-kernel/domain';
 import type { FolderRepository } from '../../domain/ports/folder.repository';
+import type { NoteCardRepository } from '../../domain/ports/note-card.repository';
 import type { NoteRepository } from '../../domain/ports/note.repository';
+import type { CardContextService } from '../../domain/services/card-context.service';
 import type { FolderPreconditionService } from '../../domain/services/folder-precondition.service';
 import {
     type NoteSpaceContentsView,
@@ -14,11 +16,14 @@ export type GetNoteSpaceContentsCommand = {
 };
 
 // R10, R14: the root of a space or one of its folders, with the way back to the root; the other's « Privé » is not found.
+// R18, R20: in a smart tree, the template it reads, and the card of each note.
 export class GetNoteSpaceContentsUseCase {
     constructor(
         private readonly folderRepository: FolderRepository,
         private readonly noteRepository: NoteRepository,
+        private readonly noteCardRepository: NoteCardRepository,
         private readonly folderPreconditionService: FolderPreconditionService,
+        private readonly cardContextService: CardContextService,
     ) {}
 
     async execute(
@@ -50,6 +55,10 @@ export class GetNoteSpaceContentsUseCase {
         const contents = {
             space: command.space,
             path,
+            cardContext: await this.cardContextService.findCardContext(
+                coupleId,
+                command.folderId,
+            ),
             folders,
             folderCounts: await this.folderRepository.countVisibleChildren(
                 coupleId,
@@ -62,6 +71,10 @@ export class GetNoteSpaceContentsUseCase {
                 folders,
             ),
             notes,
+            cards: await this.noteCardRepository.findByNoteIds(
+                coupleId,
+                notes.map((note) => note.id.getValue()),
+            ),
         };
         return toNoteSpaceContentsView(contents, userId);
     }
