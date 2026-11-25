@@ -1,6 +1,6 @@
 # État du projet
 
-> Mis à jour : 2026-11-24 nuit (messages : D client mergé (#17), E écran ouvert (#18) ; questions au propriétaire : ordre dans un jour, schéma photo inutilisé, moment de la release ; puis ses idées sur les notes). Dernière consolidation : aucune.
+> Mis à jour : 2026-11-25 (messages E mergée (#18), ordre de chat ; décision 0052 acceptée ; lot 1 des dossiers, backend en cours par un sous-agent).
 > Ce fichier est réécrit, jamais allongé (60 lignes au plus). L'historique est dans `journal/`.
 
 ## Où on en est
@@ -18,8 +18,8 @@
 
 1. **Essai sur les deux téléphones** de la release PR #9 (2026-11-24) : « Aujourd'hui » change le jour sans faire défiler (choix du propriétaire, PR #8 annule #5) ; feuille de l'agenda, titre visible au-dessus du clavier, défilement qui ne la replie plus (poignée seule) ; glissement vers la gauche (à moitié : bouton « Supprimer » ; au-delà de 60 % : suppression au lâcher, décision 0049). Si le titre reste caché : faire suivre à la feuille la hauteur de `visualViewport`.
 2. **Autres retours du couple**, une petite PR chacun : sélecteurs natifs, place du « + », points de couleur, événement privé invisible chez l'autre, barre d'onglets, compteur « Nous » (2 969 jours attendus le 2026-11-24), écriture à deux dans une note, bandes système blanches du Samsung.
-3. **Messages** (décisions 0050, 0051) : A à D mergées (#13 à #17), E écran ouvert (#18). Questions en attente : ordre dans un jour (R5 « plus récent d'abord » contre ordre de chat, Claude penche pour le chat), retirer `createInstantPhotoFormSchema` inutilisé, release maintenant ou après F. Release : générer une paire VAPID pour la VM avec l'accord du propriétaire (sinon l'API ne démarre pas). Puis F (service worker, « Activer les notifications »). À vérifier sur téléphone : clavier iOS sur le composeur, appareil photo, HEIC sur Samsung, photo de 10 Mo. À faire à part : agenda/notes 500 au lieu de 409 ; sauvegarde nocturne sans les photos ; R3 à confirmer.
-4. **Idées du propriétaire sur les notes** : il veut y revenir dès la PR E finie ; les recueillir, proposer chaque correction avant d'agir.
+3. **Messages** (décisions 0050, 0051) : A à E mergées (#13 à #18) ; le fil est dans l'ordre d'une messagerie (choix du propriétaire, 2026-11-25), le schéma photo inutilisé est retiré. Release après F (choix du propriétaire) : générer une paire VAPID pour la VM avec son accord (sinon l'API ne démarre pas). F : service worker, « Activer les notifications ». À vérifier sur téléphone : clavier iOS sur le composeur, appareil photo, HEIC sur Samsung, photo de 10 Mo. À faire à part : agenda/notes 500 au lieu de 409 ; sauvegarde nocturne sans les photos ; R3 à confirmer.
+4. **Dossiers de notes et dossiers IA** (D53, décision 0052 acceptée le 2026-11-25, PR #19) : règles R10 à R25 des notes, Gemini gratuit avec risque accepté, lot 2 sans tri, « Modifiées récemment » gardé ; planche `Notes-concept` et `Notes-dossiers`. Prochaine étape : lot 1, dossiers classiques (backend, client, écran), une PR à la fois. Agenda « qui est concerné » pour plus tard (D52).
 5. **Plus tard, si le couple le veut** : prénoms dans « Nous » (l'API ne les connaît pas), répétition annuelle dans l'agenda.
 
 Mode de travail : pas d'autonomie. Une PR à la fois, résumée au propriétaire ; merger seulement après son « go » ; supprimer la branche après merge, en local et sur GitHub. Le backend et le client se confient bien à un sous-agent avec un brief complet, relu avant la PR ; l'interface se maquette d'abord sur la planche.
