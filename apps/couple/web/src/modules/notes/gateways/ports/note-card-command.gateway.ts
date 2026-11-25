@@ -1,4 +1,5 @@
 import type {
+    NoteCardFieldForm,
     NoteCardNameForm,
     NoteCardQueryForm,
 } from '@cocooning/couple-client-business-logic/notes';
@@ -18,5 +19,11 @@ export abstract class NoteCardCommandGateway {
     abstract refineNoteCard(
         noteId: string,
         form: NoteCardQueryForm,
+    ): Promise<Result<null, ApiError>>;
+    abstract refreshNoteCard(noteId: string): Promise<Result<null, ApiError>>;
+    abstract correctNoteCardField(
+        noteId: string,
+        fieldName: string,
+        form: NoteCardFieldForm,
     ): Promise<Result<null, ApiError>>;
 }

@@ -59,6 +59,30 @@ describe('Feature: the commands on the cards of a smart folder', () => {
         });
     });
 
+    describe('Scenario: R22, a partner updates the card or corrects a field', () => {
+        it('updates the card, then corrects one field by its name', async () => {
+            const { result, events, gateway } = renderCommands();
+
+            await act(async () => result.current.refreshNoteCard(NOTE_ID));
+            await act(async () =>
+                result.current.correctNoteCardField(NOTE_ID, 'Prix', {
+                    value: '30 €',
+                }),
+            );
+
+            expect(gateway.answers.calls).toEqual([
+                { operation: 'refreshNoteCard', noteId: NOTE_ID },
+                {
+                    operation: 'correctNoteCardField',
+                    noteId: NOTE_ID,
+                    fieldName: 'Prix',
+                    form: { value: '30 €' },
+                },
+            ]);
+            expect(events).toEqual(['REFRESH:done', 'CORRECT:done']);
+        });
+    });
+
     describe('Scenario: R19, a partner adds an item by its name', () => {
         it('adds the name to the folder', async () => {
             const { result, events, gateway } = renderCommands();

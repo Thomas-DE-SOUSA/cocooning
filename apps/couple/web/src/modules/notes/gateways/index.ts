@@ -1,6 +1,8 @@
 import { notesCardAddAction } from '../actions/notes-card-add.action';
 import { notesCardChooseAction } from '../actions/notes-card-choose.action';
+import { notesCardCorrectAction } from '../actions/notes-card-correct.action';
 import { notesCardRefineAction } from '../actions/notes-card-refine.action';
+import { notesCardRefreshAction } from '../actions/notes-card-refresh.action';
 import { notesFolderCreateAction } from '../actions/notes-folder-create.action';
 import { notesFolderDeleteAction } from '../actions/notes-folder-delete.action';
 import { notesFolderMoveAction } from '../actions/notes-folder-move.action';
@@ -43,6 +45,8 @@ export const noteCardCommandGateway: NoteCardCommandGateway =
         addNoteCard: notesCardAddAction,
         chooseNoteCardCandidate: notesCardChooseAction,
         refineNoteCard: notesCardRefineAction,
+        refreshNoteCard: notesCardRefreshAction,
+        correctNoteCardField: notesCardCorrectAction,
     });
 
 export const noteSpaceContentsGateway: NoteSpaceContentsGateway =

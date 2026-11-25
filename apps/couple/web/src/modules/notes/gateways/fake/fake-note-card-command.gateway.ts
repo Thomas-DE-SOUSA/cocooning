@@ -1,4 +1,5 @@
 import type {
+    NoteCardFieldForm,
     NoteCardNameForm,
     NoteCardQueryForm,
 } from '@cocooning/couple-client-business-logic/notes';
@@ -40,6 +41,23 @@ export class FakeNoteCardCommandGateway extends NoteCardCommandGateway {
         return this.answers.answer({
             operation: 'refineNoteCard',
             noteId,
+            form,
+        });
+    }
+
+    override refreshNoteCard(noteId: string): Promise<Result<null, ApiError>> {
+        return this.answers.answer({ operation: 'refreshNoteCard', noteId });
+    }
+
+    override correctNoteCardField(
+        noteId: string,
+        fieldName: string,
+        form: NoteCardFieldForm,
+    ): Promise<Result<null, ApiError>> {
+        return this.answers.answer({
+            operation: 'correctNoteCardField',
+            noteId,
+            fieldName,
             form,
         });
     }

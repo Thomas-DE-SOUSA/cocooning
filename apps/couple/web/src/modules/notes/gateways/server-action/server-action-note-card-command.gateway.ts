@@ -1,4 +1,5 @@
 import type {
+    NoteCardFieldForm,
     NoteCardNameForm,
     NoteCardQueryForm,
 } from '@cocooning/couple-client-business-logic/notes';
@@ -21,6 +22,12 @@ export type NoteCardCommandActions = {
     readonly refineNoteCard: (
         noteId: string,
         form: NoteCardQueryForm,
+    ) => Answer;
+    readonly refreshNoteCard: (noteId: string) => Answer;
+    readonly correctNoteCardField: (
+        noteId: string,
+        fieldName: string,
+        form: NoteCardFieldForm,
     ) => Answer;
 };
 
@@ -55,6 +62,24 @@ export class ServerActionNoteCardCommandGateway extends NoteCardCommandGateway {
     override refineNoteCard(noteId: string, form: NoteCardQueryForm): Answer {
         return runServerAction(
             () => this.actions.refineNoteCard(noteId, form),
+            UNREACHABLE,
+        );
+    }
+
+    override refreshNoteCard(noteId: string): Answer {
+        return runServerAction(
+            () => this.actions.refreshNoteCard(noteId),
+            UNREACHABLE,
+        );
+    }
+
+    override correctNoteCardField(
+        noteId: string,
+        fieldName: string,
+        form: NoteCardFieldForm,
+    ): Answer {
+        return runServerAction(
+            () => this.actions.correctNoteCardField(noteId, fieldName, form),
             UNREACHABLE,
         );
     }

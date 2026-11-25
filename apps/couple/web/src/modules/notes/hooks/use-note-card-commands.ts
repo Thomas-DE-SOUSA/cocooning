@@ -1,4 +1,5 @@
 import type {
+    NoteCardFieldForm,
     NoteCardNameForm,
     NoteCardQueryForm,
 } from '@cocooning/couple-client-business-logic/notes';
@@ -52,6 +53,18 @@ export function useNoteCardCommands({ gateway, onDone, onFailed }: Options) {
         refineNoteCard: (noteId: string, form: NoteCardQueryForm) =>
             run(NoteCardCommandEnum.REFINE, () =>
                 gateway.refineNoteCard(noteId, form),
+            ),
+        refreshNoteCard: (noteId: string) =>
+            run(NoteCardCommandEnum.REFRESH, () =>
+                gateway.refreshNoteCard(noteId),
+            ),
+        correctNoteCardField: (
+            noteId: string,
+            fieldName: string,
+            form: NoteCardFieldForm,
+        ) =>
+            run(NoteCardCommandEnum.CORRECT, () =>
+                gateway.correctNoteCardField(noteId, fieldName, form),
             ),
         pending: isPending ? lastCommand : null,
         isBusy: isPending,

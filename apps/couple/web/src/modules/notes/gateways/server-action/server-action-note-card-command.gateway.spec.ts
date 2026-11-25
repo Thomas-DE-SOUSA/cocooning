@@ -10,6 +10,8 @@ const REJECTING = new ServerActionNoteCardCommandGateway({
     addNoteCard: rejects,
     chooseNoteCardCandidate: rejects,
     refineNoteCard: rejects,
+    refreshNoteCard: rejects,
+    correctNoteCardField: rejects,
 });
 
 describe('Feature: card commands through the server actions', () => {
@@ -23,6 +25,8 @@ describe('Feature: card commands through the server actions', () => {
             addNoteCard: record,
             chooseNoteCardCandidate: record,
             refineNoteCard: record,
+            refreshNoteCard: record,
+            correctNoteCardField: record,
         });
 
         await expect(
@@ -31,11 +35,15 @@ describe('Feature: card commands through the server actions', () => {
 
         await gateway.chooseNoteCardCandidate(NOTE_ID, 1);
         await gateway.refineNoteCard(NOTE_ID, { query: 'Lyon 1er' });
+        await gateway.refreshNoteCard(NOTE_ID);
+        await gateway.correctNoteCardField(NOTE_ID, 'Prix', { value: '30 €' });
 
         expect(sent).toEqual([
             [FOLDER_ID, { name: 'Chez Paul' }],
             [NOTE_ID, 1],
             [NOTE_ID, { query: 'Lyon 1er' }],
+            [NOTE_ID],
+            [NOTE_ID, 'Prix', { value: '30 €' }],
         ]);
     });
 
@@ -51,6 +59,12 @@ describe('Feature: card commands through the server actions', () => {
         [
             'refineNoteCard',
             () => REJECTING.refineNoteCard(NOTE_ID, { query: 'Lyon' }),
+        ],
+        ['refreshNoteCard', () => REJECTING.refreshNoteCard(NOTE_ID)],
+        [
+            'correctNoteCardField',
+            () =>
+                REJECTING.correctNoteCardField(NOTE_ID, 'Prix', { value: '1' }),
         ],
     ])(
         'gives a network error instead of rejecting for %s',

@@ -1,14 +1,15 @@
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import type {
-    NoteResponse,
+    NoteDetailResponse,
     NoteSpaceContentsResponse,
 } from '@cocooning/couple-contract/notes';
+import type { NoteCardViewModel } from './note-card.view-model';
 import type { NotePlaceLevel } from './note-space-screen.view-model';
 import type { NoteListItem } from './notes-screen.view-model';
 
-// What the page of a note reads: the note, and the contents of the place it is in.
+// What the page of a note reads: the note with its card (R20), and the contents of the place it is in.
 export type NoteReading = {
-    readonly note: NoteResponse;
+    readonly note: NoteDetailResponse;
     readonly place: NoteSpaceContentsResponse;
 };
 
@@ -23,6 +24,7 @@ export type NotePageViewModel =
           readonly step: typeof NotePageStepEnum.NOTE;
           readonly note: NoteListItem;
           readonly level: NotePlaceLevel;
+          readonly card: NoteCardViewModel | null;
       }
     | {
           readonly step: typeof NotePageStepEnum.UNAVAILABLE;

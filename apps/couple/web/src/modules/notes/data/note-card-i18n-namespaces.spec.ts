@@ -12,6 +12,8 @@ const REQUIRED_KEYS = [
     'form.name.errors.tooLong',
     'form.query.errors.required',
     'form.query.errors.tooLong',
+    'form.value.errors.required',
+    'form.value.errors.tooLong',
     ...[
         ...NOTE_CARD_SCREEN_ERROR_CODES,
         ...Object.values(ApiErrorCodeEnum),

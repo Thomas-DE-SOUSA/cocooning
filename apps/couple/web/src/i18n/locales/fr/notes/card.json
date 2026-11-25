@@ -19,6 +19,25 @@
         "search": "Chercher",
         "searching": "Recherche en cours"
     },
+    "card": {
+        "title": "Fiche",
+        "refresh": "Mettre à jour",
+        "refreshing": "Mise à jour en cours",
+        "retry": "Réessayer",
+        "notFound": "Non trouvé",
+        "corrected": "corrigée",
+        "failed": "La recherche n'a pas abouti.",
+        "limitReached": "Plafond du jour atteint : réessaie demain.",
+        "sources_one": "{{count}} source · recherchée le {{date}}",
+        "sources_other": "{{count}} sources · recherchée le {{date}}",
+        "ourNotes": "Nos notes"
+    },
+    "correction": {
+        "title": "Corriger « {{name}} »",
+        "description": "« Mettre à jour » gardera ta correction.",
+        "submit": "Enregistrer",
+        "saving": "Enregistrement en cours"
+    },
     "form": {
         "name": {
             "errors": {
@@ -32,12 +51,20 @@
                 "required": "Précise ce que tu cherches.",
                 "tooLong": "Cette précision est trop longue : 200 signes au plus."
             }
+        },
+        "value": {
+            "errors": {
+                "required": "Écris une valeur.",
+                "tooLong": "Cette valeur est trop longue : 300 signes au plus."
+            }
         }
     },
     "toast": {
         "ADD": "Ajout impossible",
         "CHOOSE": "Choix impossible",
-        "REFINE": "Nouvelle recherche impossible"
+        "REFINE": "Nouvelle recherche impossible",
+        "REFRESH": "Mise à jour impossible",
+        "CORRECT": "Correction impossible"
     },
     "apiErrors": {
         "NOTE_NOT_FOUND": "Cette note n'existe plus. La liste est mise à jour.",

@@ -10,6 +10,7 @@ import {
     NotePageStepEnum,
     type NoteReading,
 } from '../view-models/note-page.view-model';
+import { presentNoteCard } from './note-card.presenter';
 import { toNoteListItem } from './note-list-item.presenter';
 import { presentPlaceLevel } from './place-level.presenter';
 
@@ -36,6 +37,10 @@ export function presentNotePage(
                 step: NotePageStepEnum.NOTE,
                 note: toNoteListItem(reading.value.note),
                 level: presentPlaceLevel(reading.value.place),
+                card: presentNoteCard(
+                    reading.value.note,
+                    reading.value.place.cardContext !== null,
+                ),
             },
         };
     }

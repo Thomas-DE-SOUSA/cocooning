@@ -40,14 +40,14 @@ L'élément ajouté est une note, avec la fiche en haut (une valeur par case) et
 
 Une information que l'IA ne trouve pas reste « non trouvé ». La fiche garde ses sources (des liens) et la date de sa recherche.
 
-- Dans le code : `NoteCard.recordResult` (`fieldsFilledWith` : une case absente de la réponse vaut `null`, « non trouvé »), `sources` (`NOTE_CARD_SOURCE_MAX_COUNT`) et `searchedAt`.
+- Dans le code : `NoteCard.recordResult` (`fieldsFilledWith` : une case absente de la réponse vaut `null`, « non trouvé »), `sources` (`NOTE_CARD_SOURCE_MAX_COUNT`) et `searchedAt`. Dans la PWA : une case sans valeur s'affiche « Non trouvé » en italique ; le pied de la fiche dit « 3 sources · recherchée le 25 nov. » et déplie les liens, ouverts dans un nouvel onglet (`NoteCardView`, `NoteCardSources`).
 - Source : décision 0052. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R22. Je corrige une case, « Mettre à jour » la respecte
 
 Je corrige une case à la main ; « Mettre à jour » relance la recherche pour les autres cases et garde ma correction. Une case ajoutée à la fiche type se remplit sur les fiches du dossier, dans la limite du plafond du jour (R23).
 
-- Dans le code : `CorrectNoteCardFieldUseCase` et `NoteCard.correctField` (`isManual`, `CARD_FIELD_VALUE_MAX_LENGTH`), `RefreshNoteCardUseCase` et `NoteCard.refresh` (fiche type du dossier, cases corrigées gardées) ; `EditFolderTemplateUseCase` passe la fiche type corrigée aux fiches de tout l'arbre (`NoteCardRepository.findInTree`, `NoteCard.applyEditedTemplate`) : une fiche remplie qui gagne une case repart `PENDING`.
+- Dans le code : `CorrectNoteCardFieldUseCase` et `NoteCard.correctField` (`isManual`, `CARD_FIELD_VALUE_MAX_LENGTH`), `RefreshNoteCardUseCase` et `NoteCard.refresh` (fiche type du dossier, cases corrigées gardées) ; `EditFolderTemplateUseCase` passe la fiche type corrigée aux fiches de tout l'arbre (`NoteCardRepository.findInTree`, `NoteCard.applyEditedTemplate`) : une fiche remplie qui gagne une case repart `PENDING`. Dans la PWA : un toucher sur une case de la fiche ouvre une feuille qui la corrige, la valeur corrigée porte la marque « corrigée » ; « Mettre à jour », en haut de la fiche, est grisé pendant la recherche (`NoteCardFieldSheetView`, `useNoteCardPanel`).
 - Source : proposition de Claude (décision 0052). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R23. Un plafond de recherches par jour
@@ -68,7 +68,7 @@ Notre moteur de recherche, sur notre serveur, interroge des moteurs publics avec
 
 Je déplace une fiche dans un autre dossier IA : elle prend la fiche type du nouveau dossier, garde les valeurs des cases de même nom, et « Mettre à jour » remplit les autres. Hors d'un dossier IA, elle garde ses valeurs, sans « Mettre à jour ».
 
-- Dans le code : `MoveNoteUseCase` et `NoteCardRelocationService` : la fiche d'une note rangée dans un dossier IA prend sa fiche type (`NoteCard.adoptTemplate`, `fieldsAdopting` : les cases de même nom, sans tenir compte de la casse, gardent leur valeur et leur marque), dans la même `UnitOfWork` que la note, sans relancer la recherche ; hors d'un dossier IA, la fiche n'est pas touchée, et `RefreshNoteCardUseCase` refuse `FOLDER_NOT_SMART`.
+- Dans le code : `MoveNoteUseCase` et `NoteCardRelocationService` : la fiche d'une note rangée dans un dossier IA prend sa fiche type (`NoteCard.adoptTemplate`, `fieldsAdopting` : les cases de même nom, sans tenir compte de la casse, gardent leur valeur et leur marque), dans la même `UnitOfWork` que la note, sans relancer la recherche ; hors d'un dossier IA, la fiche n'est pas touchée, et `RefreshNoteCardUseCase` refuse `FOLDER_NOT_SMART`. Dans la PWA : « Mettre à jour » n'apparaît que sur la page d'une note rangée dans un arbre IA (`presentNoteCard`, `canRefresh`).
 - Source : proposition de Claude (décision 0052). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ## Cas et exceptions
