@@ -64,7 +64,7 @@
         "proposing": "Proposition en cours",
         "subjectHint": "Proposé par l'IA d'après le nom. Corrige-le si besoin.",
         "fields": "Fiche type",
-        "newField": "Nouvelle case",
+        "newField": "Ajouter une information (ex. : Terrasse)",
         "addField": "Ajouter une case",
         "removeField": "Retirer « {{name}} »"
     },
