@@ -6,6 +6,7 @@ import {
 import { Logger } from '@cocooning/shared-kernel/ports';
 import type { FetchFunction } from './gemini-interactions.client';
 import { htmlToText } from './html-to-text';
+import { pageRatingLine } from './page-rating';
 
 // Enough for the facts of a card, small enough for the free AI (decision 0054).
 export const WEB_PAGE_TEXT_MAX_LENGTH = 20_000;
@@ -48,7 +49,10 @@ export class FetchWebPageReader extends WebPageReader {
             });
             const type = response.headers.get('content-type') ?? '';
             if (!response.ok || !READABLE_TYPES.test(type)) return null;
-            const text = htmlToText(await response.text());
+            const html = await response.text();
+            const text = [pageRatingLine(html), htmlToText(html)]
+                .filter((part) => part !== null)
+                .join('\n');
             return { url, text: text.slice(0, WEB_PAGE_TEXT_MAX_LENGTH) };
         } catch {
             // A page that times out or refuses is one source less, counted by read(); nothing to do here.

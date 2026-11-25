@@ -17,6 +17,8 @@ const SYSTEM_INSTRUCTION = [
     'web search. Use only these texts. Never use your own knowledge, never guess, never invent a value or an address.',
     'When "openStreetMap" is given and is the item typed, prefer it for the address, the opening hours and the phone,',
     'and the web texts for the rest; write its opening hours (such as "Mo-Sa 12:00-14:30") in plain French.',
+    'For a field about the rating or the stars given by customers, write the rating found in the texts with the site',
+    'it comes from, such as "4,6/5 (320 avis, TheFork)"; when several sites give one, write the one with most reviews.',
     'If several distinct places or things clearly match what was typed, answer "kind": "CANDIDATES" with',
     `2 to ${CARD_CANDIDATE_MAX_COUNT} candidates (a short "label" and a "detail" telling them apart, such as the city), and empty values.`,
     'Otherwise answer "kind": "VALUES" with one entry per field: its exact "field" name and its "value" in French,',
