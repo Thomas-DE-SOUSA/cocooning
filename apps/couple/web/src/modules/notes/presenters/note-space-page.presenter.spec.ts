@@ -53,6 +53,7 @@ describe('Feature: the screen of a space or a folder (R10, R14)', () => {
                         href: FOLDER_HREF,
                         folderCount: 0,
                         noteCount: 2,
+                        isSmart: false,
                     },
                 ],
                 notes: [
@@ -61,6 +62,7 @@ describe('Feature: the screen of a space or a folder (R10, R14)', () => {
                         href: `/notes/${A_SHARED_NOTE.noteId}`,
                     }),
                 ],
+                cardContext: null,
             });
         });
     });

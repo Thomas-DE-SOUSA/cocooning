@@ -11,6 +11,7 @@ const MAISON: FolderListItem = {
     href: '/spaces/SHARED?folderId=f1',
     folderCount: 1,
     noteCount: 4,
+    isSmart: false,
 };
 const COURSES: NoteListItem = {
     noteId: 'n1',
@@ -58,6 +59,14 @@ describe('Feature: what a space or a folder holds (R13)', () => {
         expect(
             sectionOf('Dossiers').getByText('1 dossier · 4 notes'),
         ).not.toBeNull();
+    });
+
+    it('R17, marks a smart folder with « IA »', () => {
+        renderContents({
+            folders: [MAISON, { ...MAISON, folderId: 'f2', isSmart: true }],
+        });
+
+        expect(sectionOf('Dossiers').getAllByText('IA')).toHaveLength(1);
     });
 
     it('R14, opens the actions of a folder from its « ⋯ »', () => {

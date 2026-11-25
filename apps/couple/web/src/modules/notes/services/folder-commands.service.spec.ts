@@ -2,6 +2,7 @@ import {
     CreateFolderUseCase,
     type FolderNameForm,
     RenameFolderUseCase,
+    type SmartFolderForm,
 } from '@cocooning/couple-client-business-logic/notes';
 import {
     type ApiError,
@@ -72,6 +73,39 @@ describe('Feature: folder commands sent by the server actions', () => {
                 expect(gateway.calls).toEqual([]);
             },
         );
+
+        it('R17, sends a smart folder with its trimmed subject and fields', async () => {
+            const form: SmartFolderForm = {
+                name: 'Restaurants',
+                subject: ' Les restos ',
+                fields: [' Adresse ', 'Prix'],
+            };
+
+            expect(await create(form)).toEqual(ok(null));
+            expect(gateway.calls).toEqual([
+                {
+                    operation: 'createFolder',
+                    request: expect.objectContaining({
+                        kind: 'SMART',
+                        subject: 'Les restos',
+                        cardTemplate: ['Adresse', 'Prix'],
+                    }),
+                },
+            ]);
+        });
+
+        it('R17, refuses a smart folder without fields', async () => {
+            const result = await create({
+                name: 'Restaurants',
+                subject: 'Les restos',
+                fields: [],
+            });
+
+            expect(result.success === false && result.error.code).toBe(
+                ApiErrorCodeEnum.VALIDATION_ERROR,
+            );
+            expect(gateway.calls).toEqual([]);
+        });
 
         it('passes the refusal of the API through', async () => {
             const refusal: ApiError = {

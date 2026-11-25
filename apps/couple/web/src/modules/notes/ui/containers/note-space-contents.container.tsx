@@ -3,7 +3,10 @@
 import { useNewItemMenu } from '../../hooks/use-new-item-menu';
 import { useNoteSheet } from '../../hooks/use-note-sheet';
 import type { NoteSpaceContentsScreen } from '../../view-models/note-space-screen.view-model';
-import { NoteSheetKindEnum } from '../../view-models/note-sheet.view-model';
+import {
+    NoteSheetKindEnum,
+    type NoteSheetTarget,
+} from '../../view-models/note-sheet.view-model';
 import { NewItemMenuView } from '../views/new-item-menu.view';
 import { NoteSpaceContentsView } from '../views/note-space-contents.view';
 import { NoteSheetDrawerContainer } from './note-sheet-drawer.container';
@@ -19,13 +22,9 @@ export function NoteSpaceContentsContainer({ screen }: Props) {
         back: screen.back,
         folders: screen.folders,
     };
-    const create = (
-        kind:
-            | typeof NoteSheetKindEnum.NEW_NOTE
-            | typeof NoteSheetKindEnum.NEW_FOLDER,
-    ) => {
+    const create = (target: NoteSheetTarget) => {
         menu.close();
-        sheet.open({ kind, place: screen.place });
+        sheet.open(target);
     };
     return (
         <>
@@ -53,8 +52,19 @@ export function NoteSpaceContentsContainer({ screen }: Props) {
                 isOpen={menu.isOpen}
                 onToggle={menu.toggle}
                 onClose={menu.close}
-                onNewNote={() => create(NoteSheetKindEnum.NEW_NOTE)}
-                onNewFolder={() => create(NoteSheetKindEnum.NEW_FOLDER)}
+                onNewNote={() =>
+                    create({
+                        kind: NoteSheetKindEnum.NEW_NOTE,
+                        place: screen.place,
+                    })
+                }
+                onNewFolder={() =>
+                    create({
+                        kind: NoteSheetKindEnum.NEW_FOLDER,
+                        place: screen.place,
+                        inheritedFrom: screen.cardContext?.holderName ?? null,
+                    })
+                }
             />
             <NoteSheetDrawerContainer
                 target={sheet.target}

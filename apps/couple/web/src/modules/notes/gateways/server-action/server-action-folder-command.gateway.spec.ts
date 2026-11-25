@@ -1,4 +1,5 @@
 import { ApiErrorCodeEnum } from '@cocooning/couple-client-business-logic/shared';
+import { A_PROPOSED_TEMPLATE } from '@cocooning/couple-client-business-logic/testing';
 import { NoteSpaceEnum } from '@cocooning/couple-shared-kernel/enums';
 import { ok } from '@cocooning/shared-kernel/utils';
 import { ServerActionFolderCommandGateway } from './server-action-folder-command.gateway';
@@ -9,6 +10,7 @@ const rejects = () => Promise.reject(new TypeError('Failed to fetch'));
 
 const REJECTING = new ServerActionFolderCommandGateway({
     createFolder: rejects,
+    proposeFolderTemplate: rejects,
     renameFolder: rejects,
     deleteFolder: rejects,
     moveFolder: rejects,
@@ -23,6 +25,10 @@ describe('Feature: folder commands through the server actions', () => {
         };
         const gateway = new ServerActionFolderCommandGateway({
             createFolder: record,
+            proposeFolderTemplate: (...input: unknown[]) => {
+                sent.push(input);
+                return Promise.resolve(ok(A_PROPOSED_TEMPLATE));
+            },
             renameFolder: record,
             deleteFolder: record,
             moveFolder: record,
@@ -31,12 +37,16 @@ describe('Feature: folder commands through the server actions', () => {
         await expect(
             gateway.createFolder({ name: 'Maison' }, SHARED_ROOT),
         ).resolves.toEqual(ok(null));
+        await expect(
+            gateway.proposeFolderTemplate({ name: 'Restos' }, SHARED_ROOT),
+        ).resolves.toEqual(ok(A_PROPOSED_TEMPLATE));
         await gateway.renameFolder(FOLDER_ID, { name: 'Travaux' });
         await gateway.deleteFolder(FOLDER_ID);
         await gateway.moveFolder(FOLDER_ID, null);
 
         expect(sent).toEqual([
             [{ name: 'Maison' }, SHARED_ROOT],
+            [{ name: 'Restos' }, SHARED_ROOT],
             [FOLDER_ID, { name: 'Travaux' }],
             [FOLDER_ID],
             [FOLDER_ID, null],
@@ -47,6 +57,10 @@ describe('Feature: folder commands through the server actions', () => {
         [
             'createFolder',
             () => REJECTING.createFolder({ name: 'M' }, SHARED_ROOT),
+        ],
+        [
+            'proposeFolderTemplate',
+            () => REJECTING.proposeFolderTemplate({ name: 'M' }, SHARED_ROOT),
         ],
         [
             'renameFolder',

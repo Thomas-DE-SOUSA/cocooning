@@ -1,6 +1,7 @@
 import type {
     FolderNameForm,
     NoteTitleForm,
+    SmartFolderForm,
 } from '@cocooning/couple-client-business-logic/notes';
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import type { Result } from '@cocooning/shared-kernel/utils';
@@ -47,7 +48,10 @@ export function useNoteSheetCommands({ gateways, onDone, onFailed }: Options) {
             run(NoteSheetCommandEnum.CREATE_NOTE, () =>
                 notes.createNote(form, destination),
             ),
-        createFolder: (form: FolderNameForm, destination: NoteLocation) =>
+        createFolder: (
+            form: FolderNameForm | SmartFolderForm,
+            destination: NoteLocation,
+        ) =>
             run(NoteSheetCommandEnum.CREATE_FOLDER, () =>
                 folders.createFolder(form, destination),
             ),

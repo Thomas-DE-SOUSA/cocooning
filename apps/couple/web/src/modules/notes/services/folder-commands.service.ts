@@ -2,6 +2,7 @@ import 'server-only';
 import {
     createFolderNameFormSchema,
     type CreateFolderUseCase,
+    createSmartFolderFormSchema,
     type RenameFolderUseCase,
 } from '@cocooning/couple-client-business-logic/notes';
 import type {
@@ -27,13 +28,22 @@ export type FolderUseCaseCall = (
     folderId: string,
 ) => Promise<Result<unknown, ApiError>>;
 
-// core-frontend.md rule 14: the name and the place are validated again here. R13: at the root of a space or in a folder.
+// R17: a form with fields is a smart folder, validated with its subject and its fields.
+const isSmartFolderInput = (input: unknown): boolean =>
+    typeof input === 'object' && input !== null && 'fields' in input;
+
+const folderFormSchemaOf = (input: unknown, t: Translator) =>
+    isSmartFolderInput(input)
+        ? createSmartFolderFormSchema(t)
+        : createFolderNameFormSchema(t);
+
+// core-frontend.md rule 14: the form and the place are validated again here. R13: at the root of a space or in a folder.
 export async function createFolder(
     input: unknown,
     destinationInput: unknown,
     context: CreateFolderContext,
 ): Promise<Result<null, ApiError>> {
-    const form = createFolderNameFormSchema(context.t).safeParse(input);
+    const form = folderFormSchemaOf(input, context.t).safeParse(input);
     if (!form.success) return fail(invalid('Invalid folder name form'));
     const destination = NoteLocationSchema.safeParse(destinationInput);
     if (!destination.success) return fail(invalid('Invalid folder place'));

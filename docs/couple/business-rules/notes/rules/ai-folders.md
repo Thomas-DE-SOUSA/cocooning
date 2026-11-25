@@ -8,14 +8,14 @@ Comment un dossier IA complète ce que le couple y ajoute. À lire avant de touc
 
 À la création, je choisis « Classique » ou « IA ». Pour un dossier IA, l'IA propose d'après son nom un sujet (une phrase, 280 signes au plus) et une fiche type (de 1 à 10 cases, chacune nommée en 40 signes au plus). Je les corrige avant de créer le dossier, et plus tard aussi ; dans « Partagé », nous les corrigeons tous les deux.
 
-- Dans le code : `ProposeFolderTemplateUseCase` (port `NoteCardWriter.proposeTemplate`, adaptateur Gemini, sans recherche ni plafond), `CreateFolderUseCase` et `SmartFolderValidator.kindOf` (`FolderKindEnum`), `FolderSubject`, `CardTemplate` (`FOLDER_SUBJECT_MAX_LENGTH`, `CARD_TEMPLATE_MAX_FIELDS`, `CARD_FIELD_NAME_MAX_LENGTH`), `EditFolderTemplateUseCase` et `Folder.editTemplate`, sans contrôle de propriétaire (R14).
+- Dans le code : `ProposeFolderTemplateUseCase` (port `NoteCardWriter.proposeTemplate`, adaptateur Gemini, sans recherche ni plafond), `CreateFolderUseCase` et `SmartFolderValidator.kindOf` (`FolderKindEnum`), `FolderSubject`, `CardTemplate` (`FOLDER_SUBJECT_MAX_LENGTH`, `CARD_TEMPLATE_MAX_FIELDS`, `CARD_FIELD_NAME_MAX_LENGTH`), `EditFolderTemplateUseCase` et `Folder.editTemplate`, sans contrôle de propriétaire (R14). Dans la PWA : la feuille « Nouveau dossier » propose « Classique » ou « IA » ; « Proposer avec l'IA » remplit le sujet et les cases, que le couple corrige avant « Créer le dossier » ; si l'IA ne répond pas, un toast le dit et les champs se remplissent à la main (`NewFolderSheetView`, `useNewFolderSheet`, module web `notes`). Un dossier IA porte l'étiquette « IA » dans les listes (`SmartBadge`).
 - Source : [décision 0052](../../../decisions/notes/0052-dossiers-et-dossiers-ia.md) ; les limites sont une proposition de Claude, acceptées par « go ». Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R18. Un sous-dossier d'un dossier IA hérite et précise
 
 Je crée « Lyon » dans « Restaurants » : il est IA lui aussi, garde la fiche type de « Restaurants », et son nom s'ajoute au contexte des recherches. Si la fiche type de « Restaurants » change, celle de « Lyon » change avec elle.
 
-- Dans le code : `SmartFolderValidator.kindOf` (un dossier créé dans un dossier IA est IA, sans fiche type à lui, sinon `FOLDER_TEMPLATE_INHERITED`) ; `cardContextOf` et `CardContextService` lisent la lignée du dossier (`FolderRepository.findLineage`, une requête) et y trouvent le dossier IA qui porte le sujet et la fiche type, ainsi que les noms des dossiers depuis lui ; `EditFolderTemplateUseCase` corrige la fiche type depuis n'importe quel dossier de l'arbre.
+- Dans le code : `SmartFolderValidator.kindOf` (un dossier créé dans un dossier IA est IA, sans fiche type à lui, sinon `FOLDER_TEMPLATE_INHERITED`) ; `cardContextOf` et `CardContextService` lisent la lignée du dossier (`FolderRepository.findLineage`, une requête) et y trouvent le dossier IA qui porte le sujet et la fiche type, ainsi que les noms des dossiers depuis lui ; `EditFolderTemplateUseCase` corrige la fiche type depuis n'importe quel dossier de l'arbre. Dans la PWA : dans un arbre IA, « Nouveau dossier » ne demande que le nom et dit « Garde la fiche de « Restaurants » » (`SmartSubFolderSheetContainer`, `presentCardContext`).
 - Source : décision 0052. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ## L'ajout d'un élément

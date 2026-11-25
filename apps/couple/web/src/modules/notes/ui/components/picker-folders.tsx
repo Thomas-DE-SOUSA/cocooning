@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { NOTE_SPACE_NAMESPACE } from '../../data/note-space-i18n-namespaces';
 import { presentFolderContents } from '../../presenters/place-labels.presenter';
 import type { FolderListItem } from '../../view-models/note-space-screen.view-model';
+import { SmartBadge } from './smart-badge';
 
 type Props = {
     readonly folders: readonly FolderListItem[];
@@ -47,8 +48,11 @@ export function PickerFolders({ folders, isLoading, onOpen }: Props) {
                             />
                         </span>
                         <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-                            <span className="font-semibold break-words">
+                            <span className="flex items-center gap-2 font-semibold break-words">
                                 {folder.name}
+                                {folder.isSmart ? (
+                                    <SmartBadge label={t('smartBadge')} />
+                                ) : null}
                             </span>
                             <span className="text-sm text-muted-foreground">
                                 {presentFolderContents(folder, t)}

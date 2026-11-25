@@ -13,6 +13,7 @@ import {
     type NoteSpacePage,
     NoteSpaceStepEnum,
 } from '../view-models/note-space-screen.view-model';
+import { presentCardContext } from './card-context.presenter';
 import { toNoteListItem } from './note-list-item.presenter';
 import { presentNotePlace } from './note-place.presenter';
 import { presentPlaceLevel } from './place-level.presenter';
@@ -36,6 +37,7 @@ const presentContents = (
         step: NoteSpaceStepEnum.CONTENTS,
         ...presentPlaceLevel(contents),
         notes: contents.notes.map(toNoteListItem),
+        cardContext: presentCardContext(contents),
     },
 });
 

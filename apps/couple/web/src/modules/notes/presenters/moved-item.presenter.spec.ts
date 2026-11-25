@@ -24,6 +24,7 @@ const aFolder = (folderId: string, name: string): FolderListItem => ({
     href: `/spaces/SHARED?folderId=${folderId}`,
     folderCount: 0,
     noteCount: 0,
+    isSmart: false,
 });
 const MAISON = aFolder('f1', 'Maison');
 const TRAVAUX = aFolder('f2', 'Travaux');

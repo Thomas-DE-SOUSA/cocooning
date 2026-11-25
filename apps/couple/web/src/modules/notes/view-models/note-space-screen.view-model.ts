@@ -1,4 +1,5 @@
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
+import type { NoteCardContext } from './note-card-context.view-model';
 import type { NoteLocation, NotePlace } from './note-place.view-model';
 import type { NoteListItem } from './notes-screen.view-model';
 
@@ -8,6 +9,8 @@ export type FolderListItem = {
     readonly href: string;
     readonly folderCount: number;
     readonly noteCount: number;
+    // R17: a smart folder completes what is added to it, with the « IA » badge.
+    readonly isSmart: boolean;
 };
 
 export const NoteSpaceStepEnum = {
@@ -29,6 +32,7 @@ export type NotePlaceLevel = ScreenPlace & {
 export type NoteSpaceContentsScreen = NotePlaceLevel & {
     readonly step: typeof NoteSpaceStepEnum.CONTENTS;
     readonly notes: readonly NoteListItem[];
+    readonly cardContext: NoteCardContext | null;
 };
 
 export type NoteSpaceScreenViewModel =
