@@ -1,4 +1,4 @@
-import { isPageRequest } from './sw-page-request';
+import { isInstantPhotoRequest, isPageRequest } from './sw-page-request';
 
 const aRequest = (mode: string, rsc: string | null) => ({
     mode,
@@ -20,6 +20,25 @@ describe('Feature: the service worker never caches a page', () => {
         'tells whether %s is a page',
         (_label, request, sameOrigin, expected) => {
             expect(isPageRequest(request, sameOrigin)).toBe(expected);
+        },
+    );
+});
+
+describe('Feature: the service worker never caches a photo of the couple', () => {
+    it.each([
+        ['a photo of the feed', '/api/instant-photos/0193-photo', true, true],
+        [
+            'a photo from another origin',
+            '/api/instant-photos/0193',
+            false,
+            false,
+        ],
+        ['a static image of the PWA', '/icons/icon-192.png', true, false],
+        ['the messages page', '/messages', true, false],
+    ])(
+        'tells whether %s goes to the network only',
+        (_label, pathname, sameOrigin, expected) => {
+            expect(isInstantPhotoRequest(pathname, sameOrigin)).toBe(expected);
         },
     );
 });

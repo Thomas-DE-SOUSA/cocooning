@@ -3,6 +3,7 @@ import frAgendaCalendar from './locales/fr/agenda/calendar.json';
 import frSignIn from './locales/fr/authentication/sign-in.json';
 import frSignOut from './locales/fr/authentication/sign-out.json';
 import frGeneric from './locales/fr/generic.json';
+import frMessagingMessages from './locales/fr/messaging/messages.json';
 import frNotesList from './locales/fr/notes/list.json';
 import frNotesNote from './locales/fr/notes/note.json';
 import frPairingCouple from './locales/fr/pairing/couple.json';
@@ -16,6 +17,7 @@ export const RESOURCES = {
         'notes/list': frNotesList,
         'notes/note': frNotesNote,
         'agenda/calendar': frAgendaCalendar,
+        'messaging/messages': frMessagingMessages,
     },
 } as const satisfies Record<Locale, Record<string, object>>;
 

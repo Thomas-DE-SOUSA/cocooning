@@ -2,7 +2,7 @@ import { WebRouterEnum } from '@cocooning/couple-shared-kernel/routers';
 import { defaultCache, PAGES_CACHE_NAME } from '@serwist/next/worker';
 import type { PrecacheEntry, SerwistGlobalConfig } from 'serwist';
 import { NetworkOnly, Serwist } from 'serwist';
-import { isPageRequest } from './sw-page-request';
+import { isInstantPhotoRequest, isPageRequest } from './sw-page-request';
 
 declare global {
     interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -24,6 +24,11 @@ const serwist = new Serwist({
         {
             matcher: ({ request, sameOrigin }) =>
                 isPageRequest(request, sameOrigin),
+            handler: new NetworkOnly(),
+        },
+        {
+            matcher: ({ url, sameOrigin }) =>
+                isInstantPhotoRequest(url.pathname, sameOrigin),
             handler: new NetworkOnly(),
         },
         ...defaultCache,

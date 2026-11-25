@@ -1,7 +1,7 @@
 'use client';
 
 import { WebRouterEnum } from '@cocooning/couple-shared-kernel/routers';
-import { CalendarDays, Heart, NotebookText } from 'lucide-react';
+import { CalendarDays, Heart, MessageCircle, NotebookText } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { TabBar } from '@/shared/ui/tab-bar';
@@ -14,13 +14,18 @@ const TABS = [
         icon: CalendarDays,
     },
     {
+        href: WebRouterEnum.MESSAGES,
+        key: 'navigation.messages',
+        icon: MessageCircle,
+    },
+    {
         href: WebRouterEnum.COUPLE_OVERVIEW,
         key: 'navigation.couple',
         icon: Heart,
     },
 ] as const;
 
-// One tab per shipped screen (decision 0044): messages joins when it exists.
+// One tab per shipped screen (decision 0044).
 export function MainNavigation() {
     const { t } = useTranslation('generic');
     const pathname = usePathname();

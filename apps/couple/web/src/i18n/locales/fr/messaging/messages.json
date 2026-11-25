@@ -1,0 +1,116 @@
+{
+    "title": "Messages",
+    "feed": {
+        "label": "Nos mots et nos photos",
+        "today": "Aujourd'hui",
+        "yesterday": "Hier",
+        "empty": "Pas encore de mot ni de photo. À toi d'envoyer le premier !",
+        "older": "Voir les plus anciens",
+        "loadingOlder": "Chargement des plus anciens"
+    },
+    "item": {
+        "mine": "Moi",
+        "partner": "Mon âme sœur",
+        "photoAltMine": "Ma photo",
+        "photoAltPartner": "Photo de mon âme sœur",
+        "photoOfTheDay": "photo du jour",
+        "late": "en retard",
+        "hidden": "Envoie la tienne pour voir la sienne",
+        "withdrawHint": "Retirer"
+    },
+    "composer": {
+        "readyWords": "Mots prêts",
+        "readyWord": {
+            "love": "Je t'aime",
+            "missYou": "Tu me manques",
+            "kisses": "Bisous",
+            "onMyWay": "J'arrive"
+        },
+        "takePhoto": "Prendre une photo",
+        "send": "Envoyer",
+        "sending": "Envoi en cours"
+    },
+    "form": {
+        "text": {
+            "label": "Un petit mot",
+            "placeholder": "Un petit mot…",
+            "errors": {
+                "required": "Écris un mot avant de l'envoyer.",
+                "tooLong": "Ce mot est trop long : 140 signes au plus."
+            }
+        },
+        "photo": {
+            "errors": {
+                "required": "Cette photo est vide. Reprends-la.",
+                "tooHeavy": "Cette photo est trop lourde : 10 Mo au plus."
+            }
+        }
+    },
+    "preview": {
+        "title": "Pour ton âme sœur",
+        "alt": "Aperçu de la photo prise",
+        "promptCaption": "Photo du jour, invitation de {{time}}",
+        "cancel": "Annuler",
+        "retake": "Reprendre",
+        "send": "Envoyer",
+        "sending": "Envoi en cours"
+    },
+    "prompt": {
+        "title": "C'est l'heure de la photo",
+        "issuedAt": "Invitation de {{time}}",
+        "beforeLate": "Encore {{minutes}} min avant « en retard ». Tu peux répondre jusqu'à minuit.",
+        "late": "Elle portera « en retard ». Tu peux répondre jusqu'à minuit.",
+        "partnerAnswered": "Ton âme sœur a envoyé sa photo : envoie la tienne pour la voir.",
+        "partnerWaiting": "Ton âme sœur n'a pas encore envoyé la sienne.",
+        "take": "Prendre ma photo",
+        "answered": "Photo du jour envoyée",
+        "bothAnswered": "Photo du jour : vous l'avez prise tous les deux"
+    },
+    "withdraw": {
+        "title": "Retirer ce message ?",
+        "description": "Il disparaîtra pour nous deux.",
+        "confirm": "Retirer pour nous deux",
+        "withdrawing": "Retrait en cours",
+        "keep": "Garder"
+    },
+    "toast": {
+        "flashMessageSent": "Mot envoyé",
+        "instantPhotoSent": "Photo envoyée",
+        "withdrawn": "Retiré",
+        "flashMessageFailed": "Le mot n'est pas parti",
+        "instantPhotoFailed": "La photo n'est pas partie",
+        "withdrawFailed": "Retrait impossible",
+        "olderFailed": "Impossible de lire les plus anciens",
+        "photoRefused": "Photo refusée"
+    },
+    "unavailable": {
+        "title": "Impossible d'afficher les messages",
+        "refresh": "Réessayer"
+    },
+    "apiErrors": {
+        "MESSAGING_COUPLE_NOT_PAIRED": "Votre couple n'est pas encore formé.",
+        "FLASH_MESSAGE_NOT_FOUND": "Ce mot n'existe plus. Les messages sont mis à jour.",
+        "FLASH_MESSAGE_RESERVED_TO_OWNER": "Seul l'auteur d'un mot peut le retirer.",
+        "FLASH_MESSAGE_TEXT_INVALID": "Ce mot n'est pas valable : de 1 à 140 signes.",
+        "FLASH_MESSAGE_VERSION_CONFLICT": "Ce mot vient de changer. Réessaie.",
+        "INSTANT_PHOTO_NOT_FOUND": "Cette photo n'existe plus. Les messages sont mis à jour.",
+        "INSTANT_PHOTO_RESERVED_TO_OWNER": "Seul l'auteur d'une photo peut la retirer.",
+        "INSTANT_PHOTO_CONTENT_INVALID": "Cette photo n'est pas acceptée : JPEG, PNG, WebP ou HEIC, 10 Mo au plus.",
+        "INSTANT_PHOTO_VERSION_CONFLICT": "Cette photo vient de changer. Réessaie.",
+        "INSTANT_PHOTO_DATA_CORRUPTED": "Cette photo est illisible.",
+        "PHOTO_PROMPT_NOT_FOUND": "L'invitation du jour n'existe pas encore.",
+        "PHOTO_PROMPT_EXPIRED": "L'invitation du jour est passée : minuit a sonné.",
+        "PHOTO_PROMPT_ALREADY_ANSWERED": "Tu as déjà envoyé ta photo du jour.",
+        "PHOTO_PROMPT_VERSION_CONFLICT": "L'invitation du jour vient de changer. Réessaie.",
+        "AUTHENTICATION_SESSION_MISSING": "Votre session a pris fin. Reconnectez-vous.",
+        "AUTHENTICATION_SESSION_INVALID": "Votre session a pris fin. Reconnectez-vous.",
+        "NETWORK_ERROR": "Cocooning ne répond pas pour le moment. Réessayez dans un instant ; si le problème dure, vérifiez que Tailscale est activé.",
+        "INVALID_RESPONSE": "La réponse du serveur est illisible. Réessayez dans un instant.",
+        "VALIDATION_ERROR": "Les informations envoyées sont invalides.",
+        "UNAUTHORIZED": "Votre session a pris fin. Reconnectez-vous.",
+        "FORBIDDEN": "Cette action ne vous est pas permise.",
+        "NOT_FOUND": "Cet élément est introuvable. Les messages sont mis à jour.",
+        "CONFLICT": "Les messages viennent de changer. Réessaie.",
+        "UNKNOWN": "Une erreur inattendue est survenue. Réessayez dans un instant."
+    }
+}
