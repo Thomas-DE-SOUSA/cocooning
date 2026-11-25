@@ -249,4 +249,47 @@ describe('Feature: the cards of the notes of a smart folder (R19 to R22)', () =>
             ]);
         });
     });
+
+    describe('Scenario: R25, the note moves to another smart folder', () => {
+        it('gives its card the new template, keeping the fields of the same name', async () => {
+            const { noteId } = await addedNote(await smartFolder());
+            await setCard(noteId, {
+                status: 'FILLED',
+                fields: [
+                    {
+                        name: 'Adresse',
+                        value: '11 rue Mercière',
+                        isManual: false,
+                    },
+                    { name: 'Cuisine', value: 'Lyonnaise', isManual: false },
+                    { name: 'Prix', value: '25 €', isManual: true },
+                ],
+            });
+            const sorties = folderOf(
+                await folders.createSmart(PARTNER_A, 'Sorties', {
+                    subject: 'Nos sorties',
+                    cardTemplate: ['Prix', 'Ambiance'],
+                }),
+            ).folderId;
+            expect(
+                (await folders.moveNote(PARTNER_B, noteId, 'SHARED', sorties))
+                    .status,
+            ).toBe(200);
+            const { card } = noteDetailOf(await notes.get(PARTNER_A, noteId));
+            expect(card).toMatchObject({
+                status: 'FILLED',
+                fields: [
+                    { name: 'Prix', value: '25 €', isManual: true },
+                    { name: 'Ambiance', value: null, isManual: false },
+                ],
+            });
+            expect(
+                (await folders.moveNote(PARTNER_B, noteId, 'SHARED', null))
+                    .status,
+            ).toBe(200);
+            expect(
+                noteDetailOf(await notes.get(PARTNER_A, noteId)).card?.fields,
+            ).toEqual(card?.fields);
+        });
+    });
 });

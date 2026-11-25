@@ -6,6 +6,7 @@ export * from './note-access.validator';
 export * from './note-card-candidate.validator';
 export * from './note-card-enrichment.service';
 export * from './note-card-precondition.service';
+export * from './note-card-relocation.service';
 export * from './note-card-status.validator';
 export * from './note-precondition.service';
 export * from './note-revocation.service';

@@ -6,6 +6,7 @@ import {
     ListNoteSpacesUseCase,
     MoveFolderUseCase,
     MoveNoteUseCase,
+    NoteCardRelocationService,
     ProposeFolderTemplateUseCase,
     RenameFolderUseCase,
 } from '@cocooning/couple-server-business-logic/notes';
@@ -58,9 +59,12 @@ export const FOLDER_USE_CASES = [
         (d) =>
             new MoveNoteUseCase(
                 d.repository,
+                d.cards,
                 d.preconditions,
                 d.folderPreconditions,
                 d.revocation,
+                new NoteCardRelocationService(d.cards, d.cardContexts),
+                d.unitOfWork,
                 d.clock,
                 d.publishing,
             ),

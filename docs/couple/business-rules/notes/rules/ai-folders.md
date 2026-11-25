@@ -68,7 +68,7 @@ Notre moteur de recherche, sur notre serveur, interroge des moteurs publics avec
 
 Je déplace une fiche dans un autre dossier IA : elle prend la fiche type du nouveau dossier, garde les valeurs des cases de même nom, et « Mettre à jour » remplit les autres. Hors d'un dossier IA, elle garde ses valeurs, sans « Mettre à jour ».
 
-- Dans le code : à venir (lot 2).
+- Dans le code : `MoveNoteUseCase` et `NoteCardRelocationService` : la fiche d'une note rangée dans un dossier IA prend sa fiche type (`NoteCard.adoptTemplate`, `fieldsAdopting` : les cases de même nom, sans tenir compte de la casse, gardent leur valeur et leur marque), dans la même `UnitOfWork` que la note, sans relancer la recherche ; hors d'un dossier IA, la fiche n'est pas touchée, et `RefreshNoteCardUseCase` refuse `FOLDER_NOT_SMART`.
 - Source : proposition de Claude (décision 0052). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ## Cas et exceptions

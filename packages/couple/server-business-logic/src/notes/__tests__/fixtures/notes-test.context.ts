@@ -33,6 +33,7 @@ import { NoteCard } from '../../domain/models/note-card.aggregate';
 import type { CardCandidate } from '../../domain/models/note-card.aggregate.type';
 import { createSmartFolderSettings } from '../../domain/models/smart-folder-settings';
 import { NoteCardEnrichmentService } from '../../domain/services/note-card-enrichment.service';
+import { NoteCardRelocationService } from '../../domain/services/note-card-relocation.service';
 import { NoteCardPreconditionService } from '../../domain/services/note-card-precondition.service';
 import { CardTemplate } from '../../domain/value-objects/card-template.vo';
 import { NoteCardQuery } from '../../domain/value-objects/note-card-query.vo';
@@ -171,9 +172,15 @@ export class NotesTestContext {
     moveNoteUseCase(): MoveNoteUseCase {
         return new MoveNoteUseCase(
             this.noteRepository,
+            this.noteCardRepository,
             this.preconditions,
             this.folderPreconditions,
             new NoteRevocationService(this.noteCollaborationProvider),
+            new NoteCardRelocationService(
+                this.noteCardRepository,
+                this.cardContexts,
+            ),
+            this.unitOfWork,
             this.dateTimeProvider,
             this.eventPublishingService,
         );
