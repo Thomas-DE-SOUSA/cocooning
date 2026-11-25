@@ -79,6 +79,8 @@ export function toNoteCardState(snapshot: NoteCardSnapshot) {
         searchedAt:
             snapshot.searchedAt === null ? null : new Date(snapshot.searchedAt),
         requestedBy: snapshot.requestedBy,
+        // Every save ends a reservation of the background task: a card asked again is offered at once.
+        claimedAt: null,
         updatedAt: new Date(snapshot.metadata.updatedAt),
     };
 }

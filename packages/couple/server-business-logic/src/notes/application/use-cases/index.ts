@@ -7,6 +7,7 @@ export * from './create-note.use-case';
 export * from './delete-folder.use-case';
 export * from './delete-note.use-case';
 export * from './edit-folder-template.use-case';
+export * from './enrich-pending-note-cards.use-case';
 export * from './get-note-space-contents.use-case';
 export * from './get-note.use-case';
 export * from './list-note-spaces.use-case';

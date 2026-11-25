@@ -33,6 +33,11 @@ export class CardContextService {
         });
     }
 
+    // R20, R25: the smart tree of the folder holding a note, or null outside one.
+    findCardContextOf(note: Note): Promise<CardContext | null> {
+        return this.findCardContext(note.coupleId, folderIdOf(note));
+    }
+
     // R20, R25: the smart tree of the folder holding a note.
     loadCardContextOf(note: Note): Promise<CardContext> {
         return this.loadCardContext(note.coupleId, folderIdOf(note));

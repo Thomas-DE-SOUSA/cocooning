@@ -3,6 +3,7 @@ import { AuthenticationServiceModule } from '../authentication';
 import { NotesServiceModule } from './notes-service.module';
 import { NoteCollaborationServer } from './primary/collaboration';
 import { NoteCoupleGuard } from './primary/couple';
+import { NoteCardEnrichmentScheduler } from './primary/scheduler';
 import {
     AddNoteCardController,
     ChooseNoteCardCandidateController,
@@ -52,6 +53,10 @@ import {
         RefreshNoteCardController,
         CorrectNoteCardFieldController,
     ],
-    providers: [NoteCoupleGuard, NoteCollaborationServer],
+    providers: [
+        NoteCoupleGuard,
+        NoteCollaborationServer,
+        NoteCardEnrichmentScheduler,
+    ],
 })
 export class NotesModule {}

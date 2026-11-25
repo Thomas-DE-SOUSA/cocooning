@@ -6,6 +6,8 @@ Dossiers IA (decision 0054) : `FolderPrismaRepository.findLineage` (chemin puis 
 
 Fiches : `NoteCardPrismaRepository` (`saveAll` en un `createMany` et un `UPDATE ... FROM unnest` filtre par couple et version, `note-card-prisma.writer.ts` ; evenements de plusieurs agregats par `appendNoteEventsOfMany` ; arbre de R22 par `readCardsInTree`, requete recursive), mappers `note-card-prisma.mapper.ts` (colonnes JSON relues par Zod, sinon `NOTE_CARD_DATA_CORRUPTED`) et `toNoteCardResponse`, `toNoteDetailResponse` ; use cases des fiches dans `notes-card-use-cases.ts`. Specs E2E : `smart-folders.e2e-spec.ts`, `note-cards.e2e-spec.ts` (`CardRequests`), `note-card-prisma-repository.e2e-spec.ts`, `folder-prisma-lineage.e2e-spec.ts`.
 
+Tache de fond des fiches : `NoteCardEnrichmentScheduler` (`primary/scheduler/`, meme forme que `OutboxRelayScheduler` de `messaging` : `setInterval` de `NOTE_CARD_ENRICHMENT_INTERVAL_MS`, `unref`, coupe par `NOTE_CARD_ENRICHMENT_ENABLED=false`, jamais deux passages a la fois, echec journalise sans arreter l'API) appelle `EnrichPendingNoteCardsUseCase`, construit par `notes-enrichment-use-case.ts` (lit `NOTE_CARD_DAILY_SEARCH_LIMIT`, `NOTE_CARD_ENRICHMENT_BATCH_SIZE`). Reservation par `claimPendingCards` (`note-card-prisma.query.ts`, `FOR UPDATE SKIP LOCKED`, bail `NOTE_CARD_CLAIM_LEASE_MS`), plafond par `NoteCardSearchPrismaCounter` (minuit de Paris converti en UTC dans la requete). En E2E : `NotesTestApp.enrichCards()` appelle `tick()`, spec `note-card-enrichment.e2e-spec.ts`.
+
 Modele a copier pour le prochain contexte du couple (agenda, messages) : `primary/couple/` (garde et decorateur du couple), `test/notes/` (`NotesTestApp`, une spec par route, isolation par couple et par proprietaire).
 
 Contexte metier :

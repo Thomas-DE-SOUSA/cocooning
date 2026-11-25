@@ -33,6 +33,10 @@ const TEST_ENVIRONMENT = {
     WEB_SEARCH_TIMEOUT_MS: '1000',
     NOTE_CARD_GEMINI_API_KEY: '',
     NOTE_CARD_GEMINI_MODEL: 'gemini-e2e-never-called',
+    NOTE_CARD_DAILY_SEARCH_LIMIT: '30',
+    // The specs drive the background task with NoteCardEnrichmentScheduler.tick(), never a timer.
+    NOTE_CARD_ENRICHMENT_ENABLED: 'false',
+    NOTE_CARD_ENRICHMENT_INTERVAL_MS: '10000',
 } as const;
 
 Object.assign(process.env, TEST_ENVIRONMENT);

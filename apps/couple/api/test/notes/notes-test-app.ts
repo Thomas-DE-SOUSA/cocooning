@@ -15,6 +15,7 @@ import { DateTimeProvider } from '@cocooning/shared-kernel/ports';
 import { DeterministicDateTimeProvider } from '@cocooning/shared-kernel/testing';
 import { closeTestApp, createTestApp } from '../shared/app/create-test-app';
 import { TestClient, type TestResponse } from '../shared/app/test-client';
+import { NoteCardEnrichmentScheduler } from '../../src/modules/notes/primary/scheduler';
 import { FakeNoteCardWriter } from './fake-note-card-writer';
 import { FakeWebPageReader, FakeWebSearchProvider } from './fake-web-search';
 import {
@@ -77,6 +78,11 @@ export class NotesTestApp {
             ),
             ...COUPLES.map((couple) => createTestCouple(this.prisma, couple)),
         ]);
+    }
+
+    // One pass of the background task of the cards, on the clock of the test (decision 0054).
+    enrichCards(): Promise<void> {
+        return this.started().app.get(NoteCardEnrichmentScheduler).tick();
     }
 
     async collaborationUrl(): Promise<string> {

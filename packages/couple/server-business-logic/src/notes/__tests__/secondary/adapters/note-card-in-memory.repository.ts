@@ -1,4 +1,5 @@
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
+import { NoteCardStatusEnum } from '@cocooning/couple-shared-kernel/enums';
 import type { DomainEvent } from '@cocooning/shared-kernel/domain';
 import { NoteException } from '../../../domain/exceptions/note.exception';
 import { NoteCard } from '../../../domain/models/note-card.aggregate';
@@ -86,6 +87,24 @@ export class NoteCardInMemoryRepository extends NoteCardRepository {
             )
             .map((note) => note.id);
         return this.findByNoteIds(coupleId, noteIds);
+    }
+
+    // Every couple, oldest request first, as the adapter; the reservation itself is the adapter's concern.
+    override claimPending(limit: number): Promise<ReadonlyArray<NoteCard>> {
+        return Promise.resolve(
+            this.storedSnapshots
+                .filter(
+                    (snapshot) =>
+                        snapshot.status === NoteCardStatusEnum.PENDING,
+                )
+                .sort((left, right) =>
+                    left.metadata.updatedAt.localeCompare(
+                        right.metadata.updatedAt,
+                    ),
+                )
+                .slice(0, limit)
+                .map((snapshot) => this.rebuild(snapshot)),
+        );
     }
 
     private treeOf(

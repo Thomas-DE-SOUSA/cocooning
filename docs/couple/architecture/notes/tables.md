@@ -73,6 +73,7 @@ L'agrégat `NoteCard` (modèle `NoteCard`, fichier `notes-note-card.prisma`, mig
 | `sources` | `JSONB` | Au plus dix liens (R21) |
 | `searched_at` | `TIMESTAMP(3)`, nullable | Date de la dernière recherche aboutie (R21) |
 | `requested_by` | `UUID` | Partenaire qui a demandé la dernière recherche ; la tâche de fond agit en son nom |
+| `claimed_at` | `TIMESTAMP(3)`, nullable | Réservation par la tâche de fond (migration `20261125220000_notes_note_card_search`) ; remise à `null` par chaque sauvegarde, reprise après `NOTE_CARD_CLAIM_LEASE_MS` (cinq minutes) |
 | `version` | `INTEGER` | Verrou optimiste |
 | `created_at`, `updated_at` | `TIMESTAMP(3)` | `EntityMetadata` du domaine |
 
@@ -81,8 +82,24 @@ L'agrégat `NoteCard` (modèle `NoteCard`, fichier `notes-note-card.prisma`, mig
 | `note_card_pkey` | `id` | Clé primaire ; traduite en `NOTE_CARD_VERSION_CONFLICT` sur une sauvegarde périmée |
 | `note_card_couple_id_note_id_key` | `couple_id`, `note_id`, unique | Une fiche par note ; sert aussi la clé étrangère (une note n'est jamais supprimée pour de vrai) |
 | `note_card_note_id_fkey` | `note_id` vers `note.id` | La note existe |
+| `note_card_status_claimed_at_idx` | `status`, `claimed_at` | La réservation de la tâche de fond, entre couples comme le relais de l'outbox (décision 0051) : un `UPDATE ... WHERE id IN (SELECT ... FOR UPDATE SKIP LOCKED)` dans une transaction courte, jamais pendant les recherches |
 
 Une écriture de plusieurs fiches (`saveAll`, R22) se fait en un `createMany` et une seule requête `UPDATE ... FROM unnest(...)` filtrée par couple et version ; les fiches d'un arbre (`findInTree`) se lisent par une requête récursive sur `folder` jointe à `note`, `deleted_at` écrit à chaque niveau.
+
+## `note_card_search`
+
+Une ligne par recherche d'une fiche (modèle `NoteCardSearch`, fichier `notes-note-card-search.prisma`), sans suppression : le plafond de R23 compte les lignes d'un couple depuis minuit à Paris, calculé en UTC dans la requête (`NoteCardSearchPrismaCounter`).
+
+| Colonne | Type | Rôle |
+|---|---|---|
+| `id` | `UUID`, clé primaire | Identifiant technique (`uuid(7)` de Prisma) |
+| `couple_id` | `UUID` | Couple de la recherche |
+| `note_card_id` | `UUID` | Fiche cherchée, sans clé étrangère : le compte survit à la fiche |
+| `searched_at` | `TIMESTAMP(3)` | Instant de la recherche, en UTC |
+
+| Index ou contrainte | Colonnes | Pourquoi |
+|---|---|---|
+| `note_card_search_couple_id_searched_at_idx` | `couple_id`, `searched_at` | Le compte du jour d'un couple |
 
 ## `note_event`
 

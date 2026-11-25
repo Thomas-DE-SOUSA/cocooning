@@ -69,3 +69,9 @@ export const fieldsCorrecting = (
             : field,
     );
 };
+
+// R22: the fields the search must fill, those not corrected by hand.
+export const fieldsToSearch = (
+    fields: ReadonlyArray<CardField>,
+): ReadonlyArray<string> =>
+    fields.filter((field) => !field.isManual).map((field) => field.name);

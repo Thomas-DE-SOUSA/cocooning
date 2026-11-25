@@ -19,4 +19,10 @@ export abstract class NoteCardRepository {
         coupleId: string,
         folderId: string,
     ): Promise<ReadonlyArray<NoteCard>>;
+    // Decision 0054: the background task reserves a few cards « en recherche », of every couple, oldest request first;
+    // a card reserved and not saved again is offered anew once its reservation is over (at least once).
+    abstract claimPending(
+        limit: number,
+        now: Date,
+    ): Promise<ReadonlyArray<NoteCard>>;
 }

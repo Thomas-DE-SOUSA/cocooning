@@ -21,7 +21,7 @@ const updateCards = (
     UPDATE "note_card" AS stored
     SET "status" = changed.status, "query" = changed.query, "fields" = changed.fields::jsonb,
         "candidates" = changed.candidates::jsonb, "sources" = changed.sources::jsonb,
-        "searched_at" = changed.searched_at, "requested_by" = changed.requested_by,
+        "searched_at" = changed.searched_at, "requested_by" = changed.requested_by, "claimed_at" = NULL,
         "updated_at" = changed.updated_at, "version" = stored."version" + 1
     FROM unnest(
         ${snapshots.map(({ coupleId }) => coupleId)}::uuid[],

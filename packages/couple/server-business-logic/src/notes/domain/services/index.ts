@@ -4,6 +4,7 @@ export * from './folder-placement.validator';
 export * from './folder-precondition.service';
 export * from './note-access.validator';
 export * from './note-card-candidate.validator';
+export * from './note-card-enrichment.service';
 export * from './note-card-precondition.service';
 export * from './note-card-status.validator';
 export * from './note-precondition.service';

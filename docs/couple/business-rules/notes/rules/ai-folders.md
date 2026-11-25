@@ -54,14 +54,14 @@ Je corrige une case à la main ; « Mettre à jour » relance la recherche pour 
 
 Le couple fait au plus 30 recherches par jour, tous dossiers confondus. Au-delà, l'app me dit de réessayer demain ; la note est créée quand même.
 
-- Dans le code : à venir (lot 2), plafond dans la configuration.
+- Dans le code : `NoteCardEnrichmentService` compte les recherches du couple sur le jour de Paris (`NoteCardSearchCounter`, table `note_card_search`) avant chaque recherche et passe la fiche en `LIMIT_REACHED` au-delà de `NOTE_CARD_DAILY_SEARCH_LIMIT` (`30`, configuration de l'API) ; `AddNoteCardUseCase` crée la note sans compter ; la proposition d'une fiche type (R17) ne compte pas.
 - Source : proposition de Claude (décision 0052), pour protéger le quota gratuit de l'IA. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R24. Ce qui part chez l'IA
 
 Notre moteur de recherche, sur notre serveur, interroge des moteurs publics avec ce que je tape et le contexte du dossier. Partent chez l'IA le sujet du dossier, les noms des dossiers au-dessus, les cases de la fiche type, ce que je tape et les textes trouvés. Jamais nos notes libres.
 
-- Dans le code : à venir (lot 2).
+- Dans le code : `searchQueryOf` (ce que je tape et les noms des dossiers depuis le dossier IA, vers SearXNG), `noteCardWritingRequestOf` (`NoteCardWritingRequest` : sujet, noms des dossiers, cases à chercher, ce que je tape, résultats et textes des pages), `folderTemplateRequestOf` pour R17 ; le contenu Yjs d'une note n'est jamais lu par ces chemins.
 - Source : décision 0052, [décision 0054](../../../decisions/notes/0054-recherche-des-fiches-searxng-et-gemini.md). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R25. Une fiche déplacée garde ses valeurs
@@ -88,5 +88,7 @@ Je déplace une fiche dans un autre dossier IA : elle prend la fiche type du nou
 | Précision vide ou trop longue | Refusée, `422` `NOTE_CARD_QUERY_INVALID` (R19) |
 | Corriger une case absente de la fiche, ou avec une valeur vide ou trop longue | Refusé, `422` `NOTE_CARD_FIELD_INVALID` (R22) |
 | « Mettre à jour » une fiche hors d'un dossier IA | Refusé, `422` `FOLDER_NOT_SMART` (R25) |
+| Plus de 30 recherches dans le jour de Paris | La fiche passe « à réessayer demain », `LIMIT_REACHED` ; la note reste (R23) |
+| Le moteur de recherche ou l'IA ne répond pas pendant la tâche de fond | La fiche passe `FAILED`, sans détail ; la note reste, « Mettre à jour » réessaie (R20) |
 | Deux écritures de la même fiche en même temps | Refusée, `409` `NOTE_CARD_VERSION_CONFLICT` |
 | L'IA ne répond pas, ou répond hors des règles de R17 | `503` `NOTE_CARD_WRITER_UNAVAILABLE`, sans détail |

@@ -25,7 +25,7 @@ const unavailable = (): NoteException =>
 export class FakeNoteCardWriter extends NoteCardWriter {
     private proposal: FolderTemplateProposal | null = PROPOSED_TEMPLATE;
     private requests: ReadonlyArray<FolderTemplateRequest> = [];
-    private writing: NoteCardWriting | null = null;
+    private writing: NoteCardWriting | Error | null = null;
     private writings: ReadonlyArray<NoteCardWritingRequest> = [];
 
     get cardRequests(): ReadonlyArray<NoteCardWritingRequest> {
@@ -36,8 +36,9 @@ export class FakeNoteCardWriter extends NoteCardWriter {
         this.writing = writing;
     }
 
-    willFailToWrite(): void {
-        this.writing = null;
+    // A failure that is not the unavailable AI: a defect, never turned into a failed card.
+    willBreak(): void {
+        this.writing = new Error('Fake writer defect');
     }
 
     get templateRequests(): ReadonlyArray<FolderTemplateRequest> {
@@ -66,6 +67,7 @@ export class FakeNoteCardWriter extends NoteCardWriter {
     ): Promise<NoteCardWriting> {
         this.writings = [...this.writings, request];
         if (this.writing === null) return Promise.reject(unavailable());
+        if (this.writing instanceof Error) return Promise.reject(this.writing);
         return Promise.resolve(this.writing);
     }
 }

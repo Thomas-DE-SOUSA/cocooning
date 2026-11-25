@@ -1,5 +1,6 @@
 import { Prisma } from '@cocooning/couple-prisma/client';
 import type { PrismaService } from '@cocooning/couple-prisma/nest';
+import { NoteCardStatusEnum } from '@cocooning/couple-shared-kernel/enums';
 import type { NoteCardRow } from '../mappers';
 
 type Transaction = PrismaService['current'];
@@ -27,5 +28,31 @@ export async function readCardsInTree(
           AND "note"."deleted_at" IS NULL AND "note"."folder_id" IN (SELECT "id" FROM "tree")`);
     return tx.noteCard.findMany({
         where: { coupleId, id: { in: rows.map(({ id }) => id) } },
+    });
+}
+
+// Decision 0054: a reservation lasts long enough for a few searches; a card still PENDING after it is offered again.
+export const NOTE_CARD_CLAIM_LEASE_MS = 5 * 60_000;
+
+// Across couples, like the outbox relay (decision 0051): the oldest requests first, the rows another process
+// is reserving skipped, then reserved in the same statement.
+export async function claimPendingCards(
+    tx: Transaction,
+    limit: number,
+    now: Date,
+): Promise<ReadonlyArray<NoteCardRow>> {
+    const expired = new Date(now.getTime() - NOTE_CARD_CLAIM_LEASE_MS);
+    const rows = await tx.$queryRaw<IdRow[]>(Prisma.sql`
+        UPDATE "note_card" SET "claimed_at" = ${now}
+        WHERE "id" IN (
+            SELECT "id" FROM "note_card"
+            WHERE "status" = ${NoteCardStatusEnum.PENDING} AND ("claimed_at" IS NULL OR "claimed_at" < ${expired})
+            ORDER BY "updated_at", "id" LIMIT ${limit}
+            FOR UPDATE SKIP LOCKED
+        )
+        RETURNING "id"`);
+    return tx.noteCard.findMany({
+        where: { id: { in: rows.map(({ id }) => id) } },
+        orderBy: [{ updatedAt: 'asc' }, { id: 'asc' }],
     });
 }

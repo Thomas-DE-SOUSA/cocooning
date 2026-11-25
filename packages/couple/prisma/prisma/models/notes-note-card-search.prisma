@@ -1,0 +1,11 @@
+/// R23: one row per web search of a card, counted per couple and per day of Paris (decision 0054). Append-only.
+model NoteCardSearch {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  coupleId   String   @map("couple_id") @db.Uuid
+  noteCardId String   @map("note_card_id") @db.Uuid
+  searchedAt DateTime @map("searched_at")
+
+  // The searches of a couple from a given instant (core.md rule 27: coupleId leads).
+  @@index([coupleId, searchedAt])
+  @@map("note_card_search")
+}

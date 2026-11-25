@@ -8,7 +8,7 @@ import {
 } from '@cocooning/couple-server-business-logic/notes';
 import { Logger, UnitOfWork } from '@cocooning/shared-kernel/ports';
 import { type NoteCardRow, toNoteCardSnapshot } from '../mappers';
-import { readCardsInTree } from './note-card-prisma.query';
+import { claimPendingCards, readCardsInTree } from './note-card-prisma.query';
 import { writeNoteCards } from './note-card-prisma.writer';
 import { appendNoteEventsOfMany } from './note-event-prisma.writer';
 import { toVersionConflict } from './outbox-version-conflict';
@@ -83,6 +83,23 @@ export class NoteCardPrismaRepository extends NoteCardRepository {
         return this.read(folderId, async (tx) =>
             (await readCardsInTree(tx, coupleId, folderId)).map(toCard),
         );
+    }
+
+    // In its own short transaction: the searches that follow never hold a row lock (decision 0054).
+    override async claimPending(
+        limit: number,
+        now: Date,
+    ): Promise<ReadonlyArray<NoteCard>> {
+        try {
+            const rows = await this.unitOfWork.run(() =>
+                claimPendingCards(this.prismaService.current, limit, now),
+            );
+            return rows.map(toCard);
+        } catch (error) {
+            if (error instanceof NoteException) throw error;
+            this.logger.error('Failed to claim note cards', { error });
+            throw error;
+        }
     }
 
     private async read<T>(

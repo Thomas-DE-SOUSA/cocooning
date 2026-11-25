@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import {
     FolderRepository,
     NoteCardRepository,
+    NoteCardSearchCounter,
     NoteCollaborationProvider,
     NoteContentRepository,
     NoteRepository,
@@ -20,6 +21,7 @@ import {
 import {
     FolderPrismaRepository,
     NoteCardPrismaRepository,
+    NoteCardSearchPrismaCounter,
     NoteContentPrismaRepository,
     NotePrismaRepository,
 } from './secondary/repositories';
@@ -34,6 +36,7 @@ const adapters = [
     { provide: NoteRepository, useClass: NotePrismaRepository },
     { provide: FolderRepository, useClass: FolderPrismaRepository },
     { provide: NoteCardRepository, useClass: NoteCardPrismaRepository },
+    { provide: NoteCardSearchCounter, useClass: NoteCardSearchPrismaCounter },
     { provide: NoteContentRepository, useClass: NoteContentPrismaRepository },
     { provide: PairedCoupleProvider, useClass: PairedCouplePrismaProvider },
     {

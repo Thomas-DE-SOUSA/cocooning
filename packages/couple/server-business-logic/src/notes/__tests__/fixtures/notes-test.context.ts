@@ -16,6 +16,7 @@ import { AddNoteCardUseCase } from '../../application/use-cases/add-note-card.us
 import { ChooseNoteCardCandidateUseCase } from '../../application/use-cases/choose-note-card-candidate.use-case';
 import { CorrectNoteCardFieldUseCase } from '../../application/use-cases/correct-note-card-field.use-case';
 import { CreateFolderUseCase } from '../../application/use-cases/create-folder.use-case';
+import { EnrichPendingNoteCardsUseCase } from '../../application/use-cases/enrich-pending-note-cards.use-case';
 import { RefineNoteCardUseCase } from '../../application/use-cases/refine-note-card.use-case';
 import { RefreshNoteCardUseCase } from '../../application/use-cases/refresh-note-card.use-case';
 import { DeleteFolderUseCase } from '../../application/use-cases/delete-folder.use-case';
@@ -31,6 +32,7 @@ import type { CardFieldValues } from '../../domain/models/card-fields';
 import { NoteCard } from '../../domain/models/note-card.aggregate';
 import type { CardCandidate } from '../../domain/models/note-card.aggregate.type';
 import { createSmartFolderSettings } from '../../domain/models/smart-folder-settings';
+import { NoteCardEnrichmentService } from '../../domain/services/note-card-enrichment.service';
 import { NoteCardPreconditionService } from '../../domain/services/note-card-precondition.service';
 import { CardTemplate } from '../../domain/value-objects/card-template.vo';
 import { NoteCardQuery } from '../../domain/value-objects/note-card-query.vo';
@@ -61,6 +63,7 @@ import { FakeNoteCollaborationProvider } from '../secondary/adapters/fake-note-c
 import { FakePairedCoupleProvider } from '../secondary/adapters/fake-paired-couple.provider';
 import { FakeWebPageReader } from '../secondary/adapters/fake-web-page.reader';
 import { FakeWebSearchProvider } from '../secondary/adapters/fake-web-search.provider';
+import { NoteCardSearchInMemoryCounter } from '../secondary/adapters/note-card-search-in-memory.counter';
 import { NoteCardInMemoryRepository } from '../secondary/adapters/note-card-in-memory.repository';
 import { NoteContentInMemoryRepository } from '../secondary/adapters/note-content-in-memory.repository';
 import { FolderInMemoryRepository } from '../secondary/adapters/folder-in-memory.repository';
@@ -72,6 +75,8 @@ export const COUPLE_ID = 'c0000000-0000-7000-8000-0000000000c1';
 export const OTHER_COUPLE_ID = 'c0000000-0000-7000-8000-0000000000c2';
 export const PARTNER_A = 'a0000000-0000-7000-8000-00000000000a';
 export const PARTNER_B = 'b0000000-0000-7000-8000-00000000000b';
+export const DAILY_SEARCH_LIMIT = 30;
+export const ENRICHMENT_BATCH_SIZE = 3;
 export const STRANGER = 'd0000000-0000-7000-8000-00000000000d';
 export const AS_A: ExecutionContext = {
     coupleId: COUPLE_ID,
@@ -106,6 +111,7 @@ export class NotesTestContext {
     readonly noteCardWriter = new FakeNoteCardWriter();
     readonly webSearchProvider = new FakeWebSearchProvider();
     readonly webPageReader = new FakeWebPageReader();
+    readonly searchCounter = new NoteCardSearchInMemoryCounter();
     readonly eventPublisher = new FakeEventPublisherAdapter();
     readonly logger = new FakeLoggerAdapter();
     private readonly eventPublishingService = new EventPublishingService(
@@ -268,6 +274,27 @@ export class NotesTestContext {
             this.cardContexts,
             this.dateTimeProvider,
             this.eventPublishingService,
+        );
+    }
+
+    enrichPendingNoteCardsUseCase(): EnrichPendingNoteCardsUseCase {
+        return new EnrichPendingNoteCardsUseCase(
+            this.noteCardRepository,
+            new NoteCardEnrichmentService(
+                this.noteCardRepository,
+                this.noteRepository,
+                this.cardContexts,
+                this.searchCounter,
+                {
+                    webSearchProvider: this.webSearchProvider,
+                    webPageReader: this.webPageReader,
+                    noteCardWriter: this.noteCardWriter,
+                },
+                DAILY_SEARCH_LIMIT,
+            ),
+            this.dateTimeProvider,
+            this.eventPublishingService,
+            ENRICHMENT_BATCH_SIZE,
         );
     }
 

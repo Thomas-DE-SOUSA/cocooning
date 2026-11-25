@@ -14,6 +14,7 @@ import {
     ShareNoteUseCase,
 } from '@cocooning/couple-server-business-logic/notes';
 import { CARD_USE_CASES } from './notes-card-use-cases';
+import { enrichPendingNoteCardsUseCase } from './notes-enrichment-use-case';
 import { FOLDER_USE_CASES } from './notes-folder-use-cases';
 import { NotesSecondaryModule } from './notes-secondary.module';
 import { notesUseCase } from './notes-use-case.factory';
@@ -78,6 +79,7 @@ const useCases = [
     ),
     ...FOLDER_USE_CASES,
     ...CARD_USE_CASES,
+    enrichPendingNoteCardsUseCase,
 ];
 
 // Decision 0006: the guard service reading pairing is a provider, injected where the couple of a request is needed.
