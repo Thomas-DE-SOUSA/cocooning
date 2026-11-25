@@ -78,6 +78,22 @@ describe('Feature: the events of the chosen day', () => {
         });
     });
 
+    it.each([
+        [true, 'ME'],
+        [false, 'YOU'],
+    ])(
+        'R11, tells who an event of its author is for, read by its author %s',
+        (isOwner, audience) => {
+            const [item] = presentDayItems(
+                [anEvent({ isOwner, audience: 'OWNER', labelId: null })],
+                '2026-12-05',
+                CREATOR_ID,
+            );
+
+            expect(item).toMatchObject({ audience, labelId: null });
+        },
+    );
+
     it('R7, tells my private event apart', () => {
         const [item] = presentDayItems(
             [MY_PRIVATE_EVENT],

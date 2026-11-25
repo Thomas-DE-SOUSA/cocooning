@@ -11,8 +11,9 @@ import { editCalendarEvent } from '../services/calendar-event-commands.service';
 export async function agendaCalendarEventEditAction(
     calendarEventId: string,
     input: CalendarEventFormInput,
+    isOwner: boolean,
 ): Promise<Result<null, ApiError>> {
-    return editCalendarEvent(calendarEventId, input, {
+    return editCalendarEvent(calendarEventId, input, isOwner, {
         t: await getServerTranslation(AGENDA_NAMESPACE),
         editCalendarEvent: agendaModule().editCalendarEvent,
     });

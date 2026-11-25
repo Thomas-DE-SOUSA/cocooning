@@ -13,6 +13,8 @@ const A_DINNER: CalendarEventForm = {
     startsAt: '20:00',
     endsAt: null,
     isPrivate: false,
+    audience: 'BOTH',
+    labelId: null,
 };
 
 describe('Feature: what saving an edited event sends', () => {
@@ -28,6 +30,11 @@ describe('Feature: what saving an edited event sends', () => {
         ['the description', { description: 'Apporter le dessert' }],
         ['the last day', { endsOn: '2026-12-06' }],
         ['the end hour', { endsAt: '23:00' }],
+        ['who it is for (R11)', { audience: 'YOU' as const }],
+        [
+            'the label (R13)',
+            { labelId: '01936b2e-7c4a-7000-8000-0000000000b1' },
+        ],
     ])('R9, sends the details when %s changed', (_label, change) => {
         const save = presentCalendarEventSave(A_DINNER, {
             ...A_DINNER,

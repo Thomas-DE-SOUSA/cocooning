@@ -22,6 +22,7 @@ export type CalendarEventCommandActions = {
     readonly editCalendarEvent: (
         calendarEventId: string,
         input: CalendarEventFormInput,
+        isOwner: boolean,
     ) => CommandResult;
     readonly shareCalendarEvent: CalendarEventAction;
     readonly makeCalendarEventPrivate: CalendarEventAction;
@@ -53,12 +54,14 @@ export class ServerActionCalendarEventCommandGateway extends CalendarEventComman
     override editCalendarEvent(
         calendarEventId: string,
         form: CalendarEventForm,
+        isOwner: boolean,
     ): CommandResult {
         return runServerAction(
             () =>
                 this.actions.editCalendarEvent(
                     calendarEventId,
                     toCalendarEventFormInput(form),
+                    isOwner,
                 ),
             UNREACHABLE,
         );

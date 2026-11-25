@@ -87,7 +87,7 @@ describe('Feature: the form of an event in the drawer', () => {
             expect(submitted).toEqual([]);
         });
 
-        it('R3, asks for "rien que pour moi"', async () => {
+        it('R3, R11, asks for "rien que pour moi", then for me', async () => {
             const { submitted, user } = renderForm();
 
             await user.type(screen.getByLabelText('Titre'), 'Cadeau');
@@ -96,7 +96,12 @@ describe('Feature: the form of an event in the drawer', () => {
             );
             await submit(user);
 
-            await waitFor(() => expect(submitted[0]?.isPrivate).toBe(true));
+            await waitFor(() =>
+                expect(submitted[0]).toMatchObject({
+                    isPrivate: true,
+                    audience: 'ME',
+                }),
+            );
         });
     });
 

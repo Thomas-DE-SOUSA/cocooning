@@ -23,11 +23,13 @@ const A_STAY: AgendaDayItem = {
     },
     isOwner: true,
     isPrivate: true,
+    audience: 'ME',
+    labelId: '01936b2e-7c4a-7000-8000-0000000000b1',
     color: AuthorColorEnum.TERRACOTTA,
 };
 
 describe('Feature: what the drawer starts from', () => {
-    it('R3, R5, starts a new event on the chosen day, all day and shared', () => {
+    it('R3, R5, R11, starts a new event on the chosen day, all day, shared, for both', () => {
         expect(
             toCalendarEventFormInput(presentNewCalendarEvent('2026-11-24')),
         ).toEqual({
@@ -38,10 +40,12 @@ describe('Feature: what the drawer starts from', () => {
             startsAt: '',
             endsAt: '',
             isPrivate: false,
+            audience: 'BOTH',
+            labelId: null,
         });
     });
 
-    it('edits the whole moment of an event, not the hours of the day shown', () => {
+    it('edits the whole moment of an event, not the hours of the day shown, with who it is for and its label', () => {
         expect(presentCalendarEventOf(A_STAY)).toEqual({
             title: 'Week-end à Annecy',
             description: null,
@@ -50,6 +54,8 @@ describe('Feature: what the drawer starts from', () => {
             startsAt: '18:00',
             endsAt: null,
             isPrivate: true,
+            audience: 'ME',
+            labelId: '01936b2e-7c4a-7000-8000-0000000000b1',
         });
     });
 
