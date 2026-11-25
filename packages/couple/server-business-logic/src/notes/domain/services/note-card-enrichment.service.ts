@@ -13,6 +13,7 @@ import type { NoteCardSearchCounter } from '../ports/note-card-search.counter';
 import type { NoteCardRepository } from '../ports/note-card.repository';
 import type { NoteCardWriter } from '../ports/note-card.writer';
 import type { NoteRepository } from '../ports/note.repository';
+import type { PlaceDirectory } from '../ports/place.directory';
 import type { WebPageReader } from '../ports/web-page.reader';
 import type { WebSearchProvider } from '../ports/web-search.provider';
 import type { CardContextService } from './card-context.service';
@@ -29,10 +30,12 @@ const isUnavailable = (error: unknown): boolean =>
 export type NoteCardSearchPorts = {
     readonly webSearchProvider: WebSearchProvider;
     readonly webPageReader: WebPageReader;
+    readonly placeDirectory: PlaceDirectory;
     readonly noteCardWriter: NoteCardWriter;
 };
 
-// Decision 0054: one card after the other, each through the daily limit, the search, the pages and the AI.
+// Decisions 0054 and 0055: one card after the other, each through the daily limit, the search and OpenStreetMap
+// together, the pages and the AI.
 export class NoteCardEnrichmentService {
     constructor(
         private readonly noteCardRepository: NoteCardRepository,
@@ -95,13 +98,15 @@ export class NoteCardEnrichmentService {
         card: NoteCard,
         context: CardContext,
     ): Promise<NoteCardWriting> {
-        const { webSearchProvider, webPageReader, noteCardWriter } = this.ports;
-        const results = await webSearchProvider.search(
-            searchQueryOf(card, context),
-        );
+        const { webSearchProvider, webPageReader, placeDirectory } = this.ports;
+        const query = searchQueryOf(card, context);
+        const [results, place] = await Promise.all([
+            webSearchProvider.search(query),
+            placeDirectory.findPlace(query),
+        ]);
         const pages = await webPageReader.read(pagesToRead(results));
-        return noteCardWriter.writeCard(
-            noteCardWritingRequestOf(card, context, results, pages),
+        return this.ports.noteCardWriter.writeCard(
+            noteCardWritingRequestOf(card, context, { place, results, pages }),
         );
     }
 

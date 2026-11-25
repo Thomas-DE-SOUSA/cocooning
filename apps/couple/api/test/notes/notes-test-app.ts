@@ -7,6 +7,7 @@ import {
 import { PrismaService } from '@cocooning/couple-prisma/nest';
 import {
     NoteCardWriter,
+    PlaceDirectory,
     WebPageReader,
     WebSearchProvider,
 } from '@cocooning/couple-server-business-logic/notes';
@@ -17,6 +18,7 @@ import { closeTestApp, createTestApp } from '../shared/app/create-test-app';
 import { TestClient, type TestResponse } from '../shared/app/test-client';
 import { NoteCardEnrichmentScheduler } from '../../src/modules/notes/primary/scheduler';
 import { FakeNoteCardWriter } from './fake-note-card-writer';
+import { FakePlaceDirectory } from './fake-place-directory';
 import { FakeWebPageReader, FakeWebSearchProvider } from './fake-web-search';
 import {
     COUPLES,
@@ -31,12 +33,13 @@ const MILLISECONDS_PER_MINUTE = 60_000;
 const withNote = (route: string, noteId: string): string =>
     route.replace(':noteId', noteId);
 
-// The real AppModule on a clock the spec moves, the search engine, the pages and the AI replaced by fakes; reset() seeds the accounts and the two formed couples.
+// The real AppModule on a clock the spec moves, the search engine, the pages, OpenStreetMap and the AI replaced by fakes; reset() seeds the accounts and the two formed couples.
 export class NotesTestApp {
     readonly clock = new DeterministicDateTimeProvider(NOW);
     readonly writer = new FakeNoteCardWriter();
     readonly search = new FakeWebSearchProvider();
     readonly pages = new FakeWebPageReader();
+    readonly places = new FakePlaceDirectory();
     private app: INestApplication | null = null;
     private client: TestClient | null = null;
 
@@ -56,6 +59,7 @@ export class NotesTestApp {
                 { provide: NoteCardWriter, useValue: this.writer },
                 { provide: WebSearchProvider, useValue: this.search },
                 { provide: WebPageReader, useValue: this.pages },
+                { provide: PlaceDirectory, useValue: this.places },
             ],
         });
         this.app = app;
@@ -71,6 +75,7 @@ export class NotesTestApp {
         this.writer.reset();
         this.search.reset();
         this.pages.reset();
+        this.places.reset();
         await truncateAllTables(this.prisma);
         await Promise.all([
             ...PARTNERS.map((userId) =>

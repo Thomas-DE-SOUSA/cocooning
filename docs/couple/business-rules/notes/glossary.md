@@ -15,5 +15,7 @@ Les termes propres aux notes, avec leur nom dans le code. Les termes communs (no
 | **Fiche type** | `CardTemplate` | La liste des cases d'un dossier IA, commune à toutes ses fiches |
 | **Case** | `CardField` | Une information de la fiche type (adresse, prix, horaires) |
 | **Fiche** | `NoteCard` | Les valeurs des cases en haut d'une note d'un dossier IA, avec leurs sources et la date de la recherche |
+| **Lieu** | `Place` | Un restaurant, une boutique, un musée… trouvé sur OpenStreetMap pour compléter une fiche (décision 0055) |
+| **Annuaire des lieux** | `PlaceDirectory` | OpenStreetMap, interrogé par Nominatim avec les mots de la recherche |
 | **Candidat** | `CardCandidate` | Un des éléments possibles quand le nom tapé est ambigu |
 | **Mettre à jour la fiche** | `NoteCard.refresh` | Relancer la recherche en gardant les cases corrigées à la main |

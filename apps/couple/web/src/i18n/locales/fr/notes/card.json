@@ -31,6 +31,7 @@
         "limitReached": "Plafond du jour atteint : réessaie demain.",
         "sources_one": "{{count}} source · recherchée le {{date}}",
         "sources_other": "{{count}} sources · recherchée le {{date}}",
+        "openStreetMapSource": "OpenStreetMap",
         "ourNotes": "Nos notes"
     },
     "correction": {

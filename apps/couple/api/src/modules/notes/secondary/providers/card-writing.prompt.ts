@@ -4,6 +4,7 @@ import {
 } from '@cocooning/couple-shared-kernel/limits';
 import type { NoteCardWritingRequest } from '@cocooning/couple-server-business-logic/notes';
 import { z } from 'zod';
+import { placeTextOf } from './card-writing.place';
 import type { GeminiPrompt } from './gemini-interactions.client';
 
 const CANDIDATE_LABEL_MAX_LENGTH = 120;
@@ -12,13 +13,15 @@ const CANDIDATE_DETAIL_MAX_LENGTH = 200;
 const SYSTEM_INSTRUCTION = [
     'You fill the card of one item in the shared notes of a French couple.',
     'You receive the subject of the folder, the names of the folders above the item, the fields of the card,',
-    'what the couple typed, and the results and page texts of a web search.',
-    'Use only these texts. Never use your own knowledge, never guess, never invent a value or an address.',
+    'what the couple typed, the place found on OpenStreetMap when there is one, and the results and page texts of a',
+    'web search. Use only these texts. Never use your own knowledge, never guess, never invent a value or an address.',
+    'When "openStreetMap" is given and is the item typed, prefer it for the address, the opening hours and the phone,',
+    'and the web texts for the rest; write its opening hours (such as "Mo-Sa 12:00-14:30") in plain French.',
     'If several distinct places or things clearly match what was typed, answer "kind": "CANDIDATES" with',
     `2 to ${CARD_CANDIDATE_MAX_COUNT} candidates (a short "label" and a "detail" telling them apart, such as the city), and empty values.`,
     'Otherwise answer "kind": "VALUES" with one entry per field: its exact "field" name and its "value" in French,',
     `at most ${CARD_FIELD_VALUE_MAX_LENGTH} characters, or null when the texts do not give it; and in "sourceUrls"`,
-    'the addresses of the results or pages you actually used. Answer with the JSON object only.',
+    'the addresses of the results, pages or OpenStreetMap place you actually used. Answer with the JSON object only.',
 ].join(' ');
 
 const RESPONSE_SCHEMA = {
@@ -88,7 +91,8 @@ export const CardWritingAnswerSchema = z.discriminatedUnion('kind', [
 
 export type CardWritingAnswer = z.infer<typeof CardWritingAnswerSchema>;
 
-// R24: the subject, the folders, the fields, what was typed and the texts found; nothing of the couple's notes.
+// R24: the subject, the folders, the fields, what was typed and the texts found, OpenStreetMap first (decision 0055);
+// nothing of the couple's notes.
 export const cardWritingPrompt = (
     request: NoteCardWritingRequest,
 ): GeminiPrompt => ({
@@ -99,6 +103,7 @@ export const cardWritingPrompt = (
         folderNames: request.folderNames,
         fields: request.fieldNames,
         typed: request.query,
+        openStreetMap: placeTextOf(request.place),
         searchResults: request.results,
         pages: request.pages,
     }),

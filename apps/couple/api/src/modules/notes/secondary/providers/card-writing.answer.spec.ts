@@ -10,6 +10,7 @@ const REQUEST: NoteCardWritingRequest = {
     folderNames: ['Restaurants', 'Lyon'],
     fieldNames: ['Adresse', 'Prix'],
     query: 'Chez Paul',
+    place: null,
     results: [{ title: 'T', url: 'https://a.example/', snippet: 'S' }],
     pages: [{ url: 'https://b.example/', text: 'Texte' }],
 };
@@ -23,6 +24,7 @@ describe('Feature: what the AI writes on a card (R19, R21, R24)', () => {
             folderNames: ['Restaurants', 'Lyon'],
             fields: ['Adresse', 'Prix'],
             typed: 'Chez Paul',
+            openStreetMap: null,
             searchResults: REQUEST.results,
             pages: REQUEST.pages,
         });
