@@ -1,10 +1,10 @@
 ---
 nature: produit
-status: proposée
+status: acceptée
 date: 2026-11-25
 deciders: [Thomas De Sousa]
-validated-by: à compléter
-validated-on:
+validated-by: Thomas De Sousa, 2026-11-25
+validated-on: 2026-11-25
 supersedes:
 superseded-by:
 premortem:
@@ -27,6 +27,7 @@ Les notes forment une seule liste ([décision 0039](0039-regles-des-notes.md)). 
 - **Un sous-dossier d'un dossier IA hérite et précise** : il garde la fiche type de son parent et son nom s'ajoute au contexte des recherches. Réponse : « Hérite et précise (Recommandé) ».
 - **Rien n'est inventé** : une information introuvable reste « non trouvé » ; chaque fiche garde ses sources et la date de sa recherche.
 - **L'IA est Gemini, dans son offre gratuite**, derrière un port remplaçable, avec une clé sur un compte Google dédié à Cocooning. Réponses : « J'aimerais plus une clé API gratuite », « j'accepte les risques ».
+- **Les règles proposées par Claude** (un dossier reste dans son espace, son contenu remonte quand on le supprime, les limites, la case corrigée gardée, la fiche déplacée, le plafond de 30 recherches par jour) et « Modifiées récemment » sur l'accueil sont acceptées par « go » le 2026-11-25.
 - **Livraison en deux lots** : lot 1, les espaces et les dossiers classiques, sans IA ; lot 2, les dossiers IA, sans tri des fiches. Ensuite, une par une : Envie → Fait avec l'avis du couple, coller un lien ou partager depuis une autre app, carte des lieux et questions au dossier.
 
 ## Alternatives écartées
