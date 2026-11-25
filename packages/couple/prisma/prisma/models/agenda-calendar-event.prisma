@@ -15,6 +15,8 @@ model CalendarEvent {
   startsAt    String?   @map("starts_at") @db.VarChar(5)
   endsAt      String?   @map("ends_at") @db.VarChar(5)
   visibility  String    @db.VarChar(20)
+  /// Who the event is for, relative to its author: OWNER, PARTNER or BOTH (R11); OWNER when private.
+  audience    String    @db.VarChar(20)
   version     Int       @map("version")
   createdAt   DateTime  @map("created_at")
   updatedAt   DateTime  @map("updated_at")

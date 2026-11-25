@@ -1,4 +1,7 @@
-import { CalendarEventVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    CalendarEventAudienceEnum,
+    CalendarEventVisibilityEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import { z } from 'zod';
 
 // The body of every calendar event action that returns one: the CalendarEventView of the use cases.
@@ -13,6 +16,7 @@ export const CalendarEventResponseSchema = z.object({
     startsAt: z.string().nullable(),
     endsAt: z.string().nullable(),
     visibility: z.enum(Object.values(CalendarEventVisibilityEnum)),
+    audience: z.enum(Object.values(CalendarEventAudienceEnum)),
     updatedAt: z.string(),
 });
 

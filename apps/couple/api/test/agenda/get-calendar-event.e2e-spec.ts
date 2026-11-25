@@ -2,6 +2,7 @@ import { AgendaExceptionCodeEnum } from '@cocooning/couple-contract/agenda';
 import { AgendaTestApp } from './agenda-test-app';
 import {
     DINNER,
+    PRIVATE_DINNER,
     NOW,
     PARTNER_A,
     PARTNER_B,
@@ -38,10 +39,10 @@ describe('Feature: a partner opens one calendar event (R7)', () => {
     });
 
     it('answers 404 to the other partner on a private event, as if it did not exist', async () => {
-        const calendarEventId = await agenda.createdId(PARTNER_A, {
-            ...DINNER,
-            visibility: 'PRIVATE',
-        });
+        const calendarEventId = await agenda.createdId(
+            PARTNER_A,
+            PRIVATE_DINNER,
+        );
         expect((await agenda.get(PARTNER_A, calendarEventId)).status).toBe(200);
         expect(await agenda.get(PARTNER_B, calendarEventId)).toEqual(NOT_FOUND);
         expect(await agenda.get(PARTNER_B, UNKNOWN_CALENDAR_EVENT_ID)).toEqual(

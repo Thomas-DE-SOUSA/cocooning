@@ -1,4 +1,7 @@
-import type { CalendarEventVisibility } from '@cocooning/couple-shared-kernel/enums';
+import type {
+    CalendarEventAudience,
+    CalendarEventVisibility,
+} from '@cocooning/couple-shared-kernel/enums';
 import type { CalendarEvent } from '../../domain/models/calendar-event.aggregate';
 
 export type CalendarEventView = {
@@ -12,10 +15,11 @@ export type CalendarEventView = {
     readonly startsAt: string | null;
     readonly endsAt: string | null;
     readonly visibility: CalendarEventVisibility;
+    readonly audience: CalendarEventAudience;
     readonly updatedAt: Date;
 };
 
-// isOwner tells the reader whether the visibility actions apply to them (R8); the PWA colours the author by ownerId.
+// isOwner tells the reader whether the visibility actions apply to them (R8); the audience is relative to the author, the PWA turns it for the reader (R11).
 export const toCalendarEventView = (
     calendarEvent: CalendarEvent,
     readerId: string,
@@ -32,6 +36,7 @@ export const toCalendarEventView = (
         startsAt: details.startsAt,
         endsAt: details.endsAt,
         visibility: details.visibility,
+        audience: details.audience,
         updatedAt: calendarEvent.updatedAt,
     };
 };

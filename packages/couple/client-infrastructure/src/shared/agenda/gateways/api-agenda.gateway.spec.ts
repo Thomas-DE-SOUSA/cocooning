@@ -5,7 +5,10 @@ import {
     A_SHARED_CALENDAR_EVENT,
 } from '@cocooning/couple-client-business-logic/testing';
 import { AgendaExceptionCodeEnum } from '@cocooning/couple-contract/agenda';
-import { CalendarEventVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    CalendarEventAudienceEnum,
+    CalendarEventVisibilityEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import { fail, ok } from '@cocooning/shared-kernel/utils';
 import { createCoupleHttpConfig } from '../../couple-http-config';
 import { resolveAgendaEndpoints } from '../endpoints/agenda.endpoints';
@@ -22,6 +25,7 @@ const DETAILS = {
     endsOn: null,
     startsAt: '20:00',
     endsAt: '23:00',
+    audience: CalendarEventAudienceEnum.BOTH,
 };
 
 const aGateway = (token: string | null = 'session-token-1') =>

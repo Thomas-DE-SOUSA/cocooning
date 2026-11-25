@@ -2,7 +2,7 @@
 
 Cette page décrit les deux tables PostgreSQL du contexte `agenda` : leurs colonnes, leurs index et leurs contraintes. À lire avant de modifier `packages/couple/prisma/prisma/models/agenda-*.prisma` ou l'adaptateur Prisma de `CalendarEventRepository`.
 
-Les tables naissent avec la migration `20261124133221_agenda_calendar_event` (`packages/couple/prisma/prisma/migrations/`). Les dates techniques sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma ; les jours et les heures d'un événement sont ceux de Paris, sans fuseau ni conversion ([décision 0047](../../decisions/agenda/0047-moments-de-l-agenda-en-heure-de-paris.md)).
+Les tables naissent avec la migration `20261124133221_agenda_calendar_event` (`packages/couple/prisma/prisma/migrations/`) ; la colonne `audience` vient de `20261125230000_agenda_calendar_event_audience`. Les dates techniques sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma ; les jours et les heures d'un événement sont ceux de Paris, sans fuseau ni conversion ([décision 0047](../../decisions/agenda/0047-moments-de-l-agenda-en-heure-de-paris.md)).
 
 ## `calendar_event`
 
@@ -19,6 +19,7 @@ L'agrégat `CalendarEvent` (modèle `CalendarEvent`, fichier `agenda-calendar-ev
 | `ends_on` | `DATE`, nullable | Dernier jour d'un événement de plusieurs jours, `null` pour un seul jour (R5) |
 | `starts_at`, `ends_at` | `VARCHAR(5)`, nullables | Heures `HH:MM` de Paris ; `starts_at` à `null` : toute la journée (R5) |
 | `visibility` | `VARCHAR(20)` | `SHARED` ou `PRIVATE` (`CalendarEventVisibilityEnum`), relu par `parseEnum()` ; une valeur inconnue répond `CALENDAR_EVENT_DATA_CORRUPTED` |
+| `audience` | `VARCHAR(20)` | Pour qui : `OWNER`, `PARTNER` ou `BOTH` (`CalendarEventAudienceEnum`, R11), relu par `parseEnum()` ; une valeur inconnue répond `CALENDAR_EVENT_DATA_CORRUPTED`. La migration l'a rempli depuis `visibility` (`SHARED` donne `BOTH`, `PRIVATE` donne `OWNER`) avant de le rendre obligatoire |
 | `version` | `INTEGER` | Verrou optimiste : 1 à la création, incrémenté par le repository |
 | `created_at`, `updated_at` | `TIMESTAMP(3)` | `EntityMetadata` du domaine, fournies par `DateTimeProvider` |
 | `deleted_at` | `TIMESTAMP(3)`, nullable | Suppression douce (R9) : le modèle figure dans `SOFT_DELETABLE_MODELS` |

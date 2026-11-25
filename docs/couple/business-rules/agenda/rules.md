@@ -88,7 +88,7 @@ Je crée un événement partagé, ou je partage un événement privé : le tél�
 
 À la création ou en le modifiant, je dis si l'événement est pour moi, pour toi ou pour nous deux. Chez l'autre, « pour moi » s'affiche « Toi » et inversement. Un événement « rien que pour moi » est forcément pour moi.
 
-- Dans le code : `CalendarEventAudienceEnum` (`OWNER`, `PARTNER`, `BOTH`, relatif à l'auteur), `CalendarEvent.create` et `edit` ; refus `CALENDAR_EVENT_AUDIENCE_INVALID` pour un événement privé qui n'est pas pour son auteur. La PWA traduit en « Moi », « Toi », « Nous deux » selon qui regarde.
+- Dans le code : `CalendarEventAudienceEnum` (`OWNER`, `PARTNER`, `BOTH`, relatif à l'auteur), `CalendarEvent.create`, `edit` et `makePrivate`, `CalendarEventAudienceValidator.ensureFits` ; refus `CALENDAR_EVENT_AUDIENCE_INVALID` pour un événement privé qui n'est pas pour son auteur, y compris pour rendre privé un événement partagé ; partager garde l'audience. La PWA traduit en « Moi », « Toi », « Nous deux » selon qui regarde.
 - Source : [décision 0056](../../decisions/agenda/0056-pour-qui-et-etiquettes.md). Validée par : Thomas De Sousa, 2026-11-25.
 
 ### R12. Les étiquettes sont communes au couple

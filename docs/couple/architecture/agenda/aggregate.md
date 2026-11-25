@@ -4,19 +4,20 @@ Cette page décrit l'agrégat `CalendarEvent` du contexte `agenda` : son état, 
 
 ## Rôle et limites
 
-`CalendarEvent` porte un événement d'agenda : son couple, son auteur, ses détails (titre, description, moment) et sa visibilité. L'agrégat ne sait pas qui le regarde : la visibilité se filtre dans la requête du repository, si bien que modifier et supprimer n'ont pas à vérifier l'auteur (R9).
+`CalendarEvent` porte un événement d'agenda : son couple, son auteur, ses détails (titre, description, moment, pour qui) et sa visibilité. L'agrégat ne sait pas qui le regarde : la visibilité se filtre dans la requête du repository, si bien que modifier et supprimer n'ont pas à vérifier l'auteur (R9).
 
 ## Comment c'est construit
 
 | Élément | Rôle | Chemin |
 |---|---|---|
-| `CalendarEvent.create(input, now)` | L'auteur devient propriétaire ; visibilité `SHARED`, ou `PRIVATE` quand il coche « rien que pour moi » ; enregistre `CalendarEventCreatedEvent` (R1, R3) | `domain/models/calendar-event.aggregate.ts` |
-| `CalendarEvent.edit(userId, details, now)` | Remplace les détails ; enregistre `CalendarEventEditedEvent` (R9) | idem |
-| `CalendarEvent.share(userId, now)`, `CalendarEvent.makePrivate(userId, now)` | Change la visibilité, auteur seul ; enregistre `CalendarEventSharedEvent` ou `CalendarEventMadePrivateEvent` (R8) | idem |
+| `CalendarEvent.create(input, now)` | L'auteur devient propriétaire ; visibilité `SHARED`, ou `PRIVATE` quand il coche « rien que pour moi » ; refuse un événement privé qui n'est pas pour son auteur ; enregistre `CalendarEventCreatedEvent` (R1, R3, R11) | `domain/models/calendar-event.aggregate.ts` |
+| `CalendarEvent.edit(userId, details, now)` | Remplace les détails ; un événement privé reste pour son auteur ; enregistre `CalendarEventEditedEvent` (R9, R11) | idem |
+| `CalendarEvent.share(userId, now)`, `CalendarEvent.makePrivate(userId, now)` | Change la visibilité, auteur seul ; partager garde l'`audience`, rendre privé demande `OWNER` ; enregistre `CalendarEventSharedEvent` ou `CalendarEventMadePrivateEvent` (R8, R11) | idem |
 | `CalendarEvent.delete(userId, now)` | Suppression douce ; enregistre `CalendarEventDeletedEvent` (R9) | idem |
 | `CalendarEvent.fromSnapshot`, `toSnapshot` | Relecture sans validation, sérialisation en primitives et dates ISO, par `calendarEventPropsFromSnapshot` et `calendarEventSnapshotFromProps` | idem, `domain/models/calendar-event.aggregate.snapshot.ts` |
 | `CalendarEventMoment.create` | `startsOn` vrai jour ; `endsOn` vrai jour après `startsOn` ; `startsAt`, `endsAt` heures `HH:MM` ; `endsAt` seulement avec `startsAt`, et après lui sans `endsOn` (R5) | `domain/value-objects/calendar-event-moment.vo.ts` |
 | `CalendarEventAccessValidator.ensureOwner` | Refuse `CALENDAR_EVENT_RESERVED_TO_OWNER` | `domain/services/calendar-event-access.validator.ts` |
+| `CalendarEventAudienceValidator.ensureFits` | Refuse `CALENDAR_EVENT_AUDIENCE_INVALID` pour un événement privé qui n'est pas `OWNER` | `domain/services/calendar-event-audience.validator.ts` |
 
 ## Événements
 
@@ -40,8 +41,10 @@ Chaque événement porte l'`ExecutionContext` complet ; aucun ne porte le titre,
 | INV-004 | Seul l'auteur change la visibilité (`CALENDAR_EVENT_RESERVED_TO_OWNER`, R8) | agrégat (`ensureOwner`) |
 | INV-005 | L'auteur et le couple d'un événement ne changent jamais | agrégat (propriétés `readonly`) |
 | INV-006 | L'agrégat ne modifie jamais `version` ; il part de 1 et la base l'incrémente | agrégat, repository |
+| INV-007 | Un événement privé est pour son auteur : `audience` vaut `OWNER` à la création, à la modification et pour être rendu privé (`CALENDAR_EVENT_AUDIENCE_INVALID`, R11) | agrégat (`CalendarEventAudienceValidator.ensureFits`) |
 
 ## Décisions liées
 
 - [Décision 0046](../../decisions/agenda/0046-regles-de-l-agenda.md) : règles de l'agenda
+- [Décision 0056](../../decisions/agenda/0056-pour-qui-et-etiquettes.md) : pour qui est un événement, et des étiquettes de couleur
 - [Décision 0047](../../decisions/agenda/0047-moments-de-l-agenda-en-heure-de-paris.md) : jours et heures de Paris, sans instant

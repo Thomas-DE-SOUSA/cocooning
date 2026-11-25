@@ -1,4 +1,5 @@
 import {
+    CalendarEventAudienceEnum,
     type CalendarEventVisibility,
     CalendarEventVisibilityEnum,
 } from '@cocooning/couple-shared-kernel/enums';
@@ -66,7 +67,11 @@ export class AgendaTestFakes {
     ): CalendarEvent {
         return this.givenEventOf(
             context,
-            { title: 'Surprise', ...details },
+            {
+                title: 'Surprise',
+                audience: CalendarEventAudienceEnum.OWNER,
+                ...details,
+            },
             CalendarEventVisibilityEnum.PRIVATE,
         );
     }

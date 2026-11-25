@@ -91,6 +91,7 @@
         "CALENDAR_EVENT_COUPLE_NOT_PAIRED": "Votre couple n'est pas encore formé.",
         "CALENDAR_EVENT_VERSION_CONFLICT": "L'événement vient de changer. Réessayez.",
         "CALENDAR_EVENT_DATA_CORRUPTED": "Les données de l'agenda sont illisibles.",
+        "CALENDAR_EVENT_AUDIENCE_INVALID": "Un événement « rien que pour moi » ne peut être que pour vous.",
         "CALENDAR_LABEL_NOT_FOUND": "Cette étiquette n'existe plus. L'agenda est mis à jour.",
         "CALENDAR_LABEL_NAME_INVALID": "Ce nom n'est pas valable : de 1 à 30 signes.",
         "CALENDAR_LABEL_LIMIT_REACHED": "Vous avez déjà 20 étiquettes. Supprimez-en une pour en créer une autre.",

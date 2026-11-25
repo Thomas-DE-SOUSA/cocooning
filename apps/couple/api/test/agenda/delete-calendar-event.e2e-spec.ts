@@ -4,6 +4,7 @@ import { AgendaTestApp } from './agenda-test-app';
 import {
     DECEMBER,
     DINNER,
+    PRIVATE_DINNER,
     PARTNER_A,
     PARTNER_B,
     STRANGER,
@@ -43,10 +44,10 @@ describe('Feature: a partner deletes a calendar event (R9)', () => {
     });
 
     it('answers 404 to the other partner on a private event, and to another couple', async () => {
-        const calendarEventId = await agenda.createdId(PARTNER_A, {
-            ...DINNER,
-            visibility: 'PRIVATE',
-        });
+        const calendarEventId = await agenda.createdId(
+            PARTNER_A,
+            PRIVATE_DINNER,
+        );
         expect((await agenda.delete(PARTNER_B, calendarEventId)).status).toBe(
             404,
         );

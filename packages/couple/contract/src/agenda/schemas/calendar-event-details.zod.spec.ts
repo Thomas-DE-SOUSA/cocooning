@@ -12,6 +12,7 @@ const DINNER = {
     endsOn: null,
     startsAt: '20:00',
     endsAt: null,
+    audience: 'BOTH',
     visibility: 'SHARED',
 };
 
@@ -53,9 +54,20 @@ describe.each([
         ['a last day that is not a day', { endsOn: '13/12/2026' }],
         ['a start hour that is not an hour', { startsAt: '24:00' }],
         ['an end hour with seconds', { endsAt: '22:00:00' }],
+        ['an unknown audience', { audience: 'FRIENDS' }],
+        ['a missing audience', { audience: undefined }],
     ])('rejects %s', (_label, change) => {
         expect(schema.safeParse({ ...DINNER, ...change }).success).toBe(false);
     });
+
+    it.each([['OWNER'], ['PARTNER'], ['BOTH']])(
+        'accepts the audience %s (R11)',
+        (audience) => {
+            expect(schema.safeParse({ ...DINNER, audience }).success).toBe(
+                true,
+            );
+        },
+    );
 });
 
 describe('Feature: the visibility chosen at creation (R3)', () => {

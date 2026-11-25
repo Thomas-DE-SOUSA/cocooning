@@ -27,6 +27,7 @@ export const calendarEventPropsFromSnapshot = (
             startsAt: snapshot.startsAt,
             endsAt: snapshot.endsAt,
         }),
+        audience: snapshot.audience,
     },
     visibility: snapshot.visibility,
     version: snapshot.version,
@@ -49,6 +50,7 @@ export const calendarEventSnapshotFromProps = ({
     description:
         details.description === null ? null : details.description.value,
     ...details.moment.toSnapshot(),
+    audience: details.audience,
     visibility,
     version,
     metadata: metadata.toSnapshot(),

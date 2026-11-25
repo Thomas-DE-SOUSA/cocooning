@@ -26,6 +26,7 @@ export type CalendarEventBody = {
     readonly endsOn: string | null;
     readonly startsAt: string | null;
     readonly endsAt: string | null;
+    readonly audience: string;
     readonly visibility: string;
 };
 
@@ -37,7 +38,15 @@ export const DINNER: CalendarEventBody = {
     endsOn: null,
     startsAt: '20:00',
     endsAt: '23:00',
+    audience: 'BOTH',
     visibility: 'SHARED',
+};
+
+// R11: an event kept "rien que pour moi" is for its author.
+export const PRIVATE_DINNER: CalendarEventBody = {
+    ...DINNER,
+    audience: 'OWNER',
+    visibility: 'PRIVATE',
 };
 
 // A weekend over two days, all day long, as the edit form sends it and as created shared.
@@ -48,6 +57,7 @@ export const WEEKEND_DETAILS: Omit<CalendarEventBody, 'visibility'> = {
     endsOn: '2026-12-13',
     startsAt: null,
     endsAt: null,
+    audience: 'BOTH',
 };
 export const WEEKEND: CalendarEventBody = {
     ...WEEKEND_DETAILS,

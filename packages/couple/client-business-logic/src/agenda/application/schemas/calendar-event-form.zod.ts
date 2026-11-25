@@ -39,6 +39,3 @@ export type CalendarEventForm = z.output<
 export type CalendarEventFormInput = z.input<
     ReturnType<typeof createCalendarEventFormSchema>
 >;
-
-// What an edit sends: the visibility changes only through share and make private (R8).
-export type CalendarEventDetailsForm = Omit<CalendarEventForm, 'isPrivate'>;
