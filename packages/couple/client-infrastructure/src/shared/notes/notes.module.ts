@@ -1,4 +1,7 @@
 import {
+    AddNoteCardUseCase,
+    ChooseNoteCardCandidateUseCase,
+    CorrectNoteCardFieldUseCase,
     CreateFolderUseCase,
     CreateNoteUseCase,
     DeleteFolderUseCase,
@@ -11,13 +14,17 @@ import {
     MoveFolderUseCase,
     MoveNoteUseCase,
     ProposeFolderTemplateUseCase,
+    RefineNoteCardUseCase,
+    RefreshNoteCardUseCase,
     RenameFolderUseCase,
     RenameNoteUseCase,
 } from '@cocooning/couple-client-business-logic/notes';
 import { createCoupleHttpConfig } from '../couple-http-config';
 import type { SessionTokenProvider } from '../session/session-headers';
+import { resolveNoteCardsEndpoints } from './endpoints/note-cards.endpoints';
 import { resolveNoteFoldersEndpoints } from './endpoints/note-folders.endpoints';
 import { resolveNotesEndpoints } from './endpoints/notes.endpoints';
+import { ApiNoteCardsGateway } from './gateways/api-note-cards.gateway';
 import { ApiNoteFoldersGateway } from './gateways/api-note-folders.gateway';
 import { ApiNotesGateway } from './gateways/api-notes.gateway';
 
@@ -36,6 +43,11 @@ export type NotesModule = {
     readonly moveFolder: MoveFolderUseCase;
     readonly deleteFolder: DeleteFolderUseCase;
     readonly moveNote: MoveNoteUseCase;
+    readonly addNoteCard: AddNoteCardUseCase;
+    readonly chooseNoteCardCandidate: ChooseNoteCardCandidateUseCase;
+    readonly refineNoteCard: RefineNoteCardUseCase;
+    readonly refreshNoteCard: RefreshNoteCardUseCase;
+    readonly correctNoteCardField: CorrectNoteCardFieldUseCase;
 };
 
 // The gateways stay inside; getSessionToken is only called when a use case runs (decision 0036).
@@ -55,6 +67,11 @@ export function createNotesModule(
         httpConfig,
         getSessionToken,
     );
+    const cards = new ApiNoteCardsGateway(
+        resolveNoteCardsEndpoints(apiBaseUrl),
+        httpConfig,
+        getSessionToken,
+    );
     return {
         listNotes: new ListNotesUseCase(notes),
         getNote: new GetNoteUseCase(notes),
@@ -70,5 +87,10 @@ export function createNotesModule(
         moveFolder: new MoveFolderUseCase(folders),
         deleteFolder: new DeleteFolderUseCase(folders),
         moveNote: new MoveNoteUseCase(folders),
+        addNoteCard: new AddNoteCardUseCase(cards),
+        chooseNoteCardCandidate: new ChooseNoteCardCandidateUseCase(cards),
+        refineNoteCard: new RefineNoteCardUseCase(cards),
+        refreshNoteCard: new RefreshNoteCardUseCase(cards),
+        correctNoteCardField: new CorrectNoteCardFieldUseCase(cards),
     };
 }

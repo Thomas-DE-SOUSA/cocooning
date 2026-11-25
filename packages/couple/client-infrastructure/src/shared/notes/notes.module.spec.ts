@@ -1,5 +1,6 @@
 import { FakeFetch } from '@cocooning/client-infrastructure/testing';
 import {
+    A_FILLED_NOTE_CARD,
     A_NOTE_PAGE,
     A_SHARED_FOLDER,
     THE_NOTE_SPACES,
@@ -45,6 +46,22 @@ describe('Feature: the web app builds the notes use cases', () => {
         expect(fakeFetch.calls.map(({ url }) => url)).toEqual([
             'http://api.test/note-spaces',
             `http://api.test/note-folders/${A_SHARED_FOLDER.folderId}`,
+        ]);
+    });
+
+    it('wires the note card use cases to the API (R19 to R22)', async () => {
+        const notes = createNotesModule('http://api.test', 5000, () =>
+            Promise.resolve('session-token-1'),
+        );
+        const noteId = A_FILLED_NOTE_CARD.noteId;
+
+        fakeFetch.givenResponse(200, JSON.stringify(A_FILLED_NOTE_CARD));
+        await expect(notes.refreshNoteCard.execute(noteId)).resolves.toEqual(
+            ok(A_FILLED_NOTE_CARD),
+        );
+
+        expect(fakeFetch.calls.map(({ url }) => url)).toEqual([
+            `http://api.test/notes/${noteId}/card/refresh`,
         ]);
     });
 });
