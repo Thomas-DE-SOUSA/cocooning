@@ -32,6 +32,7 @@ describe('Feature: a partner opens a note (R4)', () => {
                 isOwner: false,
                 title: 'Courses',
                 visibility: 'SHARED',
+                folderId: null,
                 updatedAt: NOW.toISOString(),
             },
         });

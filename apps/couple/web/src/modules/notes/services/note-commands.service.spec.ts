@@ -36,7 +36,14 @@ describe('Feature: note commands sent by the server actions', () => {
         it('sends the trimmed title once', async () => {
             expect(await create({ title: '  Courses ' })).toEqual(ok(null));
             expect(gateway.calls).toEqual([
-                { operation: 'createNote', request: { title: 'Courses' } },
+                {
+                    operation: 'createNote',
+                    request: {
+                        title: 'Courses',
+                        space: 'SHARED',
+                        folderId: null,
+                    },
+                },
             ]);
         });
 

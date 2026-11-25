@@ -35,6 +35,7 @@ describe('Feature: a partner renames a note (R6)', () => {
                 isOwner: false,
                 title: 'Courses du samedi',
                 visibility: 'SHARED',
+                folderId: null,
                 updatedAt: new Date(NOW.getTime() + 60_000).toISOString(),
             },
         });

@@ -6,6 +6,8 @@ model Note {
   /// NOTE_TITLE_MAX_LENGTH of the couple shared kernel (R8).
   title        String    @db.VarChar(120)
   visibility   String    @db.VarChar(20)
+  /// Null at the root of its space (R12); the folder always has the space of the note's visibility (R11).
+  folderId     String?   @map("folder_id") @db.Uuid
   /// Yjs state of the content, written by the real-time channel; null until the first edit.
   contentState Bytes?    @map("content_state")
   version      Int       @map("version")
@@ -13,7 +15,11 @@ model Note {
   updatedAt    DateTime  @map("updated_at")
   deletedAt    DateTime? @map("deleted_at")
 
+  folder Folder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+
   // The list of a couple, most recently changed first (core.md rule 27: coupleId leads).
   @@index([coupleId, updatedAt(sort: Desc)])
+  // The notes of a folder, and those to move up when it is deleted (R16).
+  @@index([coupleId, folderId])
   @@map("note")
 }

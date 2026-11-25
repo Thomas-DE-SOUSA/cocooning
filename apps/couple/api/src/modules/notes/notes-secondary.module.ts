@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import {
+    FolderRepository,
     NoteCollaborationProvider,
     NoteContentRepository,
     NoteRepository,
@@ -11,12 +12,14 @@ import {
 } from './secondary/collaboration';
 import { PairedCouplePrismaProvider } from './secondary/providers';
 import {
+    FolderPrismaRepository,
     NoteContentPrismaRepository,
     NotePrismaRepository,
 } from './secondary/repositories';
 
 const adapters = [
     { provide: NoteRepository, useClass: NotePrismaRepository },
+    { provide: FolderRepository, useClass: FolderPrismaRepository },
     { provide: NoteContentRepository, useClass: NoteContentPrismaRepository },
     { provide: PairedCoupleProvider, useClass: PairedCouplePrismaProvider },
     {

@@ -1,6 +1,7 @@
 export * from './create-test-account';
 export * from './create-test-calendar-events';
 export * from './create-test-couple';
+export * from './create-test-folders';
 export * from './create-test-messages';
 export * from './create-test-notes';
 export * from './read-agenda-events';

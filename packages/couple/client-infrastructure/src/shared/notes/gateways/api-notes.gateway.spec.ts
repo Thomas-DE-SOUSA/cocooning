@@ -49,7 +49,11 @@ describe('Feature: the PWA reaches the notes through the API', () => {
 
         it('creates and renames with the trimmed title', async () => {
             fakeFetch.givenResponse(200, JSON.stringify(A_SHARED_NOTE));
-            await aGateway().createNote({ title: ' Courses ' });
+            await aGateway().createNote({
+                title: ' Courses ',
+                space: 'SHARED',
+                folderId: null,
+            });
             await aGateway().renameNote(NOTE_ID, {
                 title: 'Courses du samedi',
             });
@@ -58,7 +62,11 @@ describe('Feature: the PWA reaches the notes through the API', () => {
                     url: 'http://api.test/notes',
                     method: 'POST',
                     headers: { ...JSON_BODY, ...SESSION_COOKIE },
-                    body: JSON.stringify({ title: 'Courses' }),
+                    body: JSON.stringify({
+                        title: 'Courses',
+                        space: 'SHARED',
+                        folderId: null,
+                    }),
                 },
                 {
                     url: `http://api.test/notes/${NOTE_ID}`,
@@ -124,7 +132,11 @@ describe('Feature: the PWA reaches the notes through the API', () => {
 
     describe('Scenario: a request outside the contract or without session', () => {
         it('refuses an empty title without calling the API', async () => {
-            const result = await aGateway().createNote({ title: ' ' });
+            const result = await aGateway().createNote({
+                title: ' ',
+                space: 'SHARED',
+                folderId: null,
+            });
             expect(result.success === false && result.error.code).toBe(
                 ApiErrorCodeEnum.VALIDATION_ERROR,
             );

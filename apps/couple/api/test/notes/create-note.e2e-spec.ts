@@ -31,6 +31,7 @@ describe('Feature: a partner creates a note (R1, R2)', () => {
                     isOwner: true,
                     title: 'Courses',
                     visibility: 'SHARED',
+                    folderId: null,
                     updatedAt: NOW.toISOString(),
                 },
             });

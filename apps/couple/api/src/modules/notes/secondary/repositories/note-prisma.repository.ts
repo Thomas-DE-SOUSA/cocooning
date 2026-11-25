@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import type { Prisma } from '@cocooning/couple-prisma/client';
 import { PrismaService } from '@cocooning/couple-prisma/nest';
 import {
+    type Folder,
     Note,
     NoteException,
     NoteRepository,
+    type NoteSpaceCounts,
+    visibilityOfSpace,
 } from '@cocooning/couple-server-business-logic/notes';
-import { NoteVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
+import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
+import type { NoteSpace } from '@cocooning/couple-shared-kernel/enums';
 import type {
     OffsetPage,
     OffsetPaginationParams,
@@ -15,18 +18,19 @@ import { Logger, UnitOfWork } from '@cocooning/shared-kernel/ports';
 import { type NoteRow, toNoteSnapshot, WITHOUT_CONTENT } from '../mappers';
 import { appendNoteEvents } from './note-event-prisma.writer';
 import { writeNote } from './note-prisma.writer';
-import { toNoteVersionConflict } from './note-version-conflict';
+import {
+    countNotesByFolder,
+    countNotesBySpace,
+    notesVisibleTo,
+} from './note-prisma.query';
+import { toVersionConflict } from './outbox-version-conflict';
 
 const toNote = (row: NoteRow): Note => Note.fromSnapshot(toNoteSnapshot(row));
 
-// R4: the shared notes of the couple and the partner's own private notes, in the query (core-backend.md rule 12).
-const visibleTo = (
-    coupleId: string,
-    userId: string,
-): Prisma.NoteWhereInput => ({
-    coupleId,
-    OR: [{ visibility: NoteVisibilityEnum.SHARED }, { ownerId: userId }],
-});
+const MOST_RECENT_FIRST = [
+    { updatedAt: 'desc' },
+    { id: 'asc' },
+] as const satisfies ReadonlyArray<Record<string, 'asc' | 'desc'>>;
 
 @Injectable()
 export class NotePrismaRepository extends NoteRepository {
@@ -51,7 +55,10 @@ export class NotePrismaRepository extends NoteRepository {
             });
         } catch (error) {
             if (error instanceof NoteException) throw error;
-            const conflict = toNoteVersionConflict(error);
+            const conflict = toVersionConflict(
+                error,
+                NoteExceptionCodeEnum.NOTE_VERSION_CONFLICT,
+            );
             if (conflict !== null) throw conflict;
             this.logger.error('Failed to save note', {
                 noteId: snapshot.id,
@@ -68,7 +75,7 @@ export class NotePrismaRepository extends NoteRepository {
     ): Promise<Note | null> {
         return this.load({ noteId }, async (notes) => {
             const row = await notes.findFirst({
-                where: { ...visibleTo(coupleId, userId), id: noteId },
+                where: { ...notesVisibleTo(coupleId, userId), id: noteId },
                 omit: WITHOUT_CONTENT,
             });
             return row === null ? null : toNote(row);
@@ -81,13 +88,13 @@ export class NotePrismaRepository extends NoteRepository {
         userId: string,
         { page, pageSize }: OffsetPaginationParams,
     ): Promise<OffsetPage<Note>> {
-        const where = visibleTo(coupleId, userId);
+        const where = notesVisibleTo(coupleId, userId);
         return this.load({ coupleId }, async (notes) => {
             const [rows, total] = await Promise.all([
                 notes.findMany({
                     where,
                     omit: WITHOUT_CONTENT,
-                    orderBy: [{ updatedAt: 'desc' }, { id: 'asc' }],
+                    orderBy: [...MOST_RECENT_FIRST],
                     skip: (page - 1) * pageSize,
                     take: pageSize,
                 }),
@@ -95,6 +102,51 @@ export class NotePrismaRepository extends NoteRepository {
             ]);
             return { items: rows.map(toNote), total, page, pageSize };
         });
+    }
+
+    override findVisibleIn(
+        coupleId: string,
+        userId: string,
+        space: NoteSpace,
+        folderId: string | null,
+    ): Promise<ReadonlyArray<Note>> {
+        return this.load({ coupleId }, async (notes) => {
+            const rows = await notes.findMany({
+                where: {
+                    ...notesVisibleTo(coupleId, userId),
+                    visibility: visibilityOfSpace(space),
+                    folderId,
+                },
+                omit: WITHOUT_CONTENT,
+                orderBy: [...MOST_RECENT_FIRST],
+            });
+            return rows.map(toNote);
+        });
+    }
+
+    override countVisibleByFolder(
+        coupleId: string,
+        userId: string,
+        folders: ReadonlyArray<Folder>,
+    ): Promise<ReadonlyMap<string, number>> {
+        const folderIds = folders.map((folder) => folder.id.getValue());
+        return this.load({ coupleId }, () =>
+            countNotesByFolder(
+                this.prismaService.current,
+                coupleId,
+                userId,
+                folderIds,
+            ),
+        );
+    }
+
+    override countVisibleBySpace(
+        coupleId: string,
+        userId: string,
+    ): Promise<NoteSpaceCounts> {
+        return this.load({ coupleId }, () =>
+            countNotesBySpace(this.prismaService.current, coupleId, userId),
+        );
     }
 
     // Logged by identifiers only: titles belong to the couple (core.md rule 33).

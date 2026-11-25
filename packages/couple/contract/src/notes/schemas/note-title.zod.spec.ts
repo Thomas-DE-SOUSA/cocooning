@@ -7,14 +7,12 @@ describe.each([
     ['rename', RenameNoteRequestSchema],
 ])('Feature: the title sent to %s a note (R8)', (_action, schema) => {
     it('accepts a title without its surrounding spaces', () => {
-        expect(schema.parse({ title: '  Courses ' })).toEqual({
-            title: 'Courses',
-        });
+        expect(schema.parse({ title: '  Courses ' }).title).toBe('Courses');
     });
 
     it('accepts exactly NOTE_TITLE_MAX_LENGTH signs', () => {
         const title = 'a'.repeat(NOTE_TITLE_MAX_LENGTH);
-        expect(schema.parse({ title })).toEqual({ title });
+        expect(schema.parse({ title }).title).toBe(title);
     });
 
     it.each([

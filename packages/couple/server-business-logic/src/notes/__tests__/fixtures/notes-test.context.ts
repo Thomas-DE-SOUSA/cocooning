@@ -1,3 +1,7 @@
+import {
+    type NoteSpace,
+    NoteSpaceEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import { EventPublishingService } from '@cocooning/shared-kernel/application';
 import type { ExecutionContext } from '@cocooning/shared-kernel/domain';
 import {
@@ -5,7 +9,19 @@ import {
     FakeEventPublisherAdapter,
     FakeLoggerAdapter,
     FakeUuidV7GeneratorProvider,
+    InMemoryUnitOfWork,
 } from '@cocooning/shared-kernel/testing';
+import { CreateFolderUseCase } from '../../application/use-cases/create-folder.use-case';
+import { DeleteFolderUseCase } from '../../application/use-cases/delete-folder.use-case';
+import { GetNoteSpaceContentsUseCase } from '../../application/use-cases/get-note-space-contents.use-case';
+import { ListNoteSpacesUseCase } from '../../application/use-cases/list-note-spaces.use-case';
+import { MoveFolderUseCase } from '../../application/use-cases/move-folder.use-case';
+import { MoveNoteUseCase } from '../../application/use-cases/move-note.use-case';
+import { RenameFolderUseCase } from '../../application/use-cases/rename-folder.use-case';
+import { Folder } from '../../domain/models/folder.aggregate';
+import { FolderPreconditionService } from '../../domain/services/folder-precondition.service';
+import { NoteRevocationService } from '../../domain/services/note-revocation.service';
+import { FolderName } from '../../domain/value-objects/folder-name.vo';
 import { AuthorizeNoteDocumentUseCase } from '../../application/use-cases/authorize-note-document.use-case';
 import { GetNoteUseCase } from '../../application/use-cases/get-note.use-case';
 import { LoadNoteDocumentUseCase } from '../../application/use-cases/load-note-document.use-case';
@@ -24,6 +40,7 @@ import { NoteTitle } from '../../domain/value-objects/note-title.vo';
 import { FakeNoteCollaborationProvider } from '../secondary/adapters/fake-note-collaboration.provider';
 import { FakePairedCoupleProvider } from '../secondary/adapters/fake-paired-couple.provider';
 import { NoteContentInMemoryRepository } from '../secondary/adapters/note-content-in-memory.repository';
+import { FolderInMemoryRepository } from '../secondary/adapters/folder-in-memory.repository';
 import { NoteInMemoryRepository } from '../secondary/adapters/note-in-memory.repository';
 
 export const NOW = new Date('2026-11-23T10:00:00.000Z');
@@ -46,13 +63,17 @@ export const AS_STRANGER: ExecutionContext = {
     userId: STRANGER,
 };
 
-// Configures the process-wide UUID generator: call `NoteId.resetForTests()` in afterEach.
+// Configures the process-wide UUID generator, shared by every Uuid subclass: call `NoteId.resetForTests()` in afterEach.
 export class NotesTestContext {
     readonly dateTimeProvider = new DeterministicDateTimeProvider(NOW);
     readonly noteRepository = new NoteInMemoryRepository();
     readonly noteContentRepository = new NoteContentInMemoryRepository(
         this.noteRepository,
     );
+    readonly folderRepository = new FolderInMemoryRepository(
+        this.noteRepository,
+    );
+    readonly unitOfWork = new InMemoryUnitOfWork();
     readonly pairedCoupleProvider = new FakePairedCoupleProvider();
     readonly noteCollaborationProvider = new FakeNoteCollaborationProvider();
     readonly eventPublisher = new FakeEventPublisherAdapter();
@@ -63,6 +84,9 @@ export class NotesTestContext {
     );
     private readonly preconditions = new NotePreconditionService(
         this.noteRepository,
+    );
+    private readonly folderPreconditions = new FolderPreconditionService(
+        this.folderRepository,
     );
 
     constructor() {
@@ -76,6 +100,7 @@ export class NotesTestContext {
     createNoteUseCase(): CreateNoteUseCase {
         return new CreateNoteUseCase(
             this.noteRepository,
+            this.folderPreconditions,
             this.dateTimeProvider,
             this.eventPublishingService,
         );
@@ -101,6 +126,54 @@ export class NotesTestContext {
         return new DeleteNoteUseCase(...this.revokingDependencies());
     }
 
+    moveNoteUseCase(): MoveNoteUseCase {
+        return new MoveNoteUseCase(
+            this.noteRepository,
+            this.preconditions,
+            this.folderPreconditions,
+            new NoteRevocationService(this.noteCollaborationProvider),
+            this.dateTimeProvider,
+            this.eventPublishingService,
+        );
+    }
+
+    createFolderUseCase(): CreateFolderUseCase {
+        return new CreateFolderUseCase(...this.folderMutationDependencies());
+    }
+
+    renameFolderUseCase(): RenameFolderUseCase {
+        return new RenameFolderUseCase(...this.folderMutationDependencies());
+    }
+
+    moveFolderUseCase(): MoveFolderUseCase {
+        return new MoveFolderUseCase(...this.folderMutationDependencies());
+    }
+
+    deleteFolderUseCase(): DeleteFolderUseCase {
+        return new DeleteFolderUseCase(
+            this.folderRepository,
+            this.folderPreconditions,
+            this.unitOfWork,
+            this.dateTimeProvider,
+            this.eventPublishingService,
+        );
+    }
+
+    getNoteSpaceContentsUseCase(): GetNoteSpaceContentsUseCase {
+        return new GetNoteSpaceContentsUseCase(
+            this.folderRepository,
+            this.noteRepository,
+            this.folderPreconditions,
+        );
+    }
+
+    listNoteSpacesUseCase(): ListNoteSpacesUseCase {
+        return new ListNoteSpacesUseCase(
+            this.folderRepository,
+            this.noteRepository,
+        );
+    }
+
     getNoteUseCase(): GetNoteUseCase {
         return new GetNoteUseCase(this.preconditions);
     }
@@ -123,13 +196,19 @@ export class NotesTestContext {
         );
     }
 
-    // A note of the couple, as if already in the database, without events.
-    givenNoteOf(context: ExecutionContext, title = 'Courses'): Note {
+    // A note of the couple, as if already in the database, without events; shared at the root by default.
+    givenNoteOf(
+        context: ExecutionContext,
+        title = 'Courses',
+        folder: Folder | null = null,
+    ): Note {
         const note = Note.create(
             {
                 coupleId: context.coupleId,
                 ownerId: context.userId,
                 title: NoteTitle.create(title),
+                space: folder === null ? NoteSpaceEnum.SHARED : folder.space,
+                folder,
             },
             this.dateTimeProvider.now(),
         );
@@ -149,6 +228,34 @@ export class NotesTestContext {
         return note;
     }
 
+    // A folder of the couple, as if already in the database, without events; in « Partagé » at the root by default.
+    givenFolderOf(
+        context: ExecutionContext,
+        name: string,
+        parent: Folder | null = null,
+        space: NoteSpace = parent === null
+            ? NoteSpaceEnum.SHARED
+            : parent.space,
+    ): Folder {
+        const folder = Folder.create(
+            {
+                coupleId: context.coupleId,
+                ownerId: context.userId,
+                space,
+                parent,
+                name: FolderName.create(name),
+            },
+            this.dateTimeProvider.now(),
+        );
+        folder.clearDomainEvents();
+        this.folderRepository.seed(folder);
+        return folder;
+    }
+
+    givenPrivateFolderOf(context: ExecutionContext, name: string): Folder {
+        return this.givenFolderOf(context, name, null, NoteSpaceEnum.PRIVATE);
+    }
+
     advanceHours(hours: number): void {
         this.dateTimeProvider.advanceBy(hours * MILLISECONDS_PER_HOUR);
     }
@@ -158,6 +265,15 @@ export class NotesTestContext {
             this.noteRepository,
             this.preconditions,
             this.noteCollaborationProvider,
+            this.dateTimeProvider,
+            this.eventPublishingService,
+        ] as const;
+    }
+
+    private folderMutationDependencies() {
+        return [
+            this.folderRepository,
+            this.folderPreconditions,
             this.dateTimeProvider,
             this.eventPublishingService,
         ] as const;

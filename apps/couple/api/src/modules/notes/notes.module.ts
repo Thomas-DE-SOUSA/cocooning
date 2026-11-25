@@ -4,11 +4,18 @@ import { NotesServiceModule } from './notes-service.module';
 import { NoteCollaborationServer } from './primary/collaboration';
 import { NoteCoupleGuard } from './primary/couple';
 import {
+    CreateFolderController,
     CreateNoteController,
+    DeleteFolderController,
     DeleteNoteController,
     GetNoteController,
+    GetNoteSpaceContentsController,
+    ListNoteSpacesController,
     ListNotesController,
     MakeNotePrivateController,
+    MoveFolderController,
+    MoveNoteController,
+    RenameFolderController,
     RenameNoteController,
     ShareNoteController,
 } from './primary/controllers';
@@ -23,6 +30,13 @@ import {
         ShareNoteController,
         MakeNotePrivateController,
         DeleteNoteController,
+        MoveNoteController,
+        ListNoteSpacesController,
+        GetNoteSpaceContentsController,
+        CreateFolderController,
+        RenameFolderController,
+        MoveFolderController,
+        DeleteFolderController,
     ],
     providers: [NoteCoupleGuard, NoteCollaborationServer],
 })

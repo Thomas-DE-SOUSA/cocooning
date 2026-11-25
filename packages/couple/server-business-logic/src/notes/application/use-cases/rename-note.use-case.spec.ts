@@ -45,6 +45,7 @@ describe('Feature: rename a note', () => {
                 isOwner: false,
                 title: 'Courses du samedi',
                 visibility: NoteVisibilityEnum.SHARED,
+                folderId: null,
                 updatedAt: RENAMED_AT,
             });
             expect(ctx.noteRepository.storedSnapshots[0]).toMatchObject({

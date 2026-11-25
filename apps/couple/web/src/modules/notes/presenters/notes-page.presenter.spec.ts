@@ -16,6 +16,7 @@ const A_PRIVATE_NOTE_OF_THE_PARTNER = {
     isOwner: false,
     title: 'Idées cadeaux',
     visibility: NoteVisibilityEnum.PRIVATE,
+    folderId: null,
     updatedAt: '2026-11-23T16:05:00.000Z',
 };
 

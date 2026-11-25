@@ -8,21 +8,21 @@ Comment le couple range ses notes : les deux espaces et les dossiers classiques.
 
 J'ouvre les notes : je vois « Partagé », que nous voyons tous les deux, et « Privé », que je suis seul à voir. Mon âme sœur a son propre « Privé », que je ne vois pas.
 
-- Dans le code : à venir (lot 1 des dossiers).
+- Dans le code : `NoteSpaceEnum` (`@cocooning/couple-shared-kernel/enums`), `ListNoteSpacesUseCase` (accueil, nombre de dossiers et de notes par espace), `GetNoteSpaceContentsUseCase` ; `FolderRepository` et `NoteRepository` filtrent dans la requête : « Partagé », ou propriétaire égale au partenaire.
 - Source : [décision 0052](../../../decisions/notes/0052-dossiers-et-dossiers-ia.md). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R11. Une note prend la visibilité de son espace
 
 Une note rangée dans « Partagé » est partagée, une note rangée dans « Privé » est privée. Je déplace ma note de l'un à l'autre : elle est partagée ou devient privée, comme avec R5. Je ne peux pas ranger la note de l'autre dans mon « Privé ».
 
-- Dans le code : à venir (lot 1) ; la visibilité reste celle de `Note.share` et `Note.makePrivate`.
+- Dans le code : `visibilityOfSpace`, `Note.create`, `Note.moveTo` et `MoveNoteUseCase` ; changer d'espace passe par le changement de visibilité de `Note.share` et `Note.makePrivate` (`NOTE_RESERVED_TO_OWNER`) et ramène la note à la racine de son nouvel espace ; `NoteRevocationService` déconnecte l'autre éditeur d'une note passée dans « Privé ».
 - Source : décision 0052. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R12. Les notes d'avant les dossiers sont à la racine de leur espace
 
 Le jour où les dossiers arrivent, nos notes partagées sont à la racine de « Partagé », mes notes privées à la racine de mon « Privé ».
 
-- Dans le code : à venir (lot 1, migration).
+- Dans le code : la colonne `note.folder_id` arrive nulle (migration `20261125100000_notes_folders`), aucune donnée à reprendre : `null` est la racine de l'espace.
 - Source : décision 0052. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ## Les dossiers
@@ -31,36 +31,38 @@ Le jour où les dossiers arrivent, nos notes partagées sont à la racine de « 
 
 Dans un espace ou dans un dossier, je crée une note ou un dossier. Un dossier a un nom de 1 à 60 signes.
 
-- Dans le code : à venir (lot 1).
+- Dans le code : `CreateFolderUseCase`, `Folder.create`, `FolderName.create`, `FOLDER_NAME_MAX_LENGTH` (`@cocooning/couple-shared-kernel/limits`), `CreateNoteUseCase` ; `FolderPreconditionService.loadDestination` refuse un dossier d'un autre espace (`FOLDER_SPACE_MISMATCH`).
 - Source : décision 0052 ; la limite de 60 signes est une proposition de Claude, acceptée par « go ». Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R14. Un dossier de « Partagé » est à nous deux
 
 Nous créons, renommons, déplaçons et supprimons tous les deux un dossier de « Partagé ». Un dossier de mon « Privé » n'existe que pour moi, comme une note privée (R4).
 
-- Dans le code : à venir (lot 1).
+- Dans le code : `CreateFolderUseCase`, `RenameFolderUseCase`, `MoveFolderUseCase`, `DeleteFolderUseCase`, sans contrôle de propriétaire ; `FolderPreconditionService.loadVisibleFolder` refuse `FOLDER_NOT_FOUND`.
 - Source : décision 0052. Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R15. Un dossier reste dans son espace
 
 Je déplace un dossier dans un autre dossier du même espace. Un dossier ne passe pas de « Partagé » à « Privé » ni l'inverse : il contiendrait les notes de l'autre. Je déplace les notes une à une (R11).
 
-- Dans le code : à venir (lot 1).
+- Dans le code : `Folder.moveTo`, `FolderPlacementValidator.ensureMovable` (`FOLDER_MOVE_INVALID`), sur le chemin du dossier cible lu en une requête (`FolderRepository.findPath`).
 - Source : proposition de Claude (décision 0052). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ### R16. Supprimer un dossier fait remonter son contenu
 
 Je supprime un dossier : ses notes et ses sous-dossiers remontent dans le dossier du dessus. Aucune note ne disparaît avec un dossier, puisque seule sa propriétaire supprime une note (R7).
 
-- Dans le code : à venir (lot 1).
+- Dans le code : `DeleteFolderUseCase`, `Folder.delete` (suppression douce), `FolderRepository.moveContentUp` : une requête pour les sous-dossiers, une pour les notes, dans la même transaction.
 - Source : proposition de Claude (décision 0052). Validée par : Thomas De Sousa, 2026-11-25 (« go »).
 
 ## Cas et exceptions
 
 | Situation | Ce qui s'applique |
 |---|---|
-| Ranger la note de l'autre dans mon « Privé » | Refusé, seule sa propriétaire la rend privée (R5, R11) |
-| Ouvrir, renommer ou supprimer un dossier du « Privé » de l'autre | Refusé, `404`, comme un dossier inexistant (R14) |
-| Déplacer un dossier vers l'autre espace | Refusé (R15) |
-| Déplacer un dossier dans l'un de ses propres sous-dossiers | Refusé |
-| Nom de dossier vide ou trop long | Refusé, `422` (R13) |
+| Ranger la note de l'autre dans mon « Privé » | Refusé, `403` `NOTE_RESERVED_TO_OWNER`, seule sa propriétaire la rend privée (R5, R11) |
+| Ouvrir, renommer, déplacer ou supprimer un dossier du « Privé » de l'autre, ou un dossier inconnu ou supprimé | Refusé, `404` `FOLDER_NOT_FOUND`, comme un dossier inexistant (R14) |
+| Déplacer un dossier vers l'autre espace | Refusé, `422` `FOLDER_MOVE_INVALID` (R15) |
+| Déplacer un dossier en lui-même ou dans l'un de ses propres sous-dossiers | Refusé, `422` `FOLDER_MOVE_INVALID` |
+| Créer, ouvrir ou ranger dans un dossier d'un autre espace que celui demandé | Refusé, `422` `FOLDER_SPACE_MISMATCH` |
+| Nom de dossier vide ou trop long | Refusé, `422` `FOLDER_NAME_INVALID` (R13) |
+| Deux écritures du même dossier en même temps | Refusée, `409` `FOLDER_VERSION_CONFLICT` |
