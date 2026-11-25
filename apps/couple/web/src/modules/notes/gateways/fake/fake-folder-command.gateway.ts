@@ -1,5 +1,6 @@
 import type {
     FolderNameForm,
+    FolderTemplateForm,
     SmartFolderForm,
 } from '@cocooning/couple-client-business-logic/notes';
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
@@ -36,6 +37,17 @@ export class FakeFolderCommandGateway extends FolderCommandGateway {
             destination,
         });
         return answer.success ? ok(A_PROPOSED_TEMPLATE) : answer;
+    }
+
+    override editFolderTemplate(
+        folderId: string,
+        form: FolderTemplateForm,
+    ): Promise<Result<null, ApiError>> {
+        return this.answers.answer({
+            operation: 'editFolderTemplate',
+            folderId,
+            form,
+        });
     }
 
     override renameFolder(

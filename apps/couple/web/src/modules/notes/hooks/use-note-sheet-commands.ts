@@ -1,5 +1,6 @@
 import type {
     FolderNameForm,
+    FolderTemplateForm,
     NoteTitleForm,
     SmartFolderForm,
 } from '@cocooning/couple-client-business-logic/notes';
@@ -58,6 +59,10 @@ export function useNoteSheetCommands({ gateways, onDone, onFailed }: Options) {
         renameFolder: (folderId: string, form: FolderNameForm) =>
             run(NoteSheetCommandEnum.RENAME_FOLDER, () =>
                 folders.renameFolder(folderId, form),
+            ),
+        editFolderTemplate: (folderId: string, form: FolderTemplateForm) =>
+            run(NoteSheetCommandEnum.EDIT_FOLDER_TEMPLATE, () =>
+                folders.editFolderTemplate(folderId, form),
             ),
         deleteFolder: (folderId: string) =>
             run(NoteSheetCommandEnum.DELETE_FOLDER, () =>

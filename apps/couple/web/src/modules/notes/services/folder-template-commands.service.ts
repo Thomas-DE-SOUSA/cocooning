@@ -1,6 +1,8 @@
 import 'server-only';
 import {
     createFolderNameFormSchema,
+    createFolderTemplateFormSchema,
+    type EditFolderTemplateUseCase,
     type ProposeFolderTemplateUseCase,
 } from '@cocooning/couple-client-business-logic/notes';
 import type {
@@ -9,8 +11,14 @@ import type {
 } from '@cocooning/couple-client-business-logic/shared';
 import type { FolderTemplateProposalResponse } from '@cocooning/couple-contract/notes';
 import { fail, type Result } from '@cocooning/shared-kernel/utils';
+import { actOnFolder } from './folder-commands.service';
 import { invalid } from './note-commands.service';
 import { NoteLocationSchema } from './note-location.zod';
+
+export type EditFolderTemplateContext = {
+    readonly t: Translator;
+    readonly editFolderTemplate: EditFolderTemplateUseCase;
+};
 
 export type ProposeFolderTemplateContext = {
     readonly t: Translator;
@@ -32,4 +40,17 @@ export async function proposeFolderTemplate(
         space: destination.data.space,
         parentFolderId: destination.data.folderId,
     });
+}
+
+// R17, R18, R22: either partner corrects the subject and the fields, from any folder of the smart tree.
+export async function editFolderTemplate(
+    folderIdInput: unknown,
+    input: unknown,
+    context: EditFolderTemplateContext,
+): Promise<Result<null, ApiError>> {
+    const form = createFolderTemplateFormSchema(context.t).safeParse(input);
+    if (!form.success) return fail(invalid('Invalid folder template form'));
+    return actOnFolder(folderIdInput, (folderId) =>
+        context.editFolderTemplate.execute(folderId, form.data),
+    );
 }

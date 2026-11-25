@@ -30,6 +30,7 @@ export function useFolderSheet({ gateways, folder, onClose }: Options) {
         pending: commands.pending,
         isBusy: commands.isBusy,
         showRename: () => setStep(FolderSheetStepEnum.RENAME),
+        showEditTemplate: () => setStep(FolderSheetStepEnum.EDIT_TEMPLATE),
         askDeletion: () => setStep(FolderSheetStepEnum.DELETE),
         // An unchanged name closes the sheet without a call.
         rename: (values: FolderNameForm) => {

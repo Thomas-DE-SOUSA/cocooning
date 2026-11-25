@@ -48,6 +48,7 @@ export type NoteSheetTarget =
 export const FolderSheetStepEnum = {
     ACTIONS: 'ACTIONS',
     RENAME: 'RENAME',
+    EDIT_TEMPLATE: 'EDIT_TEMPLATE',
     DELETE: 'DELETE',
 } as const;
 

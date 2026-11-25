@@ -71,13 +71,20 @@
     "folderSheet": {
         "rename": "Renommer",
         "move": "Déplacer",
-        "delete": "Supprimer le dossier"
+        "delete": "Supprimer le dossier",
+        "editTemplate": "Modifier la fiche"
     },
     "renameFolder": {
         "title": "Renommer « {{name}} »",
         "description": "Ses notes et ses dossiers restent dedans.",
         "submit": "Renommer",
         "renaming": "Renommage en cours"
+    },
+    "editTemplate": {
+        "title": "Fiche de « {{name}} »",
+        "description": "Vous la corrigez tous les deux ; les fiches du dossier suivent.",
+        "submit": "Enregistrer la fiche",
+        "saving": "Enregistrement en cours"
     },
     "deletion": {
         "title": "Supprimer « {{name}} » ?",
@@ -154,7 +161,8 @@
         "deleteFolderFailed": "Suppression impossible",
         "moveFailed": "Déplacement impossible",
         "deleteNoteFailed": "Suppression impossible",
-        "proposeFailed": "L'IA ne répond pas, réessaie ou remplis toi-même"
+        "proposeFailed": "L'IA ne répond pas, réessaie ou remplis toi-même",
+        "editTemplateFailed": "Modification de la fiche impossible"
     },
     "unavailable": {
         "title": "Impossible d'afficher ce dossier",

@@ -25,6 +25,7 @@ const aFolder = (folderId: string, name: string): FolderListItem => ({
     folderCount: 0,
     noteCount: 0,
     isSmart: false,
+    template: null,
 });
 const MAISON = aFolder('f1', 'Maison');
 const TRAVAUX = aFolder('f2', 'Travaux');

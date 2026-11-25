@@ -1,5 +1,6 @@
 import type {
     FolderNameForm,
+    FolderTemplateForm,
     SmartFolderForm,
 } from '@cocooning/couple-client-business-logic/notes';
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
@@ -17,6 +18,10 @@ export abstract class FolderCommandGateway {
         form: FolderNameForm,
         destination: NoteLocation,
     ): Promise<Result<FolderTemplateProposalResponse, ApiError>>;
+    abstract editFolderTemplate(
+        folderId: string,
+        form: FolderTemplateForm,
+    ): Promise<Result<null, ApiError>>;
     abstract renameFolder(
         folderId: string,
         form: FolderNameForm,

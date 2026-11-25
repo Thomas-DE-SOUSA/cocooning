@@ -55,6 +55,7 @@ describe('Feature: the screen of a space or a folder (R10, R14)', () => {
                         folderCount: 0,
                         noteCount: 2,
                         isSmart: false,
+                        template: null,
                     },
                 ],
                 notes: [

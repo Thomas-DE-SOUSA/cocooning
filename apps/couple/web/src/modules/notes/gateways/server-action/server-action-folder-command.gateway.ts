@@ -1,5 +1,6 @@
 import type {
     FolderNameForm,
+    FolderTemplateForm,
     SmartFolderForm,
 } from '@cocooning/couple-client-business-logic/notes';
 import {
@@ -24,6 +25,10 @@ export type FolderCommandActions = {
         form: FolderNameForm,
         destination: NoteLocation,
     ) => Proposal;
+    readonly editFolderTemplate: (
+        folderId: string,
+        form: FolderTemplateForm,
+    ) => Answer;
     readonly renameFolder: (folderId: string, form: FolderNameForm) => Answer;
     readonly deleteFolder: (folderId: string) => Answer;
     readonly moveFolder: (
@@ -59,6 +64,16 @@ export class ServerActionFolderCommandGateway extends FolderCommandGateway {
     ): Proposal {
         return runServerAction(
             () => this.actions.proposeFolderTemplate(form, destination),
+            UNREACHABLE,
+        );
+    }
+
+    override editFolderTemplate(
+        folderId: string,
+        form: FolderTemplateForm,
+    ): Answer {
+        return runServerAction(
+            () => this.actions.editFolderTemplate(folderId, form),
             UNREACHABLE,
         );
     }

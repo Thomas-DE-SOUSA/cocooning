@@ -6,6 +6,7 @@ import { notesCardRefreshAction } from '../actions/notes-card-refresh.action';
 import { notesFolderCreateAction } from '../actions/notes-folder-create.action';
 import { notesFolderDeleteAction } from '../actions/notes-folder-delete.action';
 import { notesFolderMoveAction } from '../actions/notes-folder-move.action';
+import { notesFolderTemplateAction } from '../actions/notes-folder-template.action';
 import { notesFolderProposeAction } from '../actions/notes-folder-propose.action';
 import { notesFolderRenameAction } from '../actions/notes-folder-rename.action';
 import { notesNoteCreateAction } from '../actions/notes-note-create.action';
@@ -35,6 +36,7 @@ export const folderCommandGateway: FolderCommandGateway =
     new ServerActionFolderCommandGateway({
         createFolder: notesFolderCreateAction,
         proposeFolderTemplate: notesFolderProposeAction,
+        editFolderTemplate: notesFolderTemplateAction,
         renameFolder: notesFolderRenameAction,
         deleteFolder: notesFolderDeleteAction,
         moveFolder: notesFolderMoveAction,

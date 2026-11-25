@@ -4,6 +4,12 @@ import type { NoteCardContext } from './note-card-context.view-model';
 import type { NoteRowItem } from './note-card-line.view-model';
 import type { NoteLocation, NotePlace } from './note-place.view-model';
 
+// R17, R18: the subject and the fields a smart folder reads, its own or those of the smart folder above it.
+export type FolderTemplate = {
+    readonly subject: string;
+    readonly fields: readonly string[];
+};
+
 export type FolderListItem = {
     readonly folderId: string;
     readonly name: string;
@@ -12,6 +18,7 @@ export type FolderListItem = {
     readonly noteCount: number;
     // R17: a smart folder completes what is added to it, with the « IA » badge.
     readonly isSmart: boolean;
+    readonly template: FolderTemplate | null;
 };
 
 export const NoteSpaceStepEnum = {

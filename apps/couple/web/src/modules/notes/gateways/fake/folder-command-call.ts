@@ -1,5 +1,6 @@
 import type {
     FolderNameForm,
+    FolderTemplateForm,
     SmartFolderForm,
 } from '@cocooning/couple-client-business-logic/notes';
 import type { NoteLocation } from '../../view-models/note-place.view-model';
@@ -14,6 +15,11 @@ export type FolderCommandCall =
           readonly operation: 'proposeFolderTemplate';
           readonly form: FolderNameForm;
           readonly destination: NoteLocation;
+      }
+    | {
+          readonly operation: 'editFolderTemplate';
+          readonly folderId: string;
+          readonly form: FolderTemplateForm;
       }
     | {
           readonly operation: 'renameFolder';

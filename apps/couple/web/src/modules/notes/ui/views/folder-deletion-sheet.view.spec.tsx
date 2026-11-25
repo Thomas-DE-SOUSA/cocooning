@@ -11,6 +11,7 @@ const MAISON: FolderListItem = {
     folderCount: 1,
     noteCount: 4,
     isSmart: false,
+    template: null,
 };
 
 function renderSheet(isPending: boolean) {

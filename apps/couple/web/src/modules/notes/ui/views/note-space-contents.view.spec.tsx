@@ -13,6 +13,7 @@ const MAISON: FolderListItem = {
     folderCount: 1,
     noteCount: 4,
     isSmart: false,
+    template: null,
 };
 const COURSES: NoteRowItem = {
     noteId: 'n1',

@@ -6,11 +6,13 @@ import { ServerActionFolderCommandGateway } from './server-action-folder-command
 
 const FOLDER_ID = '01936b2e-7c4a-7000-8000-0000000000e1';
 const SHARED_ROOT = { space: NoteSpaceEnum.SHARED, folderId: null };
+const TEMPLATE = { subject: 'Nos restos', fields: ['Adresse'] };
 const rejects = () => Promise.reject(new TypeError('Failed to fetch'));
 
 const REJECTING = new ServerActionFolderCommandGateway({
     createFolder: rejects,
     proposeFolderTemplate: rejects,
+    editFolderTemplate: rejects,
     renameFolder: rejects,
     deleteFolder: rejects,
     moveFolder: rejects,
@@ -29,6 +31,7 @@ describe('Feature: folder commands through the server actions', () => {
                 sent.push(input);
                 return Promise.resolve(ok(A_PROPOSED_TEMPLATE));
             },
+            editFolderTemplate: record,
             renameFolder: record,
             deleteFolder: record,
             moveFolder: record,
@@ -40,6 +43,7 @@ describe('Feature: folder commands through the server actions', () => {
         await expect(
             gateway.proposeFolderTemplate({ name: 'Restos' }, SHARED_ROOT),
         ).resolves.toEqual(ok(A_PROPOSED_TEMPLATE));
+        await gateway.editFolderTemplate(FOLDER_ID, TEMPLATE);
         await gateway.renameFolder(FOLDER_ID, { name: 'Travaux' });
         await gateway.deleteFolder(FOLDER_ID);
         await gateway.moveFolder(FOLDER_ID, null);
@@ -47,6 +51,7 @@ describe('Feature: folder commands through the server actions', () => {
         expect(sent).toEqual([
             [{ name: 'Maison' }, SHARED_ROOT],
             [{ name: 'Restos' }, SHARED_ROOT],
+            [FOLDER_ID, TEMPLATE],
             [FOLDER_ID, { name: 'Travaux' }],
             [FOLDER_ID],
             [FOLDER_ID, null],
@@ -61,6 +66,10 @@ describe('Feature: folder commands through the server actions', () => {
         [
             'proposeFolderTemplate',
             () => REJECTING.proposeFolderTemplate({ name: 'M' }, SHARED_ROOT),
+        ],
+        [
+            'editFolderTemplate',
+            () => REJECTING.editFolderTemplate(FOLDER_ID, TEMPLATE),
         ],
         [
             'renameFolder',
