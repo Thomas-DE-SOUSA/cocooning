@@ -77,23 +77,14 @@ describe('Feature: the PWA reaches the notes through the API', () => {
             ]);
         });
 
-        it.each([
-            ['opens', 'getNote', 'GET', `/notes/${NOTE_ID}`],
-            ['shares', 'shareNote', 'POST', `/notes/${NOTE_ID}/share`],
-            [
-                'makes private',
-                'makeNotePrivate',
-                'POST',
-                `/notes/${NOTE_ID}/make-private`,
-            ],
-        ] as const)('%s a note', async (_label, operation, method, path) => {
+        it('opens a note', async () => {
             fakeFetch.givenResponse(200, JSON.stringify(A_SHARED_NOTE));
-            await expect(aGateway()[operation](NOTE_ID)).resolves.toEqual(
+            await expect(aGateway().getNote(NOTE_ID)).resolves.toEqual(
                 ok(A_SHARED_NOTE),
             );
             expect(fakeFetch.calls[0]).toMatchObject({
-                url: `http://api.test${path}`,
-                method,
+                url: `http://api.test/notes/${NOTE_ID}`,
+                method: 'GET',
             });
         });
 

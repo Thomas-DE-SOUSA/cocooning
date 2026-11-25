@@ -1,9 +1,6 @@
 import { ApiErrorCodeEnum } from '../../../shared/api-error';
 import { fail, ok } from '@cocooning/shared-kernel/utils';
-import {
-    NoteSpaceEnum,
-    NoteVisibilityEnum,
-} from '@cocooning/couple-shared-kernel/enums';
+import { NoteSpaceEnum } from '@cocooning/couple-shared-kernel/enums';
 import {
     A_NOTE_PAGE,
     A_SHARED_NOTE,
@@ -13,9 +10,7 @@ import { CreateNoteUseCase } from './create-note.use-case';
 import { DeleteNoteUseCase } from './delete-note.use-case';
 import { GetNoteUseCase } from './get-note.use-case';
 import { ListNotesUseCase } from './list-notes.use-case';
-import { MakeNotePrivateUseCase } from './make-note-private.use-case';
 import { RenameNoteUseCase } from './rename-note.use-case';
-import { ShareNoteUseCase } from './share-note.use-case';
 
 const NOTE_ID = A_SHARED_NOTE.noteId;
 const FOLDER_ID = '01936b2e-7c4a-7000-8000-0000000000e1';
@@ -79,21 +74,12 @@ describe('Feature: the notes of the couple from the PWA', () => {
         );
     });
 
-    it('shares, makes private and deletes a note (R5, R7)', async () => {
-        await new ShareNoteUseCase(gateway).execute(NOTE_ID);
-        const madePrivate = await new MakeNotePrivateUseCase(gateway).execute(
-            NOTE_ID,
-        );
+    it('deletes a note (R7)', async () => {
         await expect(
             new DeleteNoteUseCase(gateway).execute(NOTE_ID),
         ).resolves.toEqual(ok(null));
-        expect(madePrivate).toEqual(
-            ok({ ...A_SHARED_NOTE, visibility: NoteVisibilityEnum.PRIVATE }),
-        );
-        expect(gateway.calls.map(({ operation }) => operation)).toEqual([
-            'shareNote',
-            'makeNotePrivate',
-            'deleteNote',
+        expect(gateway.calls).toEqual([
+            { operation: 'deleteNote', noteId: NOTE_ID },
         ]);
     });
 

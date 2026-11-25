@@ -1,6 +1,6 @@
 # Notes
 
-Les notes du couple depuis la PWA : lister une page, creer dans un espace et un dossier, renommer, partager, rendre privee, supprimer, deplacer ; les espaces « Partage » et « Prive » et leurs dossiers : lire un espace ou un dossier, creer, renommer, deplacer, supprimer un dossier (decision 0052). Le contenu edite a deux passe par le canal temps reel, hors de ce paquet (decision 0040).
+Les notes du couple depuis la PWA : lister une page, ouvrir, creer dans un espace et un dossier, renommer, supprimer, deplacer (le deplacement vers l'autre espace partage la note ou la rend privee, R11 ; plus de commande de partage dans la PWA, decision 0053) ; les espaces « Partage » et « Prive » et leurs dossiers : lire un espace ou un dossier, creer, renommer, deplacer, supprimer un dossier (decision 0052). Le contenu edite a deux passe par le canal temps reel, hors de ce paquet (decision 0040).
 
 ## A lire avant de commencer
 
