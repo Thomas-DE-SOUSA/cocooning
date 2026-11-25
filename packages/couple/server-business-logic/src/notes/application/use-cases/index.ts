@@ -1,4 +1,7 @@
+export * from './add-note-card.use-case';
 export * from './authorize-note-document.use-case';
+export * from './choose-note-card-candidate.use-case';
+export * from './correct-note-card-field.use-case';
 export * from './create-folder.use-case';
 export * from './create-note.use-case';
 export * from './delete-folder.use-case';
@@ -13,6 +16,8 @@ export * from './make-note-private.use-case';
 export * from './move-folder.use-case';
 export * from './move-note.use-case';
 export * from './propose-folder-template.use-case';
+export * from './refine-note-card.use-case';
+export * from './refresh-note-card.use-case';
 export * from './rename-folder.use-case';
 export * from './rename-note.use-case';
 export * from './save-note-document.use-case';

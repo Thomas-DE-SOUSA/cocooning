@@ -1,7 +1,11 @@
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
 import { NoteException } from '../exceptions/note.exception';
 import { type CardContext, cardContextOf } from '../models/card-context';
+import type { Note } from '../models/note.aggregate';
 import type { FolderRepository } from '../ports/folder.repository';
+
+const folderIdOf = (note: Note): string | null =>
+    note.folderId === null ? null : note.folderId.getValue();
 
 export class CardContextService {
     constructor(private readonly folderRepository: FolderRepository) {}
@@ -27,5 +31,10 @@ export class CardContextService {
             code: NoteExceptionCodeEnum.FOLDER_NOT_SMART,
             message: 'Not in a smart folder',
         });
+    }
+
+    // R20, R25: the smart tree of the folder holding a note.
+    loadCardContextOf(note: Note): Promise<CardContext> {
+        return this.loadCardContext(note.coupleId, folderIdOf(note));
     }
 }

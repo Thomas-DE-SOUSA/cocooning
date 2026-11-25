@@ -45,6 +45,7 @@ describe('Feature: open a space or one of its folders (R10, R14)', () => {
             await expect(open(AS_A, NoteSpaceEnum.SHARED)).resolves.toEqual({
                 space: NoteSpaceEnum.SHARED,
                 path: [],
+                cardContext: null,
                 folders: [
                     {
                         folderId: restaurants.id.getValue(),
@@ -80,6 +81,7 @@ describe('Feature: open a space or one of its folders (R10, R14)', () => {
                         visibility: NoteVisibilityEnum.SHARED,
                         folderId: null,
                         updatedAt: NOW,
+                        card: null,
                     },
                 ],
             });
@@ -115,6 +117,7 @@ describe('Feature: open a space or one of its folders (R10, R14)', () => {
             expect(ofB).toEqual({
                 space: NoteSpaceEnum.PRIVATE,
                 path: [],
+                cardContext: null,
                 folders: [],
                 notes: [],
             });

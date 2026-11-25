@@ -1,10 +1,10 @@
-# Agrégats Note et Folder
+# Agrégats Note, Folder et NoteCard
 
-Cette page décrit les agrégats `Note` et `Folder` du contexte `notes` : leur état, leurs transitions et les invariants qu'ils garantissent. À lire avant de toucher à `note.aggregate.ts` ou `folder.aggregate.ts`.
+Cette page décrit les agrégats `Note`, `Folder` et `NoteCard` du contexte `notes` : leur état, leurs transitions et les invariants qu'ils garantissent. À lire avant de toucher à `note.aggregate.ts`, `folder.aggregate.ts` ou `note-card.aggregate.ts`.
 
 ## Rôle et limites
 
-`Note` porte les métadonnées d'une note : son couple, sa propriétaire, son titre, sa visibilité et son dossier (`null` à la racine de son espace). `Folder` porte un dossier ([décision 0052](../../decisions/notes/0052-dossiers-et-dossiers-ia.md)) : son couple, sa créatrice, son espace, son genre (`FolderKindEnum`, classique ou IA), son dossier parent, son nom et, en haut d'un arbre IA seulement, son sujet et sa fiche type (`SmartFolderSettings`, R17, R18). Un espace n'est pas un agrégat : « Partagé » et « Privé » sont les valeurs de `NoteSpaceEnum`, et l'espace d'une note se lit dans sa visibilité (`visibilityOfSpace`, `spaceOfVisibility`, `domain/models/note-space.ts`). Le contenu riche est un document Yjs à part, synchronisé par le canal temps réel ([décision 0040](../../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md)). L'agrégat ne sait pas qui le regarde : la visibilité se filtre dans la requête du repository.
+`Note` porte les métadonnées d'une note : son couple, sa propriétaire, son titre, sa visibilité et son dossier (`null` à la racine de son espace). `Folder` porte un dossier ([décision 0052](../../decisions/notes/0052-dossiers-et-dossiers-ia.md)) : son couple, sa créatrice, son espace, son genre (`FolderKindEnum`, classique ou IA), son dossier parent, son nom et, en haut d'un arbre IA seulement, son sujet et sa fiche type (`SmartFolderSettings`, R17, R18). `NoteCard` porte la fiche d'une note d'un dossier IA ([décision 0054](../../decisions/notes/0054-recherche-des-fiches-searxng-et-gemini.md)) : sa note, son statut (`NoteCardStatusEnum`), ce que le couple a tapé (`NoteCardQuery`), ses cases (`CardField` : nom, valeur ou `null` pour « non trouvé », marque `isManual`), ses candidats, ses sources, la date de sa recherche et la partenaire qui l'a demandée. Un espace n'est pas un agrégat : « Partagé » et « Privé » sont les valeurs de `NoteSpaceEnum`, et l'espace d'une note se lit dans sa visibilité (`visibilityOfSpace`, `spaceOfVisibility`, `domain/models/note-space.ts`). Le contenu riche est un document Yjs à part, synchronisé par le canal temps réel ([décision 0040](../../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md)). L'agrégat ne sait pas qui le regarde : la visibilité se filtre dans la requête du repository.
 
 ## Comment c'est construit
 
@@ -23,6 +23,11 @@ Cette page décrit les agrégats `Note` et `Folder` du contexte `notes` : leur �
 | `Folder.rename(userId, name, now)` | Change le nom ; enregistre `FolderRenamedEvent` (R13, R14) | idem |
 | `Folder.moveTo(userId, parent, parentPath, now)` | Change le dossier parent, dans le même espace, jamais en lui-même ni sous l'un de ses sous-dossiers ; enregistre `FolderMovedEvent` (R15) | idem |
 | `Folder.delete(userId, now)` | Suppression douce ; le contenu remonte par `FolderRepository.moveContentUp` ; enregistre `FolderDeletedEvent` (R16) | idem |
+| `NoteCard.create(input, now)` | La fiche d'une note ajoutée par son nom, `PENDING`, une case vide par case de la fiche type ; enregistre `NoteCardRequestedEvent` (R19, R20) | `domain/models/note-card.aggregate.ts` |
+| `NoteCard.chooseCandidate`, `refine`, `refresh` | Relancent la recherche (`PENDING`) avec un candidat, une précision, ou la fiche type du dossier en gardant les cases corrigées ; refusés pendant une recherche (`NOTE_CARD_STATUS_INVALID`) ; enregistrent `NoteCardRequestedEvent` (R19, R22) | idem |
+| `NoteCard.recordCandidates`, `recordResult`, `fail`, `markLimitReached` | Fin d'une recherche, depuis `PENDING` seulement : `CHOOSING`, `FILLED`, `FAILED`, `LIMIT_REACHED` ; enregistrent `NoteCardSearchedEvent` (R19 à R23) | idem |
+| `NoteCard.correctField` | Une case corrigée à la main (`isManual`) ; enregistre `NoteCardCorrectedEvent` (R22) | idem |
+| `NoteCard.adoptTemplate`, `applyEditedTemplate` | La fiche prend une fiche type en gardant les cases de même nom ; la seconde relance une fiche remplie qui gagne une case ; enregistrent `NoteCardTemplateAdoptedEvent` (R22, R25) | idem |
 | `FolderPlacementValidator.ensureInSpace`, `ensureMovable` | Refusent `FOLDER_SPACE_MISMATCH` et `FOLDER_MOVE_INVALID` | `domain/services/folder-placement.validator.ts` |
 
 ## Événements
@@ -37,11 +42,15 @@ Cette page décrit les agrégats `Note` et `Folder` du contexte `notes` : leur �
 | `NoteMovedEvent` | `notes.note.moved` | `folderId` (`null` à la racine) |
 | `FolderCreatedEvent` | `notes.folder.created` | `ownerId`, `space`, `kind`, `parentFolderId` |
 | `FolderTemplateEditedEvent` | `notes.folder.template-edited` | aucune (`null`) |
+| `NoteCardRequestedEvent` | `notes.note-card.requested` | `noteId`, `status` |
+| `NoteCardSearchedEvent` | `notes.note-card.searched` | `noteId`, `status` |
+| `NoteCardCorrectedEvent` | `notes.note-card.corrected` | `noteId`, `status` |
+| `NoteCardTemplateAdoptedEvent` | `notes.note-card.template-adopted` | `noteId`, `status` |
 | `FolderRenamedEvent` | `notes.folder.renamed` | aucune (`null`) |
 | `FolderMovedEvent` | `notes.folder.moved` | `parentFolderId` |
 | `FolderDeletedEvent` | `notes.folder.deleted` | aucune (`null`) |
 
-Chaque événement porte l'`ExecutionContext` complet ; aucun ne porte le titre, le nom d'un dossier, son sujet, sa fiche type ni le contenu. Les événements des dossiers vont dans la même outbox `note_event` ; le relais de `messaging` ne les notifie pas. Un déplacement vers l'autre espace enregistre `NoteSharedEvent` ou `NoteMadePrivateEvent`, puis `NoteMovedEvent` : une note rangée dans « Partagé » notifie l'autre comme un partage (R9). Les notes et sous-dossiers qui remontent à la suppression d'un dossier changent par une requête groupée, sans événement.
+Chaque événement porte l'`ExecutionContext` complet ; aucun ne porte le titre, le nom d'un dossier, son sujet, sa fiche type, ce que le couple a tapé, une valeur de fiche ni le contenu. Les événements d'une fiche, au nom de la partenaire qui a demandé la recherche, vont aussi dans `note_event` ; le relais de `messaging` ne les notifie pas. Les événements des dossiers vont dans la même outbox `note_event` ; le relais de `messaging` ne les notifie pas. Un déplacement vers l'autre espace enregistre `NoteSharedEvent` ou `NoteMadePrivateEvent`, puis `NoteMovedEvent` : une note rangée dans « Partagé » notifie l'autre comme un partage (R9). Les notes et sous-dossiers qui remontent à la suppression d'un dossier changent par une requête groupée, sans événement.
 
 ## Invariants
 
@@ -56,6 +65,8 @@ Chaque événement porte l'`ExecutionContext` complet ; aucun ne porte le titre,
 | INV-007 | Un dossier a un nom de 1 à `FOLDER_NAME_MAX_LENGTH` signes, sans espaces autour (`FOLDER_NAME_INVALID`, R13) | `FolderName.create` |
 | INV-008 | Un dossier ne change jamais d'espace ; son parent est du même espace et n'est ni lui-même ni l'un de ses descendants (`FOLDER_MOVE_INVALID`, R15) | `Folder` (`create`, `moveTo`) |
 | INV-010 | Un dossier IA en haut d'un arbre porte un sujet de 1 à `FOLDER_SUBJECT_MAX_LENGTH` signes et une fiche type de 1 à `CARD_TEMPLATE_MAX_FIELDS` cases uniques ; un dossier classique n'en porte pas ; un dossier créé dans un dossier IA est IA et n'en porte pas (R17, R18) | `SmartFolderValidator`, `FolderSubject`, `CardTemplate` |
+| INV-011 | Une fiche a une note et une seule (`note_card_couple_id_note_id_key`) ; ses cases suivent la fiche type qu'elle a prise ; une case corrigée à la main n'est jamais écrasée par une recherche (R22) | `NoteCard`, `fieldsFilledWith`, base |
+| INV-012 | Une recherche ne se termine que depuis `PENDING`, et ne se relance que hors de `PENDING` (`NOTE_CARD_STATUS_INVALID`) | `NoteCardStatusValidator` |
 | INV-009 | Un dossier supprimé ne contient plus rien : ses notes et sous-dossiers remontent dans la même transaction (R16) | `DeleteFolderUseCase`, `FolderRepository.moveContentUp` |
 
 ## Décisions liées

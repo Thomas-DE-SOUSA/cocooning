@@ -12,7 +12,12 @@ import {
     FakeUuidV7GeneratorProvider,
     InMemoryUnitOfWork,
 } from '@cocooning/shared-kernel/testing';
+import { AddNoteCardUseCase } from '../../application/use-cases/add-note-card.use-case';
+import { ChooseNoteCardCandidateUseCase } from '../../application/use-cases/choose-note-card-candidate.use-case';
+import { CorrectNoteCardFieldUseCase } from '../../application/use-cases/correct-note-card-field.use-case';
 import { CreateFolderUseCase } from '../../application/use-cases/create-folder.use-case';
+import { RefineNoteCardUseCase } from '../../application/use-cases/refine-note-card.use-case';
+import { RefreshNoteCardUseCase } from '../../application/use-cases/refresh-note-card.use-case';
 import { DeleteFolderUseCase } from '../../application/use-cases/delete-folder.use-case';
 import { EditFolderTemplateUseCase } from '../../application/use-cases/edit-folder-template.use-case';
 import { GetNoteSpaceContentsUseCase } from '../../application/use-cases/get-note-space-contents.use-case';
@@ -22,7 +27,13 @@ import { MoveNoteUseCase } from '../../application/use-cases/move-note.use-case'
 import { ProposeFolderTemplateUseCase } from '../../application/use-cases/propose-folder-template.use-case';
 import { RenameFolderUseCase } from '../../application/use-cases/rename-folder.use-case';
 import { Folder } from '../../domain/models/folder.aggregate';
+import type { CardFieldValues } from '../../domain/models/card-fields';
+import { NoteCard } from '../../domain/models/note-card.aggregate';
+import type { CardCandidate } from '../../domain/models/note-card.aggregate.type';
 import { createSmartFolderSettings } from '../../domain/models/smart-folder-settings';
+import { NoteCardPreconditionService } from '../../domain/services/note-card-precondition.service';
+import { CardTemplate } from '../../domain/value-objects/card-template.vo';
+import { NoteCardQuery } from '../../domain/value-objects/note-card-query.vo';
 import { CardContextService } from '../../domain/services/card-context.service';
 import { FolderPreconditionService } from '../../domain/services/folder-precondition.service';
 import { NoteRevocationService } from '../../domain/services/note-revocation.service';
@@ -48,6 +59,7 @@ import {
 } from '../secondary/adapters/fake-note-card.writer';
 import { FakeNoteCollaborationProvider } from '../secondary/adapters/fake-note-collaboration.provider';
 import { FakePairedCoupleProvider } from '../secondary/adapters/fake-paired-couple.provider';
+import { NoteCardInMemoryRepository } from '../secondary/adapters/note-card-in-memory.repository';
 import { NoteContentInMemoryRepository } from '../secondary/adapters/note-content-in-memory.repository';
 import { FolderInMemoryRepository } from '../secondary/adapters/folder-in-memory.repository';
 import { NoteInMemoryRepository } from '../secondary/adapters/note-in-memory.repository';
@@ -82,6 +94,10 @@ export class NotesTestContext {
     readonly folderRepository = new FolderInMemoryRepository(
         this.noteRepository,
     );
+    readonly noteCardRepository = new NoteCardInMemoryRepository(
+        this.noteRepository,
+        this.folderRepository,
+    );
     readonly unitOfWork = new InMemoryUnitOfWork();
     readonly pairedCoupleProvider = new FakePairedCoupleProvider();
     readonly noteCollaborationProvider = new FakeNoteCollaborationProvider();
@@ -100,6 +116,9 @@ export class NotesTestContext {
     );
     private readonly cardContexts = new CardContextService(
         this.folderRepository,
+    );
+    private readonly cardPreconditions = new NoteCardPreconditionService(
+        this.noteCardRepository,
     );
 
     constructor() {
@@ -173,8 +192,10 @@ export class NotesTestContext {
     editFolderTemplateUseCase(): EditFolderTemplateUseCase {
         return new EditFolderTemplateUseCase(
             this.folderRepository,
+            this.noteCardRepository,
             this.folderPreconditions,
             this.cardContexts,
+            this.unitOfWork,
             this.dateTimeProvider,
             this.eventPublishingService,
         );
@@ -194,7 +215,9 @@ export class NotesTestContext {
         return new GetNoteSpaceContentsUseCase(
             this.folderRepository,
             this.noteRepository,
+            this.noteCardRepository,
             this.folderPreconditions,
+            this.cardContexts,
         );
     }
 
@@ -206,7 +229,42 @@ export class NotesTestContext {
     }
 
     getNoteUseCase(): GetNoteUseCase {
-        return new GetNoteUseCase(this.preconditions);
+        return new GetNoteUseCase(this.preconditions, this.noteCardRepository);
+    }
+
+    addNoteCardUseCase(): AddNoteCardUseCase {
+        return new AddNoteCardUseCase(
+            this.noteRepository,
+            this.noteCardRepository,
+            this.folderPreconditions,
+            this.cardContexts,
+            this.unitOfWork,
+            this.dateTimeProvider,
+            this.eventPublishingService,
+        );
+    }
+
+    chooseNoteCardCandidateUseCase(): ChooseNoteCardCandidateUseCase {
+        return new ChooseNoteCardCandidateUseCase(...this.cardDependencies());
+    }
+
+    refineNoteCardUseCase(): RefineNoteCardUseCase {
+        return new RefineNoteCardUseCase(...this.cardDependencies());
+    }
+
+    correctNoteCardFieldUseCase(): CorrectNoteCardFieldUseCase {
+        return new CorrectNoteCardFieldUseCase(...this.cardDependencies());
+    }
+
+    refreshNoteCardUseCase(): RefreshNoteCardUseCase {
+        return new RefreshNoteCardUseCase(
+            this.noteCardRepository,
+            this.preconditions,
+            this.cardPreconditions,
+            this.cardContexts,
+            this.dateTimeProvider,
+            this.eventPublishingService,
+        );
     }
 
     authorizeNoteDocumentUseCase(): AuthorizeNoteDocumentUseCase {
@@ -322,8 +380,65 @@ export class NotesTestContext {
         return this.givenFolderOf(context, name, null, NoteSpaceEnum.PRIVATE);
     }
 
+    // A card « en recherche » for a note, as if already stored, without events; the template of PROPOSED_TEMPLATE.
+    givenCardOf(
+        note: Note,
+        fieldNames: ReadonlyArray<string> = PROPOSED_TEMPLATE.fieldNames,
+    ): NoteCard {
+        const card = NoteCard.create(
+            {
+                coupleId: note.coupleId,
+                noteId: note.id,
+                requestedBy: note.ownerId,
+                query: NoteCardQuery.create(note.title.value),
+                template: CardTemplate.create(fieldNames),
+            },
+            this.dateTimeProvider.now(),
+        );
+        return this.seedCard(card);
+    }
+
+    givenFilledCardOf(
+        note: Note,
+        values: CardFieldValues,
+        sources: ReadonlyArray<string> = [],
+    ): NoteCard {
+        const card = this.givenCardOf(note);
+        card.recordResult(values, sources, this.dateTimeProvider.now());
+        return this.seedCard(card);
+    }
+
+    givenChoosingCardOf(
+        note: Note,
+        candidates: ReadonlyArray<CardCandidate>,
+    ): NoteCard {
+        const card = this.givenCardOf(note);
+        card.recordCandidates(candidates, this.dateTimeProvider.now());
+        return this.seedCard(card);
+    }
+
     advanceHours(hours: number): void {
         this.dateTimeProvider.advanceBy(hours * MILLISECONDS_PER_HOUR);
+    }
+
+    private seedCard(card: NoteCard): NoteCard {
+        card.clearDomainEvents();
+        this.noteCardRepository.seed(card);
+        return NoteCard.fromSnapshot(
+            this.noteCardRepository.storedSnapshots.find(
+                (stored) => stored.id === card.id.getValue(),
+            ) ?? card.toSnapshot(),
+        );
+    }
+
+    private cardDependencies() {
+        return [
+            this.noteCardRepository,
+            this.preconditions,
+            this.cardPreconditions,
+            this.dateTimeProvider,
+            this.eventPublishingService,
+        ] as const;
     }
 
     private revokingDependencies() {

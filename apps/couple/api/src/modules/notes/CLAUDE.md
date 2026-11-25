@@ -4,6 +4,8 @@ Adaptateurs du contexte `notes` : `NotePrismaRepository` et `FolderPrismaReposit
 
 Dossiers IA (decision 0054) : `FolderPrismaRepository.findLineage` (chemin puis dossiers par identifiants, `readFolderLineage`), colonnes `kind`, `subject`, `card_template` relues par `folder-prisma.mapper.ts`. L'IA : `GeminiNoteCardWriter` (`secondary/providers/`) sur `GeminiInteractionsClient` (`POST` de l'API Interactions par `fetch`, cle dans l'en-tete `x-goog-api-key`, `store: false`, sans outil de recherche, reponse JSON par `response_format` puis Zod ; cle vide, refus HTTP, panne ou reponse hors schema : `NOTE_CARD_WRITER_UNAVAILABLE`, journalise par l'operation et le statut seulement) ; prompts dans `*.prompt.ts`. `env.ts` du module : `NOTE_CARD_GEMINI_API_KEY` (vide accepte), `NOTE_CARD_GEMINI_MODEL`.
 
+Fiches : `NoteCardPrismaRepository` (`saveAll` en un `createMany` et un `UPDATE ... FROM unnest` filtre par couple et version, `note-card-prisma.writer.ts` ; evenements de plusieurs agregats par `appendNoteEventsOfMany` ; arbre de R22 par `readCardsInTree`, requete recursive), mappers `note-card-prisma.mapper.ts` (colonnes JSON relues par Zod, sinon `NOTE_CARD_DATA_CORRUPTED`) et `toNoteCardResponse`, `toNoteDetailResponse` ; use cases des fiches dans `notes-card-use-cases.ts`. Specs E2E : `smart-folders.e2e-spec.ts`, `note-cards.e2e-spec.ts` (`CardRequests`), `note-card-prisma-repository.e2e-spec.ts`, `folder-prisma-lineage.e2e-spec.ts`.
+
 Modele a copier pour le prochain contexte du couple (agenda, messages) : `primary/couple/` (garde et decorateur du couple), `test/notes/` (`NotesTestApp`, une spec par route, isolation par couple et par proprietaire).
 
 Contexte metier :

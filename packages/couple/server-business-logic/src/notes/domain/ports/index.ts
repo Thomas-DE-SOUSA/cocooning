@@ -1,4 +1,5 @@
 export * from './folder.repository';
+export * from './note-card.repository';
 export * from './note-card.writer';
 export * from './note-collaboration.provider';
 export * from './note-content.repository';

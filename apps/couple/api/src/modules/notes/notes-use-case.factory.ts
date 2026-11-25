@@ -3,6 +3,8 @@ import {
     CardContextService,
     FolderPreconditionService,
     FolderRepository,
+    NoteCardPreconditionService,
+    NoteCardRepository,
     NoteCardWriter,
     NoteCollaborationProvider,
     NoteContentRepository,
@@ -22,6 +24,8 @@ export type NotesDependencies = {
     readonly repository: NoteRepository;
     readonly folders: FolderRepository;
     readonly contents: NoteContentRepository;
+    readonly cards: NoteCardRepository;
+    readonly cardPreconditions: NoteCardPreconditionService;
     readonly preconditions: NotePreconditionService;
     readonly folderPreconditions: FolderPreconditionService;
     readonly cardContexts: CardContextService;
@@ -37,6 +41,7 @@ const DEPENDENCIES = [
     NoteRepository,
     FolderRepository,
     NoteContentRepository,
+    NoteCardRepository,
     NoteCollaborationProvider,
     NoteCardWriter,
     UnitOfWork,
@@ -50,6 +55,7 @@ const collect = (
     repository: NoteRepository,
     folders: FolderRepository,
     contents: NoteContentRepository,
+    cards: NoteCardRepository,
     collaboration: NoteCollaborationProvider,
     writer: NoteCardWriter,
     unitOfWork: UnitOfWork,
@@ -62,6 +68,8 @@ const collect = (
         repository,
         folders,
         contents,
+        cards,
+        cardPreconditions: new NoteCardPreconditionService(cards),
         preconditions: new NotePreconditionService(repository),
         folderPreconditions: new FolderPreconditionService(folders),
         cardContexts: new CardContextService(folders),

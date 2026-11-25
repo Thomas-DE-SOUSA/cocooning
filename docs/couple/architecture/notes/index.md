@@ -6,7 +6,7 @@ Cette page décrit comment le contexte `notes` est construit : ses couches, ses 
 
 `notes` porte les notes du couple : leur titre, leur propriétaire, leur visibilité, leur dossier et leur cycle de vie, ainsi que les deux espaces et les dossiers où elles se rangent ([décision 0052](../../decisions/notes/0052-dossiers-et-dossiers-ia.md), lot 1 sans IA). Le contenu riche, document Yjs édité à deux, arrive avec le canal temps réel ([décision 0040](../../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md)). Le contexte ne connaît ni les sessions (`authentication`) ni le code d'invitation (`pairing`) : il reçoit le `coupleId` par un port étroit ([décision 0041](../../decisions/0041-couple-de-la-requete.md)).
 
-Construit aujourd'hui : domaine et application, tables `note`, `folder` et `note_event` (voir [les tables](tables.md)), adaptateurs Prisma de `NoteRepository`, `FolderRepository` et `PairedCoupleProvider`. Contrat HTTP et routes de l'API, canal temps réel (voir [l'édition à deux](collaboration.md)), liste, page et éditeur d'une note dans la PWA. À venir : les espaces et les dossiers dans la PWA (lot 1 des dossiers), la route `/collab` en production.
+Construit aujourd'hui : domaine et application, tables `note`, `folder`, `note_card` et `note_event` (voir [les tables](tables.md)), adaptateurs Prisma de `NoteRepository`, `FolderRepository` et `PairedCoupleProvider`. Contrat HTTP et routes de l'API, canal temps réel (voir [l'édition à deux](collaboration.md)), liste, page et éditeur d'une note dans la PWA. À venir : les espaces et les dossiers dans la PWA (lot 1 des dossiers), la route `/collab` en production.
 
 ## Comment c'est construit
 
@@ -28,6 +28,9 @@ Construit aujourd'hui : domaine et application, tables `note`, `folder` et `note
 | `FolderPlacementValidator` | Contrôle statique : dossier du bon espace (`FOLDER_SPACE_MISMATCH`), déplacement sans cycle ni changement d'espace (`FOLDER_MOVE_INVALID`) | `domain/services/folder-placement.validator.ts` |
 | `SmartFolderValidator`, `CardContextService` | Contrôle statique du genre d'un dossier créé et du dossier qui porte la fiche type (R17, R18) ; domain service qui lit la lignée d'un dossier et en tire le contexte des fiches, sinon `FOLDER_NOT_SMART` | `domain/services/` |
 | `NoteCardWriter` | Port de l'IA ([décision 0054](../../decisions/notes/0054-recherche-des-fiches-searxng-et-gemini.md)) : `proposeTemplate` ; adaptateur `GeminiNoteCardWriter` (API Interactions par `fetch`, réponse JSON validée par Zod, `NOTE_CARD_WRITER_UNAVAILABLE` sinon) | `domain/ports/note-card.writer.ts`, `apps/couple/api/src/modules/notes/secondary/providers/` |
+| `NoteCard`, `NoteCardRepository` | Agrégat de la fiche d'une note d'un dossier IA (voir [les agrégats](aggregate.md)) ; port `save`, `saveAll`, `findByNoteId`, `findByNoteIds`, `findInTree` (fiches d'un dossier et de ses sous-dossiers), adaptateur `NoteCardPrismaRepository` | `domain/models/note-card.aggregate.ts`, `domain/ports/note-card.repository.ts` |
+| `NoteCardPreconditionService` | Domain service : la fiche d'une note visible, sinon `NOTE_CARD_NOT_FOUND` | `domain/services/note-card-precondition.service.ts` |
+| `AddNoteCardUseCase`, `ChooseNoteCardCandidateUseCase`, `RefineNoteCardUseCase`, `RefreshNoteCardUseCase`, `CorrectNoteCardFieldUseCase` | Use cases des fiches (R19 à R22) ; `GetNoteUseCase` et `GetNoteSpaceContentsUseCase` rendent la fiche de chaque note (`NoteDetailView`) et le contexte du dossier IA ouvert | `application/use-cases/` |
 | `NoteRevocationService` | Domain service : une note passée dans « Privé » par `MoveNoteUseCase` ne reste ouverte que pour sa propriétaire (R5, R11) | `domain/services/note-revocation.service.ts` |
 | `NoteCoupleGuardService` | Guard service : construit l'`ExecutionContext` depuis le `PartnerContext`, sinon `NOTE_COUPLE_NOT_PAIRED` (R3, décision 0006) | `application/services/note-couple-guard.service.ts` |
 | `CreateNoteUseCase`, `ListNotesUseCase` (page `OffsetPage<NoteView>`, la plus récemment modifiée d'abord), `GetNoteUseCase`, `RenameNoteUseCase`, `ShareNoteUseCase`, `MakeNotePrivateUseCase`, `DeleteNoteUseCase`, `MoveNoteUseCase` | Use cases des notes, `execute(context)` ou `execute(context, command)` | `application/use-cases/` |
@@ -47,7 +50,7 @@ Toutes les routes demandent une session (cookie `cocooning_session`, [décision 
 |---|---|---|---|---|
 | `POST /notes`, corps `CreateNoteRequestSchema` | `NOTE_CREATE` | `CreateNoteUseCase` | `201` | `422` titre invalide |
 | `GET /notes?page&pageSize` | `NOTE_LIST` | `ListNotesUseCase` | `200`, `NotePageResponseSchema` | `422` pagination invalide |
-| `GET /notes/:noteId` | `NOTE_GET` | `GetNoteUseCase` | `200` | `404` `NOTE_NOT_FOUND` (R4) ; `422` identifiant invalide |
+| `GET /notes/:noteId` | `NOTE_GET` | `GetNoteUseCase` | `200`, `NoteDetailResponseSchema` (la note et sa fiche ou `null`) | `404` `NOTE_NOT_FOUND` (R4) ; `422` identifiant invalide |
 | `PATCH /notes/:noteId`, corps `RenameNoteRequestSchema` | `NOTE_RENAME` | `RenameNoteUseCase` | `200` | `404` `NOTE_NOT_FOUND` ; `409` `NOTE_VERSION_CONFLICT` ; `422` |
 | `POST /notes/:noteId/share` | `NOTE_SHARE` | `ShareNoteUseCase` | `200` | `403` `NOTE_RESERVED_TO_OWNER` ; `404` |
 | `POST /notes/:noteId/make-private` | `NOTE_MAKE_PRIVATE` | `MakeNotePrivateUseCase` | `200` | `403` ; `404` |
@@ -60,6 +63,11 @@ Toutes les routes demandent une session (cookie `cocooning_session`, [décision 
 | `PUT /note-folders/:folderId/template`, corps `EditFolderTemplateRequestSchema` | `FOLDER_TEMPLATE_EDIT` | `EditFolderTemplateUseCase` | `200`, le dossier qui porte la fiche type | `404` ; `409` ; `422` `FOLDER_NOT_SMART`, sujet ou fiche type |
 | `PATCH /note-folders/:folderId`, corps `RenameFolderRequestSchema` | `FOLDER_RENAME` | `RenameFolderUseCase` | `200` | `404` ; `409` `FOLDER_VERSION_CONFLICT` ; `422` |
 | `POST /note-folders/:folderId/move`, corps `MoveFolderRequestSchema` | `FOLDER_MOVE` | `MoveFolderUseCase` | `200` | `404` ; `409` ; `422` `FOLDER_MOVE_INVALID` |
+| `POST /note-folders/:folderId/cards`, corps `AddNoteCardRequestSchema` | `NOTE_CARD_ADD` | `AddNoteCardUseCase` | `201`, `NoteDetailResponseSchema` | `404` dossier ; `422` `FOLDER_NOT_SMART` ou nom invalide |
+| `POST /notes/:noteId/card/choose`, corps `ChooseNoteCardCandidateRequestSchema` | `NOTE_CARD_CANDIDATE_CHOOSE` | `ChooseNoteCardCandidateUseCase` | `200`, `NoteCardResponseSchema` | `404` ; `409` `NOTE_CARD_STATUS_INVALID` ; `422` `NOTE_CARD_CANDIDATE_INVALID` |
+| `POST /notes/:noteId/card/refine`, corps `RefineNoteCardRequestSchema` | `NOTE_CARD_REFINE` | `RefineNoteCardUseCase` | `200`, `NoteCardResponseSchema` | `404` ; `409` ; `422` |
+| `POST /notes/:noteId/card/refresh` | `NOTE_CARD_REFRESH` | `RefreshNoteCardUseCase` | `200`, `NoteCardResponseSchema` | `404` ; `409` ; `422` `FOLDER_NOT_SMART` |
+| `PUT /notes/:noteId/card/fields`, corps `CorrectNoteCardFieldRequestSchema` | `NOTE_CARD_FIELD_CORRECT` | `CorrectNoteCardFieldUseCase` | `200`, `NoteCardResponseSchema` | `404` ; `409` ; `422` `NOTE_CARD_FIELD_INVALID` |
 | `DELETE /note-folders/:folderId` | `FOLDER_DELETE` | `DeleteFolderUseCase` | `204` | `404` ; `409` |
 
 ## Points d'attention

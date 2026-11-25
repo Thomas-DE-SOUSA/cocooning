@@ -32,6 +32,7 @@ export const THE_NOTE_SPACES: NoteSpacesResponse = {
 export const A_SPACE_CONTENTS: NoteSpaceContentsResponse = {
     space: NoteSpaceEnum.SHARED,
     path: [],
+    cardContext: null,
     folders: [{ ...A_SHARED_FOLDER, folderCount: 0, noteCount: 2 }],
-    notes: [A_SHARED_NOTE],
+    notes: [{ ...A_SHARED_NOTE, card: null }],
 };

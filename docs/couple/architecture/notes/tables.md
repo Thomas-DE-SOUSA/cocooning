@@ -1,6 +1,6 @@
 # Tables des notes
 
-Cette page décrit les trois tables PostgreSQL du contexte `notes` : leurs colonnes, leurs index et leurs contraintes. À lire avant de modifier `packages/couple/prisma/prisma/models/notes-*.prisma` ou l'adaptateur Prisma de `NoteRepository`.
+Cette page décrit les tables PostgreSQL du contexte `notes` : leurs colonnes, leurs index et leurs contraintes. À lire avant de modifier `packages/couple/prisma/prisma/models/notes-*.prisma` ou l'adaptateur Prisma de `NoteRepository`.
 
 Les tables naissent avec la migration `20261123194115_notes_note` ; `content_state` arrive avec `notes_content_state`, la table `folder` et la colonne `note.folder_id` avec `20261125100000_notes_folders`, ses colonnes `kind`, `subject` et `card_template` avec `20261125200000_notes_smart_folders`, l'index `note_couple_id_folder_id_idx` avec `20261125100100_notes_note_folder_index`, construit en `CONCURRENTLY` sur la table remplie (`packages/couple/prisma/prisma/migrations/`). Les dates sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma.
 
@@ -56,6 +56,33 @@ L'agrégat `Folder` (modèle `Folder`, fichier `notes-folder.prisma`, [décision
 | `folder_parent_folder_id_fkey` | `parent_folder_id` vers `folder.id` | Le parent existe |
 
 La visibilité se filtre dans le `where` de chaque lecture : `couple_id` du partenaire, puis `space = 'SHARED'` ou `owner_id` égal au partenaire (R14). Le chemin d'un dossier (`findPath`) se lit en une requête récursive (`WITH RECURSIVE ... CYCLE`), filtrée par `couple_id` et `deleted_at` à chaque niveau ; sa lignée (`findLineage`, R18), par ce chemin puis une lecture des dossiers par leurs identifiants.
+
+## `note_card`
+
+L'agrégat `NoteCard` (modèle `NoteCard`, fichier `notes-note-card.prisma`, migration `20261125210000_notes_note_card`, [décision 0054](../../decisions/notes/0054-recherche-des-fiches-searxng-et-gemini.md)). Pas de `deleted_at` : la fiche suit sa note, et toute lecture passe par la note visible (R4).
+
+| Colonne | Type | Rôle |
+|---|---|---|
+| `id` | `UUID`, clé primaire | Identifiant de la fiche (`NoteCardId.generate()`, UUID v7) |
+| `couple_id` | `UUID` | Couple de la fiche (`core.md` règle 27) |
+| `note_id` | `UUID`, clé étrangère vers `note` (`ON DELETE CASCADE`) | La note de la fiche |
+| `status` | `VARCHAR(20)` | `NoteCardStatusEnum`, relu par `parseEnum()` ; une valeur inconnue répond `NOTE_CARD_DATA_CORRUPTED` |
+| `query` | `VARCHAR(200)` | Ce que le couple a tapé, `NOTE_CARD_QUERY_MAX_LENGTH` (R19) |
+| `fields` | `JSONB` | Les cases, dans l'ordre de la fiche type : `name`, `value` (`null` : « non trouvé »), `isManual` (R21, R22) |
+| `candidates` | `JSONB` | Au plus trois candidats (`label`, `detail`), vide hors de `CHOOSING` (R19) |
+| `sources` | `JSONB` | Au plus dix liens (R21) |
+| `searched_at` | `TIMESTAMP(3)`, nullable | Date de la dernière recherche aboutie (R21) |
+| `requested_by` | `UUID` | Partenaire qui a demandé la dernière recherche ; la tâche de fond agit en son nom |
+| `version` | `INTEGER` | Verrou optimiste |
+| `created_at`, `updated_at` | `TIMESTAMP(3)` | `EntityMetadata` du domaine |
+
+| Index ou contrainte | Colonnes | Pourquoi |
+|---|---|---|
+| `note_card_pkey` | `id` | Clé primaire ; traduite en `NOTE_CARD_VERSION_CONFLICT` sur une sauvegarde périmée |
+| `note_card_couple_id_note_id_key` | `couple_id`, `note_id`, unique | Une fiche par note ; sert aussi la clé étrangère (une note n'est jamais supprimée pour de vrai) |
+| `note_card_note_id_fkey` | `note_id` vers `note.id` | La note existe |
+
+Une écriture de plusieurs fiches (`saveAll`, R22) se fait en un `createMany` et une seule requête `UPDATE ... FROM unnest(...)` filtrée par couple et version ; les fiches d'un arbre (`findInTree`) se lisent par une requête récursive sur `folder` jointe à `note`, `deleted_at` écrit à chaque niveau.
 
 ## `note_event`
 

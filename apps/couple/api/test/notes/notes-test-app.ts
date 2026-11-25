@@ -32,6 +32,10 @@ export class NotesTestApp {
     private app: INestApplication | null = null;
     private client: TestClient | null = null;
 
+    provider<T>(token: abstract new (...args: never[]) => T): T {
+        return this.started().app.get(token);
+    }
+
     get prisma(): PrismaService {
         return this.started().app.get(PrismaService);
     }

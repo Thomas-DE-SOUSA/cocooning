@@ -14,3 +14,8 @@ export * from './move-folder.controller';
 export * from './delete-folder.controller';
 export * from './propose-folder-template.controller';
 export * from './edit-folder-template.controller';
+export * from './add-note-card.controller';
+export * from './choose-note-card-candidate.controller';
+export * from './refine-note-card.controller';
+export * from './refresh-note-card.controller';
+export * from './correct-note-card-field.controller';

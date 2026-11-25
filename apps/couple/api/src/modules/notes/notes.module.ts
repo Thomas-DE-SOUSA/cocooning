@@ -4,6 +4,9 @@ import { NotesServiceModule } from './notes-service.module';
 import { NoteCollaborationServer } from './primary/collaboration';
 import { NoteCoupleGuard } from './primary/couple';
 import {
+    AddNoteCardController,
+    ChooseNoteCardCandidateController,
+    CorrectNoteCardFieldController,
     CreateFolderController,
     CreateNoteController,
     DeleteFolderController,
@@ -17,6 +20,8 @@ import {
     MoveFolderController,
     MoveNoteController,
     ProposeFolderTemplateController,
+    RefineNoteCardController,
+    RefreshNoteCardController,
     RenameFolderController,
     RenameNoteController,
     ShareNoteController,
@@ -32,9 +37,7 @@ import {
         ShareNoteController,
         MakeNotePrivateController,
         DeleteNoteController,
-        EditFolderTemplateController,
         MoveNoteController,
-        ProposeFolderTemplateController,
         ListNoteSpacesController,
         GetNoteSpaceContentsController,
         CreateFolderController,
@@ -43,6 +46,11 @@ import {
         DeleteFolderController,
         ProposeFolderTemplateController,
         EditFolderTemplateController,
+        AddNoteCardController,
+        ChooseNoteCardCandidateController,
+        RefineNoteCardController,
+        RefreshNoteCardController,
+        CorrectNoteCardFieldController,
     ],
     providers: [NoteCoupleGuard, NoteCollaborationServer],
 })

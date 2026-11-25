@@ -44,7 +44,9 @@ export const FOLDER_USE_CASES = [
             new GetNoteSpaceContentsUseCase(
                 d.folders,
                 d.repository,
+                d.cards,
                 d.folderPreconditions,
+                d.cardContexts,
             ),
     ),
     notesUseCase(
@@ -77,8 +79,10 @@ export const FOLDER_USE_CASES = [
         (d) =>
             new EditFolderTemplateUseCase(
                 d.folders,
+                d.cards,
                 d.folderPreconditions,
                 d.cardContexts,
+                d.unitOfWork,
                 d.clock,
                 d.publishing,
             ),
