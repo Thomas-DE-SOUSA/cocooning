@@ -33,10 +33,11 @@ La page d'une note (`apps/couple/web/src/app/notes/[noteId]/page.tsx`) passe au 
 
 | Élément | Rôle | Chemin (depuis `apps/couple/web/src/modules/notes/`) |
 |---|---|---|
-| `NoteDocumentGateway` | Port : relie un document Yjs à sa note jusqu'à la fermeture ; signale un refus (R4) et un document fermé par le serveur | `gateways/ports/note-document.gateway.ts` |
-| `HocuspocusNoteDocumentGateway` | Adaptateur : `HocuspocusProvider` sur l'adresse du canal, le nom du document est le `noteId`. Un jeton fixe déclenche `onAuthenticate`, qui lit le cookie. Un message `CLOSE` du serveur (code 1000) devient `onClosedByServer` ; une coupure réseau se reconnecte seule | `gateways/hocuspocus/hocuspocus-note-document.gateway.ts` |
+| `NoteDocumentGateway` | Port : relie un document Yjs à sa note jusqu'à la fermeture ; signale un refus (R4) et un document fermé par le serveur ; pour une liste (`ListDocumentEvents`), sa première synchronisation et la présence de l'autre partenaire (R32) | `gateways/ports/note-document.gateway.ts` |
+| `HocuspocusNoteDocumentGateway` | Adaptateur : `HocuspocusProvider` sur l'adresse du canal, le nom du document est le `noteId`. Un jeton fixe déclenche `onAuthenticate`, qui lit le cookie. Un message `CLOSE` du serveur (code 1000) devient `onClosedByServer` ; une coupure réseau se reconnecte seule. Sur une liste, partage le `viewerId` dans l'awareness et dit si un autre lecteur y est (`isPartnerPresent`) | `gateways/hocuspocus/hocuspocus-note-document.gateway.ts` |
 | `useNoteDocument` | Un seul `Y.Doc` pour la page ; rouvre le même document après une fermeture par le serveur, pour fusionner ce qui a été tapé entre-temps, et relit la page (`router.refresh()`), qui renvoie vers l'accueil une note perdue | `hooks/use-note-document.ts` |
-| `useNoteEditor` | Tiptap 3 : `StarterKit` sans annuler et refaire (l'historique est celui de Yjs), titres de niveau 2 et 3, `TaskList` et `TaskItem`, `Collaboration` sur le document | `hooks/use-note-editor.ts` |
+| `useNoteEditor` | Tiptap 3 : `StarterKit` sans annuler et refaire (l'historique est celui de Yjs), titres de niveau 2 et 3, `TaskList` et `NoteTaskItem` (`TaskItem` qui garde `checkedBy` et `lineId`, décision 0059), `Collaboration` sur le document | `hooks/use-note-editor.ts` |
+| `useListDocument`, `useChecklist`, `gateways/yjs/` | Page d'une liste ([décision 0059](../../decisions/frontend/0059-ecran-des-listes.md)) : le même canal, sans Tiptap ; les lignes `taskList > taskItem[checked, checkedBy, lineId] > paragraph` sont lues et changées par des transactions Yjs, « Vider les faits » en une seule | `hooks/`, `gateways/yjs/` |
 | `NoteEditorToolbar`, `NoteEditorView` | Barre de mise en forme (titre, gras, italique, listes, cases à cocher) et contenu éditable | `ui/components/`, `ui/views/` |
 
 L'adaptateur vit dans le module web et non dans `couple-client-infrastructure`, contrairement à la décision 0040 ([écart frontend 006](../../gaps/frontend.md)).

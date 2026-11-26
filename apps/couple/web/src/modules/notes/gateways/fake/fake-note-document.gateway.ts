@@ -1,5 +1,6 @@
 import type { Doc } from 'yjs';
 import {
+    type ListDocumentEvents,
     type NoteDocumentEvents,
     NoteDocumentGateway,
 } from '../ports/note-document.gateway';
@@ -8,6 +9,7 @@ type Connection = {
     readonly noteId: string;
     readonly document: Doc;
     readonly events: NoteDocumentEvents;
+    readonly listEvents: ListDocumentEvents | null;
 };
 
 // Records each connection; the spec plays the server through the events of the last one.
@@ -33,8 +35,9 @@ export class FakeNoteDocumentGateway extends NoteDocumentGateway {
         noteId: string,
         document: Doc,
         events: NoteDocumentEvents,
+        listEvents: ListDocumentEvents | null,
     ): () => void {
-        const connection: Connection = { noteId, document, events };
+        const connection: Connection = { noteId, document, events, listEvents };
         this.connections.push(connection);
         return () => {
             this.closed.add(connection);

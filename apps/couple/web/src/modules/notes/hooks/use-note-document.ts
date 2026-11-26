@@ -14,13 +14,18 @@ export function useNoteDocument({ gateway, noteId, onLost }: Options): Doc {
     const [connection, setConnection] = useState(0);
     useEffect(
         () =>
-            gateway.connect(noteId, document, {
-                onRefused: onLost,
-                onClosedByServer: () => {
-                    onLost();
-                    setConnection((count) => count + 1);
+            gateway.connect(
+                noteId,
+                document,
+                {
+                    onRefused: onLost,
+                    onClosedByServer: () => {
+                        onLost();
+                        setConnection((count) => count + 1);
+                    },
                 },
-            }),
+                null,
+            ),
         [gateway, noteId, document, onLost, connection],
     );
     return document;

@@ -14,7 +14,7 @@ type Props = {
     readonly items: readonly TabBarItem[];
 };
 
-// Decision 0044: the active tab differs by color, weight and a pill, never by color alone. Four tabs keep about 80 px each on a 360 px phone.
+// Decision 0044: the active tab differs by color, weight and a pill, never by color alone. Five tabs keep about 64 px each on a 360 px phone.
 export function TabBar({ label, items }: Props) {
     return (
         <nav
@@ -39,7 +39,7 @@ export function TabBar({ label, items }: Props) {
                         >
                             <span
                                 className={cn(
-                                    'inline-flex h-8 w-14 items-center justify-center rounded-full',
+                                    'inline-flex h-8 w-12 items-center justify-center rounded-full',
                                     item.isActive && 'bg-secondary',
                                 )}
                             >
