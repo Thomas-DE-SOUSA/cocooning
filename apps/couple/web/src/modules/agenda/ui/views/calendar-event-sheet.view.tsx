@@ -4,14 +4,7 @@ import type {
     CalendarEventForm,
     CalendarEventFormInput,
 } from '@cocooning/couple-client-business-logic/agenda';
-import {
-    Button,
-    DrawerContent,
-    DrawerDescription,
-    DrawerHeader,
-    DrawerTitle,
-    Spinner,
-} from '@cocooning/design-system';
+import { DrawerContent } from '@cocooning/design-system';
 import type { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { AGENDA_NAMESPACE } from '../../data/agenda-i18n-namespaces';
@@ -19,7 +12,9 @@ import {
     type CalendarEventCommand,
     CalendarEventCommandEnum,
 } from '../../view-models/calendar-event-command.view-model';
+import type { CalendarLabelItem } from '../../view-models/calendar-label.view-model';
 import { CalendarEventDeletion } from '../components/calendar-event-deletion';
+import { SheetTopBar } from '../components/sheet-top-bar';
 import { CalendarEventFormView } from './calendar-event-form.view';
 
 type Props = {
@@ -31,11 +26,13 @@ type Props = {
     >;
     readonly isAllDay: boolean;
     readonly showsPrivacy: boolean;
+    readonly labels: readonly CalendarLabelItem[];
     readonly pending: CalendarEventCommand | null;
     readonly isBusy: boolean;
     readonly isDeletionAsked: boolean;
     readonly onAllDayChange: (allDay: boolean) => void;
     readonly onCancel: () => void;
+    readonly onNewLabel: () => void;
     readonly onSubmit: (form: CalendarEventForm) => void;
     readonly onAskDeletion: () => void;
     readonly onConfirmDeletion: () => void;
@@ -66,38 +63,26 @@ export function CalendarEventSheetView(props: Props) {
         props.pending !== CalendarEventCommandEnum.DELETE_CALENDAR_EVENT;
     return (
         <DrawerContent>
-            <DrawerHeader className="justify-between">
-                <Button
-                    variant="ghost"
-                    className="px-3 text-muted-foreground"
-                    onClick={props.onCancel}
-                >
-                    {t('drawer.cancel')}
-                </Button>
-                <DrawerTitle className="text-lg">{t(keys.title)}</DrawerTitle>
-                <Button
-                    type="submit"
-                    form={FORM_ID}
-                    className="px-3"
-                    disabled={props.isBusy}
-                    aria-busy={isSubmitting}
-                >
-                    {isSubmitting ? (
-                        <Spinner aria-label={t(keys.pending)} />
-                    ) : (
-                        t(keys.submit)
-                    )}
-                </Button>
-            </DrawerHeader>
-            <DrawerDescription className="sr-only">
-                {t('drawer.description')}
-            </DrawerDescription>
+            <SheetTopBar
+                formId={FORM_ID}
+                title={t(keys.title)}
+                description={t('drawer.description')}
+                cancelLabel={t('drawer.cancel')}
+                submitLabel={t(keys.submit)}
+                pendingLabel={t(keys.pending)}
+                isSubmitting={isSubmitting}
+                isBusy={props.isBusy}
+                onCancel={props.onCancel}
+            />
             <div className="flex flex-col gap-6 overflow-y-auto px-5 pt-2 pb-6">
                 <CalendarEventFormView
                     formId={FORM_ID}
                     form={props.form}
                     isAllDay={props.isAllDay}
+                    isEdition={props.isEdition}
                     showsPrivacy={props.showsPrivacy}
+                    labels={props.labels}
+                    onNewLabel={props.onNewLabel}
                     onAllDayChange={props.onAllDayChange}
                     onSubmit={props.onSubmit}
                 />

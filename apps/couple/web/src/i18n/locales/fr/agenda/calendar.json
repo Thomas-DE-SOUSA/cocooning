@@ -31,7 +31,7 @@
         "newEventOn": "Nouvel événement le {{day}}",
         "createTitle": "Nouvel événement",
         "editTitle": "Modifier l'événement",
-        "description": "Le titre, le jour, les heures et la visibilité de l'événement.",
+        "description": "Le titre, le jour, les heures, pour qui, la visibilité et l'étiquette de l'événement.",
         "cancel": "Annuler",
         "create": "Ajouter",
         "creating": "Ajout en cours",
@@ -74,13 +74,24 @@
         },
         "isPrivate": {
             "label": "Rien que pour moi",
-            "hint": "Ton âme sœur ne verra pas cet événement."
+            "hint": "Ton âme sœur ne le verra pas. Seulement avec « Moi »."
         },
         "audience": {
+            "label": "Pour qui",
+            "options": {
+                "ME": "Moi",
+                "YOU": "Toi",
+                "BOTH": "Nous deux"
+            },
             "errors": {
                 "required": "Dites pour qui est l'événement.",
                 "privateNotForMe": "Un événement rien que pour moi est pour moi."
             }
+        },
+        "label": {
+            "legend": "Étiquette",
+            "optional": "(facultative)",
+            "new": "+ Nouvelle"
         }
     },
     "toast": {
@@ -104,7 +115,7 @@
         "CALENDAR_EVENT_AUDIENCE_INVALID": "Un événement « rien que pour moi » ne peut être que pour vous.",
         "CALENDAR_LABEL_NOT_FOUND": "Cette étiquette n'existe plus. L'agenda est mis à jour.",
         "CALENDAR_LABEL_NAME_INVALID": "Ce nom n'est pas valable : de 1 à 30 signes.",
-        "CALENDAR_LABEL_LIMIT_REACHED": "Vous avez déjà 20 étiquettes. Supprimez-en une pour en créer une autre.",
+        "CALENDAR_LABEL_LIMIT_REACHED": "Vous avez déjà 20 étiquettes.",
         "CALENDAR_LABEL_VERSION_CONFLICT": "L'étiquette vient de changer. Réessayez.",
         "CALENDAR_LABEL_DATA_CORRUPTED": "Les données de l'agenda sont illisibles.",
         "AUTHENTICATION_SESSION_MISSING": "Votre session a pris fin. Reconnectez-vous.",

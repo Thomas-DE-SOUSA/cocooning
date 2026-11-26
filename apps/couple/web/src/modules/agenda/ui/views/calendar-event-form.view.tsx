@@ -14,8 +14,11 @@ import {
 import type { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { AGENDA_NAMESPACE } from '../../data/agenda-i18n-namespaces';
+import type { CalendarLabelItem } from '../../view-models/calendar-label.view-model';
+import { AudiencePicker } from '../components/audience-picker';
 import { CalendarEventMomentFields } from '../components/calendar-event-moment-fields';
 import { CalendarEventPrivacyRow } from '../components/calendar-event-privacy-row';
+import { CalendarLabelChips } from '../components/calendar-label-chips';
 
 type Props = {
     readonly formId: string;
@@ -25,7 +28,10 @@ type Props = {
         CalendarEventForm
     >;
     readonly isAllDay: boolean;
+    readonly isEdition: boolean;
     readonly showsPrivacy: boolean;
+    readonly labels: readonly CalendarLabelItem[];
+    readonly onNewLabel: () => void;
     readonly onAllDayChange: (allDay: boolean) => void;
     readonly onSubmit: (form: CalendarEventForm) => void;
 };
@@ -33,12 +39,15 @@ type Props = {
 const TITLE_ERROR_ID = 'calendar-event-title-error';
 const DESCRIPTION_ERROR_ID = 'calendar-event-description-error';
 
-// The form of the drawer (R2, R5, R6); its submit button sits in the top row of the sheet, linked by formId.
+// The form of the drawer (R2, R5, R6, R11, R13); its submit button sits in the top row of the sheet, linked by formId.
 export function CalendarEventFormView({
     formId,
     form,
     isAllDay,
+    isEdition,
     showsPrivacy,
+    labels,
+    onNewLabel,
     onAllDayChange,
     onSubmit,
 }: Props) {
@@ -71,6 +80,16 @@ export function CalendarEventFormView({
                 isAllDay={isAllDay}
                 onAllDayChange={onAllDayChange}
             />
+            <AudiencePicker
+                form={form}
+                turnsPrivacyOff={!isEdition}
+            />
+            {showsPrivacy ? <CalendarEventPrivacyRow form={form} /> : null}
+            <CalendarLabelChips
+                form={form}
+                labels={labels}
+                onNewLabel={onNewLabel}
+            />
             <Field>
                 <Label htmlFor="description">
                     {t('form.description.label')}
@@ -86,7 +105,6 @@ export function CalendarEventFormView({
                     {errors.description?.message}
                 </FieldError>
             </Field>
-            {showsPrivacy ? <CalendarEventPrivacyRow form={form} /> : null}
         </form>
     );
 }

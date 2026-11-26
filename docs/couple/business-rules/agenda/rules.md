@@ -95,7 +95,7 @@ Je crée un événement partagé, ou je partage un événement privé : le tél�
 
 Nous avons une seule liste d'étiquettes, chacune un nom de 1 à 30 signes et une couleur parmi huit. Nous les créons, renommons, recolorons et supprimons tous les deux, 20 au plus.
 
-- Dans le code : agrégat `CalendarLabel`, `CalendarLabelName`, `CalendarLabelColorEnum`, `ListCalendarLabelsUseCase`, `CreateCalendarLabelUseCase`, `EditCalendarLabelUseCase`, `DeleteCalendarLabelUseCase` ; refus `CALENDAR_LABEL_LIMIT_REACHED` au-delà de `CALENDAR_LABEL_MAX_COUNT` (`CalendarLabelPreconditionService.ensureLabelRoomLeft`), sans verrou : deux créations au même instant peuvent dépasser la borne.
+- Dans le code : agrégat `CalendarLabel`, `CalendarLabelName`, `CalendarLabelColorEnum`, `ListCalendarLabelsUseCase`, `CreateCalendarLabelUseCase`, `EditCalendarLabelUseCase`, `DeleteCalendarLabelUseCase` ; refus `CALENDAR_LABEL_LIMIT_REACHED` au-delà de `CALENDAR_LABEL_MAX_COUNT` (`CalendarLabelPreconditionService.ensureLabelRoomLeft`), sans verrou : deux créations au même instant peuvent dépasser la borne. Dans la PWA, une étiquette se crée depuis la feuille d'un événement (« + Nouvelle », `CalendarLabelSheetContainer`, `apps/couple/web/src/modules/agenda/`).
 - Source : décision 0056. Validée par : Thomas De Sousa, 2026-11-25.
 
 ### R13. Une étiquette colore un événement

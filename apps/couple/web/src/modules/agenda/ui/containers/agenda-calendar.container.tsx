@@ -59,6 +59,7 @@ export function AgendaCalendarContainer({
                 target={drawer.target}
                 isOpen={drawer.isOpen}
                 opening={drawer.opening}
+                labels={viewModel.labels}
                 onClose={drawer.close}
             />
         </>

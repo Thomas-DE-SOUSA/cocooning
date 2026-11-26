@@ -17,3 +17,17 @@ export const indexCalendarLabels = (
     labels: readonly CalendarLabelItem[],
 ): CalendarLabelIndex =>
     new Map(labels.map((label) => [label.calendarLabelId, label]));
+
+// The labels read by the page, then those created in the open event sheet and not read yet.
+export const mergeCalendarLabels = (
+    read: readonly CalendarLabelItem[],
+    created: readonly CalendarLabelItem[],
+): readonly CalendarLabelItem[] => {
+    const readIds = new Set(read.map(({ calendarLabelId }) => calendarLabelId));
+    return [
+        ...read,
+        ...created.filter(
+            ({ calendarLabelId }) => !readIds.has(calendarLabelId),
+        ),
+    ];
+};

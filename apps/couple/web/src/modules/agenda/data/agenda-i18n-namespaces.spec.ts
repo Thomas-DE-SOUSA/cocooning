@@ -59,8 +59,11 @@ const REQUIRED_KEYS = [
     ].map((key) => `form.moment.errors.${key}`),
     'form.isPrivate.label',
     'form.isPrivate.hint',
+    'form.audience.label',
+    ...['ME', 'YOU', 'BOTH'].map((key) => `form.audience.options.${key}`),
     'form.audience.errors.required',
     'form.audience.errors.privateNotForMe',
+    ...['legend', 'optional', 'new'].map((key) => `form.label.${key}`),
     ...[
         ...Object.values(CALENDAR_EVENT_DONE_KEYS),
         ...Object.values(CALENDAR_EVENT_FAILURE_KEYS),
