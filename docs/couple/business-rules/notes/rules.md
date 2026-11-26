@@ -90,6 +90,6 @@ Je crée une note partagée, ou je partage une note privée : le téléphone de 
 
 ## Voir aussi
 
-- [Règles des dossiers](rules/folders.md) et [des dossiers IA](rules/ai-folders.md)
+- [Règles des dossiers](rules/folders.md), [des dossiers IA](rules/ai-folders.md) et [des listes](rules/lists.md)
 - [Glossaire des notes](glossary.md)
 - [Décision 0040](../../decisions/notes/0040-edition-a-deux-par-hocuspocus-dans-l-api.md) : le canal temps réel
