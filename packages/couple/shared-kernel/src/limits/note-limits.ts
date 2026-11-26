@@ -15,3 +15,6 @@ export const NOTE_CARD_QUERY_MAX_LENGTH = 200;
 // R21, R22 of notes: the links a card keeps, and the value a partner corrects by hand.
 export const NOTE_CARD_SOURCE_MAX_COUNT = 10;
 export const CARD_FIELD_VALUE_MAX_LENGTH = 300;
+
+// R26 of notes: the optional emoji of a list, in code points as Zod counts them, wide enough for a joined sequence (family, flag).
+export const NOTE_LIST_EMOJI_MAX_LENGTH = 16;

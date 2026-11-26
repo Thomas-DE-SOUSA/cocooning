@@ -28,4 +28,8 @@ export const NotesRouteEnum = {
     NOTE_CARD_REFINE: '/notes/:noteId/card/refine',
     NOTE_CARD_REFRESH: '/notes/:noteId/card/refresh',
     NOTE_CARD_FIELD_CORRECT: '/notes/:noteId/card/fields',
+    // R26 to R28: the lists of the Lists tab are notes; opening, writing and deleting one reuse the note routes.
+    NOTE_LIST_INDEX: '/note-lists',
+    NOTE_LIST_CREATE: '/note-lists',
+    NOTE_LIST_EDIT: '/note-lists/:noteId',
 } as const satisfies RouteGroup;
