@@ -13,6 +13,7 @@ import {
 import { CalendarEventMadePrivateEvent } from '../events/calendar-event-made-private.event';
 import { CalendarEventSharedEvent } from '../events/calendar-event-shared.event';
 import { CalendarEventAccessValidator } from '../services/calendar-event-access.validator';
+import { CalendarEventAudienceValidator } from '../services/calendar-event-audience.validator';
 import type { CalendarEventDetails } from '../value-objects/calendar-event-details';
 import { CalendarEventId } from '../value-objects/calendar-event-id.vo';
 import {
@@ -32,9 +33,13 @@ export class CalendarEvent extends AggregateRoot {
         super();
     }
 
-    // R1, R3: the author owns the event, shared unless kept "rien que pour moi" at creation.
+    // R1, R3: the author owns the event, shared unless kept "rien que pour moi" at creation. R11: for whom.
     static create(input: CreateCalendarEventInput, now: Date): CalendarEvent {
         const { ownerId, visibility } = input;
+        CalendarEventAudienceValidator.ensureFits(
+            visibility,
+            input.details.audience,
+        );
         const calendarEvent = new CalendarEvent({
             ...input,
             id: CalendarEventId.generate(),
@@ -51,8 +56,12 @@ export class CalendarEvent extends AggregateRoot {
         return new CalendarEvent(calendarEventPropsFromSnapshot(snapshot));
     }
 
-    // R9: whoever sees the event edits it; the repository only hands out visible events (R7).
+    // R9: whoever sees the event edits it; the repository only hands out visible events (R7). R11: a private one stays for its author.
     edit(userId: string, details: CalendarEventDetails, now: Date): void {
+        CalendarEventAudienceValidator.ensureFits(
+            this.props.visibility,
+            details.audience,
+        );
         this.props.details = details;
         this.props.metadata = this.props.metadata.recordUpdate(now);
         this.record(CalendarEventEditedEvent, userId, now);
@@ -93,6 +102,11 @@ export class CalendarEvent extends AggregateRoot {
         now: Date,
     ): void {
         CalendarEventAccessValidator.ensureOwner(this.props.ownerId, userId);
+        // R11: only an event for its author becomes private; sharing keeps the audience.
+        CalendarEventAudienceValidator.ensureFits(
+            visibility,
+            this.props.details.audience,
+        );
         this.props.visibility = visibility;
         this.props.metadata = this.props.metadata.recordUpdate(now);
     }

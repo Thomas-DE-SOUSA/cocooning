@@ -1,18 +1,12 @@
+import type { ViewerAudience } from '@cocooning/couple-client-business-logic/agenda';
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import type { CalendarEventMoment } from './calendar-event-moment.view-model';
-
-// Glossary "Couleur de l'auteur": terracotta for the partner who created the couple, sage for the other.
-export const AuthorColorEnum = {
-    TERRACOTTA: 'TERRACOTTA',
-    SAGE: 'SAGE',
-} as const;
-
-export type AuthorColor =
-    (typeof AuthorColorEnum)[keyof typeof AuthorColorEnum];
+import type { CalendarLabelItem } from './calendar-label.view-model';
+import type { AudiencePill, EventTint } from './event-tint.view-model';
 
 export type DayMark = {
     readonly calendarEventId: string;
-    readonly color: AuthorColor;
+    readonly tint: EventTint;
     readonly isPrivate: boolean;
 };
 
@@ -38,7 +32,11 @@ export type AgendaDayItem = {
     readonly moment: CalendarEventMoment;
     readonly isOwner: boolean;
     readonly isPrivate: boolean;
-    readonly color: AuthorColor;
+    readonly audience: ViewerAudience;
+    readonly labelId: string | null;
+    readonly labelName: string | null;
+    readonly tint: EventTint;
+    readonly pill: AudiencePill;
 };
 
 export type AgendaCalendarViewModel = {
@@ -69,6 +67,7 @@ export type AgendaScreenViewModel =
           readonly initialDay: string;
           readonly calendar: AgendaCalendarViewModel;
           readonly days: AgendaDays;
+          readonly labels: readonly CalendarLabelItem[];
       }
     | {
           readonly step: typeof AgendaStepEnum.UNAVAILABLE;

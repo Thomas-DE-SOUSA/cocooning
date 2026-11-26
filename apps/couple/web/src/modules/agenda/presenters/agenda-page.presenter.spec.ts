@@ -4,6 +4,7 @@ import {
 } from '@cocooning/couple-client-business-logic/shared';
 import {
     A_CALENDAR_EVENT_LIST,
+    A_CALENDAR_LABEL_LIST,
     A_PAIRED_COUPLE,
 } from '@cocooning/couple-client-business-logic/testing';
 import { AgendaExceptionCodeEnum } from '@cocooning/couple-contract/agenda';
@@ -28,6 +29,7 @@ const AN_AGENDA: AgendaPageInput = {
     couple: ok(A_PAIRED_COUPLE),
     events: ok(A_CALENDAR_EVENT_LIST),
     dayEvents: null,
+    labels: ok(A_CALENDAR_LABEL_LIST),
     query: { day: '2026-12-05', month: '2026-12' },
     today: '2026-11-24',
 };
@@ -81,6 +83,34 @@ describe('Feature: the agenda page (decision 0036)', () => {
             });
         });
 
+        it('R12, R13, gives the labels of the couple and colours an event by its label', () => {
+            const [sport] = A_CALENDAR_LABEL_LIST.items;
+            const page = calendarOf(
+                presentAgendaPage({
+                    ...AN_AGENDA,
+                    events: ok({
+                        items: [
+                            anEvent({
+                                startsOn: '2026-12-05',
+                                labelId: sport!.calendarLabelId,
+                            }),
+                        ],
+                    }),
+                }),
+            );
+
+            expect(page.labels.map(({ name }) => name)).toEqual([
+                'Sport',
+                'Famille',
+            ]);
+            expect(page.days['2026-12-05']?.items).toMatchObject([
+                { labelName: 'Sport', tint: 'SAGE' },
+            ]);
+            expect(page.calendar.marks['2026-12-05']).toMatchObject([
+                { tint: 'SAGE' },
+            ]);
+        });
+
         it('adds the chosen day from its own list when another month is shown', () => {
             const { days } = calendarOf(
                 presentAgendaPage({
@@ -127,6 +157,14 @@ describe('Feature: the agenda page (decision 0036)', () => {
                 presentAgendaPage({ ...AN_AGENDA, couple: ok(null) })
                     .redirectTo,
             ).toBe(WebRouterEnum.COUPLE_PAIRING);
+        });
+
+        it('shows a refused reading of the labels on the screen', () => {
+            const error = aRefusal(ApiErrorCodeEnum.UNKNOWN, null);
+            expect(
+                presentAgendaPage({ ...AN_AGENDA, labels: fail(error) })
+                    .viewModel,
+            ).toEqual({ step: AgendaStepEnum.UNAVAILABLE, error });
         });
 
         it('shows any other failure on the screen, the chosen day included', () => {

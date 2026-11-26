@@ -17,6 +17,7 @@ const SURPRISE: CalendarEventBody = {
     title: 'Bijoutier',
     startsAt: '10:00',
     endsAt: null,
+    audience: 'OWNER',
     visibility: 'PRIVATE',
 };
 

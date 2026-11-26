@@ -39,7 +39,12 @@ export function useCalendarEventSheet({ gateway, target, onClose }: Options) {
             onClose();
             return;
         }
-        commands.saveCalendarEvent(item.calendarEventId, form, save);
+        commands.saveCalendarEvent(
+            item.calendarEventId,
+            form,
+            save,
+            item.isOwner,
+        );
     };
     const deleteCalendarEvent = () => {
         if (target.mode !== CalendarEventDrawerModeEnum.EDIT) return;

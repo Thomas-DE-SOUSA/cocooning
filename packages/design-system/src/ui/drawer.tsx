@@ -18,6 +18,20 @@ export function Drawer(props: ComponentProps<typeof DrawerPrimitive.Root>) {
     );
 }
 
+// A sheet opened from inside another one (vaul's nested root): the same settings, the sheet below steps back.
+export function DrawerNested(
+    props: ComponentProps<typeof DrawerPrimitive.NestedRoot>,
+) {
+    return (
+        <DrawerPrimitive.NestedRoot
+            data-slot="drawer-nested"
+            handleOnly
+            repositionInputs={false}
+            {...props}
+        />
+    );
+}
+
 export function DrawerContent({
     className,
     children,

@@ -1,4 +1,7 @@
-import { CalendarEventVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    CalendarEventAudienceEnum,
+    CalendarEventVisibilityEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import { fail, ok } from '@cocooning/shared-kernel/utils';
 import { ApiErrorCodeEnum } from '../../../shared/api-error';
 import {
@@ -6,6 +9,7 @@ import {
     A_SHARED_CALENDAR_EVENT,
     FakeAgendaGateway,
 } from '../../../testing/fake-agenda.gateway';
+import { ViewerAudienceEnum } from '../../domain/enums/viewer-audience.enum';
 import type { CalendarEventForm } from '../schemas/calendar-event-form.zod';
 import { CreateCalendarEventUseCase } from './create-calendar-event.use-case';
 import { DeleteCalendarEventUseCase } from './delete-calendar-event.use-case';
@@ -24,7 +28,13 @@ const DETAILS = {
     startsAt: null,
     endsAt: null,
 };
-const FORM: CalendarEventForm = { ...DETAILS, isPrivate: false };
+const FORM: CalendarEventForm = {
+    ...DETAILS,
+    isPrivate: false,
+    audience: ViewerAudienceEnum.BOTH,
+    labelId: null,
+};
+const LABEL_ID = '01936b2e-7c4a-7000-8000-0000000000b1';
 const RESERVED = {
     code: ApiErrorCodeEnum.FORBIDDEN,
     message: 'Reserved to the owner of the calendar event',
@@ -55,34 +65,70 @@ describe('Feature: the agenda of the couple from the PWA', () => {
     });
 
     it.each([
-        [false, CalendarEventVisibilityEnum.SHARED],
-        [true, CalendarEventVisibilityEnum.PRIVATE],
+        [
+            false,
+            ViewerAudienceEnum.BOTH,
+            CalendarEventVisibilityEnum.SHARED,
+            CalendarEventAudienceEnum.BOTH,
+        ],
+        [
+            false,
+            ViewerAudienceEnum.YOU,
+            CalendarEventVisibilityEnum.SHARED,
+            CalendarEventAudienceEnum.PARTNER,
+        ],
+        [
+            true,
+            ViewerAudienceEnum.ME,
+            CalendarEventVisibilityEnum.PRIVATE,
+            CalendarEventAudienceEnum.OWNER,
+        ],
     ])(
-        'creates an event, private %s, with its visibility (R1, R3)',
-        async (isPrivate, visibility) => {
+        'creates an event, private %s, for %s, as its author (R1, R3, R11, R13)',
+        async (isPrivate, viewerAudience, visibility, audience) => {
             await new CreateCalendarEventUseCase(gateway).execute({
                 ...FORM,
                 isPrivate,
+                audience: viewerAudience,
+                labelId: LABEL_ID,
             });
             expect(gateway.calls).toEqual([
                 {
                     operation: 'createCalendarEvent',
-                    request: { ...DETAILS, visibility },
+                    request: {
+                        ...DETAILS,
+                        audience,
+                        labelId: LABEL_ID,
+                        visibility,
+                    },
                 },
             ]);
         },
     );
 
-    it('edits an event with its details only (R9)', async () => {
-        await new EditCalendarEventUseCase(gateway).execute(EVENT_ID, FORM);
-        expect(gateway.calls).toEqual([
-            {
-                operation: 'editCalendarEvent',
-                calendarEventId: EVENT_ID,
-                request: DETAILS,
-            },
-        ]);
-    });
+    it.each([
+        [true, ViewerAudienceEnum.ME, CalendarEventAudienceEnum.OWNER],
+        [true, ViewerAudienceEnum.YOU, CalendarEventAudienceEnum.PARTNER],
+        [false, ViewerAudienceEnum.ME, CalendarEventAudienceEnum.PARTNER],
+        [false, ViewerAudienceEnum.YOU, CalendarEventAudienceEnum.OWNER],
+        [false, ViewerAudienceEnum.BOTH, CalendarEventAudienceEnum.BOTH],
+    ])(
+        'edits an event, by its author %s, for %s, relative to the author and without its visibility (R9, R11)',
+        async (isOwner, viewerAudience, audience) => {
+            await new EditCalendarEventUseCase(gateway).execute(
+                EVENT_ID,
+                { ...FORM, audience: viewerAudience },
+                isOwner,
+            );
+            expect(gateway.calls).toEqual([
+                {
+                    operation: 'editCalendarEvent',
+                    calendarEventId: EVENT_ID,
+                    request: { ...DETAILS, audience, labelId: null },
+                },
+            ]);
+        },
+    );
 
     it('shares, makes private and deletes an event (R8, R9)', async () => {
         await new ShareCalendarEventUseCase(gateway).execute(EVENT_ID);

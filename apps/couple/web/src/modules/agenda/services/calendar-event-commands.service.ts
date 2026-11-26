@@ -11,6 +11,7 @@ import {
 } from '@cocooning/couple-client-business-logic/shared';
 import { CalendarEventParamsRequestSchema } from '@cocooning/couple-contract/agenda';
 import { fail, ok, type Result } from '@cocooning/shared-kernel/utils';
+import { z } from 'zod';
 
 export type CreateCalendarEventContext = {
     readonly t: Translator;
@@ -55,15 +56,23 @@ export async function actOnCalendarEvent(
     return result.success ? ok(null) : result;
 }
 
-// R9: the edit sends the details; isPrivate is validated with the form but never sent, the visibility has its own commands (R8).
+// R9: the edit sends the details, the visibility has its own commands (R8). R11: isOwner turns the audience picked by
+// the reader into the audience of the author; a wrong one only changes who the event is for, which either partner may.
 export async function editCalendarEvent(
     calendarEventIdInput: unknown,
     input: unknown,
+    isOwnerInput: unknown,
     context: EditCalendarEventContext,
 ): Promise<Result<null, ApiError>> {
     const form = createCalendarEventFormSchema(context.t).safeParse(input);
     if (!form.success) return fail(invalid('Invalid calendar event form'));
+    const isOwner = z.boolean().safeParse(isOwnerInput);
+    if (!isOwner.success) return fail(invalid('Invalid calendar event author'));
     return actOnCalendarEvent(calendarEventIdInput, (calendarEventId) =>
-        context.editCalendarEvent.execute(calendarEventId, form.data),
+        context.editCalendarEvent.execute(
+            calendarEventId,
+            form.data,
+            isOwner.data,
+        ),
     );
 }

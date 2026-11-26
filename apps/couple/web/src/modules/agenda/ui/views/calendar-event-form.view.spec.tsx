@@ -1,62 +1,6 @@
-import type { CalendarEventForm } from '@cocooning/couple-client-business-logic/agenda';
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { WithI18n } from '@/testing/with-i18n';
-import { useCalendarEventForm } from '../../hooks/use-calendar-event-form';
+import { screen, waitFor } from '@testing-library/react';
 import { presentNewCalendarEvent } from '../../presenters/calendar-event-form.presenter';
-import { CalendarEventFormView } from './calendar-event-form.view';
-
-const FORM_ID = 'calendar-event-form';
-
-function FormHarness({
-    initial,
-    showsPrivacy,
-    submitted,
-}: {
-    readonly initial: CalendarEventForm;
-    readonly showsPrivacy: boolean;
-    readonly submitted: CalendarEventForm[];
-}) {
-    const { form, isAllDay, changeAllDay } = useCalendarEventForm(initial);
-    return (
-        <>
-            <CalendarEventFormView
-                formId={FORM_ID}
-                form={form}
-                isAllDay={isAllDay}
-                showsPrivacy={showsPrivacy}
-                onAllDayChange={changeAllDay}
-                onSubmit={(values) => submitted.push(values)}
-            />
-            <button
-                type="submit"
-                form={FORM_ID}
-            >
-                Ajouter
-            </button>
-        </>
-    );
-}
-
-function renderForm(
-    initial = presentNewCalendarEvent('2026-11-24'),
-    showsPrivacy = true,
-) {
-    const submitted: CalendarEventForm[] = [];
-    render(
-        <WithI18n>
-            <FormHarness
-                initial={initial}
-                showsPrivacy={showsPrivacy}
-                submitted={submitted}
-            />
-        </WithI18n>,
-    );
-    return { submitted, user: userEvent.setup() };
-}
-
-const submit = (user: ReturnType<typeof userEvent.setup>) =>
-    user.click(screen.getByRole('button', { name: 'Ajouter' }));
+import { renderForm, submit } from './__tests__/calendar-event-form-harness';
 
 describe('Feature: the form of an event in the drawer', () => {
     describe('Scenario: R2, R3, R5, a new event on the chosen day', () => {
@@ -87,7 +31,7 @@ describe('Feature: the form of an event in the drawer', () => {
             expect(submitted).toEqual([]);
         });
 
-        it('R3, asks for "rien que pour moi"', async () => {
+        it('R3, R11, asks for "rien que pour moi", then for me', async () => {
             const { submitted, user } = renderForm();
 
             await user.type(screen.getByLabelText('Titre'), 'Cadeau');
@@ -96,7 +40,12 @@ describe('Feature: the form of an event in the drawer', () => {
             );
             await submit(user);
 
-            await waitFor(() => expect(submitted[0]?.isPrivate).toBe(true));
+            await waitFor(() =>
+                expect(submitted[0]).toMatchObject({
+                    isPrivate: true,
+                    audience: 'ME',
+                }),
+            );
         });
     });
 

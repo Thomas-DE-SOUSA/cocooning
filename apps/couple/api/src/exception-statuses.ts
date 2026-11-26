@@ -87,6 +87,14 @@ export const EXCEPTION_STATUSES: ExceptionStatusTable = {
         HttpStatus.UNPROCESSABLE_ENTITY,
     [AgendaExceptionCodeEnum.CALENDAR_EVENT_VERSION_CONFLICT]:
         HttpStatus.CONFLICT,
+    [AgendaExceptionCodeEnum.CALENDAR_EVENT_AUDIENCE_INVALID]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
+    [AgendaExceptionCodeEnum.CALENDAR_LABEL_NOT_FOUND]: HttpStatus.NOT_FOUND,
+    [AgendaExceptionCodeEnum.CALENDAR_LABEL_NAME_INVALID]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
+    [AgendaExceptionCodeEnum.CALENDAR_LABEL_LIMIT_REACHED]: HttpStatus.CONFLICT,
+    [AgendaExceptionCodeEnum.CALENDAR_LABEL_VERSION_CONFLICT]:
+        HttpStatus.CONFLICT,
     [MessagingExceptionCodeEnum.MESSAGING_COUPLE_NOT_PAIRED]:
         HttpStatus.NOT_FOUND,
     [MessagingExceptionCodeEnum.FLASH_MESSAGE_NOT_FOUND]: HttpStatus.NOT_FOUND,

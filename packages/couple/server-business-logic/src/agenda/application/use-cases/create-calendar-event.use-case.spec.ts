@@ -1,5 +1,6 @@
 import { AgendaExceptionCodeEnum } from '@cocooning/couple-contract/agenda';
 import {
+    CalendarEventAudienceEnum,
     type CalendarEventVisibility,
     CalendarEventVisibilityEnum,
 } from '@cocooning/couple-shared-kernel/enums';
@@ -8,6 +9,7 @@ import { CalendarEventId } from '../../domain/value-objects/calendar-event-id.vo
 import { AgendaTestContext } from '../../__tests__/fixtures/agenda-test.context';
 import {
     AS_A,
+    AS_STRANGER,
     COUPLE_ID,
     FIRST_ID,
     NOW,
@@ -17,6 +19,7 @@ import {
 
 const SHARED = CalendarEventVisibilityEnum.SHARED;
 const PRIVATE = CalendarEventVisibilityEnum.PRIVATE;
+const { OWNER, PARTNER, BOTH } = CalendarEventAudienceEnum;
 
 describe('Feature: create a calendar event', () => {
     let ctx: AgendaTestContext;
@@ -49,6 +52,8 @@ describe('Feature: create a calendar event', () => {
                 startsAt: null,
                 endsAt: null,
                 visibility: SHARED,
+                audience: BOTH,
+                labelId: null,
                 updatedAt: NOW,
             });
         });
@@ -93,14 +98,73 @@ describe('Feature: create a calendar event', () => {
         });
     });
 
-    describe('Scenario: R3, the author keeps the event "rien que pour moi"', () => {
-        it('creates it private, and says so in its event', async () => {
-            const view = await create(PRIVATE);
-            expect(view.visibility).toBe(PRIVATE);
+    describe('Scenario: R3, R11, the author keeps the event "rien que pour moi"', () => {
+        it('creates it private, for its author, and says so in its event', async () => {
+            const view = await create(PRIVATE, { ...WEEKEND, audience: OWNER });
+            expect(view).toMatchObject({
+                visibility: PRIVATE,
+                audience: OWNER,
+            });
             expect(ctx.eventPublisher.published[0]?.data).toEqual({
                 ownerId: PARTNER_A,
                 visibility: PRIVATE,
             });
+        });
+    });
+
+    describe('Scenario: R11, who the event is for', () => {
+        it.each([[OWNER], [PARTNER], [BOTH]])(
+            'creates a shared event for %s',
+            async (audience) => {
+                const view = await create(SHARED, { ...WEEKEND, audience });
+                expect(view.audience).toBe(audience);
+            },
+        );
+
+        it.each([[PARTNER], [BOTH]])(
+            'refuses a private event for %s and stores nothing',
+            async (audience) => {
+                await expect(
+                    create(PRIVATE, { ...WEEKEND, audience }),
+                ).rejects.toMatchObject({
+                    code: AgendaExceptionCodeEnum.CALENDAR_EVENT_AUDIENCE_INVALID,
+                });
+                expect(ctx.calendarEventRepository.storedSnapshots).toEqual([]);
+                expect(ctx.eventPublisher.published).toEqual([]);
+            },
+        );
+    });
+
+    describe('Scenario: R13, a label on the event', () => {
+        it('creates the event with a label of the couple', async () => {
+            const label = ctx.givenLabelOf(AS_A);
+            const labelId = label.id.getValue();
+            const view = await create(SHARED, { ...WEEKEND, labelId });
+            expect(view.labelId).toBe(labelId);
+            expect(
+                ctx.calendarEventRepository.storedSnapshots[0],
+            ).toMatchObject({ labelId });
+        });
+
+        const refusesWith = async (labelId: string) => {
+            await expect(
+                create(SHARED, { ...WEEKEND, labelId }),
+            ).rejects.toMatchObject({
+                code: AgendaExceptionCodeEnum.CALENDAR_LABEL_NOT_FOUND,
+            });
+            expect(ctx.calendarEventRepository.storedSnapshots).toEqual([]);
+        };
+
+        it('refuses a label of another couple and stores nothing', async () => {
+            await refusesWith(ctx.givenLabelOf(AS_STRANGER).id.getValue());
+        });
+
+        it('refuses a deleted label and stores nothing', async () => {
+            const calendarLabelId = ctx.givenLabelOf(AS_A).id.getValue();
+            await ctx
+                .deleteCalendarLabelUseCase()
+                .execute(AS_A, { calendarLabelId });
+            await refusesWith(calendarLabelId);
         });
     });
 

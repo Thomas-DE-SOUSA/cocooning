@@ -4,7 +4,7 @@ Les termes propres à l'agenda, avec leur nom dans le code. Les termes communs (
 
 | Terme | Nom dans le code | Définition |
 |---|---|---|
-| **Auteur** | `ownerId` | Le partenaire qui a créé l'événement ; sa couleur marque l'événement |
+| **Auteur** | `ownerId` | Le partenaire qui a créé l'événement |
 | **Titre** | `CalendarEventTitle` | Le nom de l'événement, obligatoire |
 | **Jour** | `startsOn` | Le jour où l'événement commence, un jour du calendrier (`AAAA-MM-JJ`) |
 | **Jusqu'au** | `endsOn` | Le dernier jour d'un événement de plusieurs jours ; absent pour un événement d'un jour |
@@ -12,4 +12,7 @@ Les termes propres à l'agenda, avec leur nom dans le code. Les termes communs (
 | **Toute la journée** | `startsAt` absent | Un événement sans heure |
 | **Description** | `CalendarEventDescription` | Un texte simple et facultatif sous l'événement |
 | **Partagé / rien que pour moi** | `CalendarEventVisibility` `SHARED` / `PRIVATE` | Un événement partagé est vu et modifié par les deux ; un événement « rien que pour moi » n'existe que pour son auteur |
-| **Couleur de l'auteur** | calculée par la PWA | Terre cuite pour le partenaire qui a créé le couple, sauge pour l'autre |
+| **Pour qui** | `CalendarEventAudienceEnum` (`OWNER`, `PARTNER`, `BOTH`) | Qui l'événement concerne, relatif à l'auteur ; affiché « Moi », « Toi » ou « Nous deux » selon qui regarde |
+| **Pour qui, vu par qui regarde** | `ViewerAudienceEnum` (`ME`, `YOU`, `BOTH`) | Le « Pour qui » tel que la PWA l'affiche et le fait choisir : « Moi », « Toi » ou « Nous deux » pour le partenaire qui regarde ; traduit vers `CalendarEventAudienceEnum` selon qu'il est l'auteur ou non |
+| **Étiquette** | `CalendarLabel` | Un nom et une couleur communs au couple, posés sur un événement pour le colorer |
+| **Couleur d'étiquette** | `CalendarLabelColorEnum` | Une des huit teintes de la palette : sauge, rose, terre cuite, ocre, ardoise, prune, menthe, galet |

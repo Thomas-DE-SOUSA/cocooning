@@ -10,6 +10,7 @@ export abstract class CalendarEventCommandGateway {
     abstract editCalendarEvent(
         calendarEventId: string,
         form: CalendarEventForm,
+        isOwner: boolean,
     ): Promise<Result<null, ApiError>>;
     abstract shareCalendarEvent(
         calendarEventId: string,

@@ -13,6 +13,8 @@ const A_FORM = {
     startsAt: '',
     endsAt: '',
     isPrivate: false,
+    audience: 'BOTH',
+    labelId: null as string | null,
 };
 type FormInput = typeof A_FORM;
 
@@ -26,7 +28,7 @@ const issuesOf = (change: Partial<FormInput>) => {
           ]);
 };
 
-describe('Feature: the event typed in the agenda form (R2, R5, R6)', () => {
+describe('Feature: the event typed in the agenda form (R2, R5, R6, R11, R13)', () => {
     it('trims the texts and turns the empty optional inputs into null', () => {
         expect(
             schema.parse({ ...A_FORM, title: ' Diner ', description: '  ' }),
@@ -38,6 +40,8 @@ describe('Feature: the event typed in the agenda form (R2, R5, R6)', () => {
             startsAt: null,
             endsAt: null,
             isPrivate: false,
+            audience: 'BOTH',
+            labelId: null,
         });
     });
 
@@ -48,6 +52,8 @@ describe('Feature: the event typed in the agenda form (R2, R5, R6)', () => {
         ],
         ['an evening', { startsAt: '20:00', endsAt: '23:30' }],
         ['a start hour alone', { startsAt: '20:00' }],
+        ['an event of mine kept for me', { isPrivate: true, audience: 'ME' }],
+        ['an event for you with a label', { audience: 'YOU', labelId: 'l1' }],
         [
             'the longest texts',
             {
@@ -118,6 +124,24 @@ describe('Feature: the event typed in the agenda form (R2, R5, R6)', () => {
             { startsAt: '20:00', endsAt: '20:00' },
             'endsAt',
             'moment.errors.endsAtNotAfterStartsAt',
+        ],
+        [
+            'an event « rien que pour moi » for both',
+            { isPrivate: true, audience: 'BOTH' },
+            'audience',
+            'audience.errors.privateNotForMe',
+        ],
+        [
+            'an event « rien que pour moi » for you',
+            { isPrivate: true, audience: 'YOU' },
+            'audience',
+            'audience.errors.privateNotForMe',
+        ],
+        [
+            'no audience',
+            { audience: '' },
+            'audience',
+            'audience.errors.required',
         ],
     ])(
         'refuses %s with its translated message (decision 0031)',

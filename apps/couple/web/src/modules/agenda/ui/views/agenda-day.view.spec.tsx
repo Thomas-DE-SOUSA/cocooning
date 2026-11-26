@@ -2,7 +2,6 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { WithI18n } from '@/testing/with-i18n';
 import {
     type AgendaDayItem,
-    AuthorColorEnum,
     type AgendaDayViewModel,
     EventSpanKindEnum,
 } from '../../view-models/agenda-screen.view-model';
@@ -23,7 +22,11 @@ const A_DINNER: AgendaDayItem = {
     },
     isOwner: false,
     isPrivate: false,
-    color: AuthorColorEnum.SAGE,
+    audience: 'BOTH',
+    labelId: '01936b2e-7c4a-7000-8000-0000000000b1',
+    labelName: 'Famille',
+    tint: 'SLATE',
+    pill: 'BOTH',
 };
 const MY_SURPRISE: AgendaDayItem = {
     calendarEventId: 'event-surprise',
@@ -40,7 +43,11 @@ const MY_SURPRISE: AgendaDayItem = {
     },
     isOwner: true,
     isPrivate: true,
-    color: AuthorColorEnum.TERRACOTTA,
+    audience: 'ME',
+    labelId: null,
+    labelName: null,
+    tint: 'NEUTRAL',
+    pill: 'PRIVATE',
 };
 
 function renderDay(
@@ -87,25 +94,36 @@ describe('Feature: the events of the chosen day', () => {
         expect(screen.getByText("Aujourd'hui")).toBeTruthy();
     });
 
-    it('shows the hours one above the other, the description and the author', () => {
+    it('R11, R13, shows the hours, the description, who it is for and its label in its colour', () => {
         renderDay({ items: [A_DINNER] });
 
         const dinner = itemOf('Dîner chez Léa');
         expect(dinner.getByText('20:00')).toBeTruthy();
         expect(dinner.getByText('23:00')).toBeTruthy();
         expect(dinner.getByText('Apporter le dessert')).toBeTruthy();
-        expect(dinner.getByText('Mon âme sœur')).toBeTruthy();
-        expect(dinner.queryByText('Rien que pour moi')).toBeNull();
+        expect(dinner.getByText('Nous deux').getAttribute('data-pill')).toBe(
+            'BOTH',
+        );
+        expect(dinner.getByText('Famille')).toBeTruthy();
+        const tints = [
+            ...screen
+                .getByRole('heading', { name: 'Dîner chez Léa' })
+                .closest('li')!
+                .querySelectorAll('[data-tint]'),
+        ].map((element) => element.getAttribute('data-tint'));
+        expect(tints).toEqual(['SLATE', 'SLATE']);
     });
 
-    it('R7, marks my private event and how long my stay lasts', () => {
+    it('R7, marks my private event, without a label, and how long my stay lasts', () => {
         renderDay({ items: [MY_SURPRISE] });
 
         const surprise = itemOf('Cadeau surprise');
         expect(surprise.getByText('Toute la journée')).toBeTruthy();
         expect(surprise.getByText("Jusqu'au 29 novembre")).toBeTruthy();
-        expect(surprise.getByText('Moi')).toBeTruthy();
-        expect(surprise.getByText('Rien que pour moi')).toBeTruthy();
+        expect(
+            surprise.getByText('Rien que pour moi').getAttribute('data-pill'),
+        ).toBe('PRIVATE');
+        expect(surprise.getByText('Sans étiquette')).toBeTruthy();
     });
 
     it('opens the event that is tapped', () => {

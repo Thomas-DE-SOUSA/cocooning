@@ -12,6 +12,8 @@ const DETAIL_FIELDS = [
     'endsOn',
     'startsAt',
     'endsAt',
+    'audience',
+    'labelId',
 ] as const satisfies readonly (keyof CalendarEventForm)[];
 
 const presentVisibilityChange = (

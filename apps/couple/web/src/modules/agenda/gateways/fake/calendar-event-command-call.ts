@@ -9,6 +9,7 @@ export type CalendarEventCommandCall =
           readonly operation: 'editCalendarEvent';
           readonly calendarEventId: string;
           readonly form: CalendarEventForm;
+          readonly isOwner: boolean;
       }
     | {
           readonly operation:

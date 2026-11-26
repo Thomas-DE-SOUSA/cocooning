@@ -4,6 +4,7 @@ import type { ExecutionContext } from '@cocooning/shared-kernel/domain';
 import type { DateTimeProvider } from '@cocooning/shared-kernel/ports';
 import { CalendarEvent } from '../../domain/models/calendar-event.aggregate';
 import type { CalendarEventRepository } from '../../domain/ports/calendar-event.repository';
+import type { CalendarLabelPreconditionService } from '../../domain/services/calendar-label-precondition.service';
 import {
     type CalendarEventDetailsInput,
     createCalendarEventDetails,
@@ -20,6 +21,7 @@ export type CreateCalendarEventCommand = CalendarEventDetailsInput & {
 export class CreateCalendarEventUseCase {
     constructor(
         private readonly calendarEventRepository: CalendarEventRepository,
+        private readonly calendarLabelPreconditionService: CalendarLabelPreconditionService,
         private readonly dateTimeProvider: DateTimeProvider,
         private readonly eventPublishingService: EventPublishingService,
     ) {}
@@ -28,6 +30,10 @@ export class CreateCalendarEventUseCase {
         context: ExecutionContext,
         command: CreateCalendarEventCommand,
     ): Promise<CalendarEventView> {
+        await this.calendarLabelPreconditionService.ensureLabelUsable(
+            context,
+            command.labelId,
+        );
         const details = createCalendarEventDetails(command);
         const calendarEvent = CalendarEvent.create(
             {

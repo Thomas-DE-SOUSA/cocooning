@@ -5,7 +5,10 @@ import type {
     CreateCalendarEventRequest,
     EditCalendarEventRequest,
 } from '@cocooning/couple-contract/agenda';
-import { CalendarEventVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
+import {
+    CalendarEventAudienceEnum,
+    CalendarEventVisibilityEnum,
+} from '@cocooning/couple-shared-kernel/enums';
 import { fail, ok, type Result } from '@cocooning/shared-kernel/utils';
 import { AgendaGateway } from '../agenda/domain/ports/agenda.gateway';
 import type { ApiError } from '../shared/api-error';
@@ -44,6 +47,8 @@ export const A_SHARED_CALENDAR_EVENT: CalendarEventResponse = {
     startsAt: '20:00',
     endsAt: '23:00',
     visibility: CalendarEventVisibilityEnum.SHARED,
+    audience: CalendarEventAudienceEnum.OWNER,
+    labelId: null,
     updatedAt: '2026-11-24T08:00:00.000Z',
 };
 

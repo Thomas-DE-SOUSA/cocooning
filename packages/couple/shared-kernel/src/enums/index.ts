@@ -1,4 +1,6 @@
+export * from './calendar-event-audience.enum';
 export * from './calendar-event-visibility.enum';
+export * from './calendar-label-color.enum';
 export * from './couple-pairing-status.enum';
 export * from './folder-kind.enum';
 export * from './instant-photo-content-type.enum';

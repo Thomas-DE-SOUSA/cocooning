@@ -1,3 +1,4 @@
+import { toViewerAudience } from '@cocooning/couple-client-business-logic/agenda';
 import type { CalendarEventResponse } from '@cocooning/couple-contract/agenda';
 import { CalendarEventVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
 import {
@@ -5,12 +6,13 @@ import {
     type EventSpan,
     EventSpanKindEnum,
 } from '../view-models/agenda-screen.view-model';
-import { presentAuthorColor } from './author-color.presenter';
+import type { CalendarLabelIndex } from './calendar-labels.presenter';
 import {
     compareCalendarEvents,
     isOnDay,
 } from './calendar-event-order.presenter';
 import { presentShortDay } from './day-label.presenter';
+import { presentAudiencePill, presentEventLabel } from './event-tint.presenter';
 
 function presentSpan(
     event: CalendarEventResponse,
@@ -33,7 +35,7 @@ function presentSpan(
 function toDayItem(
     event: CalendarEventResponse,
     day: string,
-    creatorId: string | null,
+    labels: CalendarLabelIndex,
 ): AgendaDayItem {
     const isFirstDay = day === event.startsOn;
     return {
@@ -51,17 +53,20 @@ function toDayItem(
         },
         isOwner: event.isOwner,
         isPrivate: event.visibility === CalendarEventVisibilityEnum.PRIVATE,
-        color: presentAuthorColor(event, creatorId),
+        audience: toViewerAudience(event.audience, event.isOwner),
+        labelId: event.labelId,
+        ...presentEventLabel(event.labelId, labels),
+        pill: presentAudiencePill(event),
     };
 }
 
 export function presentDayItems(
     events: readonly CalendarEventResponse[],
     day: string,
-    creatorId: string | null,
+    labels: CalendarLabelIndex,
 ): AgendaDayItem[] {
     return events
         .filter((event) => isOnDay(event, day))
-        .map((event) => toDayItem(event, day, creatorId))
+        .map((event) => toDayItem(event, day, labels))
         .sort(compareCalendarEvents);
 }

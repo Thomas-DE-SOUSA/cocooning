@@ -12,6 +12,8 @@ const A_DINNER: CalendarEventForm = {
     startsAt: '20:00',
     endsAt: null,
     isPrivate: false,
+    audience: 'BOTH',
+    labelId: null,
 };
 const rejects = () => Promise.reject(new TypeError('Failed to fetch'));
 
@@ -31,7 +33,7 @@ function sendCommand(
         return gateway.createCalendarEvent(A_DINNER);
     }
     if (command === 'editCalendarEvent') {
-        return gateway.editCalendarEvent(EVENT_ID, A_DINNER);
+        return gateway.editCalendarEvent(EVENT_ID, A_DINNER, false);
     }
     return gateway[command](EVENT_ID);
 }
@@ -46,7 +48,8 @@ describe('Feature: calendar event commands through the server actions', () => {
         const gateway = new ServerActionCalendarEventCommandGateway({
             createCalendarEvent: (input) =>
                 record(`${input.title}|${input.endsOn}|${input.startsAt}`),
-            editCalendarEvent: (id, input) => record(`${id}|${input.endsAt}`),
+            editCalendarEvent: (id, input, isOwner) =>
+                record(`${id}|${input.endsAt}|${isOwner}`),
             shareCalendarEvent: record,
             makeCalendarEventPrivate: record,
             deleteCalendarEvent: record,
@@ -59,7 +62,7 @@ describe('Feature: calendar event commands through the server actions', () => {
         }
         expect(sent).toEqual([
             'Dîner chez Léa||20:00',
-            `${EVENT_ID}|`,
+            `${EVENT_ID}||false`,
             EVENT_ID,
             EVENT_ID,
             EVENT_ID,

@@ -1,18 +1,17 @@
 import { ApiRouterEnum } from '@cocooning/couple-shared-kernel/routers';
-import type { TestClient, TestResponse } from '../shared/app/test-client';
+import type { TestResponse } from '../shared/app/test-client';
 import {
     type CalendarEventBody,
     calendarEventOf,
     DINNER,
 } from './agenda-test-data';
+import { CalendarLabelRequests } from './calendar-label-requests';
 
 const withEvent = (route: string, calendarEventId: string): string =>
     route.replace(':calendarEventId', calendarEventId);
 
-// One method per route of the agenda, sent as a partner signed in at the clock of the test app.
-export abstract class AgendaRequests {
-    abstract as(userId: string): TestClient;
-
+// One method per event route of the agenda, sent as a partner signed in at the clock of the test app.
+export abstract class AgendaRequests extends CalendarLabelRequests {
     create(
         userId: string,
         body: CalendarEventBody = DINNER,

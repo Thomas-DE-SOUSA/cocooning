@@ -1,8 +1,9 @@
 'use client';
 
-import type {
-    CalendarEventForm,
-    CalendarEventFormInput,
+import {
+    type CalendarEventForm,
+    type CalendarEventFormInput,
+    ViewerAudienceEnum,
 } from '@cocooning/couple-client-business-logic/agenda';
 import { Label, Switch } from '@cocooning/design-system';
 import { Controller, type UseFormReturn } from 'react-hook-form';
@@ -19,7 +20,7 @@ type Props = {
 
 const HINT_ID = 'calendar-event-private-hint';
 
-// R3 at creation, R8 when the author edits: the other partner never sees this row.
+// R3 at creation, R8 when the author edits: the other partner never sees this row. R11: kept for me, it is for me.
 export function CalendarEventPrivacyRow({ form }: Props) {
     const { t } = useTranslation(AGENDA_NAMESPACE);
     return (
@@ -46,7 +47,15 @@ export function CalendarEventPrivacyRow({ form }: Props) {
                         id="isPrivate"
                         aria-describedby={HINT_ID}
                         checked={field.value}
-                        onCheckedChange={field.onChange}
+                        onCheckedChange={(checked) => {
+                            field.onChange(checked);
+                            if (checked) {
+                                form.setValue(
+                                    'audience',
+                                    ViewerAudienceEnum.ME,
+                                );
+                            }
+                        }}
                         onBlur={field.onBlur}
                     />
                 )}

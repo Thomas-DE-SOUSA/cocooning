@@ -2,7 +2,7 @@
 
 @source '../';
 
-/* "Lin et terre cuite" (platform decision 0017): every pair is checked against WCAG 2.2 AA there. */
+/* "Lin et terre cuite" (platform decision 0017): every pair is checked against WCAG 2.2 AA there; the label tints in decision 0057. */
 :root {
     --radius: 0.75rem;
     --background: #fbf6ee;
@@ -20,6 +20,15 @@
     --border: #eadfd1;
     --input: #8c7a6d;
     --ring: #a65a33;
+    --label-sage: #5e7f57;
+    --label-rose: #c25b7e;
+    --label-terracotta: #a65a33;
+    --label-ochre: #b7862b;
+    --label-slate: #4f6f99;
+    --label-plum: #7d5491;
+    --label-mint: #3e8580;
+    --label-pebble: #7a6e66;
+    --label-none: #b5a79b;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,6 +48,15 @@
         --border: #3a302a;
         --input: #8a7b6f;
         --ring: #d98a5f;
+        --label-sage: #9fc196;
+        --label-rose: #e89ab5;
+        --label-terracotta: #d98a5f;
+        --label-ochre: #e0b661;
+        --label-slate: #93b1da;
+        --label-plum: #bfa0d1;
+        --label-mint: #82c4be;
+        --label-pebble: #b9aa9c;
+        --label-none: #6e6157;
     }
 }
 
@@ -64,6 +82,15 @@
     --color-border: var(--border);
     --color-input: var(--input);
     --color-ring: var(--ring);
+    --color-label-sage: var(--label-sage);
+    --color-label-rose: var(--label-rose);
+    --color-label-terracotta: var(--label-terracotta);
+    --color-label-ochre: var(--label-ochre);
+    --color-label-slate: var(--label-slate);
+    --color-label-plum: var(--label-plum);
+    --color-label-mint: var(--label-mint);
+    --color-label-pebble: var(--label-pebble);
+    --color-label-none: var(--label-none);
 }
 
 @layer base {

@@ -59,9 +59,52 @@ describe('Feature: a partner creates a calendar event (R1, R3)', () => {
         it('keeps the event "rien que pour moi" when asked at creation', async () => {
             const response = await agenda.create(PARTNER_A, {
                 ...WEEKEND,
+                audience: 'OWNER',
                 visibility: 'PRIVATE',
             });
             expect(calendarEventOf(response).visibility).toBe('PRIVATE');
+        });
+    });
+
+    describe('Scenario: R11, who the event is for', () => {
+        it('keeps a shared event for the partner only', async () => {
+            const response = await agenda.create(PARTNER_A, {
+                ...WEEKEND,
+                audience: 'PARTNER',
+            });
+            expect(calendarEventOf(response)).toMatchObject({
+                visibility: 'SHARED',
+                audience: 'PARTNER',
+            });
+        });
+
+        it.each([['PARTNER'], ['BOTH']])(
+            'refuses with 422 a private event for %s, and stores nothing',
+            async (audience) => {
+                const response = await agenda.create(PARTNER_A, {
+                    ...WEEKEND,
+                    audience,
+                    visibility: 'PRIVATE',
+                });
+                expect(response).toEqual(
+                    refusal(
+                        422,
+                        AgendaExceptionCodeEnum.CALENDAR_EVENT_AUDIENCE_INVALID,
+                        'A private calendar event is for its author only',
+                    ),
+                );
+                expect(await agenda.prisma.current.calendarEvent.count()).toBe(
+                    0,
+                );
+            },
+        );
+
+        it('refuses with 422 an unknown audience', async () => {
+            const response = await agenda.create(PARTNER_A, {
+                ...WEEKEND,
+                audience: 'FRIENDS',
+            });
+            expect(response.status).toBe(422);
         });
     });
 
