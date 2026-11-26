@@ -1,8 +1,9 @@
 import Collaboration from '@tiptap/extension-collaboration';
-import { TaskItem, TaskList } from '@tiptap/extension-list';
+import { TaskList } from '@tiptap/extension-list';
 import { type Editor, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import type { Doc } from 'yjs';
+import { NoteTaskItem } from './note-task-item.extension';
 
 // The look of the content: Tailwind classes on the editable root, no stylesheet of its own.
 const CONTENT_CLASS = [
@@ -26,7 +27,7 @@ export function useNoteEditor(document: Doc, label: string): Editor | null {
                     heading: { levels: [2, 3] },
                 }),
                 TaskList,
-                TaskItem.configure({ nested: true }),
+                NoteTaskItem.configure({ nested: true }),
                 Collaboration.configure({ document }),
             ],
             editorProps: {
