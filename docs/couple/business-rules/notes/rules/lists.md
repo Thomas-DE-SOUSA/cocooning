@@ -8,7 +8,7 @@ Les listes de courses et de tâches de l'onglet Listes : des notes à cocher. À
 
 Je crée une liste dans Courses ou dans Tâches, commune ou rien que pour moi, avec un titre et, si je veux, un emoji. Elle suit les règles des notes : elle est à moi et à notre couple (R1), privée elle n'existe que pour moi (R4), commune nous l'écrivons à deux en direct (R6).
 
-- Dans le code : `CreateNoteListUseCase`, `Note.createList` (visibilité de l'espace, `visibilityOfSpace`), `NoteList`, `NoteListKindEnum`, `NoteListEmoji` (`NOTE_LIST_EMOJI_MAX_LENGTH` points de code), `EditNoteListUseCase`, `Note.editList` (les deux partenaires sur une liste commune, comme R6) ; une liste s'ouvre, s'écrit à deux, se partage, se rend privée et se supprime par les routes et le canal temps réel des notes ; `GetNoteUseCase` dit sa section et son emoji (`NoteDetailView`).
+- Dans le code : `CreateNoteListUseCase`, `Note.createList` (visibilité de l'espace, `visibilityOfSpace`), `NoteList`, `NoteListKindEnum`, `NoteListEmoji` (`NOTE_LIST_EMOJI_MAX_LENGTH` points de code), `EditNoteListUseCase`, `Note.editList` (les deux partenaires sur une liste commune, comme R6) ; une liste s'ouvre, s'écrit à deux, se partage, se rend privée et se supprime par les routes et le canal temps réel des notes ; `GetNoteUseCase` dit sa section et son emoji (`NoteDetailView`) ; côté PWA, `NoteListsGateway` et `createNoteListFormSchema` (titre comme R8, emoji vide en `null`, section et espace obligatoires).
 - Source : [décision 0058](../../../decisions/notes/0058-listes-sur-les-notes.md). Validée par : Thomas De Sousa, 2026-11-26 (« go »).
 
 ### R27. Les listes vivent dans l'onglet Listes
@@ -31,17 +31,23 @@ L'accueil d'une section range les listes en « Communes » et « Rien que pour m
 
 Je coche « Pain » : la case prend ma couleur, et chez l'autre elle dit « Toi ». Terre cuite pour « Moi », sauge pour « Toi », selon qui regarde.
 
+- Dans le code (PWA) : `checkLine(line, viewerId)` garde le premier qui coche dans `checkedBy`, `uncheckLine` l'efface ; `presentChecklist(lines, viewerId)` dit pour chaque ligne cochée `ViewerCheckerEnum.ME` ou `YOU` (`null` pour une ligne cochée sans `checkedBy`) (`packages/couple/client-business-logic/src/notes/domain/models/`).
+
 - Source : décision 0058. Validée par : Thomas De Sousa, 2026-11-26 (« go »).
 
 ### R30. Une ligne cochée descend dans « Fait »
 
 Une ligne cochée se barre et descend dans « Fait » ; je la décoche, elle remonte avec les lignes à prendre.
 
+- Dans le code (PWA) : `presentChecklist` rend `open` puis `done`, chacun dans l'ordre du document.
+
 - Source : décision 0058. Validée par : Thomas De Sousa, 2026-11-26 (« go »).
 
 ### R31. « Vider les faits » retire les lignes cochées
 
 Je vide les faits : les lignes cochées disparaissent pour nous deux, sans historique.
+
+- Dans le code (PWA) : `linesToClear(lines)` rend les lignes cochées à retirer du document partagé.
 
 - Source : décision 0058. Validée par : Thomas De Sousa, 2026-11-26 (« go »).
 

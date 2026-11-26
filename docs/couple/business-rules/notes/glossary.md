@@ -21,7 +21,9 @@ Les termes propres aux notes, avec leur nom dans le code. Les termes communs (no
 | **Mettre à jour la fiche** | `NoteCard.refresh` | Relancer la recherche en gardant les cases corrigées à la main |
 | **Section de listes** | `NoteListKindEnum` (`GROCERIES`, `TASKS`) | Courses ou Tâches, la section de l'onglet Listes où vit une liste ; absente pour une note ordinaire |
 | **Emoji de la liste** | `NoteListEmoji` | Un emoji facultatif qui distingue une liste sur l'accueil |
-| **Ligne** | élément à cocher du document | Un article de courses ou une tâche d'une liste |
+| **Ligne** | élément à cocher du document ; `ChecklistLine` dans la PWA | Un article de courses ou une tâche d'une liste |
 | **Qui a coché** | `checkedBy` | Le partenaire qui a coché une ligne ; sa couleur la marque, vue par qui regarde |
-| **Fait** | lignes cochées | La partie basse d'une liste, où descendent les lignes cochées |
+| **Qui a coché, vu par qui regarde** | `ViewerCheckerEnum` (`ME`, `YOU`) | « Moi » (terre cuite) ou « Toi » (sauge) sur une ligne cochée, selon le partenaire qui lit la liste |
+| **Fait** | lignes cochées (`done`) | La partie basse d'une liste, où descendent les lignes cochées |
+| **Vider les faits** | `linesToClear` | Retirer d'une liste toutes ses lignes cochées, pour les deux |
 | **Reste à cocher** | `openItemCount` | Le nombre de lignes pas encore cochées, montré sur l'accueil |

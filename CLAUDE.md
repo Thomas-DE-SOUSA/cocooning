@@ -66,7 +66,7 @@ cocooning/
 ├── packages/
 │   ├── couple/                     # contexts: pairing, then authentication, notes, agenda, messaging
 │   │   ├── server-business-logic/  # * Domain + Application layers (DDD)
-│   │   ├── client-business-logic/  # * Frontend business logic, framework-free (ApiError, Translator, authentication: sign-in form, gateway port, use case; pairing: gateway port, four use cases, join form; notes: three gateway ports (notes, spaces and folders, note cards), twenty-one use cases, note title, folder name, smart folder template and note card forms; agenda: two gateway ports (events, labels), eleven use cases, event form with who it is for, label form; messaging: five gateway ports, eleven use cases, flash message form; testing fakes)
+│   │   ├── client-business-logic/  # * Frontend business logic, framework-free (ApiError, Translator, authentication: sign-in form, gateway port, use case; pairing: gateway port, four use cases, join form; notes: four gateway ports (notes, spaces and folders, note cards, lists), twenty-four use cases, note title, folder name, smart folder template, note card and list forms, checklist lines (who checked, « Fait »); agenda: two gateway ports (events, labels), eleven use cases, event form with who it is for, label form; messaging: five gateway ports, eleven use cases, flash message form; testing fakes)
 │   │   ├── client-infrastructure/  # * Frontend adapters: HTTP config of the couple, session forwarding, authentication, pairing, notes, agenda and messaging gateways and modules
 │   │   ├── prisma/                 # * Prisma 7 schema, PrismaService, unit of work, soft delete, locks
 │   │   ├── shared-kernel/          # * Business enums, limits, api and web routers, MissingExecutionContextException
