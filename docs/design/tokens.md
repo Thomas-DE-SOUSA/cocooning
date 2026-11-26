@@ -24,6 +24,8 @@ Les couleurs sont écrites en hexadécimal, comme dans la décision, pour que le
 | `border-input` | bordure d'un champ ou d'une case vide (3:1 au moins) |
 | `border-border` | bordure décorative d'une carte, bordure par défaut |
 | `outline-ring` | anneau de focus |
+| `bg-label-sage` à `bg-label-pebble`, `border-label-*` | les huit couleurs d'une étiquette de l'agenda (`sage`, `rose`, `terracotta`, `ochre`, `slate`, `plum`, `mint`, `pebble`), en barre, point ou pastille, jamais en texte ([décision 0057](../couple/decisions/frontend/0057-ecran-pour-qui-et-etiquettes.md)) |
+| `bg-label-none` | un événement sans étiquette, neutre |
 
 Un bouton `outline` (texte terre cuite, bordure de champ) prend `bg-card` au survol, pas `bg-muted` : sur `bg-muted`, la terre cuite tombe à 4,3:1.
 
