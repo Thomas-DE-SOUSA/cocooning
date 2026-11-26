@@ -1,10 +1,10 @@
 ---
 nature: technique
-status: proposée
+status: acceptée
 date: 2026-11-26
 deciders: [Thomas De Sousa]
-validated-by: à compléter
-validated-on:
+validated-by: Thomas De Sousa, 2026-11-26
+validated-on: 2026-11-26
 supersedes:
 superseded-by:
 premortem:
@@ -26,6 +26,8 @@ La [décision 0058](../notes/0058-listes-sur-les-notes.md) fait d'une liste de c
 6. **Les routes** : `/lists?section=` (Courses par défaut, Tâches, Envies) et `/lists/:noteId`, toutes deux sous la barre d'onglets, « Listes » active. Le champ d'ajout est en haut de la page : le clavier ne le cache pas, contrairement à l'éditeur d'une note ([décision 0044](0044-navigation-par-onglets.md), point 4). La barre passe à cinq onglets, pastille de 48 px.
 7. **Supprimer une ligne** : glissement vers la gauche, comme l'agenda ([décision 0049](0049-suppression-par-glissement.md)), sans confirmation. **Vider les faits** demande une confirmation dans une feuille : l'app n'a pas d'annulation par toast. Le « ⋯ » d'une liste change titre et emoji (les deux partenaires) et la supprime (sa propriétaire), comme les notes ([décision 0053](0053-ecran-des-espaces-et-des-dossiers.md)).
 8. Le code reste dans le module web `notes` : une liste est une note, et un module n'importe pas l'intérieur d'un autre ([décision 0011](0011-pwa-rangee-par-fonctionnalite.md)).
+
+Réponse du propriétaire à la PR #48, le 2026-11-26 : « go ».
 
 ## Alternatives écartées
 
