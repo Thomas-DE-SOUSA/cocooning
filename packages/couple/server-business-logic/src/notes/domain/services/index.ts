@@ -3,6 +3,7 @@ export * from './card-template-propagation';
 export * from './folder-placement.validator';
 export * from './folder-precondition.service';
 export * from './note-access.validator';
+export * from './note-list.validator';
 export * from './note-card-candidate.validator';
 export * from './note-card-enrichment.service';
 export * from './note-card-precondition.service';

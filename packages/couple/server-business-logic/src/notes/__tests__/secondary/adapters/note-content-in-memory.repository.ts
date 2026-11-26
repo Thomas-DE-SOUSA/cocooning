@@ -1,3 +1,4 @@
+import type { NoteDocument } from '../../../domain/models/note-document';
 import { NoteContentRepository } from '../../../domain/ports/note-content.repository';
 import type { NoteInMemoryRepository } from './note-in-memory.repository';
 
@@ -24,7 +25,7 @@ export class NoteContentInMemoryRepository extends NoteContentRepository {
     override saveContent(
         coupleId: string,
         noteId: string,
-        content: Uint8Array,
+        document: NoteDocument,
     ): Promise<void> {
         const live = this.noteRepository.storedSnapshots.some(
             (snapshot) =>
@@ -35,8 +36,13 @@ export class NoteContentInMemoryRepository extends NoteContentRepository {
         if (live) {
             this.contents = new Map([
                 ...this.contents,
-                [keyOf(coupleId, noteId), Uint8Array.from(content)],
+                [keyOf(coupleId, noteId), Uint8Array.from(document.content)],
             ]);
+            this.noteRepository.recordOpenItems(
+                coupleId,
+                noteId,
+                document.openItemCount,
+            );
         }
         return Promise.resolve();
     }

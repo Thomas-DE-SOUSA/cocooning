@@ -15,7 +15,7 @@
 
 - Type : écart avec une règle validée
 - Constaté le : 2026-11-25, branche `feat/notes-ai-folders-backend`
-- Où : `packages/couple/server-business-logic/src/notes/domain/models/note-card.aggregate.ts` (environ 270 lignes), `folder.aggregate.ts` (environ 210 lignes)
+- Où : `packages/couple/server-business-logic/src/notes/domain/models/note-card.aggregate.ts` (environ 270 lignes), `folder.aggregate.ts` (environ 210 lignes), `note.aggregate.ts` (environ 245 lignes depuis les listes, décision 0058 ; la section et l'emoji vivent dans `NoteList`, les refus dans `NoteListValidator`)
 - Constat : les calculs des cases (`card-fields.ts`), la relecture (`note-card.snapshot.ts`) et les réglages (`smart-folder-settings.ts`) sont déjà sortis ; restent les méthodes d'intention et les accesseurs, qui forment l'agrégat. Même situation que `couple.aggregate.ts` et `note.aggregate.ts` (décision D26 ouverte).
 - Règle concernée : `core.md` règle 3, décision D26
 - Statut : ouvert, suit la décision D26

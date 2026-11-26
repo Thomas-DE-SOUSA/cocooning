@@ -8,6 +8,7 @@ export * from './note-card-search';
 export * from './note-card-writing';
 export * from './note-card.aggregate';
 export * from './note-card.aggregate.type';
+export * from './note-document';
 export * from './note-space';
 export * from './note.aggregate';
 export * from './note.aggregate.type';

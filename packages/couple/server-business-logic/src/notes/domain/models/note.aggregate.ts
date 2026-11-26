@@ -6,6 +6,7 @@ import {
 import { AggregateRoot, EntityMetadata } from '@cocooning/shared-kernel/domain';
 import { NoteCreatedEvent } from '../events/note-created.event';
 import { NoteDeletedEvent } from '../events/note-deleted.event';
+import { NoteListEditedEvent } from '../events/note-list-edited.event';
 import { NoteMadePrivateEvent } from '../events/note-made-private.event';
 import type { NoteEventParams } from '../events/note-event-params';
 import { NoteMovedEvent } from '../events/note-moved.event';
@@ -13,12 +14,16 @@ import { NoteRenamedEvent } from '../events/note-renamed.event';
 import { NoteSharedEvent } from '../events/note-shared.event';
 import { FolderPlacementValidator } from '../services/folder-placement.validator';
 import { NoteAccessValidator } from '../services/note-access.validator';
+import { NoteListValidator } from '../services/note-list.validator';
 import { FolderId } from '../value-objects/folder-id.vo';
 import { NoteId } from '../value-objects/note-id.vo';
+import { NoteList } from '../value-objects/note-list.vo';
+import type { NoteListEmoji } from '../value-objects/note-list-emoji.vo';
 import { NoteTitle } from '../value-objects/note-title.vo';
 import type { FolderPlace } from './folder.aggregate.type';
 import type {
     CreateNoteInput,
+    CreateNoteListInput,
     NoteProps,
     NoteSnapshot,
 } from './note.aggregate.type';
@@ -42,6 +47,8 @@ export class Note extends AggregateRoot {
             title: input.title,
             visibility,
             folderId: input.folder === null ? null : input.folder.id,
+            list: null,
+            openItemCount: 0,
             version: INITIAL_VERSION,
             metadata: EntityMetadata.create(now),
         });
@@ -56,6 +63,13 @@ export class Note extends AggregateRoot {
         return note;
     }
 
+    // R26, R27: a list of a section, at the root of its space, created like any note.
+    static createList(input: CreateNoteListInput, now: Date): Note {
+        const note = Note.create({ ...input, folder: null }, now);
+        note.props.list = input.list;
+        return note;
+    }
+
     static fromSnapshot(snapshot: NoteSnapshot): Note {
         return new Note({
             id: NoteId.from(snapshot.id),
@@ -67,6 +81,8 @@ export class Note extends AggregateRoot {
                 snapshot.folderId === null
                     ? null
                     : FolderId.from(snapshot.folderId),
+            list: NoteList.fromSnapshot(snapshot),
+            openItemCount: snapshot.openItemCount,
             version: snapshot.version,
             metadata: EntityMetadata.fromSnapshot(snapshot.metadata),
         });
@@ -78,6 +94,22 @@ export class Note extends AggregateRoot {
         this.props.metadata = this.props.metadata.recordUpdate(now);
         this.addDomainEvent(
             new NoteRenamedEvent(this.eventParams(userId, now, null)),
+        );
+    }
+
+    // R6, R26: whoever sees the list changes its title and its emoji.
+    editList(
+        userId: string,
+        title: NoteTitle,
+        emoji: NoteListEmoji | null,
+        now: Date,
+    ): void {
+        const list = NoteListValidator.ensureList(this.props.list);
+        this.props.title = title;
+        this.props.list = list.withEmoji(emoji);
+        this.props.metadata = this.props.metadata.recordUpdate(now);
+        this.addDomainEvent(
+            new NoteListEditedEvent(this.eventParams(userId, now, null)),
         );
     }
 
@@ -97,6 +129,8 @@ export class Note extends AggregateRoot {
         folder: FolderPlace | null,
         now: Date,
     ): void {
+        // R27: a list is never moved into a folder.
+        NoteListValidator.ensureMovable(this.props.list);
         FolderPlacementValidator.ensureInSpace(folder, space);
         const visibility = visibilityOfSpace(space);
         if (visibility !== this.props.visibility)
@@ -145,6 +179,15 @@ export class Note extends AggregateRoot {
         return this.props.folderId;
     }
 
+    get list(): NoteList | null {
+        return this.props.list;
+    }
+
+    // R28: what is left to check, as counted at the last save of the document.
+    get openItemCount(): number {
+        return this.props.openItemCount;
+    }
+
     get updatedAt(): Date {
         return this.props.metadata.updatedAt;
     }
@@ -157,6 +200,8 @@ export class Note extends AggregateRoot {
             title: this.props.title.value,
             visibility: this.props.visibility,
             folderId: this.folderIdValue(),
+            ...NoteList.snapshotOf(this.props.list),
+            openItemCount: this.props.openItemCount,
             version: this.props.version,
             metadata: this.props.metadata.toSnapshot(),
         };

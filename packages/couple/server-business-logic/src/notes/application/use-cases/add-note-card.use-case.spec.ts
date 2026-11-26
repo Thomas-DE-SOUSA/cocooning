@@ -60,6 +60,8 @@ describe('Feature: add an item to a smart folder by its name (R19, R20)', () => 
                     searchedAt: null,
                     updatedAt: NOW,
                 },
+                listKind: null,
+                emoji: null,
             });
             expect(ctx.noteCardRepository.storedSnapshots).toEqual([
                 {

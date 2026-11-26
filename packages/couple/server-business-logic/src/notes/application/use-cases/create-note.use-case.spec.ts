@@ -54,6 +54,9 @@ describe('Feature: create a note', () => {
                     title: 'Courses',
                     visibility: NoteVisibilityEnum.SHARED,
                     folderId: null,
+                    listKind: null,
+                    emoji: null,
+                    openItemCount: 0,
                     version: 1,
                     metadata: {
                         createdAt: NOW.toISOString(),

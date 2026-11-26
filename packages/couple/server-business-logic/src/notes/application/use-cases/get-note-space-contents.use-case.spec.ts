@@ -82,6 +82,8 @@ describe('Feature: open a space or one of its folders (R10, R14)', () => {
                         folderId: null,
                         updatedAt: NOW,
                         card: null,
+                        listKind: null,
+                        emoji: null,
                     },
                 ],
             });

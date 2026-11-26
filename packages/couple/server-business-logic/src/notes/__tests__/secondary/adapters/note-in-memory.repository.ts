@@ -1,5 +1,6 @@
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
 import {
+    type NoteListKind,
     type NoteSpace,
     NoteVisibilityEnum,
 } from '@cocooning/couple-shared-kernel/enums';
@@ -29,6 +30,10 @@ const isVisibleTo =
         snapshot.metadata.deletedAt === null &&
         (snapshot.visibility === NoteVisibilityEnum.SHARED ||
             snapshot.ownerId === userId);
+
+// R27: the notes home leaves the lists out, as the query does.
+const isOrdinary = (snapshot: NoteSnapshot): boolean =>
+    snapshot.listKind === null;
 
 const byMostRecentChange = (left: NoteSnapshot, right: NoteSnapshot): number =>
     right.metadata.updatedAt.localeCompare(left.metadata.updatedAt);
@@ -77,7 +82,9 @@ export class NoteInMemoryRepository extends NoteRepository {
         userId: string,
         { page, pageSize }: OffsetPaginationParams,
     ): Promise<OffsetPage<Note>> {
-        const visible = this.visible(coupleId, userId).sort(byMostRecentChange);
+        const visible = this.ordinary(coupleId, userId).sort(
+            byMostRecentChange,
+        );
         const start = (page - 1) * pageSize;
         return Promise.resolve({
             items: visible
@@ -97,7 +104,7 @@ export class NoteInMemoryRepository extends NoteRepository {
     ): Promise<ReadonlyArray<Note>> {
         const visibility = visibilityOfSpace(space);
         return Promise.resolve(
-            this.visible(coupleId, userId)
+            this.ordinary(coupleId, userId)
                 .filter(
                     (snapshot) =>
                         snapshot.visibility === visibility &&
@@ -114,7 +121,7 @@ export class NoteInMemoryRepository extends NoteRepository {
         folders: ReadonlyArray<Folder>,
     ): Promise<ReadonlyMap<string, number>> {
         const folderIds = folders.map((folder) => folder.id.getValue());
-        const folderIdsOfNotes = this.visible(coupleId, userId).flatMap(
+        const folderIdsOfNotes = this.ordinary(coupleId, userId).flatMap(
             ({ folderId }) =>
                 folderId !== null && folderIds.includes(folderId)
                     ? [folderId]
@@ -128,7 +135,7 @@ export class NoteInMemoryRepository extends NoteRepository {
         userId: string,
     ): Promise<NoteSpaceCounts> {
         const counts = countBy(
-            this.visible(coupleId, userId).map(({ visibility }) =>
+            this.ordinary(coupleId, userId).map(({ visibility }) =>
                 spaceOfVisibility(visibility),
             ),
         );
@@ -136,6 +143,29 @@ export class NoteInMemoryRepository extends NoteRepository {
             SHARED: counts.get('SHARED') ?? 0,
             PRIVATE: counts.get('PRIVATE') ?? 0,
         });
+    }
+
+    override findVisibleLists(
+        coupleId: string,
+        userId: string,
+        kind: NoteListKind,
+    ): Promise<ReadonlyArray<Note>> {
+        return Promise.resolve(
+            this.visible(coupleId, userId)
+                .filter((snapshot) => snapshot.listKind === kind)
+                .sort(byMostRecentChange)
+                .map((snapshot) => this.rebuild(snapshot)),
+        );
+    }
+
+    // R28, as the content adapter: the count is written with the document, without a version, on a live note only.
+    recordOpenItems(coupleId: string, noteId: string, count: number): void {
+        const stored = this.snapshots.get(noteId) ?? null;
+        if (stored === null || stored.coupleId !== coupleId) return;
+        this.snapshots = new Map([
+            ...this.snapshots,
+            [noteId, { ...stored, openItemCount: count }],
+        ]);
     }
 
     // R16, as the bulk statement of the adapter: the live notes of the folder move up, their version raised.
@@ -167,6 +197,10 @@ export class NoteInMemoryRepository extends NoteRepository {
         return this.storedSnapshots.filter(isVisibleTo(coupleId, userId));
     }
 
+    private ordinary(coupleId: string, userId: string): NoteSnapshot[] {
+        return this.visible(coupleId, userId).filter(isOrdinary);
+    }
+
     private write(note: Note): void {
         const concurrent = this.concurrentSave;
         this.concurrentSave = null;
@@ -188,9 +222,15 @@ export class NoteInMemoryRepository extends NoteRepository {
             });
         }
         const version = stored === null ? FIRST_VERSION : stored.version + 1;
+        // The save of the aggregate never writes the count: only the document does (recordOpenItems).
+        const openItemCount =
+            stored === null ? snapshot.openItemCount : stored.openItemCount;
         this.snapshots = new Map([
             ...this.snapshots,
-            [snapshot.id, structuredClone({ ...snapshot, version })],
+            [
+                snapshot.id,
+                structuredClone({ ...snapshot, openItemCount, version }),
+            ],
         ]);
     }
 }

@@ -3,6 +3,7 @@ import {
     FolderRepository,
     NoteCardRepository,
     NoteCardSearchCounter,
+    NoteChecklistReader,
     NoteCollaborationProvider,
     NoteContentRepository,
     NoteRepository,
@@ -11,6 +12,7 @@ import {
 import {
     HocuspocusNoteCollaborationProvider,
     NoteHocuspocus,
+    YjsNoteChecklistReader,
 } from './secondary/collaboration';
 import {
     fetchWebPageReaderProvider,
@@ -40,6 +42,7 @@ const adapters = [
     { provide: NoteCardRepository, useClass: NoteCardPrismaRepository },
     { provide: NoteCardSearchCounter, useClass: NoteCardSearchPrismaCounter },
     { provide: NoteContentRepository, useClass: NoteContentPrismaRepository },
+    { provide: NoteChecklistReader, useClass: YjsNoteChecklistReader },
     { provide: PairedCoupleProvider, useClass: PairedCouplePrismaProvider },
     {
         provide: NoteCollaborationProvider,

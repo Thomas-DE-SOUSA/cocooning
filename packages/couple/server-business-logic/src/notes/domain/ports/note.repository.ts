@@ -2,12 +2,16 @@ import type {
     OffsetPage,
     OffsetPaginationParams,
 } from '@cocooning/shared-kernel/domain';
-import type { NoteSpace } from '@cocooning/couple-shared-kernel/enums';
+import type {
+    NoteListKind,
+    NoteSpace,
+} from '@cocooning/couple-shared-kernel/enums';
 import type { Folder } from '../models/folder.aggregate';
 import type { Note } from '../models/note.aggregate';
 import type { NoteSpaceCounts } from '../models/note-space';
 
 // Visibility is filtered by the query, never in memory (core-backend.md rule 12): another partner's private note is not found (R4).
+// R27: findVisibleById finds a list too; the reads of the notes home (findVisible, findVisibleIn, the counts) leave lists out in the query.
 export abstract class NoteRepository {
     abstract save(note: Note): Promise<void>;
     abstract findVisibleById(
@@ -38,4 +42,10 @@ export abstract class NoteRepository {
         coupleId: string,
         userId: string,
     ): Promise<NoteSpaceCounts>;
+    // R28: the lists of one section of the Lists tab, most recently changed first.
+    abstract findVisibleLists(
+        coupleId: string,
+        userId: string,
+        kind: NoteListKind,
+    ): Promise<ReadonlyArray<Note>>;
 }

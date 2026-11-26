@@ -75,7 +75,7 @@ const useCases = [
     ),
     notesUseCase(
         SaveNoteDocumentUseCase,
-        (d) => new SaveNoteDocumentUseCase(d.contents, d.clock),
+        (d) => new SaveNoteDocumentUseCase(d.contents, d.checklist, d.clock),
     ),
     ...FOLDER_USE_CASES,
     ...CARD_USE_CASES,
