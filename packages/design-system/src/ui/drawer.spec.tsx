@@ -4,6 +4,7 @@ import {
     DrawerContent,
     DrawerDescription,
     DrawerHeader,
+    DrawerNested,
     DrawerTitle,
 } from './drawer';
 
@@ -63,6 +64,60 @@ describe('Feature: a bottom sheet', () => {
             renderDrawer(false);
 
             expect(screen.queryByRole('dialog')).toBeNull();
+        });
+    });
+
+    describe('Scenario: a sheet opened from inside another one', () => {
+        function Stacked({
+            isNestedOpen,
+            changes,
+        }: {
+            readonly isNestedOpen: boolean;
+            readonly changes: boolean[];
+        }) {
+            return (
+                <Drawer open>
+                    <DrawerContent>
+                        <DrawerTitle>Nouvel événement</DrawerTitle>
+                        <DrawerDescription>L'événement</DrawerDescription>
+                    </DrawerContent>
+                    <DrawerNested
+                        open={isNestedOpen}
+                        onOpenChange={(next) => changes.push(next)}
+                    >
+                        <DrawerContent>
+                            <DrawerTitle>Nouvelle étiquette</DrawerTitle>
+                            <DrawerDescription>Le nom</DrawerDescription>
+                        </DrawerContent>
+                    </DrawerNested>
+                </Drawer>
+            );
+        }
+
+        it('stacks a second dialog above the first, closed by Escape alone', () => {
+            const changes: boolean[] = [];
+            const { rerender } = render(
+                <Stacked
+                    isNestedOpen={false}
+                    changes={changes}
+                />,
+            );
+            rerender(
+                <Stacked
+                    isNestedOpen
+                    changes={changes}
+                />,
+            );
+
+            const nested = screen.getByRole('dialog', {
+                name: 'Nouvelle étiquette',
+            });
+            expect(
+                screen.queryByRole('dialog', { name: 'Nouvel événement' }),
+            ).toBeNull();
+            fireEvent.keyDown(nested, { key: 'Escape' });
+
+            expect(changes).toEqual([false]);
         });
     });
 });

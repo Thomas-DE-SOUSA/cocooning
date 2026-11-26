@@ -7,8 +7,9 @@ import type {
     DayMark,
     DayMarks,
 } from '../view-models/agenda-screen.view-model';
-import { presentAuthorColor } from './author-color.presenter';
 import { compareCalendarEvents } from './calendar-event-order.presenter';
+import type { CalendarLabelIndex } from './calendar-labels.presenter';
+import { presentEventLabel } from './event-tint.presenter';
 import { presentRangeDays } from './month-grid.presenter';
 
 export const MAX_MARKS_PER_DAY = 3;
@@ -23,17 +24,18 @@ function daysCovered(
     return presentRangeDays({ from: first, to: last });
 }
 
-// R7: the API sends the other's private events to nobody; a private one of mine is a hollow ring.
+// R13: a dot in the colour of the label. R7: the API sends the other's private events to nobody; a private one of
+// mine is a hollow ring.
 export function presentDayMarks(
     events: readonly CalendarEventResponse[],
-    creatorId: string | null,
+    labels: CalendarLabelIndex,
     range: CalendarEventQueryRequest,
 ): DayMarks {
     const marks: Record<string, DayMark[]> = {};
     for (const event of [...events].sort(compareCalendarEvents)) {
         const mark: DayMark = {
             calendarEventId: event.calendarEventId,
-            color: presentAuthorColor(event, creatorId),
+            tint: presentEventLabel(event.labelId, labels).tint,
             isPrivate: event.visibility === CalendarEventVisibilityEnum.PRIVATE,
         };
         for (const day of daysCovered(event, range)) {

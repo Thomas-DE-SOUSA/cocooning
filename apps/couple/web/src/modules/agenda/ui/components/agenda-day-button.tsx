@@ -4,12 +4,12 @@ import { CalendarDayButton } from '@cocooning/design-system';
 import { use } from 'react';
 import type { DayButtonProps } from 'react-day-picker';
 import type { DayMark } from '../../view-models/agenda-screen.view-model';
-import { AuthorDot } from './author-dot';
 import { DayMarksContext } from './day-marks-context';
+import { EventDot } from './event-dot';
 
 const NO_MARKS: readonly DayMark[] = [];
 
-// A day of the grid with up to three dots, one per event of that day, in the color of its author.
+// A day of the grid with up to three dots, one per event of that day, in the colour of its label (R13).
 export function AgendaDayButton(props: DayButtonProps) {
     const marks = use(DayMarksContext)[props.day.isoDate] ?? NO_MARKS;
     return (
@@ -21,9 +21,9 @@ export function AgendaDayButton(props: DayButtonProps) {
                     className="flex h-1.5 items-center gap-0.5"
                 >
                     {marks.map((mark) => (
-                        <AuthorDot
+                        <EventDot
                             key={mark.calendarEventId}
-                            color={mark.color}
+                            tint={mark.tint}
                             isPrivate={mark.isPrivate}
                             className="size-1.5"
                         />

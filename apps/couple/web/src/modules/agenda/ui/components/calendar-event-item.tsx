@@ -1,14 +1,15 @@
 'use client';
 
-import { Badge, Card, SwipeToDelete } from '@cocooning/design-system';
+import { Card, cn, SwipeToDelete } from '@cocooning/design-system';
 import { useTranslation } from 'react-i18next';
 import { AGENDA_NAMESPACE } from '../../data/agenda-i18n-namespaces';
 import {
     type AgendaDayItem,
     EventSpanKindEnum,
 } from '../../view-models/agenda-screen.view-model';
-import { AuthorDot } from './author-dot';
 import { CalendarEventTime } from './calendar-event-time';
+import { EventLabelLine } from './event-label-line';
+import { TINT_FILL } from './event-tint-classes';
 
 const SPAN_KEYS = {
     [EventSpanKindEnum.UNTIL]: 'event.until',
@@ -24,6 +25,7 @@ type Props = {
 };
 
 // The title is a button stretched over the whole card: a tap anywhere opens the drawer, the heading stays a heading.
+// R13: a bar of 5 px on the left in the colour of its label; the card clips it, so the focus ring is drawn inside.
 // R9: a swipe to the left deletes the event for both partners (the drawer keeps its own deletion).
 export function CalendarEventItem({
     item,
@@ -41,7 +43,15 @@ export function CalendarEventItem({
                 isRemoved={isRemoved}
                 disabled={isBusy}
             >
-                <Card className="relative flex gap-4">
+                <Card className="relative flex gap-4 overflow-hidden pl-6">
+                    <span
+                        aria-hidden="true"
+                        data-tint={item.tint}
+                        className={cn(
+                            'absolute inset-y-0 left-0 w-[5px]',
+                            TINT_FILL[item.tint],
+                        )}
+                    />
                     <CalendarEventTime
                         startsAt={item.startsAt}
                         endsAt={item.endsAt}
@@ -51,7 +61,7 @@ export function CalendarEventItem({
                             <button
                                 type="button"
                                 onClick={onOpen}
-                                className="text-left after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-ring"
+                                className="text-left after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-ring"
                             >
                                 {item.title}
                             </button>
@@ -68,25 +78,7 @@ export function CalendarEventItem({
                                 })}
                             </p>
                         )}
-                        <div className="flex flex-wrap items-center gap-2 text-sm">
-                            <AuthorDot
-                                color={item.color}
-                                isPrivate={item.isPrivate}
-                                className="size-2"
-                            />
-                            <span>
-                                {t(
-                                    item.isOwner
-                                        ? 'event.mine'
-                                        : 'event.partner',
-                                )}
-                            </span>
-                            {item.isPrivate ? (
-                                <Badge variant="outline">
-                                    {t('event.private')}
-                                </Badge>
-                            ) : null}
-                        </div>
+                        <EventLabelLine item={item} />
                     </div>
                 </Card>
             </SwipeToDelete>

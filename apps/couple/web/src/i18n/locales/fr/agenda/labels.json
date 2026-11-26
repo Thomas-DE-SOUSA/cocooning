@@ -1,0 +1,81 @@
+{
+    "sheet": {
+        "createTitle": "Nouvelle étiquette",
+        "editTitle": "Modifier l'étiquette",
+        "description": "Le nom et la couleur d'une étiquette commune au couple.",
+        "cancel": "Annuler",
+        "create": "Créer",
+        "creating": "Création en cours",
+        "save": "Enregistrer",
+        "saving": "Enregistrement en cours",
+        "sharedHint": "Les étiquettes sont communes : ton âme sœur les voit et peut les utiliser. Les modifier ou les supprimer se fait depuis « Nous »."
+    },
+    "form": {
+        "labelName": {
+            "label": "Nom",
+            "errors": {
+                "required": "Donnez un nom à l'étiquette.",
+                "tooLong": "Ce nom est trop long : 30 signes au plus."
+            }
+        },
+        "labelColor": {
+            "label": "Couleur",
+            "errors": {
+                "required": "Choisissez une couleur."
+            }
+        }
+    },
+    "colors": {
+        "SAGE": "Sauge",
+        "ROSE": "Rose",
+        "TERRACOTTA": "Terre cuite",
+        "OCHRE": "Ocre",
+        "SLATE": "Ardoise",
+        "PLUM": "Prune",
+        "MINT": "Menthe",
+        "PEBBLE": "Galet"
+    },
+    "deletion": {
+        "ask": "Supprimer l'étiquette",
+        "description": "Les événements qui la portent restent, sans étiquette.",
+        "confirm": "Supprimer pour nous deux",
+        "deleting": "Suppression en cours",
+        "keep": "Garder"
+    },
+    "card": {
+        "title": "Étiquettes de l'agenda",
+        "hint": "Communes au couple : touchez une étiquette pour la renommer, changer sa couleur ou la supprimer.",
+        "empty": "Aucune étiquette pour l'instant. Créez-en une en ajoutant un événement à l'agenda.",
+        "edit": "Modifier l'étiquette {{name}}"
+    },
+    "unavailable": {
+        "title": "Impossible d'afficher les étiquettes",
+        "refresh": "Réessayer"
+    },
+    "toast": {
+        "created": "Étiquette créée",
+        "saved": "Étiquette modifiée",
+        "deleted": "Étiquette supprimée",
+        "createFailed": "Création impossible",
+        "saveFailed": "Enregistrement impossible",
+        "deleteFailed": "Suppression impossible"
+    },
+    "apiErrors": {
+        "CALENDAR_LABEL_NOT_FOUND": "Cette étiquette n'existe plus. La liste est mise à jour.",
+        "CALENDAR_LABEL_NAME_INVALID": "Ce nom n'est pas valable : de 1 à 30 signes.",
+        "CALENDAR_LABEL_LIMIT_REACHED": "Vous avez déjà 20 étiquettes.",
+        "CALENDAR_LABEL_VERSION_CONFLICT": "L'étiquette vient de changer. Réessayez.",
+        "CALENDAR_LABEL_DATA_CORRUPTED": "Les données de l'agenda sont illisibles.",
+        "CALENDAR_EVENT_COUPLE_NOT_PAIRED": "Votre couple n'est pas encore formé.",
+        "AUTHENTICATION_SESSION_MISSING": "Votre session a pris fin. Reconnectez-vous.",
+        "AUTHENTICATION_SESSION_INVALID": "Votre session a pris fin. Reconnectez-vous.",
+        "NETWORK_ERROR": "Cocooning ne répond pas pour le moment. Réessayez dans un instant ; si le problème dure, vérifiez que Tailscale est activé.",
+        "INVALID_RESPONSE": "La réponse du serveur est illisible. Réessayez dans un instant.",
+        "VALIDATION_ERROR": "Les informations envoyées sont invalides.",
+        "UNAUTHORIZED": "Votre session a pris fin. Reconnectez-vous.",
+        "FORBIDDEN": "Cette action ne vous est pas permise.",
+        "NOT_FOUND": "Cet élément est introuvable. La liste est mise à jour.",
+        "CONFLICT": "Les étiquettes viennent de changer. Réessayez.",
+        "UNKNOWN": "Une erreur inattendue est survenue. Réessayez dans un instant."
+    }
+}

@@ -1,7 +1,4 @@
-import {
-    AuthorColorEnum,
-    type AgendaDayItem,
-} from '../view-models/agenda-screen.view-model';
+import type { AgendaDayItem } from '../view-models/agenda-screen.view-model';
 import {
     presentCalendarEventOf,
     presentNewCalendarEvent,
@@ -25,7 +22,9 @@ const A_STAY: AgendaDayItem = {
     isPrivate: true,
     audience: 'ME',
     labelId: '01936b2e-7c4a-7000-8000-0000000000b1',
-    color: AuthorColorEnum.TERRACOTTA,
+    labelName: 'Voyage',
+    tint: 'PLUM',
+    pill: 'PRIVATE',
 };
 
 describe('Feature: what the drawer starts from', () => {

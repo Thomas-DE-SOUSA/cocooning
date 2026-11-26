@@ -1,36 +1,35 @@
 import { CalendarEventVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
-import { AuthorColorEnum } from '../view-models/agenda-screen.view-model';
-import { anEvent, CREATOR_ID, PARTNER_ID } from './__tests__/calendar-events';
+import { anEvent, LABELS, SPORT_ID } from './__tests__/calendar-events';
 import { presentDayMarks } from './day-marks.presenter';
 
 const NOVEMBER_GRID = { from: '2026-10-26', to: '2026-12-06' };
 
 const colorsOf = (marks: ReturnType<typeof presentDayMarks>, day: string) =>
-    (marks[day] ?? []).map(({ color, isPrivate }) => ({ color, isPrivate }));
+    (marks[day] ?? []).map(({ tint, isPrivate }) => ({ tint, isPrivate }));
 
 describe('Feature: the dots under the days of the grid', () => {
-    it('R1, paints an event in the color of its author: terracotta for the creator of the couple, sage for the other', () => {
+    it('R13, paints an event in the colour of its label, neutral without one', () => {
         const marks = presentDayMarks(
             [
                 anEvent({
-                    ownerId: CREATOR_ID,
                     startsOn: '2026-11-24',
                     startsAt: '09:00',
+                    labelId: SPORT_ID,
                 }),
                 anEvent({
-                    ownerId: PARTNER_ID,
                     isOwner: false,
                     startsOn: '2026-11-24',
                     startsAt: '20:00',
+                    labelId: null,
                 }),
             ],
-            CREATOR_ID,
+            LABELS,
             NOVEMBER_GRID,
         );
 
         expect(colorsOf(marks, '2026-11-24')).toEqual([
-            { color: AuthorColorEnum.TERRACOTTA, isPrivate: false },
-            { color: AuthorColorEnum.SAGE, isPrivate: false },
+            { tint: 'SAGE', isPrivate: false },
+            { tint: 'NEUTRAL', isPrivate: false },
         ]);
     });
 
@@ -40,21 +39,22 @@ describe('Feature: the dots under the days of the grid', () => {
                 anEvent({
                     startsOn: '2026-11-24',
                     visibility: CalendarEventVisibilityEnum.PRIVATE,
+                    labelId: SPORT_ID,
                 }),
             ],
-            CREATOR_ID,
+            LABELS,
             NOVEMBER_GRID,
         );
 
         expect(colorsOf(marks, '2026-11-24')).toEqual([
-            { color: AuthorColorEnum.TERRACOTTA, isPrivate: true },
+            { tint: 'SAGE', isPrivate: true },
         ]);
     });
 
     it('marks every day a stay covers, inside the grid only', () => {
         const marks = presentDayMarks(
             [anEvent({ startsOn: '2026-12-05', endsOn: '2026-12-09' })],
-            CREATOR_ID,
+            LABELS,
             NOVEMBER_GRID,
         );
 
@@ -64,7 +64,7 @@ describe('Feature: the dots under the days of the grid', () => {
     it('marks a stay that began before the grid from its first day', () => {
         const marks = presentDayMarks(
             [anEvent({ startsOn: '2026-10-20', endsOn: '2026-10-27' })],
-            CREATOR_ID,
+            LABELS,
             NOVEMBER_GRID,
         );
 
@@ -80,21 +80,19 @@ describe('Feature: the dots under the days of the grid', () => {
                 anEvent({
                     ...day,
                     title: 'B',
-                    ownerId: PARTNER_ID,
+                    labelId: SPORT_ID,
                     startsAt: null,
                 }),
                 anEvent({ ...day, title: 'A', startsAt: '06:00' }),
             ],
-            CREATOR_ID,
+            LABELS,
             NOVEMBER_GRID,
         );
 
-        expect(colorsOf(marks, '2026-11-24').map(({ color }) => color)).toEqual(
-            [
-                AuthorColorEnum.SAGE,
-                AuthorColorEnum.TERRACOTTA,
-                AuthorColorEnum.TERRACOTTA,
-            ],
-        );
+        expect(colorsOf(marks, '2026-11-24').map(({ tint }) => tint)).toEqual([
+            'SAGE',
+            'NEUTRAL',
+            'NEUTRAL',
+        ]);
     });
 });

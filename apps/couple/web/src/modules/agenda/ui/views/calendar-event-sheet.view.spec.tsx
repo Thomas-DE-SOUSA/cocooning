@@ -32,6 +32,8 @@ function SheetHarness({
                 form={form}
                 isAllDay={isAllDay}
                 showsPrivacy
+                labels={[]}
+                onNewLabel={() => events.push('newLabel')}
                 isBusy={state.pending !== null}
                 onAllDayChange={changeAllDay}
                 onCancel={() => events.push('cancel')}

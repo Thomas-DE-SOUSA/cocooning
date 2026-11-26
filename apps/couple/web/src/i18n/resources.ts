@@ -1,5 +1,6 @@
 import type { Locale } from './config';
 import frAgendaCalendar from './locales/fr/agenda/calendar.json';
+import frAgendaLabels from './locales/fr/agenda/labels.json';
 import frSignIn from './locales/fr/authentication/sign-in.json';
 import frSignOut from './locales/fr/authentication/sign-out.json';
 import frGeneric from './locales/fr/generic.json';
@@ -22,6 +23,7 @@ export const RESOURCES = {
         'notes/space': frNotesSpace,
         'notes/card': frNotesCard,
         'agenda/calendar': frAgendaCalendar,
+        'agenda/labels': frAgendaLabels,
         'messaging/messages': frMessagingMessages,
         'messaging/push': frMessagingPush,
     },
