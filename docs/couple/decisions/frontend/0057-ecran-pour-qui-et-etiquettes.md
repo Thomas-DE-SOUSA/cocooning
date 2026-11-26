@@ -1,10 +1,10 @@
 ---
 nature: technique
-status: proposée
+status: acceptée
 date: 2026-11-26
 deciders: [Thomas De Sousa]
-validated-by: à compléter
-validated-on:
+validated-by: Thomas De Sousa, 2026-11-26
+validated-on: 2026-11-26
 supersedes:
 superseded-by:
 premortem:
@@ -35,6 +35,8 @@ La [décision 0056](../agenda/0056-pour-qui-et-etiquettes.md) colore un événem
   Les huit couleurs servent de barre, de point et de pastille, jamais de texte : elles atteignent 3:1 sur la surface (WCAG 2.2, 1.4.11), sur le fond aussi (3,0 au plus bas, l'ocre clair). Le neutre reste en dessous, voulu discret : la carte écrit « Sans étiquette » à côté.
 - **La feuille « Nouvelle étiquette » est une feuille imbriquée** de vaul (`Drawer.NestedRoot`), exportée par le design system en `DrawerNested` avec les réglages de `Drawer` (poignée seule, pas de remontée au clavier). Elle monte au-dessus de la feuille de l'événement, qui garde son formulaire ; une étiquette créée est choisie sur l'événement.
 - **La carte « Étiquettes de l'agenda » de l'onglet « Nous » appartient au module `agenda`** (`CalendarLabelsContainer`), comme la carte des notifications appartient à `messaging` : la page lit les étiquettes par `loadCalendarLabels()` et la carte les modifie et les supprime dans une feuille.
+
+Réponse du propriétaire à la PR #41, le 2026-11-26 : « go ».
 
 ## Alternatives écartées
 
