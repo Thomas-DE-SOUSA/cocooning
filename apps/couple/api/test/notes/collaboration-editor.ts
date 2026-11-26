@@ -14,10 +14,30 @@ const { HocuspocusProvider, HocuspocusProviderWebsocket } = load(
 const yjs = load('yjs') as typeof Yjs;
 
 const TEXT = 'probe';
+// Where the PWA's editor (Tiptap) writes, and how it writes a line to check (R28).
+const EDITOR_FRAGMENT = 'default';
+
+// y-prosemirror stores the boolean attribute of the node as is; Yjs types an attribute as a string by default.
+const checkedAttribute = (checked: boolean): string =>
+    checked as unknown as string;
+
+const taskListOf = (lines: ReadonlyArray<boolean>) => {
+    const list = new yjs.XmlElement('taskList');
+    list.insert(
+        0,
+        lines.map((checked) => {
+            const item = new yjs.XmlElement('taskItem');
+            item.setAttribute('checked', checkedAttribute(checked));
+            return item;
+        }),
+    );
+    return list;
+};
 
 export type Editor = {
     readonly text: () => string;
     readonly write: (text: string) => void;
+    readonly writeTaskList: (lines: ReadonlyArray<boolean>) => void;
     readonly closedByServer: Promise<void>;
     readonly close: () => void;
 };
@@ -59,6 +79,10 @@ export function openEditor(
                 resolve({
                     text: () => document.getText(TEXT).toJSON(),
                     write: (text) => document.getText(TEXT).insert(0, text),
+                    writeTaskList: (lines) =>
+                        document
+                            .getXmlFragment(EDITOR_FRAGMENT)
+                            .insert(0, [taskListOf(lines)]),
                     closedByServer,
                     close: () => {
                         provider.destroy();

@@ -16,6 +16,9 @@ const aNote = (suffix: string, overrides: Partial<TestNote>): TestNote => ({
     ownerId: PARTNER_A,
     title: 'Courses',
     visibility: 'SHARED',
+    listKind: null,
+    emoji: null,
+    openItemCount: 0,
     updatedAt: NOW,
     deletedAt: null,
     ...overrides,
@@ -44,10 +47,42 @@ export const OF_ANOTHER_COUPLE = aNote('c1', {
     title: 'Autre couple',
     updatedAt: at(5),
 });
+// R26 to R28: lists, which no read of the notes home gives (R27).
+export const GROCERIES_OF_A = aNote('d1', {
+    title: 'Carrefour',
+    listKind: 'GROCERIES',
+    emoji: '🛒',
+    openItemCount: 3,
+    updatedAt: at(6),
+});
+export const PRIVATE_GROCERIES_OF_B = aNote('d2', {
+    ownerId: PARTNER_B,
+    title: 'Pharmacie',
+    visibility: 'PRIVATE',
+    listKind: 'GROCERIES',
+    updatedAt: at(7),
+});
+export const TASKS_OF_A = aNote('d3', {
+    title: 'Noël',
+    listKind: 'TASKS',
+    emoji: '🎄',
+    updatedAt: at(8),
+});
+export const LIST_OF_ANOTHER_COUPLE = aNote('d4', {
+    coupleId: OTHER_COUPLE_ID,
+    ownerId: STRANGER,
+    title: 'Autre liste',
+    listKind: 'GROCERIES',
+    updatedAt: at(9),
+});
 export const SEEDED_NOTES = [
     SHARED_OF_A,
     PRIVATE_OF_A,
     SHARED_OF_B,
     DELETED_OF_A,
     OF_ANOTHER_COUPLE,
+    GROCERIES_OF_A,
+    PRIVATE_GROCERIES_OF_B,
+    TASKS_OF_A,
+    LIST_OF_ANOTHER_COUPLE,
 ];
