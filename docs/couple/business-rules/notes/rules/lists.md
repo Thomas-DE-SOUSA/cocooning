@@ -31,17 +31,23 @@ L'accueil d'une section range les listes en « Communes » et « Rien que pour m
 
 Je coche « Pain » : la case prend ma couleur, et chez l'autre elle dit « Toi ». Terre cuite pour « Moi », sauge pour « Toi », selon qui regarde.
 
+- Dans le code (PWA) : `checkLine(line, viewerId)` garde le premier qui coche dans `checkedBy`, `uncheckLine` l'efface ; `presentChecklist(lines, viewerId)` dit pour chaque ligne cochée `ViewerCheckerEnum.ME` ou `YOU` (`null` pour une ligne cochée sans `checkedBy`) (`packages/couple/client-business-logic/src/notes/domain/models/`).
+
 - Source : décision 0058. Validée par : Thomas De Sousa, 2026-11-26 (« go »).
 
 ### R30. Une ligne cochée descend dans « Fait »
 
 Une ligne cochée se barre et descend dans « Fait » ; je la décoche, elle remonte avec les lignes à prendre.
 
+- Dans le code (PWA) : `presentChecklist` rend `open` puis `done`, chacun dans l'ordre du document.
+
 - Source : décision 0058. Validée par : Thomas De Sousa, 2026-11-26 (« go »).
 
 ### R31. « Vider les faits » retire les lignes cochées
 
 Je vide les faits : les lignes cochées disparaissent pour nous deux, sans historique.
+
+- Dans le code (PWA) : `linesToClear(lines)` rend les lignes cochées à retirer du document partagé.
 
 - Source : décision 0058. Validée par : Thomas De Sousa, 2026-11-26 (« go »).
 
