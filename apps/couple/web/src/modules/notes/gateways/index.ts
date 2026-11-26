@@ -4,6 +4,7 @@ import { notesCardCorrectAction } from '../actions/notes-card-correct.action';
 import { notesCardRefineAction } from '../actions/notes-card-refine.action';
 import { notesCardRefreshAction } from '../actions/notes-card-refresh.action';
 import { notesListCreateAction } from '../actions/notes-list-create.action';
+import { notesListEditAction } from '../actions/notes-list-edit.action';
 import { notesFolderCreateAction } from '../actions/notes-folder-create.action';
 import { notesFolderDeleteAction } from '../actions/notes-folder-delete.action';
 import { notesFolderMoveAction } from '../actions/notes-folder-move.action';
@@ -59,6 +60,9 @@ export const noteCardCommandGateway: NoteCardCommandGateway =
 export const noteListCommandGateway: NoteListCommandGateway =
     new ServerActionNoteListCommandGateway({
         createList: notesListCreateAction,
+        editList: notesListEditAction,
+        // R7: a list is deleted like a note, by its owner.
+        deleteList: notesNoteDeleteAction,
     });
 
 export const lineIdGenerator: LineIdGenerator = new CryptoLineIdGenerator();

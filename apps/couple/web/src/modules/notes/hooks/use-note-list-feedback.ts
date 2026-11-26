@@ -12,14 +12,22 @@ import { resolveNoteCommandFailureFollowUp } from '../presenters/note-command-fa
 import { NoteCommandFailureFollowUpEnum as FollowUp } from '../view-models/note-command.view-model';
 import type { NoteListCommand } from '../view-models/note-list-command.view-model';
 
-// A created list opens at once; a refusal says why in a toast (decision 0010), then signs in again or reads the page
+// A created list opens at once, a changed one is read again, a deleted one leaves for its section; a refusal says why in a toast (decision 0010), then signs in again or reads the page
 // again when the other partner changed the list meanwhile.
-export function useNoteListFeedback() {
+export function useNoteListFeedback(onClose: () => void, exitHref: string) {
     const { t } = useTranslation(NOTE_LISTS_NAMESPACE);
     const router = useRouter();
     const onCreated = useCallback(
         (noteId: string) => router.push(noteListHref(noteId)),
         [router],
+    );
+    const onEdited = useCallback(() => {
+        onClose();
+        router.refresh();
+    }, [onClose, router]);
+    const onDeleted = useCallback(
+        () => router.replace(exitHref),
+        [router, exitHref],
     );
     const onFailed = useCallback(
         (command: NoteListCommand, error: ApiError) => {
@@ -34,5 +42,5 @@ export function useNoteListFeedback() {
         },
         [t, router],
     );
-    return { onCreated, onFailed };
+    return { onCreated, onEdited, onDeleted, onFailed };
 }

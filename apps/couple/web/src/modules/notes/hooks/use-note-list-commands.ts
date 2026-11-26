@@ -1,4 +1,7 @@
-import type { NoteListForm } from '@cocooning/couple-client-business-logic/notes';
+import type {
+    NoteListDetailsForm,
+    NoteListForm,
+} from '@cocooning/couple-client-business-logic/notes';
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import type { Result } from '@cocooning/shared-kernel/utils';
 import { useCallback, useState, useTransition } from 'react';
@@ -11,11 +14,19 @@ import {
 type Options = {
     readonly gateway: NoteListCommandGateway;
     readonly onCreated: (noteId: string) => void;
+    readonly onEdited: () => void;
+    readonly onDeleted: () => void;
     readonly onFailed: (command: NoteListCommand, error: ApiError) => void;
 };
 
 // One command at a time; the follow-up runs inside the transition, so the button spins until the next page shows.
-export function useNoteListCommands({ gateway, onCreated, onFailed }: Options) {
+export function useNoteListCommands({
+    gateway,
+    onCreated,
+    onEdited,
+    onDeleted,
+    onFailed,
+}: Options) {
     const [isPending, startTransition] = useTransition();
     const [lastCommand, setLastCommand] = useState<NoteListCommand | null>(
         null,
@@ -41,6 +52,18 @@ export function useNoteListCommands({ gateway, onCreated, onFailed }: Options) {
                 NoteListCommandEnum.CREATE_LIST,
                 () => gateway.createList(form),
                 onCreated,
+            ),
+        editList: (noteId: string, form: NoteListDetailsForm) =>
+            run(
+                NoteListCommandEnum.EDIT_LIST,
+                () => gateway.editList(noteId, form),
+                onEdited,
+            ),
+        deleteList: (noteId: string) =>
+            run(
+                NoteListCommandEnum.DELETE_LIST,
+                () => gateway.deleteList(noteId),
+                onDeleted,
             ),
         pending: isPending ? lastCommand : null,
         isBusy: isPending,

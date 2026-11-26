@@ -6,15 +6,17 @@ import { NOTE_LISTS_NAMESPACE } from '../../data/note-lists-i18n-namespaces';
 import type { NoteListViewModel } from '../../view-models/note-list-page.view-model';
 import { BackLink } from '../components/back-link';
 import { PartnerPresenceBadge } from '../components/partner-presence-badge';
+import { RowActionsButton } from '../components/row-actions-button';
 
 type Props = {
     readonly list: NoteListViewModel;
     readonly isPartnerHere: boolean;
+    readonly onActions: () => void;
 };
 
 // The way back to the section of the list and, while the other partner is in it, the sign of their presence (R32);
 // then its emoji, its title and for whom it is (R26).
-export function NoteListHeaderView({ list, isPartnerHere }: Props) {
+export function NoteListHeaderView({ list, isPartnerHere, onActions }: Props) {
     const { t } = useTranslation(NOTE_LISTS_NAMESPACE);
     const space = list.isShared ? NoteSpaceEnum.SHARED : NoteSpaceEnum.PRIVATE;
     return (
@@ -28,6 +30,10 @@ export function NoteListHeaderView({ list, isPartnerHere }: Props) {
                 {isPartnerHere ? (
                     <PartnerPresenceBadge label={t('presence')} />
                 ) : null}
+                <RowActionsButton
+                    label={t('actions')}
+                    onClick={onActions}
+                />
             </div>
             <div className="flex items-baseline justify-between gap-3 px-1">
                 <h1 className="min-w-0 text-3xl font-semibold break-words">

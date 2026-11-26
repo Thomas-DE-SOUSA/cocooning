@@ -67,7 +67,9 @@
         }
     },
     "toast": {
-        "createListFailed": "Création de la liste impossible"
+        "createListFailed": "Création de la liste impossible",
+        "editListFailed": "Modification de la liste impossible",
+        "deleteListFailed": "Suppression impossible"
     },
     "unavailable": {
         "title": "Impossible d'afficher vos listes",
@@ -105,6 +107,25 @@
         "keep": "Garder"
     },
     "presence": "Ton âme sœur est dans la liste",
+    "actions": "Actions de la liste",
+    "listSheet": {
+        "editDetails": "Modifier le titre et l'emoji",
+        "delete": "Supprimer la liste",
+        "ownerOnly": "Seule sa propriétaire peut supprimer cette liste."
+    },
+    "listDetails": {
+        "title": "Titre et emoji",
+        "description": "L'emoji reste facultatif : vide, il est retiré.",
+        "submit": "Enregistrer",
+        "saving": "Enregistrement en cours"
+    },
+    "listDeletion": {
+        "title": "Supprimer « {{title}} » ?",
+        "description": "La liste et toutes ses lignes disparaîtront.",
+        "confirm": "Supprimer la liste",
+        "deleting": "Suppression en cours",
+        "keep": "Garder"
+    },
     "apiErrors": {
         "NOTE_NOT_FOUND": "Cette note n'existe plus. La liste est mise à jour.",
         "NOTE_RESERVED_TO_OWNER": "Seule la propriétaire de la note peut faire ça.",

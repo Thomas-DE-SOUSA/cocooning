@@ -34,3 +34,9 @@ export type NoteListPage =
           readonly redirectTo: null;
           readonly viewModel: NoteListPageViewModel;
       };
+
+// What the title and emoji fields hold while typed: an empty emoji is a string until the schema makes it null.
+export type ListDetailsInput = {
+    readonly title: string;
+    readonly emoji: string;
+};

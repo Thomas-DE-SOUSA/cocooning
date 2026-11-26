@@ -24,6 +24,8 @@ function renderCommands(gateway: FakeNoteListCommandGateway) {
         useNoteListCommands({
             gateway,
             onCreated: (noteId) => journal.push(`created ${noteId}`),
+            onEdited: () => journal.push('edited'),
+            onDeleted: () => journal.push('deleted'),
             onFailed: (command, error) =>
                 journal.push(`${command} refused ${error.backendCode}`),
         }),
@@ -43,6 +45,26 @@ describe('Feature: the commands of the Lists tab (R26)', () => {
         );
         expect(gateway.calls).toEqual([
             { operation: 'createList', form: CARREFOUR },
+        ]);
+    });
+
+    it('changes the title and the emoji of a list, then deletes it', async () => {
+        const gateway = new FakeNoteListCommandGateway();
+        const { result, journal } = renderCommands(gateway);
+
+        act(() =>
+            result.current.editList(A_CREATED_LIST_ID, {
+                title: 'Lidl',
+                emoji: null,
+            }),
+        );
+        await waitFor(() => expect(journal).toEqual(['edited']));
+        act(() => result.current.deleteList(A_CREATED_LIST_ID));
+        await waitFor(() => expect(journal).toEqual(['edited', 'deleted']));
+
+        expect(gateway.calls.map(({ operation }) => operation)).toEqual([
+            'editList',
+            'deleteList',
         ]);
     });
 

@@ -5,10 +5,12 @@ import { useMemo } from 'react';
 import { lineIdGenerator } from '../../gateways';
 import { HocuspocusNoteDocumentGateway } from '../../gateways/hocuspocus/hocuspocus-note-document.gateway';
 import { useNoteListScreen } from '../../hooks/use-note-list-screen';
+import { useNoteListSheet } from '../../hooks/use-note-list-sheet';
 import type { NoteListViewModel } from '../../view-models/note-list-page.view-model';
 import { ChecklistView } from '../views/checklist.view';
 import { ClearDoneSheetView } from '../views/clear-done-sheet.view';
 import { NoteListHeaderView } from '../views/note-list-header.view';
+import { NoteListSheetContainer } from './note-list-sheet.container';
 
 type Props = {
     readonly list: NoteListViewModel;
@@ -25,11 +27,13 @@ export function NoteListContainer({ list, collaborationUrl }: Props) {
         { document: documentGateway, lineIds: lineIdGenerator },
         list,
     );
+    const sheet = useNoteListSheet();
     return (
         <>
             <NoteListHeaderView
                 list={list}
                 isPartnerHere={isPartnerHere}
+                onActions={sheet.open}
             />
             <ChecklistView
                 kind={list.kind}
@@ -50,6 +54,14 @@ export function NoteListContainer({ list, collaborationUrl }: Props) {
                     />
                 </DrawerContent>
             </Drawer>
+            <NoteListSheetContainer
+                list={list}
+                isOpen={sheet.isOpen}
+                step={sheet.step}
+                opening={sheet.opening}
+                onGoTo={sheet.goTo}
+                onClose={sheet.close}
+            />
         </>
     );
 }

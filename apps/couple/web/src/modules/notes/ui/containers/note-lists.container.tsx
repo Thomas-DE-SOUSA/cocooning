@@ -68,6 +68,7 @@ function NoteListsSectionContainer({
                     <NewListSheetContainer
                         key={sheet.opening}
                         kind={viewModel.kind}
+                        onClose={sheet.close}
                     />
                 </DrawerContent>
             </Drawer>

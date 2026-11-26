@@ -20,6 +20,7 @@ describe('Feature: the head of a list (R26)', () => {
                 <NoteListHeaderView
                     list={CARREFOUR}
                     isPartnerHere
+                    onActions={() => {}}
                 />
             </WithI18n>,
         );
@@ -40,6 +41,7 @@ describe('Feature: the head of a list (R26)', () => {
                 <NoteListHeaderView
                     list={{ ...CARREFOUR, emoji: null, isShared: false }}
                     isPartnerHere={false}
+                    onActions={() => {}}
                 />
             </WithI18n>,
         );

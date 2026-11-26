@@ -1,4 +1,7 @@
-import type { NoteListForm } from '@cocooning/couple-client-business-logic/notes';
+import type {
+    NoteListDetailsForm,
+    NoteListForm,
+} from '@cocooning/couple-client-business-logic/notes';
 import {
     type ApiError,
     ApiErrorCodeEnum,
@@ -11,6 +14,11 @@ export type NoteListCommandActions = {
     readonly createList: (
         form: NoteListForm,
     ) => Promise<Result<string, ApiError>>;
+    readonly editList: (
+        noteId: string,
+        form: NoteListDetailsForm,
+    ) => Promise<Result<null, ApiError>>;
+    readonly deleteList: (noteId: string) => Promise<Result<null, ApiError>>;
 };
 
 const UNREACHABLE: ApiError = {
@@ -27,6 +35,23 @@ export class ServerActionNoteListCommandGateway extends NoteListCommandGateway {
     override createList(form: NoteListForm): Promise<Result<string, ApiError>> {
         return runServerAction(
             () => this.actions.createList(form),
+            UNREACHABLE,
+        );
+    }
+
+    override editList(
+        noteId: string,
+        form: NoteListDetailsForm,
+    ): Promise<Result<null, ApiError>> {
+        return runServerAction(
+            () => this.actions.editList(noteId, form),
+            UNREACHABLE,
+        );
+    }
+
+    override deleteList(noteId: string): Promise<Result<null, ApiError>> {
+        return runServerAction(
+            () => this.actions.deleteList(noteId),
             UNREACHABLE,
         );
     }
