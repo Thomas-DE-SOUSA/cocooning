@@ -3,6 +3,7 @@ import { notesCardChooseAction } from '../actions/notes-card-choose.action';
 import { notesCardCorrectAction } from '../actions/notes-card-correct.action';
 import { notesCardRefineAction } from '../actions/notes-card-refine.action';
 import { notesCardRefreshAction } from '../actions/notes-card-refresh.action';
+import { notesListCreateAction } from '../actions/notes-list-create.action';
 import { notesFolderCreateAction } from '../actions/notes-folder-create.action';
 import { notesFolderDeleteAction } from '../actions/notes-folder-delete.action';
 import { notesFolderMoveAction } from '../actions/notes-folder-move.action';
@@ -17,11 +18,13 @@ import { notesSpaceContentsAction } from '../actions/notes-space-contents.action
 import type { FolderCommandGateway } from './ports/folder-command.gateway';
 import type { NoteCardCommandGateway } from './ports/note-card-command.gateway';
 import type { NoteCommandGateway } from './ports/note-command.gateway';
+import type { NoteListCommandGateway } from './ports/note-list-command.gateway';
 import type { NoteSheetGateways } from './ports/note-sheet.gateways';
 import type { NoteSpaceContentsGateway } from './ports/note-space-contents.gateway';
 import { ServerActionFolderCommandGateway } from './server-action/server-action-folder-command.gateway';
 import { ServerActionNoteCardCommandGateway } from './server-action/server-action-note-card-command.gateway';
 import { ServerActionNoteCommandGateway } from './server-action/server-action-note-command.gateway';
+import { ServerActionNoteListCommandGateway } from './server-action/server-action-note-list-command.gateway';
 import { ServerActionNoteSpaceContentsGateway } from './server-action/server-action-note-space-contents.gateway';
 
 export const noteCommandGateway: NoteCommandGateway =
@@ -49,6 +52,11 @@ export const noteCardCommandGateway: NoteCardCommandGateway =
         refineNoteCard: notesCardRefineAction,
         refreshNoteCard: notesCardRefreshAction,
         correctNoteCardField: notesCardCorrectAction,
+    });
+
+export const noteListCommandGateway: NoteListCommandGateway =
+    new ServerActionNoteListCommandGateway({
+        createList: notesListCreateAction,
     });
 
 export const noteSpaceContentsGateway: NoteSpaceContentsGateway =
