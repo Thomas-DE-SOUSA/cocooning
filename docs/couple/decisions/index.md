@@ -67,3 +67,4 @@ Le registre unique des décisions du domaine `couple`, dans l'ordre chronologiqu
 | 0055 | notes | [Les fiches d'un lieu se complètent par OpenStreetMap](notes/0055-fiches-completees-par-openstreetmap.md) | technique | acceptée | 2026-11-25 | Thomas De Sousa |
 | 0056 | agenda | [Pour qui est un événement, et des étiquettes de couleur](agenda/0056-pour-qui-et-etiquettes.md) | produit | acceptée | 2026-11-25 | Thomas De Sousa |
 | 0057 | frontend | [Couleurs des étiquettes et feuille imbriquée de l'agenda](frontend/0057-ecran-pour-qui-et-etiquettes.md) | technique | acceptée | 2026-11-26 | Thomas De Sousa |
+| 0058 | notes | [L'onglet Listes, des notes à cocher](notes/0058-listes-sur-les-notes.md) | produit | acceptée | 2026-11-26 | Thomas De Sousa |

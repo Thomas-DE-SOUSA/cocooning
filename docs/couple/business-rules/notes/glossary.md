@@ -19,3 +19,9 @@ Les termes propres aux notes, avec leur nom dans le code. Les termes communs (no
 | **Annuaire des lieux** | `PlaceDirectory` | OpenStreetMap, interrogé par Nominatim avec les mots de la recherche |
 | **Candidat** | `CardCandidate` | Un des éléments possibles quand le nom tapé est ambigu |
 | **Mettre à jour la fiche** | `NoteCard.refresh` | Relancer la recherche en gardant les cases corrigées à la main |
+| **Section de listes** | `NoteListKindEnum` (`GROCERIES`, `TASKS`) | Courses ou Tâches, la section de l'onglet Listes où vit une liste ; absente pour une note ordinaire |
+| **Emoji de la liste** | `NoteListEmoji` | Un emoji facultatif qui distingue une liste sur l'accueil |
+| **Ligne** | élément à cocher du document | Un article de courses ou une tâche d'une liste |
+| **Qui a coché** | `checkedBy` | Le partenaire qui a coché une ligne ; sa couleur la marque, vue par qui regarde |
+| **Fait** | lignes cochées | La partie basse d'une liste, où descendent les lignes cochées |
+| **Reste à cocher** | `openItemCount` | Le nombre de lignes pas encore cochées, montré sur l'accueil |

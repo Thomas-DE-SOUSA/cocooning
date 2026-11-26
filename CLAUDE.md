@@ -103,7 +103,7 @@ Code rules shared by the whole repository (code quality, architecture, errors, s
 
 The couple speaks French; the code is in English. No regulation fixes the vocabulary (D30 open), so the glossary is the list of allowed business terms: `docs/architecture/glossary.md`, then each module's `glossary.md`.
 
-- A business term has one English name, taken from the glossary (note → `Note`, événement d'agenda → `CalendarEvent`, message flash → `FlashMessage`, photo instantanée → `InstantPhoto`, couple → `Couple`, partenaire → `Partner`). A grocery list is a `Note` titled "Courses", never its own concept.
+- A business term has one English name, taken from the glossary (note → `Note`, événement d'agenda → `CalendarEvent`, message flash → `FlashMessage`, photo instantanée → `InstantPhoto`, couple → `Couple`, partenaire → `Partner`). A grocery or task list is a checklist `Note` of the Lists tab (`NoteListKindEnum`, decision 0058), never its own aggregate.
 - Everything else (action verbs, statuses, plumbing) is English: `Note.share()`, `NoteVisibility` `PRIVATE` / `SHARED`.
 - Forbidden: a term missing from the glossary (add it there first) and a French/English mix inside one identifier (`NoteCourses`, `envoyerFlash()`).
 - French user-facing labels ("Message flash") live in the i18n files, never in identifiers.
