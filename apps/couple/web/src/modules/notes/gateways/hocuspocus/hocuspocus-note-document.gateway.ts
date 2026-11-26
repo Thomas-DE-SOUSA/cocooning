@@ -5,6 +5,7 @@ import {
     type NoteDocumentEvents,
     NoteDocumentGateway,
 } from '../ports/note-document.gateway';
+import { isPartnerPresent, VIEWER_FIELD } from './partner-presence';
 
 // The API reads the session cookie sent with the handshake; Hocuspocus only asks for authentication when a token is set.
 const COOKIE_SESSION = 'session-cookie';
@@ -35,7 +36,16 @@ export class HocuspocusNoteDocumentGateway extends NoteDocumentGateway {
             onSynced: ({ state }) => {
                 if (state) listEvents?.onSynced();
             },
+            onAwarenessChange: ({ states }) => {
+                if (listEvents === null) return;
+                listEvents.onPartnerPresence(
+                    isPartnerPresent(states, listEvents.viewerId),
+                );
+            },
         });
+        if (listEvents !== null) {
+            provider.setAwarenessField(VIEWER_FIELD, listEvents.viewerId);
+        }
         return () => provider.destroy();
     }
 }

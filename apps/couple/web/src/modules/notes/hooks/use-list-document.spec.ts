@@ -10,6 +10,7 @@ function renderDocument(gateway: FakeNoteDocumentGateway) {
         useListDocument({
             gateway,
             noteId: LIST_ID,
+            viewerId: 'me',
             onLost: () => lost.push('lost'),
         }),
     );
@@ -32,6 +33,19 @@ describe('Feature: the shared document of a list (R6, R32)', () => {
         act(() => listEventsOf(gateway).onSynced());
 
         expect(result.current.isSynced).toBe(true);
+    });
+
+    it('shares who reads the list, and shows when the other partner is in it (R32)', () => {
+        const gateway = new FakeNoteDocumentGateway();
+        const { result } = renderDocument(gateway);
+        expect(listEventsOf(gateway).viewerId).toBe('me');
+        expect(result.current.isPartnerHere).toBe(false);
+
+        act(() => listEventsOf(gateway).onPartnerPresence(true));
+        expect(result.current.isPartnerHere).toBe(true);
+
+        act(() => listEventsOf(gateway).onPartnerPresence(false));
+        expect(result.current.isPartnerHere).toBe(false);
     });
 
     it('reopens the same document when the server closed it, and reports it', () => {

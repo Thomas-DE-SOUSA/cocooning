@@ -23,9 +23,10 @@ export function useNoteListScreen(gateways: Gateways, list: NoteListViewModel) {
     const router = useRouter();
     const refresh = useCallback(() => router.refresh(), [router]);
     useRefreshOnReturn(refresh);
-    const { document, isSynced } = useListDocument({
+    const { document, isSynced, isPartnerHere } = useListDocument({
         gateway: gateways.document,
         noteId: list.noteId,
+        viewerId: list.viewerId,
         onLost: refresh,
     });
     const checklist = useChecklist({
@@ -64,5 +65,5 @@ export function useNoteListScreen(gateways: Gateways, list: NoteListViewModel) {
         },
         keep: () => setIsClearing(false),
     };
-    return { screen, actions, clear };
+    return { screen, actions, clear, isPartnerHere };
 }

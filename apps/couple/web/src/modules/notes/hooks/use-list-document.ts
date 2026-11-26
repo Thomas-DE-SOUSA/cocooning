@@ -5,14 +5,22 @@ import type { NoteDocumentGateway } from '../gateways/ports/note-document.gatewa
 type Options = {
     readonly gateway: NoteDocumentGateway;
     readonly noteId: string;
+    readonly viewerId: string;
     readonly onLost: () => void;
 };
 
-// The document of a list, kept for the page like the one of a note (R6); its lines are known once first synced.
-export function useListDocument({ gateway, noteId, onLost }: Options) {
+// The document of a list, kept for the page like the one of a note (R6); its lines are known once first synced, and
+// R32 tells when the other partner has it open.
+export function useListDocument({
+    gateway,
+    noteId,
+    viewerId,
+    onLost,
+}: Options) {
     const [document] = useState(() => new Doc());
     const [connection, setConnection] = useState(0);
     const [isSynced, setIsSynced] = useState(false);
+    const [isPartnerHere, setIsPartnerHere] = useState(false);
     useEffect(
         () =>
             gateway.connect(
@@ -25,9 +33,13 @@ export function useListDocument({ gateway, noteId, onLost }: Options) {
                         setConnection((count) => count + 1);
                     },
                 },
-                { onSynced: () => setIsSynced(true) },
+                {
+                    viewerId,
+                    onSynced: () => setIsSynced(true),
+                    onPartnerPresence: setIsPartnerHere,
+                },
             ),
-        [gateway, noteId, document, onLost, connection],
+        [gateway, noteId, viewerId, document, onLost, connection],
     );
-    return { document, isSynced };
+    return { document, isSynced, isPartnerHere };
 }

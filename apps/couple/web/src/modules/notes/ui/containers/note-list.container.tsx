@@ -21,13 +21,16 @@ export function NoteListContainer({ list, collaborationUrl }: Props) {
         () => new HocuspocusNoteDocumentGateway(collaborationUrl),
         [collaborationUrl],
     );
-    const { screen, actions, clear } = useNoteListScreen(
+    const { screen, actions, clear, isPartnerHere } = useNoteListScreen(
         { document: documentGateway, lineIds: lineIdGenerator },
         list,
     );
     return (
         <>
-            <NoteListHeaderView list={list} />
+            <NoteListHeaderView
+                list={list}
+                isPartnerHere={isPartnerHere}
+            />
             <ChecklistView
                 kind={list.kind}
                 screen={screen}

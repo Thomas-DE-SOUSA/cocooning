@@ -14,10 +14,13 @@ const CARREFOUR = {
 };
 
 describe('Feature: the head of a list (R26)', () => {
-    it('goes back to its section and says for whom it is', () => {
+    it('goes back to its section, says for whom it is and who is in it (R32)', () => {
         render(
             <WithI18n>
-                <NoteListHeaderView list={CARREFOUR} />
+                <NoteListHeaderView
+                    list={CARREFOUR}
+                    isPartnerHere
+                />
             </WithI18n>,
         );
 
@@ -28,6 +31,7 @@ describe('Feature: the head of a list (R26)', () => {
             screen.getByRole('heading', { level: 1, name: '🛒 Carrefour' }),
         ).toBeTruthy();
         expect(screen.getByText('Commune')).toBeTruthy();
+        expect(screen.getByText('Ton âme sœur est dans la liste')).toBeTruthy();
     });
 
     it('shows a private list without emoji', () => {
@@ -35,6 +39,7 @@ describe('Feature: the head of a list (R26)', () => {
             <WithI18n>
                 <NoteListHeaderView
                     list={{ ...CARREFOUR, emoji: null, isShared: false }}
+                    isPartnerHere={false}
                 />
             </WithI18n>,
         );
@@ -43,5 +48,6 @@ describe('Feature: the head of a list (R26)', () => {
             screen.getByRole('heading', { level: 1, name: 'Carrefour' }),
         ).toBeTruthy();
         expect(screen.getByText('Rien que pour moi')).toBeTruthy();
+        expect(screen.queryByText('Ton âme sœur est dans la liste')).toBeNull();
     });
 });

@@ -7,9 +7,12 @@ export type NoteDocumentEvents = {
     readonly onClosedByServer: () => void;
 };
 
-// What the page of a list follows on top of the document: its first sync, before which no line is known.
+// What the page of a list follows on top of the document: its first sync, before which no line is known, and whether
+// the other partner has the same list open (R32), told apart by the viewerId each phone shares.
 export type ListDocumentEvents = {
+    readonly viewerId: string;
     readonly onSynced: () => void;
+    readonly onPartnerPresence: (isPresent: boolean) => void;
 };
 
 // The real-time channel of a note (decision 0040): keeps the document in sync until the returned function is called.
