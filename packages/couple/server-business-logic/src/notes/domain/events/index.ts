@@ -9,6 +9,7 @@ export * from './note-card-searched.event';
 export * from './note-card-template-adopted.event';
 export * from './note-created.event';
 export * from './note-deleted.event';
+export * from './note-list-edited.event';
 export * from './note-made-private.event';
 export * from './note-moved.event';
 export * from './note-renamed.event';

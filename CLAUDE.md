@@ -66,7 +66,7 @@ cocooning/
 ├── packages/
 │   ├── couple/                     # contexts: pairing, then authentication, notes, agenda, messaging
 │   │   ├── server-business-logic/  # * Domain + Application layers (DDD)
-│   │   ├── client-business-logic/  # * Frontend business logic, framework-free (ApiError, Translator, authentication: sign-in form, gateway port, use case; pairing: gateway port, four use cases, join form; notes: three gateway ports (notes, spaces and folders, note cards), twenty-one use cases, note title, folder name, smart folder template and note card forms; agenda: two gateway ports (events, labels), eleven use cases, event form with who it is for, label form; messaging: five gateway ports, eleven use cases, flash message form; testing fakes)
+│   │   ├── client-business-logic/  # * Frontend business logic, framework-free (ApiError, Translator, authentication: sign-in form, gateway port, use case; pairing: gateway port, four use cases, join form; notes: four gateway ports (notes, spaces and folders, note cards, lists), twenty-four use cases, note title, folder name, smart folder template, note card and list forms, checklist lines (who checked, « Fait »); agenda: two gateway ports (events, labels), eleven use cases, event form with who it is for, label form; messaging: five gateway ports, eleven use cases, flash message form; testing fakes)
 │   │   ├── client-infrastructure/  # * Frontend adapters: HTTP config of the couple, session forwarding, authentication, pairing, notes, agenda and messaging gateways and modules
 │   │   ├── prisma/                 # * Prisma 7 schema, PrismaService, unit of work, soft delete, locks
 │   │   ├── shared-kernel/          # * Business enums, limits, api and web routers, MissingExecutionContextException
@@ -103,7 +103,7 @@ Code rules shared by the whole repository (code quality, architecture, errors, s
 
 The couple speaks French; the code is in English. No regulation fixes the vocabulary (D30 open), so the glossary is the list of allowed business terms: `docs/architecture/glossary.md`, then each module's `glossary.md`.
 
-- A business term has one English name, taken from the glossary (note → `Note`, événement d'agenda → `CalendarEvent`, message flash → `FlashMessage`, photo instantanée → `InstantPhoto`, couple → `Couple`, partenaire → `Partner`). A grocery list is a `Note` titled "Courses", never its own concept.
+- A business term has one English name, taken from the glossary (note → `Note`, événement d'agenda → `CalendarEvent`, message flash → `FlashMessage`, photo instantanée → `InstantPhoto`, couple → `Couple`, partenaire → `Partner`). A grocery or task list is a checklist `Note` of the Lists tab (`NoteListKindEnum`, decision 0058), never its own aggregate.
 - Everything else (action verbs, statuses, plumbing) is English: `Note.share()`, `NoteVisibility` `PRIVATE` / `SHARED`.
 - Forbidden: a term missing from the glossary (add it there first) and a French/English mix inside one identifier (`NoteCourses`, `envoyerFlash()`).
 - French user-facing labels ("Message flash") live in the i18n files, never in identifiers.

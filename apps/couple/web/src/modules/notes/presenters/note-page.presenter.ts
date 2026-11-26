@@ -11,6 +11,7 @@ import {
     type NoteReading,
 } from '../view-models/note-page.view-model';
 import { presentNoteCard } from './note-card.presenter';
+import { noteListHref } from './note-list-href.presenter';
 import { toNoteListItem } from './note-list-item.presenter';
 import { presentPlaceLevel } from './place-level.presenter';
 
@@ -26,10 +27,14 @@ const redirectTo = (route: string): NotePage => ({
     viewModel: null,
 });
 
-// Decision 0036: a refused session goes back to sign-in; without a formed couple there are no notes (R3).
+// Decision 0036: a refused session goes back to sign-in; without a formed couple there are no notes (R3). A list opens
+// on its own page (R27).
 export function presentNotePage(
     reading: Result<NoteReading, ApiError>,
 ): NotePage {
+    if (reading.success && reading.value.note.listKind !== null) {
+        return redirectTo(noteListHref(reading.value.note.noteId));
+    }
     if (reading.success) {
         return {
             redirectTo: null,

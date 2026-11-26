@@ -2,6 +2,7 @@ export * from './folder.repository';
 export * from './note-card-search.counter';
 export * from './note-card.repository';
 export * from './note-card.writer';
+export * from './note-checklist.reader';
 export * from './note-collaboration.provider';
 export * from './note-content.repository';
 export * from './note.repository';

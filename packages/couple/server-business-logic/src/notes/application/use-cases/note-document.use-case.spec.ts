@@ -73,6 +73,51 @@ describe('Feature: the content of a note, edited in real time (R6, decision 0040
         });
     });
 
+    describe('Scenario: R28, each save counts the lines left to check', () => {
+        it('reads the saved content and keeps its count, which a later save of the note does not undo', async () => {
+            const list = ctx.givenListOf(AS_A);
+            ctx.noteChecklistReader.willCount(2);
+            await ctx
+                .saveNoteDocumentUseCase()
+                .execute(AS_B, { ...id(list), content: CONTENT });
+            expect(ctx.noteChecklistReader.requests).toEqual([
+                { noteId: list.id.getValue(), content: CONTENT },
+            ]);
+            await ctx.renameNoteUseCase().execute(AS_A, {
+                ...id(list),
+                title: 'Lidl',
+            });
+            expect(ctx.noteRepository.storedSnapshots[0]).toMatchObject({
+                title: 'Lidl',
+                openItemCount: 2,
+                version: 2,
+            });
+        });
+
+        it('counts an ordinary note too, whose count no screen shows', async () => {
+            const note = ctx.givenNoteOf(AS_A);
+            ctx.noteChecklistReader.willCount(1);
+            await ctx
+                .saveNoteDocumentUseCase()
+                .execute(AS_A, { ...id(note), content: CONTENT });
+            expect(ctx.noteRepository.storedSnapshots[0]).toMatchObject({
+                listKind: null,
+                openItemCount: 1,
+            });
+        });
+
+        it('writes no count for a note of another couple', async () => {
+            const note = ctx.givenNoteOf(AS_A);
+            ctx.noteChecklistReader.willCount(4);
+            await ctx
+                .saveNoteDocumentUseCase()
+                .execute(AS_STRANGER, { ...id(note), content: CONTENT });
+            expect(ctx.noteRepository.storedSnapshots[0]).toMatchObject({
+                openItemCount: 0,
+            });
+        });
+    });
+
     describe('Scenario: R7, the channel stores after a deletion', () => {
         it('keeps no content for a deleted note', async () => {
             const note = ctx.givenNoteOf(AS_A);

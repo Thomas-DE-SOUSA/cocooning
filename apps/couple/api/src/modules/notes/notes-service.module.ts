@@ -16,6 +16,7 @@ import {
 import { CARD_USE_CASES } from './notes-card-use-cases';
 import { enrichPendingNoteCardsUseCase } from './notes-enrichment-use-case';
 import { FOLDER_USE_CASES } from './notes-folder-use-cases';
+import { LIST_USE_CASES } from './notes-list-use-cases';
 import { NotesSecondaryModule } from './notes-secondary.module';
 import { notesUseCase } from './notes-use-case.factory';
 
@@ -75,10 +76,11 @@ const useCases = [
     ),
     notesUseCase(
         SaveNoteDocumentUseCase,
-        (d) => new SaveNoteDocumentUseCase(d.contents, d.clock),
+        (d) => new SaveNoteDocumentUseCase(d.contents, d.checklist, d.clock),
     ),
     ...FOLDER_USE_CASES,
     ...CARD_USE_CASES,
+    ...LIST_USE_CASES,
     enrichPendingNoteCardsUseCase,
 ];
 

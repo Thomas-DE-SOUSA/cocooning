@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@cocooning/couple-prisma/nest';
-import { NoteContentRepository } from '@cocooning/couple-server-business-logic/notes';
+import {
+    NoteContentRepository,
+    type NoteDocument,
+} from '@cocooning/couple-server-business-logic/notes';
 import { Logger } from '@cocooning/shared-kernel/ports';
 
-// The Yjs state lives on the note row; the soft-delete extension skips a deleted note, whose write then changes nothing.
+// The Yjs state and its count of unchecked items (R28) live on the note row; the soft-delete extension skips a deleted note, whose write then changes nothing.
 @Injectable()
 export class NoteContentPrismaRepository extends NoteContentRepository {
     constructor(
@@ -35,14 +38,15 @@ export class NoteContentPrismaRepository extends NoteContentRepository {
     override async saveContent(
         coupleId: string,
         noteId: string,
-        content: Uint8Array,
+        document: NoteDocument,
         now: Date,
     ): Promise<void> {
         try {
             await this.prismaService.current.note.updateMany({
                 where: { coupleId, id: noteId },
                 data: {
-                    contentState: Uint8Array.from(content),
+                    contentState: Uint8Array.from(document.content),
+                    openItemCount: document.openItemCount,
                     updatedAt: now,
                 },
             });

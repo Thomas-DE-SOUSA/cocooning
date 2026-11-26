@@ -6,4 +6,6 @@ export * from './folder-subject.vo';
 export * from './note-card-id.vo';
 export * from './note-card-query.vo';
 export * from './note-id.vo';
+export * from './note-list-emoji.vo';
+export * from './note-list.vo';
 export * from './note-title.vo';

@@ -19,7 +19,7 @@ const aRefusal = (
     backendCode: string | null = null,
 ): ApiError => ({ code, message: 'Refused', backendCode });
 
-const A_NOTE = { ...A_SHARED_NOTE, card: null };
+const A_NOTE = { ...A_SHARED_NOTE, card: null, listKind: null, emoji: null };
 const VACANCES = { folderId: A_SHARED_FOLDER.folderId, name: 'Vacances' };
 
 describe('Feature: the page of one note (decision 0036)', () => {
@@ -47,6 +47,16 @@ describe('Feature: the page of one note (decision 0036)', () => {
         expect(page.viewModel).toMatchObject({
             card: { noteId: filled!.noteId, canRefresh: true },
         });
+    });
+
+    it('R27, opens a list on its own page', () => {
+        const page = presentNotePage(
+            ok({
+                note: { ...A_NOTE, listKind: 'GROCERIES', emoji: '🛒' },
+                place: A_SPACE_CONTENTS,
+            }),
+        );
+        expect(page.redirectTo).toBe(`/lists/${A_SHARED_NOTE.noteId}`);
     });
 
     it('has no card for a note outside a smart folder', () => {

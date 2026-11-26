@@ -6,6 +6,10 @@ export type TestNote = {
     readonly ownerId: string;
     readonly title: string;
     readonly visibility: string;
+    // R26: GROCERIES or TASKS for a list, null for an ordinary note; written as is, an unknown section included.
+    readonly listKind: string | null;
+    readonly emoji: string | null;
+    readonly openItemCount: number;
     readonly updatedAt: Date;
     readonly deletedAt: Date | null;
 };
@@ -22,6 +26,9 @@ export async function createTestNotes(
             ownerId: note.ownerId,
             title: note.title,
             visibility: note.visibility,
+            listKind: note.listKind,
+            emoji: note.emoji,
+            openItemCount: note.openItemCount,
             version: 1,
             createdAt: note.updatedAt,
             updatedAt: note.updatedAt,

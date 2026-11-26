@@ -6,6 +6,7 @@ export * from './folder-kind.enum';
 export * from './instant-photo-content-type.enum';
 export * from './message-feed-item-type.enum';
 export * from './note-card-status.enum';
+export * from './note-list-kind.enum';
 export * from './note-space.enum';
 export * from './note-visibility.enum';
 export * from './push-notification-kind.enum';

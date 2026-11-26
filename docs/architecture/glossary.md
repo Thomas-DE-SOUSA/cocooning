@@ -20,7 +20,7 @@ Le couple parle français, le code est en anglais. Aucune réglementation ne fix
 | **Propriétaire** | `ownerId` | Le partenaire qui a créé une donnée |
 | **Note** | `Note` | Texte riche, perso ou partagé, éditable à deux en temps réel |
 | **Note perso / partagée** | `NoteVisibility` `PRIVATE` / `SHARED` | Une note perso n'est visible que de son propriétaire ; une note partagée est visible et modifiable par les deux |
-| **Liste de courses** | `Note` | Une note ordinaire titrée « Courses ». Pas de concept propre dans le code |
+| **Liste** | `Note` à cocher (`NoteListKindEnum`) | Une liste de courses ou de tâches de l'onglet Listes : une note à cocher, commune ou rien que pour moi (décision 0058) |
 | **Agenda** | contexte `agenda` | Le calendrier partagé du couple |
 | **Événement d'agenda** | `CalendarEvent` | Un rendez-vous du calendrier, partagé ou rien que pour son auteur, avec son auteur visible. Nommé ainsi pour ne pas le confondre avec un événement de domaine (`*.event.ts`) |
 | **Message flash** | `FlashMessage` | Un mot court envoyé à l'autre (« je t'aime »), notifié par Web Push |

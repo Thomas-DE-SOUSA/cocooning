@@ -1,7 +1,13 @@
 'use client';
 
 import { WebRouterEnum } from '@cocooning/couple-shared-kernel/routers';
-import { CalendarDays, Heart, MessageCircle, NotebookText } from 'lucide-react';
+import {
+    CalendarDays,
+    Heart,
+    ListChecks,
+    MessageCircle,
+    NotebookText,
+} from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { TabBar } from '@/shared/ui/tab-bar';
@@ -23,6 +29,12 @@ const TABS = [
         key: 'navigation.agenda',
         icon: CalendarDays,
         routes: [WebRouterEnum.AGENDA],
+    },
+    {
+        href: WebRouterEnum.NOTE_LISTS,
+        key: 'navigation.lists',
+        icon: ListChecks,
+        routes: [WebRouterEnum.NOTE_LISTS, WebRouterEnum.NOTE_LIST],
     },
     {
         href: WebRouterEnum.MESSAGES,

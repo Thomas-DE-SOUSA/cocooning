@@ -8,6 +8,7 @@ import frMessagingMessages from './locales/fr/messaging/messages.json';
 import frMessagingPush from './locales/fr/messaging/push.json';
 import frNotesCard from './locales/fr/notes/card.json';
 import frNotesList from './locales/fr/notes/list.json';
+import frNotesLists from './locales/fr/notes/lists.json';
 import frNotesNote from './locales/fr/notes/note.json';
 import frNotesSpace from './locales/fr/notes/space.json';
 import frPairingCouple from './locales/fr/pairing/couple.json';
@@ -22,6 +23,7 @@ export const RESOURCES = {
         'notes/note': frNotesNote,
         'notes/space': frNotesSpace,
         'notes/card': frNotesCard,
+        'notes/lists': frNotesLists,
         'agenda/calendar': frAgendaCalendar,
         'agenda/labels': frAgendaLabels,
         'messaging/messages': frMessagingMessages,

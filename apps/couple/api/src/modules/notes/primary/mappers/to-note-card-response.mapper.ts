@@ -30,4 +30,6 @@ export const toNoteDetailResponse = (
 ): NoteDetailResponse => ({
     ...toNoteResponse(view),
     card: view.card === null ? null : toNoteCardResponse(view.card),
+    listKind: view.listKind,
+    emoji: view.emoji,
 });

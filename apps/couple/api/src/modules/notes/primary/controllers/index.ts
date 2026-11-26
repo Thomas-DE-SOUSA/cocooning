@@ -19,3 +19,6 @@ export * from './choose-note-card-candidate.controller';
 export * from './refine-note-card.controller';
 export * from './refresh-note-card.controller';
 export * from './correct-note-card-field.controller';
+export * from './create-note-list.controller';
+export * from './edit-note-list.controller';
+export * from './list-note-lists.controller';

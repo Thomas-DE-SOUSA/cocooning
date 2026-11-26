@@ -82,6 +82,8 @@ describe('Feature: the cards of the notes of a smart folder (R19 to R22)', () =>
                         searchedAt: null,
                         updatedAt: NOW.toISOString(),
                     },
+                    listKind: null,
+                    emoji: null,
                 },
             });
             expect(

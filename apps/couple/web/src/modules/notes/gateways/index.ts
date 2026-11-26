@@ -3,6 +3,8 @@ import { notesCardChooseAction } from '../actions/notes-card-choose.action';
 import { notesCardCorrectAction } from '../actions/notes-card-correct.action';
 import { notesCardRefineAction } from '../actions/notes-card-refine.action';
 import { notesCardRefreshAction } from '../actions/notes-card-refresh.action';
+import { notesListCreateAction } from '../actions/notes-list-create.action';
+import { notesListEditAction } from '../actions/notes-list-edit.action';
 import { notesFolderCreateAction } from '../actions/notes-folder-create.action';
 import { notesFolderDeleteAction } from '../actions/notes-folder-delete.action';
 import { notesFolderMoveAction } from '../actions/notes-folder-move.action';
@@ -14,14 +16,18 @@ import { notesNoteDeleteAction } from '../actions/notes-note-delete.action';
 import { notesNoteMoveAction } from '../actions/notes-note-move.action';
 import { notesNoteRenameAction } from '../actions/notes-note-rename.action';
 import { notesSpaceContentsAction } from '../actions/notes-space-contents.action';
+import { CryptoLineIdGenerator } from './browser/crypto-line-id.generator';
 import type { FolderCommandGateway } from './ports/folder-command.gateway';
 import type { NoteCardCommandGateway } from './ports/note-card-command.gateway';
+import type { LineIdGenerator } from './ports/line-id.generator';
 import type { NoteCommandGateway } from './ports/note-command.gateway';
+import type { NoteListCommandGateway } from './ports/note-list-command.gateway';
 import type { NoteSheetGateways } from './ports/note-sheet.gateways';
 import type { NoteSpaceContentsGateway } from './ports/note-space-contents.gateway';
 import { ServerActionFolderCommandGateway } from './server-action/server-action-folder-command.gateway';
 import { ServerActionNoteCardCommandGateway } from './server-action/server-action-note-card-command.gateway';
 import { ServerActionNoteCommandGateway } from './server-action/server-action-note-command.gateway';
+import { ServerActionNoteListCommandGateway } from './server-action/server-action-note-list-command.gateway';
 import { ServerActionNoteSpaceContentsGateway } from './server-action/server-action-note-space-contents.gateway';
 
 export const noteCommandGateway: NoteCommandGateway =
@@ -50,6 +56,16 @@ export const noteCardCommandGateway: NoteCardCommandGateway =
         refreshNoteCard: notesCardRefreshAction,
         correctNoteCardField: notesCardCorrectAction,
     });
+
+export const noteListCommandGateway: NoteListCommandGateway =
+    new ServerActionNoteListCommandGateway({
+        createList: notesListCreateAction,
+        editList: notesListEditAction,
+        // R7: a list is deleted like a note, by its owner.
+        deleteList: notesNoteDeleteAction,
+    });
+
+export const lineIdGenerator: LineIdGenerator = new CryptoLineIdGenerator();
 
 export const noteSpaceContentsGateway: NoteSpaceContentsGateway =
     new ServerActionNoteSpaceContentsGateway(notesSpaceContentsAction);

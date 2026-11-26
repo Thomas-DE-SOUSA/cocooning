@@ -35,6 +35,8 @@ describe('Feature: a partner opens a note (R4)', () => {
                 folderId: null,
                 updatedAt: NOW.toISOString(),
                 card: null,
+                listKind: null,
+                emoji: null,
             },
         });
     });

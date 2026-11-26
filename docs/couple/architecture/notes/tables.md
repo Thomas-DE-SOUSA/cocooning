@@ -2,7 +2,7 @@
 
 Cette page décrit les tables PostgreSQL du contexte `notes` : leurs colonnes, leurs index et leurs contraintes. À lire avant de modifier `packages/couple/prisma/prisma/models/notes-*.prisma` ou l'adaptateur Prisma de `NoteRepository`.
 
-Les tables naissent avec la migration `20261123194115_notes_note` ; `content_state` arrive avec `notes_content_state`, la table `folder` et la colonne `note.folder_id` avec `20261125100000_notes_folders`, ses colonnes `kind`, `subject` et `card_template` avec `20261125200000_notes_smart_folders`, l'index `note_couple_id_folder_id_idx` avec `20261125100100_notes_note_folder_index`, construit en `CONCURRENTLY` sur la table remplie (`packages/couple/prisma/prisma/migrations/`). Les dates sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma.
+Les tables naissent avec la migration `20261123194115_notes_note` ; `content_state` arrive avec `notes_content_state`, la table `folder` et la colonne `note.folder_id` avec `20261125100000_notes_folders`, ses colonnes `kind`, `subject` et `card_template` avec `20261125200000_notes_smart_folders`, l'index `note_couple_id_folder_id_idx` avec `20261125100100_notes_note_folder_index`, construit en `CONCURRENTLY` sur la table remplie, les colonnes `list_kind`, `emoji` et `open_item_count` des listes avec `20261126100000_notes_note_lists` et leur index `note_couple_id_list_kind_updated_at_idx` avec `20261126100100_notes_note_list_index`, en `CONCURRENTLY` lui aussi (`packages/couple/prisma/prisma/migrations/`). Les dates sont des `TIMESTAMP(3)` sans fuseau, écrites en UTC par Prisma.
 
 ## `note`
 
@@ -17,6 +17,9 @@ L'agrégat `Note` (modèle `Note`, fichier `notes-note.prisma`). Le contenu rich
 | `visibility` | `VARCHAR(20)` | `SHARED` ou `PRIVATE` (`NoteVisibilityEnum`), relu par `parseEnum()` ; une valeur inconnue répond `NOTE_DATA_CORRUPTED`. Dit aussi l'espace de la note (R11) |
 | `folder_id` | `UUID`, nullable, clé étrangère vers `folder` (`ON DELETE SET NULL`) | Dossier de la note, `null` à la racine de son espace ; les notes d'avant les dossiers restent `null` (R12) |
 | `content_state` | `BYTEA`, nullable | État Yjs complet du contenu, `null` avant la première frappe ; lu et écrit à part de l'agrégat (`NoteContentPrismaRepository`), jamais lu par la liste |
+| `list_kind` | `VARCHAR(20)`, nullable | `GROCERIES` ou `TASKS` (`NoteListKindEnum`) pour une liste de l'onglet Listes (R26), fixé à la création, relu par `parseEnum()` ; une valeur inconnue répond `NOTE_DATA_CORRUPTED`. `null` pour une note ordinaire, dont toutes les notes d'avant les listes ; les lectures de l'accueil des notes filtrent `list_kind IS NULL` (R27) |
+| `emoji` | `VARCHAR(16)`, nullable | Emoji facultatif d'une liste (`NoteListEmoji`, `NOTE_LIST_EMOJI_MAX_LENGTH` points de code), `null` sans emoji et pour une note ordinaire |
+| `open_item_count` | `INTEGER`, `DEFAULT 0` | Lignes pas encore cochées du contenu (R28), comptées à chaque enregistrement du document et écrites avec `content_state` par `NoteContentPrismaRepository`, jamais par la sauvegarde de l'agrégat ; comptées aussi pour une note ordinaire, mais montrées pour une liste seulement. Les notes d'avant les listes valent 0 |
 | `version` | `INTEGER` | Verrou optimiste : 1 à la création, incrémenté par le repository |
 | `created_at`, `updated_at` | `TIMESTAMP(3)` | `EntityMetadata` du domaine, fournies par `DateTimeProvider` |
 | `deleted_at` | `TIMESTAMP(3)`, nullable | Suppression douce (R7) : le modèle figure dans `SOFT_DELETABLE_MODELS` |
@@ -26,6 +29,7 @@ L'agrégat `Note` (modèle `Note`, fichier `notes-note.prisma`). Le contenu rich
 | `note_pkey` | `id` | Clé primaire |
 | `note_couple_id_updated_at_idx` | `couple_id`, `updated_at DESC` | La liste d'un couple, la plus récente d'abord (`findVisible`) ; `couple_id` en tête (`core.md` règle 27) |
 | `note_couple_id_folder_id_idx` | `couple_id`, `folder_id` | Les notes d'un dossier (`findVisibleIn`, `countVisibleByFolder`) et celles qui remontent à sa suppression (R16) |
+| `note_couple_id_list_kind_updated_at_idx` | `couple_id`, `list_kind`, `updated_at DESC` | Les listes d'une section, la plus récente d'abord (`findVisibleLists`, R28) |
 | `note_folder_id_fkey` | `folder_id` vers `folder.id` | Le dossier existe ; jamais supprimé en vrai, la suppression est douce |
 
 La visibilité se filtre dans le `where` de chaque lecture : `couple_id` du partenaire, puis `visibility = 'SHARED'` ou `owner_id` égal au partenaire (R4).

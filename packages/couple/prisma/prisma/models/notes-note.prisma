@@ -1,26 +1,34 @@
 /// A note of the couple (decision 0039): metadata of the aggregate `Note`, and the Yjs state of its content (decision 0040).
 model Note {
-  id           String    @id @db.Uuid
-  coupleId     String    @map("couple_id") @db.Uuid
-  ownerId      String    @map("owner_id") @db.Uuid
+  id            String    @id @db.Uuid
+  coupleId      String    @map("couple_id") @db.Uuid
+  ownerId       String    @map("owner_id") @db.Uuid
   /// NOTE_TITLE_MAX_LENGTH of the couple shared kernel (R8).
-  title        String    @db.VarChar(120)
-  visibility   String    @db.VarChar(20)
+  title         String    @db.VarChar(120)
+  visibility    String    @db.VarChar(20)
   /// Null at the root of its space (R12); the folder always has the space of the note's visibility (R11).
-  folderId     String?   @map("folder_id") @db.Uuid
+  folderId      String?   @map("folder_id") @db.Uuid
   /// Yjs state of the content, written by the real-time channel; null until the first edit.
-  contentState Bytes?    @map("content_state")
-  version      Int       @map("version")
-  createdAt    DateTime  @map("created_at")
-  updatedAt    DateTime  @map("updated_at")
-  deletedAt    DateTime? @map("deleted_at")
+  contentState  Bytes?    @map("content_state")
+  /// R26 (decision 0058): GROCERIES or TASKS for a list of the Lists tab, null for an ordinary note.
+  listKind      String?   @map("list_kind") @db.VarChar(20)
+  /// NOTE_LIST_EMOJI_MAX_LENGTH code points of the couple shared kernel, null without one.
+  emoji         String?   @db.VarChar(16)
+  /// R28: the unchecked task items of the content, counted at each save of the document.
+  openItemCount Int       @default(0) @map("open_item_count")
+  version       Int       @map("version")
+  createdAt     DateTime  @map("created_at")
+  updatedAt     DateTime  @map("updated_at")
+  deletedAt     DateTime? @map("deleted_at")
 
-  folder Folder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  folder Folder?    @relation(fields: [folderId], references: [id], onDelete: SetNull)
   cards  NoteCard[]
 
   // The list of a couple, most recently changed first (core.md rule 27: coupleId leads).
   @@index([coupleId, updatedAt(sort: Desc)])
   // The notes of a folder, and those to move up when it is deleted (R16).
   @@index([coupleId, folderId])
+  // R28: the lists of one section, most recently changed first.
+  @@index([coupleId, listKind, updatedAt(sort: Desc)])
   @@map("note")
 }

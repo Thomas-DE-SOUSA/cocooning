@@ -6,9 +6,12 @@ import {
     CreateNoteUseCase,
     DeleteFolderUseCase,
     DeleteNoteUseCase,
+    CreateNoteListUseCase,
     EditFolderTemplateUseCase,
+    EditNoteListUseCase,
     GetNoteSpaceContentsUseCase,
     GetNoteUseCase,
+    ListNoteListsUseCase,
     ListNoteSpacesUseCase,
     ListNotesUseCase,
     MoveFolderUseCase,
@@ -23,9 +26,11 @@ import { createCoupleHttpConfig } from '../couple-http-config';
 import type { SessionTokenProvider } from '../session/session-headers';
 import { resolveNoteCardsEndpoints } from './endpoints/note-cards.endpoints';
 import { resolveNoteFoldersEndpoints } from './endpoints/note-folders.endpoints';
+import { resolveNoteListsEndpoints } from './endpoints/note-lists.endpoints';
 import { resolveNotesEndpoints } from './endpoints/notes.endpoints';
 import { ApiNoteCardsGateway } from './gateways/api-note-cards.gateway';
 import { ApiNoteFoldersGateway } from './gateways/api-note-folders.gateway';
+import { ApiNoteListsGateway } from './gateways/api-note-lists.gateway';
 import { ApiNotesGateway } from './gateways/api-notes.gateway';
 
 export type NotesModule = {
@@ -48,6 +53,9 @@ export type NotesModule = {
     readonly refineNoteCard: RefineNoteCardUseCase;
     readonly refreshNoteCard: RefreshNoteCardUseCase;
     readonly correctNoteCardField: CorrectNoteCardFieldUseCase;
+    readonly listNoteLists: ListNoteListsUseCase;
+    readonly createNoteList: CreateNoteListUseCase;
+    readonly editNoteList: EditNoteListUseCase;
 };
 
 // The gateways stay inside; getSessionToken is only called when a use case runs (decision 0036).
@@ -72,6 +80,11 @@ export function createNotesModule(
         httpConfig,
         getSessionToken,
     );
+    const lists = new ApiNoteListsGateway(
+        resolveNoteListsEndpoints(apiBaseUrl),
+        httpConfig,
+        getSessionToken,
+    );
     return {
         listNotes: new ListNotesUseCase(notes),
         getNote: new GetNoteUseCase(notes),
@@ -92,5 +105,8 @@ export function createNotesModule(
         refineNoteCard: new RefineNoteCardUseCase(cards),
         refreshNoteCard: new RefreshNoteCardUseCase(cards),
         correctNoteCardField: new CorrectNoteCardFieldUseCase(cards),
+        listNoteLists: new ListNoteListsUseCase(lists),
+        createNoteList: new CreateNoteListUseCase(lists),
+        editNoteList: new EditNoteListUseCase(lists),
     };
 }
