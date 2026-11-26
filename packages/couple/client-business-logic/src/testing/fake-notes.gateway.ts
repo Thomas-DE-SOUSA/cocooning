@@ -61,7 +61,7 @@ export class FakeNotesGateway extends NotesGateway {
     ): Promise<Result<NoteDetailResponse, ApiError>> {
         return this.respond(
             { operation: 'getNote', noteId },
-            { ...A_SHARED_NOTE, card: null },
+            { ...A_SHARED_NOTE, card: null, listKind: null, emoji: null },
         );
     }
 

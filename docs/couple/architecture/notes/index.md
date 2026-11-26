@@ -57,12 +57,12 @@ Toutes les routes demandent une session (cookie `cocooning_session`, [décision 
 |---|---|---|---|---|
 | `POST /notes`, corps `CreateNoteRequestSchema` | `NOTE_CREATE` | `CreateNoteUseCase` | `201` | `422` titre invalide |
 | `GET /notes?page&pageSize` | `NOTE_LIST` | `ListNotesUseCase` | `200`, `NotePageResponseSchema` | `422` pagination invalide |
-| `GET /notes/:noteId` | `NOTE_GET` | `GetNoteUseCase` | `200`, `NoteDetailResponseSchema` (la note et sa fiche ou `null`) | `404` `NOTE_NOT_FOUND` (R4) ; `422` identifiant invalide |
+| `GET /notes/:noteId` | `NOTE_GET` | `GetNoteUseCase` | `200`, `NoteDetailResponseSchema` (la note et sa fiche ou `null`, sa section `listKind` et son `emoji`, `null` pour une note ordinaire) | `404` `NOTE_NOT_FOUND` (R4) ; `422` identifiant invalide |
 | `PATCH /notes/:noteId`, corps `RenameNoteRequestSchema` | `NOTE_RENAME` | `RenameNoteUseCase` | `200` | `404` `NOTE_NOT_FOUND` ; `409` `NOTE_VERSION_CONFLICT` ; `422` |
 | `POST /notes/:noteId/share` | `NOTE_SHARE` | `ShareNoteUseCase` | `200` | `403` `NOTE_RESERVED_TO_OWNER` ; `404` |
 | `POST /notes/:noteId/make-private` | `NOTE_MAKE_PRIVATE` | `MakeNotePrivateUseCase` | `200` | `403` ; `404` |
 | `DELETE /notes/:noteId` | `NOTE_DELETE` | `DeleteNoteUseCase` | `204` | `403` ; `404` |
-| `POST /notes/:noteId/move`, corps `MoveNoteRequestSchema` | `NOTE_MOVE` | `MoveNoteUseCase` | `200` | `403` changement d'espace par l'autre ; `404` note ou dossier ; `422` `FOLDER_SPACE_MISMATCH` |
+| `POST /notes/:noteId/move`, corps `MoveNoteRequestSchema` | `NOTE_MOVE` | `MoveNoteUseCase` | `200` | `403` changement d'espace par l'autre ; `404` note ou dossier ; `422` `FOLDER_SPACE_MISMATCH`, `NOTE_LIST_NOT_MOVABLE` (une liste, R27) |
 | `GET /note-spaces` | `NOTE_SPACE_LIST` | `ListNoteSpacesUseCase` | `200`, `NoteSpacesResponseSchema` | |
 | `GET /note-spaces/:space/contents?folderId` | `NOTE_SPACE_CONTENTS_GET` | `GetNoteSpaceContentsUseCase` | `200`, `NoteSpaceContentsResponseSchema` | `404` `FOLDER_NOT_FOUND` ; `422` espace inconnu ou `FOLDER_SPACE_MISMATCH` |
 | `POST /note-folders`, corps `CreateFolderRequestSchema` | `FOLDER_CREATE` | `CreateFolderUseCase` | `201` | `404` parent ; `422` nom, espace, genre, sujet ou fiche type |
@@ -76,6 +76,9 @@ Toutes les routes demandent une session (cookie `cocooning_session`, [décision 
 | `POST /notes/:noteId/card/refresh` | `NOTE_CARD_REFRESH` | `RefreshNoteCardUseCase` | `200`, `NoteCardResponseSchema` | `404` ; `409` ; `422` `FOLDER_NOT_SMART` |
 | `PUT /notes/:noteId/card/fields`, corps `CorrectNoteCardFieldRequestSchema` | `NOTE_CARD_FIELD_CORRECT` | `CorrectNoteCardFieldUseCase` | `200`, `NoteCardResponseSchema` | `404` ; `409` ; `422` `NOTE_CARD_FIELD_INVALID` |
 | `DELETE /note-folders/:folderId` | `FOLDER_DELETE` | `DeleteFolderUseCase` | `204` | `404` ; `409` |
+| `GET /note-lists?kind`, query `NoteListQueryRequestSchema` | `NOTE_LIST_INDEX` | `ListNoteListsUseCase` | `200`, `NoteListIndexResponseSchema` (les listes communes et les miennes, la plus récemment modifiée d'abord, avec `openItemCount`) | `422` section inconnue |
+| `POST /note-lists`, corps `CreateNoteListRequestSchema` | `NOTE_LIST_CREATE` | `CreateNoteListUseCase` | `201`, `NoteListResponseSchema` | `422` section, espace, titre ou `NOTE_LIST_EMOJI_INVALID` |
+| `PATCH /note-lists/:noteId`, corps `EditNoteListRequestSchema` | `NOTE_LIST_EDIT` | `EditNoteListUseCase` | `200`, `NoteListResponseSchema` | `404` `NOTE_NOT_FOUND` ou `NOTE_LIST_NOT_FOUND` ; `409` `NOTE_VERSION_CONFLICT` ; `422` |
 
 ## Points d'attention
 
@@ -83,6 +86,8 @@ Toutes les routes demandent une session (cookie `cocooning_session`, [décision 
 - **Visibilité dans la requête.** `findVisibleById` et `findVisible` ne rendent que les notes vivantes du couple, partagées ou à ce partenaire (`core-backend.md` règle 12) : la note privée de l'autre répond `NOTE_NOT_FOUND`, comme une note inexistante (R4).
 - **Le titre est un contenu du couple.** Aucun événement ne le porte, ni le nom d'un dossier (`core.md` règle 33).
 - **Sans N+1.** Le chemin d'un dossier se lit en une requête récursive, les nombres par dossier et par espace en un `groupBy` chacun, la remontée de R16 en une requête pour les dossiers et une pour les notes.
+- **Une liste passe par les routes des notes.** Ouvrir (`GET /notes/:noteId`), renommer, partager, rendre privée, supprimer et écrire à deux sur `/collab` valent pour une liste comme pour une note ; seuls la création, l'accueil d'une section et l'emoji ont leurs routes `/note-lists`. `GET /notes` et les espaces ne rendent jamais une liste (R27).
+- **Liste sans pagination.** Les listes d'une section se lisent en entier : le couple en a peu (décision P1).
 - **Contenu d'un dossier sans pagination.** Les dossiers et les notes d'une racine ou d'un dossier se lisent en entier : le couple en a peu (décision P1).
 
 ## Décisions liées

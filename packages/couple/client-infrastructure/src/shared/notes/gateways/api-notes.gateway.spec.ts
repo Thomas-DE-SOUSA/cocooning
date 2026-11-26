@@ -78,7 +78,12 @@ describe('Feature: the PWA reaches the notes through the API', () => {
         });
 
         it('opens a note', async () => {
-            const detail = { ...A_SHARED_NOTE, card: null };
+            const detail = {
+                ...A_SHARED_NOTE,
+                card: null,
+                listKind: null,
+                emoji: null,
+            };
             fakeFetch.givenResponse(200, JSON.stringify(detail));
             await expect(aGateway().getNote(NOTE_ID)).resolves.toEqual(
                 ok(detail),

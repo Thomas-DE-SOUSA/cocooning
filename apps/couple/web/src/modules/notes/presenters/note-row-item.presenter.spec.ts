@@ -15,7 +15,14 @@ const [FILLED, PENDING] = A_SMART_SPACE_CONTENTS.notes;
 
 describe('Feature: the line of a card in its folder (R20, R21)', () => {
     it('has no line for a note without card', () => {
-        expect(toNoteRowItem({ ...A_SHARED_NOTE, card: null }).card).toBeNull();
+        expect(
+            toNoteRowItem({
+                ...A_SHARED_NOTE,
+                card: null,
+                listKind: null,
+                emoji: null,
+            }).card,
+        ).toBeNull();
     });
 
     it('gives the first two values found, without the fields not found', () => {

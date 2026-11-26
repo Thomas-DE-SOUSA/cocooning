@@ -19,7 +19,7 @@ const aRefusal = (
     backendCode: string | null = null,
 ): ApiError => ({ code, message: 'Refused', backendCode });
 
-const A_NOTE = { ...A_SHARED_NOTE, card: null };
+const A_NOTE = { ...A_SHARED_NOTE, card: null, listKind: null, emoji: null };
 const VACANCES = { folderId: A_SHARED_FOLDER.folderId, name: 'Vacances' };
 
 describe('Feature: the page of one note (decision 0036)', () => {
