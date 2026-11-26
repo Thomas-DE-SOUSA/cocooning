@@ -68,3 +68,4 @@ Le registre unique des décisions du domaine `couple`, dans l'ordre chronologiqu
 | 0056 | agenda | [Pour qui est un événement, et des étiquettes de couleur](agenda/0056-pour-qui-et-etiquettes.md) | produit | acceptée | 2026-11-25 | Thomas De Sousa |
 | 0057 | frontend | [Couleurs des étiquettes et feuille imbriquée de l'agenda](frontend/0057-ecran-pour-qui-et-etiquettes.md) | technique | acceptée | 2026-11-26 | Thomas De Sousa |
 | 0058 | notes | [L'onglet Listes, des notes à cocher](notes/0058-listes-sur-les-notes.md) | produit | acceptée | 2026-11-26 | Thomas De Sousa |
+| 0059 | frontend | [L'écran des listes coche les lignes dans le document Yjs de la note](frontend/0059-ecran-des-listes.md) | technique | proposée | 2026-11-26 | à compléter |
