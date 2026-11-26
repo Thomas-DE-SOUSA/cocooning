@@ -42,6 +42,16 @@
         "deleting": "Suppression en cours",
         "keep": "Garder"
     },
+    "card": {
+        "title": "Étiquettes de l'agenda",
+        "hint": "Communes au couple : touchez une étiquette pour la renommer, changer sa couleur ou la supprimer.",
+        "empty": "Aucune étiquette pour l'instant. Créez-en une en ajoutant un événement à l'agenda.",
+        "edit": "Modifier l'étiquette {{name}}"
+    },
+    "unavailable": {
+        "title": "Impossible d'afficher les étiquettes",
+        "refresh": "Réessayer"
+    },
     "toast": {
         "created": "Étiquette créée",
         "saved": "Étiquette modifiée",

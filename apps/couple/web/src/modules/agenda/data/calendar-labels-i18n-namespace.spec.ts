@@ -33,6 +33,9 @@ const REQUIRED_KEYS = [
     ...['ask', 'description', 'confirm', 'deleting', 'keep'].map(
         (key) => `deletion.${key}`,
     ),
+    ...['title', 'hint', 'empty', 'edit'].map((key) => `card.${key}`),
+    'unavailable.title',
+    'unavailable.refresh',
     ...Object.values(CALENDAR_LABEL_DONE_KEYS),
     ...Object.values(CALENDAR_LABEL_FAILURE_KEYS),
     ...[
