@@ -18,6 +18,8 @@ const CARD_NOTE = {
     ...A_SHARED_NOTE,
     folderId: FOLDER_ID,
     card: A_FILLED_NOTE_CARD,
+    listKind: null,
+    emoji: null,
 };
 const NOTE_URL = `http://api.test/notes/${NOTE_ID}/card`;
 const {

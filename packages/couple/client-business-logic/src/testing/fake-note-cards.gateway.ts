@@ -51,6 +51,8 @@ export class FakeNoteCardsGateway extends NoteCardsGateway {
                 title: request.name,
                 folderId,
                 card,
+                listKind: null,
+                emoji: null,
             },
         );
     }

@@ -22,6 +22,15 @@ export const notesVisibleTo = (
     OR: [{ visibility: NoteVisibilityEnum.SHARED }, { ownerId: userId }],
 });
 
+// R27: the notes home leaves the lists out, in the query.
+export const ordinaryNotesVisibleTo = (
+    coupleId: string,
+    userId: string,
+): Prisma.NoteWhereInput => ({
+    ...notesVisibleTo(coupleId, userId),
+    listKind: null,
+});
+
 export async function countNotesByFolder(
     tx: Transaction,
     coupleId: string,
@@ -31,7 +40,7 @@ export async function countNotesByFolder(
     const groups = await tx.note.groupBy({
         by: ['folderId'],
         where: {
-            ...notesVisibleTo(coupleId, userId),
+            ...ordinaryNotesVisibleTo(coupleId, userId),
             folderId: { in: folderIds },
         },
         _count: { _all: true },
@@ -52,7 +61,7 @@ export async function countNotesBySpace(
 ): Promise<NoteSpaceCounts> {
     const groups = await tx.note.groupBy({
         by: ['visibility'],
-        where: notesVisibleTo(coupleId, userId),
+        where: ordinaryNotesVisibleTo(coupleId, userId),
         _count: { _all: true },
     });
     return toNoteSpaceCounts(

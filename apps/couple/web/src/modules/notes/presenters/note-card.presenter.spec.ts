@@ -11,7 +11,10 @@ const [FILLED, PENDING, CHOOSING] = A_SMART_SPACE_CONTENTS.notes;
 describe('Feature: the card on the page of a note (R20 to R22, R25)', () => {
     it('has none for a note outside a smart folder', () => {
         expect(
-            presentNoteCard({ ...A_SHARED_NOTE, card: null }, false),
+            presentNoteCard(
+                { ...A_SHARED_NOTE, card: null, listKind: null, emoji: null },
+                false,
+            ),
         ).toBeNull();
     });
 

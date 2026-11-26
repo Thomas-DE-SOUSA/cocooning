@@ -69,6 +69,8 @@ const aCardNote = (card: NoteCardResponse): NoteDetailResponse => ({
     folderId: A_SMART_FOLDER.folderId,
     updatedAt: UPDATED_AT,
     card,
+    listKind: null,
+    emoji: null,
 });
 
 // R18, R20: « Restaurants » opened, a filled card, one in search, one waiting for a choice.

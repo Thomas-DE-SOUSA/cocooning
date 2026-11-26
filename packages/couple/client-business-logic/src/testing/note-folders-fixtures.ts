@@ -53,5 +53,5 @@ export const A_SPACE_CONTENTS: NoteSpaceContentsResponse = {
     path: [],
     cardContext: null,
     folders: [{ ...A_SHARED_FOLDER, folderCount: 0, noteCount: 2 }],
-    notes: [{ ...A_SHARED_NOTE, card: null }],
+    notes: [{ ...A_SHARED_NOTE, card: null, listKind: null, emoji: null }],
 };

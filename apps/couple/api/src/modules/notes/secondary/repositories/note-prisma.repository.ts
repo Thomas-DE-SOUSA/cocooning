@@ -9,7 +9,10 @@ import {
     visibilityOfSpace,
 } from '@cocooning/couple-server-business-logic/notes';
 import { NoteExceptionCodeEnum } from '@cocooning/couple-contract/notes';
-import type { NoteSpace } from '@cocooning/couple-shared-kernel/enums';
+import type {
+    NoteListKind,
+    NoteSpace,
+} from '@cocooning/couple-shared-kernel/enums';
 import type {
     OffsetPage,
     OffsetPaginationParams,
@@ -22,6 +25,7 @@ import {
     countNotesByFolder,
     countNotesBySpace,
     notesVisibleTo,
+    ordinaryNotesVisibleTo,
 } from './note-prisma.query';
 import { toVersionConflict } from './outbox-version-conflict';
 
@@ -88,7 +92,7 @@ export class NotePrismaRepository extends NoteRepository {
         userId: string,
         { page, pageSize }: OffsetPaginationParams,
     ): Promise<OffsetPage<Note>> {
-        const where = notesVisibleTo(coupleId, userId);
+        const where = ordinaryNotesVisibleTo(coupleId, userId);
         return this.load({ coupleId }, async (notes) => {
             const [rows, total] = await Promise.all([
                 notes.findMany({
@@ -113,7 +117,7 @@ export class NotePrismaRepository extends NoteRepository {
         return this.load({ coupleId }, async (notes) => {
             const rows = await notes.findMany({
                 where: {
-                    ...notesVisibleTo(coupleId, userId),
+                    ...ordinaryNotesVisibleTo(coupleId, userId),
                     visibility: visibilityOfSpace(space),
                     folderId,
                 },
@@ -147,6 +151,21 @@ export class NotePrismaRepository extends NoteRepository {
         return this.load({ coupleId }, () =>
             countNotesBySpace(this.prismaService.current, coupleId, userId),
         );
+    }
+
+    override findVisibleLists(
+        coupleId: string,
+        userId: string,
+        kind: NoteListKind,
+    ): Promise<ReadonlyArray<Note>> {
+        return this.load({ coupleId }, async (notes) => {
+            const rows = await notes.findMany({
+                where: { ...notesVisibleTo(coupleId, userId), listKind: kind },
+                omit: WITHOUT_CONTENT,
+                orderBy: [...MOST_RECENT_FIRST],
+            });
+            return rows.map(toNote);
+        });
     }
 
     // Logged by identifiers only: titles belong to the couple (core.md rule 33).

@@ -1,5 +1,7 @@
 import {
     FolderKindEnum,
+    type NoteListKind,
+    NoteListKindEnum,
     type NoteSpace,
     NoteSpaceEnum,
 } from '@cocooning/couple-shared-kernel/enums';
@@ -47,6 +49,9 @@ import { LoadNoteDocumentUseCase } from '../../application/use-cases/load-note-d
 import { SaveNoteDocumentUseCase } from '../../application/use-cases/save-note-document.use-case';
 import { NoteCoupleGuardService } from '../../application/services/note-couple-guard.service';
 import { CreateNoteUseCase } from '../../application/use-cases/create-note.use-case';
+import { CreateNoteListUseCase } from '../../application/use-cases/create-note-list.use-case';
+import { EditNoteListUseCase } from '../../application/use-cases/edit-note-list.use-case';
+import { ListNoteListsUseCase } from '../../application/use-cases/list-note-lists.use-case';
 import { DeleteNoteUseCase } from '../../application/use-cases/delete-note.use-case';
 import { ListNotesUseCase } from '../../application/use-cases/list-notes.use-case';
 import { MakeNotePrivateUseCase } from '../../application/use-cases/make-note-private.use-case';
@@ -55,11 +60,14 @@ import { ShareNoteUseCase } from '../../application/use-cases/share-note.use-cas
 import { Note } from '../../domain/models/note.aggregate';
 import { NotePreconditionService } from '../../domain/services/note-precondition.service';
 import { NoteId } from '../../domain/value-objects/note-id.vo';
+import { NoteList } from '../../domain/value-objects/note-list.vo';
+import { NoteListEmoji } from '../../domain/value-objects/note-list-emoji.vo';
 import { NoteTitle } from '../../domain/value-objects/note-title.vo';
 import {
     FakeNoteCardWriter,
     PROPOSED_TEMPLATE,
 } from '../secondary/adapters/fake-note-card.writer';
+import { FakeNoteChecklistReader } from '../secondary/adapters/fake-note-checklist.reader';
 import { FakeNoteCollaborationProvider } from '../secondary/adapters/fake-note-collaboration.provider';
 import { FakePairedCoupleProvider } from '../secondary/adapters/fake-paired-couple.provider';
 import { FakePlaceDirectory } from '../secondary/adapters/fake-place.directory';
@@ -110,6 +118,7 @@ export class NotesTestContext {
     readonly unitOfWork = new InMemoryUnitOfWork();
     readonly pairedCoupleProvider = new FakePairedCoupleProvider();
     readonly noteCollaborationProvider = new FakeNoteCollaborationProvider();
+    readonly noteChecklistReader = new FakeNoteChecklistReader();
     readonly noteCardWriter = new FakeNoteCardWriter();
     readonly webSearchProvider = new FakeWebSearchProvider();
     readonly webPageReader = new FakeWebPageReader();
@@ -153,6 +162,22 @@ export class NotesTestContext {
 
     listNotesUseCase(): ListNotesUseCase {
         return new ListNotesUseCase(this.noteRepository);
+    }
+
+    createNoteListUseCase(): CreateNoteListUseCase {
+        return new CreateNoteListUseCase(
+            this.noteRepository,
+            this.dateTimeProvider,
+            this.eventPublishingService,
+        );
+    }
+
+    listNoteListsUseCase(): ListNoteListsUseCase {
+        return new ListNoteListsUseCase(this.noteRepository);
+    }
+
+    editNoteListUseCase(): EditNoteListUseCase {
+        return new EditNoteListUseCase(...this.mutationDependencies());
     }
 
     renameNoteUseCase(): RenameNoteUseCase {
@@ -322,6 +347,7 @@ export class NotesTestContext {
     saveNoteDocumentUseCase(): SaveNoteDocumentUseCase {
         return new SaveNoteDocumentUseCase(
             this.noteContentRepository,
+            this.noteChecklistReader,
             this.dateTimeProvider,
         );
     }
@@ -339,6 +365,32 @@ export class NotesTestContext {
                 title: NoteTitle.create(title),
                 space: folder === null ? NoteSpaceEnum.SHARED : folder.space,
                 folder,
+            },
+            this.dateTimeProvider.now(),
+        );
+        note.clearDomainEvents();
+        this.noteRepository.seed(note);
+        return note;
+    }
+
+    // A list of a section (R26), as if already in the database, without events; shared with an emoji by default.
+    givenListOf(
+        context: ExecutionContext,
+        title = 'Carrefour',
+        kind: NoteListKind = NoteListKindEnum.GROCERIES,
+        space: NoteSpace = NoteSpaceEnum.SHARED,
+        emoji: string | null = '🛒',
+    ): Note {
+        const note = Note.createList(
+            {
+                coupleId: context.coupleId,
+                ownerId: context.userId,
+                title: NoteTitle.create(title),
+                space,
+                list: NoteList.create(
+                    kind,
+                    NoteListEmoji.createOptional(emoji),
+                ),
             },
             this.dateTimeProvider.now(),
         );

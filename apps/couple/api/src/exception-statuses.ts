@@ -43,6 +43,11 @@ export const EXCEPTION_STATUSES: ExceptionStatusTable = {
     [NoteExceptionCodeEnum.NOTE_RESERVED_TO_OWNER]: HttpStatus.FORBIDDEN,
     [NoteExceptionCodeEnum.NOTE_TITLE_INVALID]: HttpStatus.UNPROCESSABLE_ENTITY,
     [NoteExceptionCodeEnum.NOTE_VERSION_CONFLICT]: HttpStatus.CONFLICT,
+    [NoteExceptionCodeEnum.NOTE_LIST_NOT_FOUND]: HttpStatus.NOT_FOUND,
+    [NoteExceptionCodeEnum.NOTE_LIST_EMOJI_INVALID]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
+    [NoteExceptionCodeEnum.NOTE_LIST_NOT_MOVABLE]:
+        HttpStatus.UNPROCESSABLE_ENTITY,
     [NoteExceptionCodeEnum.FOLDER_NOT_FOUND]: HttpStatus.NOT_FOUND,
     [NoteExceptionCodeEnum.FOLDER_NAME_INVALID]:
         HttpStatus.UNPROCESSABLE_ENTITY,

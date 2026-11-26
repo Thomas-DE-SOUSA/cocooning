@@ -31,6 +31,8 @@ describe('Feature: open one note', () => {
                 folderId: null,
                 updatedAt: ctx.dateTimeProvider.now(),
                 card: null,
+                listKind: null,
+                emoji: null,
             });
         });
 
