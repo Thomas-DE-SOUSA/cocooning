@@ -49,6 +49,16 @@ describe('Feature: the page of one note (decision 0036)', () => {
         });
     });
 
+    it('R27, opens a list on its own page', () => {
+        const page = presentNotePage(
+            ok({
+                note: { ...A_NOTE, listKind: 'GROCERIES', emoji: '🛒' },
+                place: A_SPACE_CONTENTS,
+            }),
+        );
+        expect(page.redirectTo).toBe(`/lists/${A_SHARED_NOTE.noteId}`);
+    });
+
     it('has no card for a note outside a smart folder', () => {
         const page = presentNotePage(
             ok({ note: A_NOTE, place: A_SPACE_CONTENTS }),

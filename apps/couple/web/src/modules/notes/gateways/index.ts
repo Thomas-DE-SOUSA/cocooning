@@ -15,8 +15,10 @@ import { notesNoteDeleteAction } from '../actions/notes-note-delete.action';
 import { notesNoteMoveAction } from '../actions/notes-note-move.action';
 import { notesNoteRenameAction } from '../actions/notes-note-rename.action';
 import { notesSpaceContentsAction } from '../actions/notes-space-contents.action';
+import { CryptoLineIdGenerator } from './browser/crypto-line-id.generator';
 import type { FolderCommandGateway } from './ports/folder-command.gateway';
 import type { NoteCardCommandGateway } from './ports/note-card-command.gateway';
+import type { LineIdGenerator } from './ports/line-id.generator';
 import type { NoteCommandGateway } from './ports/note-command.gateway';
 import type { NoteListCommandGateway } from './ports/note-list-command.gateway';
 import type { NoteSheetGateways } from './ports/note-sheet.gateways';
@@ -58,6 +60,8 @@ export const noteListCommandGateway: NoteListCommandGateway =
     new ServerActionNoteListCommandGateway({
         createList: notesListCreateAction,
     });
+
+export const lineIdGenerator: LineIdGenerator = new CryptoLineIdGenerator();
 
 export const noteSpaceContentsGateway: NoteSpaceContentsGateway =
     new ServerActionNoteSpaceContentsGateway(notesSpaceContentsAction);

@@ -1,6 +1,7 @@
 import { HocuspocusProvider } from '@hocuspocus/provider';
 import type { Doc } from 'yjs';
 import {
+    type ListDocumentEvents,
     type NoteDocumentEvents,
     NoteDocumentGateway,
 } from '../ports/note-document.gateway';
@@ -20,6 +21,7 @@ export class HocuspocusNoteDocumentGateway extends NoteDocumentGateway {
         noteId: string,
         document: Doc,
         events: NoteDocumentEvents,
+        listEvents: ListDocumentEvents | null,
     ): () => void {
         const provider = new HocuspocusProvider({
             url: this.collaborationUrl,
@@ -29,6 +31,9 @@ export class HocuspocusNoteDocumentGateway extends NoteDocumentGateway {
             onAuthenticationFailed: events.onRefused,
             onClose: ({ event }) => {
                 if (event.code === CLOSED_BY_SERVER) events.onClosedByServer();
+            },
+            onSynced: ({ state }) => {
+                if (state) listEvents?.onSynced();
             },
         });
         return () => provider.destroy();

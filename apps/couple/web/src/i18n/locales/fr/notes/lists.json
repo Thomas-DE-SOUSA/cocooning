@@ -73,6 +73,37 @@
         "title": "Impossible d'afficher vos listes",
         "refresh": "Réessayer"
     },
+    "page": {
+        "add": {
+            "GROCERIES": "Ajouter un article",
+            "TASKS": "Ajouter une tâche",
+            "submit": "Ajouter"
+        },
+        "empty": {
+            "GROCERIES": "Rien à prendre pour l'instant : ajoute le premier article.",
+            "TASKS": "Rien à faire pour l'instant : ajoute la première tâche."
+        },
+        "line": {
+            "edit": "Modifier « {{text}} »",
+            "editLabel": "Texte de la ligne",
+            "delete": "Supprimer",
+            "checker": {
+                "ME": "Moi",
+                "YOU": "Toi"
+            }
+        },
+        "done": {
+            "title": "Fait · {{count}}",
+            "clear": "Vider les faits"
+        }
+    },
+    "clearDone": {
+        "title": "Vider les faits ?",
+        "description_one": "La ligne cochée disparaît pour vous deux.",
+        "description_other": "Les {{count}} lignes cochées disparaissent pour vous deux.",
+        "confirm": "Vider pour nous deux",
+        "keep": "Garder"
+    },
     "apiErrors": {
         "NOTE_NOT_FOUND": "Cette note n'existe plus. La liste est mise à jour.",
         "NOTE_RESERVED_TO_OWNER": "Seule la propriétaire de la note peut faire ça.",
