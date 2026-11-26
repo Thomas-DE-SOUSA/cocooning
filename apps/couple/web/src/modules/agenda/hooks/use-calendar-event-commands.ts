@@ -24,9 +24,14 @@ async function sendSave(
     calendarEventId: string,
     form: CalendarEventForm,
     save: CalendarEventSave,
+    isOwner: boolean,
 ): Promise<Result<null, ApiError>> {
     if (save.editsDetails) {
-        const edited = await gateway.editCalendarEvent(calendarEventId, form);
+        const edited = await gateway.editCalendarEvent(
+            calendarEventId,
+            form,
+            isOwner,
+        );
         if (!edited.success) return edited;
     }
     if (save.visibilityChange === CalendarEventVisibilityChangeEnum.SHARE) {
@@ -73,9 +78,10 @@ export function useCalendarEventCommands({
             calendarEventId: string,
             form: CalendarEventForm,
             save: CalendarEventSave,
+            isOwner: boolean,
         ) =>
             run(CalendarEventCommandEnum.SAVE_CALENDAR_EVENT, () =>
-                sendSave(gateway, calendarEventId, form, save),
+                sendSave(gateway, calendarEventId, form, save, isOwner),
             ),
         deleteCalendarEvent: (calendarEventId: string) =>
             run(CalendarEventCommandEnum.DELETE_CALENDAR_EVENT, () =>

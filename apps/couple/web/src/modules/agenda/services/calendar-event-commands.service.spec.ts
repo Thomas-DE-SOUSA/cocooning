@@ -26,6 +26,8 @@ const A_DINNER_INPUT = {
     startsAt: '20:00',
     endsAt: '',
     isPrivate: true,
+    audience: 'ME',
+    labelId: null,
 };
 const THE_DINNER_DETAILS = {
     title: 'Dîner chez Léa',
@@ -53,8 +55,8 @@ const create = (input: unknown) =>
         t: (key) => key,
         createCalendarEvent: new CreateCalendarEventUseCase(gateway),
     });
-const edit = (calendarEventId: unknown, input: unknown) =>
-    editCalendarEvent(calendarEventId, input, {
+const edit = (calendarEventId: unknown, input: unknown, isOwner: unknown) =>
+    editCalendarEvent(calendarEventId, input, isOwner, {
         t: (key) => key,
         editCalendarEvent: new EditCalendarEventUseCase(gateway),
     });
@@ -87,7 +89,9 @@ describe('Feature: calendar event commands sent by the server actions', () => {
 
     describe('Scenario: R9, a partner edits an event', () => {
         it('sends the details without the visibility, the private event for its author (R8, R11)', async () => {
-            expect(await edit(EVENT_ID, A_DINNER_INPUT)).toEqual(ok(null));
+            expect(await edit(EVENT_ID, A_DINNER_INPUT, true)).toEqual(
+                ok(null),
+            );
             expect(gateway.calls).toEqual([
                 {
                     operation: 'editCalendarEvent',
@@ -97,14 +101,47 @@ describe('Feature: calendar event commands sent by the server actions', () => {
             ]);
         });
 
+        it('sends PARTNER when the other partner picks « Moi » (R11)', async () => {
+            await edit(
+                EVENT_ID,
+                { ...A_DINNER_INPUT, isPrivate: false, audience: 'ME' },
+                false,
+            );
+            expect(gateway.calls).toEqual([
+                {
+                    operation: 'editCalendarEvent',
+                    calendarEventId: EVENT_ID,
+                    request: { ...THE_DINNER_DETAILS, audience: 'PARTNER' },
+                },
+            ]);
+        });
+
         it.each([
-            ['an empty title', EVENT_ID, { ...A_DINNER_INPUT, title: ' ' }],
-            ['an id that is not an event id', '../couple', A_DINNER_INPUT],
+            [
+                'an empty title',
+                EVENT_ID,
+                { ...A_DINNER_INPUT, title: ' ' },
+                true,
+            ],
+            [
+                'an id that is not an event id',
+                '../couple',
+                A_DINNER_INPUT,
+                true,
+            ],
+            [
+                'an author that is not a yes or no',
+                EVENT_ID,
+                A_DINNER_INPUT,
+                'yes',
+            ],
         ])(
             'refuses %s without calling the API',
-            async (_label, calendarEventId, input) => {
+            async (_label, calendarEventId, input, isOwner) => {
                 expect(
-                    isValidationError(await edit(calendarEventId, input)),
+                    isValidationError(
+                        await edit(calendarEventId, input, isOwner),
+                    ),
                 ).toBe(true);
                 expect(gateway.calls).toEqual([]);
             },

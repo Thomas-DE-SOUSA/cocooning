@@ -1,3 +1,4 @@
+import type { ViewerAudience } from '@cocooning/couple-client-business-logic/agenda';
 import type { ApiError } from '@cocooning/couple-client-business-logic/shared';
 import type { CalendarEventMoment } from './calendar-event-moment.view-model';
 
@@ -38,6 +39,8 @@ export type AgendaDayItem = {
     readonly moment: CalendarEventMoment;
     readonly isOwner: boolean;
     readonly isPrivate: boolean;
+    readonly audience: ViewerAudience;
+    readonly labelId: string | null;
     readonly color: AuthorColor;
 };
 

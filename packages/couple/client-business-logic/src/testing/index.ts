@@ -1,5 +1,6 @@
 export * from './fake-agenda.gateway';
 export * from './fake-authentication.gateway';
+export * from './fake-calendar-labels.gateway';
 export * from './fake-flash-message.gateway';
 export * from './fake-instant-photo.gateway';
 export * from './fake-message-feed.gateway';

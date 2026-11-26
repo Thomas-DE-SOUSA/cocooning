@@ -42,11 +42,13 @@ export class FakeCalendarEventCommandGateway extends CalendarEventCommandGateway
     override editCalendarEvent(
         calendarEventId: string,
         form: CalendarEventForm,
+        isOwner: boolean,
     ): Promise<Outcome> {
         return this.answer({
             operation: 'editCalendarEvent',
             calendarEventId,
             form,
+            isOwner,
         });
     }
 

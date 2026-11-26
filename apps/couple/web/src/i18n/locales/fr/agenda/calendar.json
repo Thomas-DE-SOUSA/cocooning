@@ -71,6 +71,12 @@
         "isPrivate": {
             "label": "Rien que pour moi",
             "hint": "Ton âme sœur ne verra pas cet événement."
+        },
+        "audience": {
+            "errors": {
+                "required": "Dites pour qui est l'événement.",
+                "privateNotForMe": "Un événement rien que pour moi est pour moi."
+            }
         }
     },
     "toast": {

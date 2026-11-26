@@ -1,3 +1,4 @@
+import { toViewerAudience } from '@cocooning/couple-client-business-logic/agenda';
 import type { CalendarEventResponse } from '@cocooning/couple-contract/agenda';
 import { CalendarEventVisibilityEnum } from '@cocooning/couple-shared-kernel/enums';
 import {
@@ -51,6 +52,8 @@ function toDayItem(
         },
         isOwner: event.isOwner,
         isPrivate: event.visibility === CalendarEventVisibilityEnum.PRIVATE,
+        audience: toViewerAudience(event.audience, event.isOwner),
+        labelId: event.labelId,
         color: presentAuthorColor(event, creatorId),
     };
 }

@@ -21,6 +21,8 @@ const A_DINNER: CalendarEventForm = {
     startsAt: '20:00',
     endsAt: null,
     isPrivate: true,
+    audience: 'ME',
+    labelId: null,
 };
 const REFUSAL: ApiError = {
     code: ApiErrorCodeEnum.CONFLICT,
@@ -63,11 +65,16 @@ describe('Feature: the commands of the event drawer', () => {
             const { result, events } = renderCommands(gateway);
 
             await act(async () =>
-                result.current.saveCalendarEvent(EVENT_ID, A_DINNER, {
-                    editsDetails: true,
-                    visibilityChange:
-                        CalendarEventVisibilityChangeEnum.MAKE_PRIVATE,
-                }),
+                result.current.saveCalendarEvent(
+                    EVENT_ID,
+                    A_DINNER,
+                    {
+                        editsDetails: true,
+                        visibilityChange:
+                            CalendarEventVisibilityChangeEnum.MAKE_PRIVATE,
+                    },
+                    true,
+                ),
             );
 
             expect(gateway.calls).toEqual([
@@ -75,6 +82,7 @@ describe('Feature: the commands of the event drawer', () => {
                     operation: 'editCalendarEvent',
                     calendarEventId: EVENT_ID,
                     form: A_DINNER,
+                    isOwner: true,
                 },
                 {
                     operation: 'makeCalendarEventPrivate',
@@ -89,10 +97,16 @@ describe('Feature: the commands of the event drawer', () => {
             const { result } = renderCommands(gateway);
 
             await act(async () =>
-                result.current.saveCalendarEvent(EVENT_ID, A_DINNER, {
-                    editsDetails: false,
-                    visibilityChange: CalendarEventVisibilityChangeEnum.SHARE,
-                }),
+                result.current.saveCalendarEvent(
+                    EVENT_ID,
+                    A_DINNER,
+                    {
+                        editsDetails: false,
+                        visibilityChange:
+                            CalendarEventVisibilityChangeEnum.SHARE,
+                    },
+                    true,
+                ),
             );
 
             expect(gateway.calls).toEqual([
@@ -106,10 +120,16 @@ describe('Feature: the commands of the event drawer', () => {
             const { result, events } = renderCommands(gateway);
 
             await act(async () =>
-                result.current.saveCalendarEvent(EVENT_ID, A_DINNER, {
-                    editsDetails: true,
-                    visibilityChange: CalendarEventVisibilityChangeEnum.SHARE,
-                }),
+                result.current.saveCalendarEvent(
+                    EVENT_ID,
+                    A_DINNER,
+                    {
+                        editsDetails: true,
+                        visibilityChange:
+                            CalendarEventVisibilityChangeEnum.SHARE,
+                    },
+                    true,
+                ),
             );
 
             expect(gateway.calls.map(({ operation }) => operation)).toEqual([

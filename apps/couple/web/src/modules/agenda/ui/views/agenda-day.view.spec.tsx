@@ -23,6 +23,8 @@ const A_DINNER: AgendaDayItem = {
     },
     isOwner: false,
     isPrivate: false,
+    audience: 'BOTH',
+    labelId: null,
     color: AuthorColorEnum.SAGE,
 };
 const MY_SURPRISE: AgendaDayItem = {
@@ -40,6 +42,8 @@ const MY_SURPRISE: AgendaDayItem = {
     },
     isOwner: true,
     isPrivate: true,
+    audience: 'ME',
+    labelId: null,
     color: AuthorColorEnum.TERRACOTTA,
 };
 
