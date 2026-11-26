@@ -22,9 +22,8 @@ const REQUIRED_KEYS = [
     'day.allDay',
     'event.until',
     'event.since',
-    'event.mine',
-    'event.partner',
-    'event.private',
+    ...['ME', 'YOU', 'BOTH', 'PRIVATE'].map((pill) => `event.audience.${pill}`),
+    'event.noLabel',
     'unavailable.title',
     'unavailable.refresh',
     ...[

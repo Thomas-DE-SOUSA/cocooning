@@ -1,9 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { WithI18n } from '@/testing/with-i18n';
-import {
-    type AgendaCalendarViewModel,
-    AuthorColorEnum,
-} from '../../view-models/agenda-screen.view-model';
+import type { AgendaCalendarViewModel } from '../../view-models/agenda-screen.view-model';
 import { AgendaCalendarView } from './agenda-calendar.view';
 
 const NOVEMBER: AgendaCalendarViewModel = {
@@ -15,12 +12,12 @@ const NOVEMBER: AgendaCalendarViewModel = {
         '2026-11-24': [
             {
                 calendarEventId: 'a',
-                color: AuthorColorEnum.TERRACOTTA,
+                tint: 'ROSE',
                 isPrivate: false,
             },
             {
                 calendarEventId: 'b',
-                color: AuthorColorEnum.SAGE,
+                tint: 'NEUTRAL',
                 isPrivate: true,
             },
         ],
@@ -48,21 +45,21 @@ const dayButton = (day: string) =>
     )!;
 
 describe('Feature: the month grid of the agenda', () => {
-    it('draws a dot per event under its day, in the color of its author', () => {
+    it('draws a dot per event under its day, in the colour of its label (R13), hollow when private (R7)', () => {
         renderCalendar();
 
-        const dots = dayButton('2026-11-24').querySelectorAll('[data-color]');
+        const dots = dayButton('2026-11-24').querySelectorAll('[data-tint]');
         expect(
             [...dots].map((dot) => [
-                dot.getAttribute('data-color'),
+                dot.getAttribute('data-tint'),
                 dot.getAttribute('data-private'),
             ]),
         ).toEqual([
-            ['TERRACOTTA', 'false'],
-            ['SAGE', 'true'],
+            ['ROSE', 'false'],
+            ['NEUTRAL', 'true'],
         ]);
         expect(
-            dayButton('2026-11-25').querySelectorAll('[data-color]'),
+            dayButton('2026-11-25').querySelectorAll('[data-tint]'),
         ).toHaveLength(0);
     });
 

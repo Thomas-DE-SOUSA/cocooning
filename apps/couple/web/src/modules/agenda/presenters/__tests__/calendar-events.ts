@@ -1,11 +1,19 @@
 import {
+    A_CALENDAR_LABEL_LIST,
     A_PRIVATE_CALENDAR_EVENT,
     A_SHARED_CALENDAR_EVENT,
 } from '@cocooning/couple-client-business-logic/testing';
 import type { CalendarEventResponse } from '@cocooning/couple-contract/agenda';
+import {
+    indexCalendarLabels,
+    presentCalendarLabels,
+} from '../calendar-labels.presenter';
 
-export const CREATOR_ID = A_SHARED_CALENDAR_EVENT.ownerId;
-export const PARTNER_ID = '01936b2e-7c4a-7000-8000-0000000000a2';
+// "Sport" in sage and "Famille" in rose, the labels of the couple in the shared fake.
+export const LABELS = indexCalendarLabels(
+    presentCalendarLabels(A_CALENDAR_LABEL_LIST),
+);
+export const SPORT_ID = '01936b2e-7c4a-7000-8000-0000000000b1';
 
 let nextId = 0;
 

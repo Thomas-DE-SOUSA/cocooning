@@ -4,4 +4,5 @@ export * from './presenters/agenda-query.presenter';
 export { presentToday } from './presenters/calendar-day.presenter';
 export * from './presenters/month-grid.presenter';
 export * from './services/load-calendar-events.service';
+export * from './services/load-calendar-labels.service';
 export * from './ui';

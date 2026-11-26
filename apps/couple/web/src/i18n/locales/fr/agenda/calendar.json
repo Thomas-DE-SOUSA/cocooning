@@ -14,9 +14,13 @@
     "event": {
         "until": "Jusqu'au {{day}}",
         "since": "Depuis le {{day}}",
-        "mine": "Moi",
-        "partner": "Mon âme sœur",
-        "private": "Rien que pour moi",
+        "audience": {
+            "ME": "Moi",
+            "YOU": "Toi",
+            "BOTH": "Nous deux",
+            "PRIVATE": "Rien que pour moi"
+        },
+        "noLabel": "Sans étiquette",
         "swipeDelete": "Supprimer"
     },
     "unavailable": {
